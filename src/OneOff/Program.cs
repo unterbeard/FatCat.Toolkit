@@ -3,10 +3,12 @@
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Events;
 
-Console.WriteLine("Hello, World!");
+ConsoleLog.LogCallerInformation = false;
+
+ConsoleLog.WriteBlue("Hello WORLD!!!!!!");
 
 var consoleUtilities = new ConsoleUtilities(new WaitEvent());
 
 consoleUtilities.WaitForExit();
 
-Console.WriteLine("Yo yo after exit");
+ConsoleLog.WriteMagenta("This is after the wait for exit");
