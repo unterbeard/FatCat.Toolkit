@@ -8,8 +8,4 @@
     <AssemblyName>FatCat.Toolkit</AssemblyName>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Events" />
-  </ItemGroup>
-
 </Project>

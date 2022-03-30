@@ -8,4 +8,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ToolKit\ToolKit.csproj" />
+  </ItemGroup>
+
 </Project>
