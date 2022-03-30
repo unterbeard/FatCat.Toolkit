@@ -4,6 +4,12 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RootNamespace>FatCat.Toolkit</RootNamespace>
+    <AssemblyName>FatCat.Toolkit</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Events" />
+  </ItemGroup>
 
 </Project>
