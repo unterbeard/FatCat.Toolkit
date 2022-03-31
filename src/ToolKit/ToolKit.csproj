@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
     <RootNamespace>FatCat.Toolkit</RootNamespace>
     <AssemblyName>FatCat.Toolkit</AssemblyName>
-
     <DebugType>full</DebugType>
     <LangVersion>latest</LangVersion>
     <VersionPrefix>1.0.0</VersionPrefix>
