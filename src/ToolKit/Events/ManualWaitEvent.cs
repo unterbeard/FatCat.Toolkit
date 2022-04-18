@@ -3,8 +3,10 @@ namespace FatCat.Toolkit.Events;
 /// <summary>
 ///  Used for waiting for triggers in threading
 /// </summary>
-public interface IWaitEvent : IDisposable
+public interface IManualWaitEvent : IDisposable
 {
+	bool HasBeenTriggered { get; }
+
 	/// <summary>
 	///  Trigger the event.  If in wait will make it return true to keep with the execution
 	/// </summary>
@@ -21,9 +23,11 @@ public interface IWaitEvent : IDisposable
 	bool Wait(TimeSpan? timeout = null);
 }
 
-public class WaitEvent : IWaitEvent
+public class ManualWaitEvent : IManualWaitEvent
 {
 	private readonly ManualResetEvent manualResetEvent = new(false);
+
+	public bool HasBeenTriggered => manualResetEvent.WaitOne(1);
 
 	public void Dispose() => manualResetEvent.Dispose();
 

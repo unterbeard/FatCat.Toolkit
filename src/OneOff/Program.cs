@@ -5,10 +5,18 @@ using FatCat.Toolkit.Events;
 
 ConsoleLog.WriteBlue("Hello WORLD!!!!!!");
 
-var consoleUtilities = new ConsoleUtilities(new WaitEvent());
+var manualWaitEvent = new ManualWaitEvent();
+
+var consoleUtilities = new ConsoleUtilities(manualWaitEvent);
 
 try { new WillDoBadStuff().DoBadStuff(); }
 catch (Exception e) { ConsoleLog.WriteException(e); }
+
+ConsoleLog.WriteMagenta($"ManualWaitEvent.Triggered => <{manualWaitEvent.HasBeenTriggered}>");
+
+manualWaitEvent.Trigger();
+
+ConsoleLog.WriteCyan($"ManualWaitEvent.Triggered => <{manualWaitEvent.HasBeenTriggered}>");
 
 consoleUtilities.WaitForExit();
 

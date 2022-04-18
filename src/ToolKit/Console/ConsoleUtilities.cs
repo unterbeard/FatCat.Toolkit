@@ -16,9 +16,9 @@ public interface IConsoleUtilities
 
 public class ConsoleUtilities : IConsoleUtilities
 {
-	private readonly IWaitEvent stopEvent;
+	private readonly IManualWaitEvent stopEvent;
 
-	public ConsoleUtilities(IWaitEvent stopEvent) => this.stopEvent = stopEvent;
+	public ConsoleUtilities(IManualWaitEvent stopEvent) => this.stopEvent = stopEvent;
 
 	public void Exit() => OnCancel(null, null);
 
