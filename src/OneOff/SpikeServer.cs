@@ -5,6 +5,8 @@ using FatCat.Toolkit.Console;
 
 namespace OneOff;
 
+public delegate void MessageReceived(string message);
+
 public class SpikeServer : IDisposable
 {
 	private readonly int bufferSize;
@@ -18,6 +20,8 @@ public class SpikeServer : IDisposable
 
 		cancelSource = new CancellationTokenSource();
 	}
+
+	public event MessageReceived? OnMessageReceived;
 
 	public void Dispose()
 	{
@@ -33,6 +37,8 @@ public class SpikeServer : IDisposable
 
 		listener.BeginAcceptTcpClient(TcpClientConnected, listener);
 	}
+
+	protected virtual void InvokeMessageReceived(string message) => OnMessageReceived?.Invoke(message);
 
 	private void TcpClientConnected(IAsyncResult ar)
 	{
@@ -52,6 +58,8 @@ public class SpikeServer : IDisposable
 
 			var stream = client.GetStream();
 
+			var fullMessage = new StringBuilder();
+
 			if (stream.CanRead)
 			{
 				var dataRead = -1;
@@ -67,6 +75,8 @@ public class SpikeServer : IDisposable
 						ConsoleLog.WriteCyan("Reading . . . . . ");
 						ConsoleLog.WriteCyan($"{data}");
 						ConsoleLog.WriteCyan($". . . . . Done read data | {client.Client.RemoteEndPoint}");
+
+						fullMessage.Append(data);
 					}
 				} while (dataRead != 0);
 			}
@@ -74,6 +84,8 @@ public class SpikeServer : IDisposable
 
 			stream.Close();
 			client.Close();
+
+			InvokeMessageReceived(fullMessage.ToString());
 		}
 		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}

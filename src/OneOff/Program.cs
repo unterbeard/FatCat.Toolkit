@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Events;
 
@@ -18,17 +19,19 @@ public static class Program
 
 		if (args.Any(i => i.Contains("s")))
 		{
-			server = new SpikeServer(IPAddress.Any, tcpPort);
+			server = new SpikeServer(IPAddress.Any, tcpPort, 256);
 
 			server.Start();
+
+			server.OnMessageReceived += m => ConsoleLog.WriteMagenta($"{new string('-', 100)}{Environment.NewLine}{m}{Environment.NewLine}{new string('-', 100)}");
 		}
 		else
 		{
 			var client = new SpikeTcpClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), tcpPort));
 
-			// var longMessage = new StringBuilder();
-			//
-			// for (var i = 0; i < 25; i++) longMessage.Append($"This will be a long message {i} | -=-=-=-=-=-=-=-=-=-=- |");
+			var longMessage = new StringBuilder();
+
+			// for (var i = 0; i < 110; i++) longMessage.Append($"This will be a long message {i} | -=-=-=-=-=-=-=-=-=-=- |");
 
 			for (var i = 0; i < 3; i++) await client.Send($"{i}{i}{i}{i}{i}{i}{i}{i}{i}{i}");
 
