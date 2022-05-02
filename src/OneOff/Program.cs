@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Events;
 
@@ -13,51 +14,75 @@ public static class Program
 
 		var consoleUtilities = new ConsoleUtilities(new ManualWaitEvent());
 
+		var server = new SpikeServer(IPAddress.Any, 62222);
+
+		server.Start();
+
 		consoleUtilities.WaitForExit();
+
+		server.Dispose();
 	}
 }
 
-public class SpikeServer
+public class SpikeServer : IDisposable
 {
 	private readonly TcpListener listener;
+	private readonly CancellationTokenSource cancelSource;
 
-	public SpikeServer(IPAddress ipAddress, ushort port) => listener = new TcpListener(ipAddress, port);
+	public SpikeServer(IPAddress ipAddress, ushort port)
+	{
+		listener = new TcpListener(ipAddress, port);
 
-	public async Task Start()
+		cancelSource = new CancellationTokenSource();
+	}
+
+	public void Close() => listener.Stop();
+
+	public void Dispose()
+	{
+		cancelSource.Dispose();
+		Close();
+	}
+
+	public void Start()
 	{
 		listener.Start();
-		await StartListener();
+		
+		ConsoleLog.WriteCyan($"Listening on <{listener.LocalEndpoint}>");
+
+		listener.BeginAcceptTcpClient(TcpClientConnected, listener);
 	}
 
-	private async Task HandleConnection(TcpClient client)
+	private void TcpClientConnected(IAsyncResult ar)
 	{
+		var syncListener = ar.AsyncState as TcpListener;
+
+		var client = listener.EndAcceptTcpClient(ar);
+
+		ConsoleLog.WriteBlue($"Client Connected from {client}");
+		ConsoleLog.WriteBlue(". . . . . . . Connected!");
+
+		syncListener?.BeginAcceptTcpClient(TcpClientConnected, syncListener);
+
+		var bytes = new byte[1024];
+
 		var stream = client.GetStream();
 
-		var buffer = new Memory<byte>();
-
-		var bytesRead = -1;
-
-		do
+		if (stream.CanRead)
 		{
-			bytesRead = await stream.ReadAsync(buffer);
-			
-			
-			
-		} while (bytesRead != 0);
-	}
+			while (stream.DataAvailable)
+			{
+				var dataRead = stream.Read(bytes, 0, bytes.Length);
 
-	private async Task StartListener()
-	{
-		try
-		{
-			ConsoleLog.WriteCyan("Waiting for a Connection . . . .");
+				ConsoleLog.WriteCyan($". . . . . Read {dataRead} bytes");
 
-			var client = await listener.AcceptTcpClientAsync();
+				var data = Encoding.ASCII.GetString(bytes, 0, dataRead);
 
-			ConsoleLog.WriteCyan("Somebody Connected");
-
-			HandleConnection(client);
+				ConsoleLog.WriteCyan($"{data}");
+				ConsoleLog.WriteCyan(". . . . . Done read data");
+			}
 		}
-		catch (Exception ex) { ConsoleLog.WriteException(ex); }
+
+		client.Close();
 	}
 }
