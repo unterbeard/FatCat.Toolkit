@@ -1,30 +1,63 @@
-﻿using FatCat.Toolkit.Console;
+﻿using System.Net;
+using System.Net.Sockets;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Events;
 
-// ConsoleLog.LogCallerInformation = false;
+namespace OneOff;
 
-ConsoleLog.WriteBlue("Hello WORLD!!!!!!");
-
-var manualWaitEvent = new ManualWaitEvent();
-
-var consoleUtilities = new ConsoleUtilities(manualWaitEvent);
-
-try { new WillDoBadStuff().DoBadStuff(); }
-catch (Exception e) { ConsoleLog.WriteException(e); }
-
-ConsoleLog.WriteMagenta($"ManualWaitEvent.Triggered => <{manualWaitEvent.HasBeenTriggered}>");
-
-manualWaitEvent.Trigger();
-
-ConsoleLog.WriteCyan($"ManualWaitEvent.Triggered => <{manualWaitEvent.HasBeenTriggered}>");
-
-consoleUtilities.WaitForExit();
-
-ConsoleLog.WriteMagenta("This is after the wait for exit");
-
-public class WillDoBadStuff
+public static class Program
 {
-	public void DoBadStuff() { ActuallyThrow(); }
+	public static void Main(params string[] args)
+	{
+		ConsoleLog.WriteBlue("Going to implement a TCP Client/Server");
 
-	private void ActuallyThrow() => throw new Exception("I did something really bad like Bart Simpson");
+		var consoleUtilities = new ConsoleUtilities(new ManualWaitEvent());
+
+		consoleUtilities.WaitForExit();
+	}
+}
+
+public class SpikeServer
+{
+	private readonly TcpListener listener;
+
+	public SpikeServer(IPAddress ipAddress, ushort port) => listener = new TcpListener(ipAddress, port);
+
+	public async Task Start()
+	{
+		listener.Start();
+		await StartListener();
+	}
+
+	private async Task HandleConnection(TcpClient client)
+	{
+		var stream = client.GetStream();
+
+		var buffer = new Memory<byte>();
+
+		var bytesRead = -1;
+
+		do
+		{
+			bytesRead = await stream.ReadAsync(buffer);
+			
+			
+			
+		} while (bytesRead != 0);
+	}
+
+	private async Task StartListener()
+	{
+		try
+		{
+			ConsoleLog.WriteCyan("Waiting for a Connection . . . .");
+
+			var client = await listener.AcceptTcpClientAsync();
+
+			ConsoleLog.WriteCyan("Somebody Connected");
+
+			HandleConnection(client);
+		}
+		catch (Exception ex) { ConsoleLog.WriteException(ex); }
+	}
 }
