@@ -28,7 +28,13 @@ public static class Program
 		{
 			var client = new SpikeTcpClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), tcpPort));
 
-			await client.Send("This is my first test message");
+			// var longMessage = new StringBuilder();
+			//
+			// for (var i = 0; i < 25; i++) longMessage.Append($"This will be a long message {i} | -=-=-=-=-=-=-=-=-=-=- |");
+
+			for (var i = 0; i < 3; i++) await client.Send($"{i}{i}{i}{i}{i}{i}{i}{i}{i}{i}");
+
+			// await client.Send(longMessage.ToString());
 
 			consoleUtilities.Exit();
 		}
@@ -55,19 +61,30 @@ public class SpikeTcpClient : IDisposable
 
 		await using var networkStream = client.GetStream();
 
+		ConsoleLog.WriteMagenta("Sending ---------------");
+		ConsoleLog.WriteMagenta(message);
+
 		var messageBytes = Encoding.UTF8.GetBytes(message);
 
 		await networkStream.WriteAsync(messageBytes);
+		await networkStream.FlushAsync();
+		networkStream.Close();
+
+		ConsoleLog.WriteMagenta("-----------   Done Sending");
+
+		client.Close();
 	}
 }
 
 public class SpikeServer : IDisposable
 {
+	private readonly int bufferSize;
 	private readonly CancellationTokenSource cancelSource;
 	private readonly TcpListener listener;
 
-	public SpikeServer(IPAddress ipAddress, ushort port)
+	public SpikeServer(IPAddress ipAddress, ushort port, int bufferSize = 1024)
 	{
+		this.bufferSize = bufferSize;
 		listener = new TcpListener(ipAddress, port);
 
 		cancelSource = new CancellationTokenSource();
@@ -90,34 +107,42 @@ public class SpikeServer : IDisposable
 
 	private void TcpClientConnected(IAsyncResult ar)
 	{
-		var syncListener = ar.AsyncState as TcpListener;
-
-		var client = listener.EndAcceptTcpClient(ar);
-
-		ConsoleLog.WriteBlue($"Client Connected from {client.Client.RemoteEndPoint}");
-		ConsoleLog.WriteBlue(". . . . . . . Connected!");
-
-		syncListener?.BeginAcceptTcpClient(TcpClientConnected, syncListener);
-
-		var bytes = new byte[1024];
-
-		var stream = client.GetStream();
-
-		if (stream.CanRead)
+		try
 		{
-			while (stream.DataAvailable)
+			var syncListener = ar.AsyncState as TcpListener;
+
+			var client = listener.EndAcceptTcpClient(ar);
+
+			ConsoleLog.WriteCyan("Going to Listen for Connections");
+			syncListener?.BeginAcceptTcpClient(TcpClientConnected, syncListener);
+
+			ConsoleLog.WriteBlue($"Client Connected from {client.Client.RemoteEndPoint}");
+			ConsoleLog.WriteBlue(". . . . . . . Connected!");
+
+			var buffer = new byte[bufferSize];
+
+			var stream = client.GetStream();
+
+			if (stream.CanRead)
 			{
-				var dataRead = stream.Read(bytes, 0, bytes.Length);
+				if (!stream.DataAvailable) ConsoleLog.WriteRed($"There is no data available from {client.Client.RemoteEndPoint}");
 
-				ConsoleLog.WriteCyan($". . . . . Read {dataRead} bytes");
+				while (stream.DataAvailable)
+				{
+					var dataRead = stream.Read(buffer, 0, buffer.Length);
 
-				var data = Encoding.ASCII.GetString(bytes, 0, dataRead);
+					ConsoleLog.WriteCyan($". . . . . Read {dataRead} bytes");
 
-				ConsoleLog.WriteCyan($"{data}");
-				ConsoleLog.WriteCyan(". . . . . Done read data");
+					var data = Encoding.ASCII.GetString(buffer, 0, dataRead);
+
+					ConsoleLog.WriteCyan($"{data}");
+					ConsoleLog.WriteCyan(". . . . . Done read data");
+				}
 			}
-		}
+			else ConsoleLog.WriteRed($"Cannot read the stream from <{client.Client.RemoteEndPoint}>");
 
-		client.Close();
+			client.Close();
+		}
+		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}
 }
