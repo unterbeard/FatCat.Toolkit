@@ -23,7 +23,7 @@ public static class Program
 
 			server.Start();
 
-			server.OnMessageReceived += m => ConsoleLog.WriteMagenta($"{new string('-', 100)}{Environment.NewLine}{m}{Environment.NewLine}{new string('-', 100)}");
+			server.OnMessageReceived += m => ConsoleLog.WriteMagenta($"{Environment.NewLine}{new string('-', 100)}{Environment.NewLine}{m}{Environment.NewLine}{new string('-', 100)}");
 		}
 		else
 		{
@@ -33,7 +33,16 @@ public static class Program
 
 			// for (var i = 0; i < 110; i++) longMessage.Append($"This will be a long message {i} | -=-=-=-=-=-=-=-=-=-=- |");
 
-			for (var i = 0; i < 3; i++) await client.Send($"{i}{i}{i}{i}{i}{i}{i}{i}{i}{i}");
+			for (var i = 0; i < 4000; i++)
+			{
+				await client.Send($"{i} || {i}{i}{i}{i}{i}{i}{i}{i}{i}{i}");
+
+				var delayTime = i % 3;
+
+				if (i % 30 == 0) delayTime = 100;
+
+				await Task.Delay(TimeSpan.FromMilliseconds(delayTime * 4));
+			}
 
 			// await client.Send(longMessage.ToString());
 
