@@ -54,11 +54,7 @@ public class TcpServer : ITcpServer
 
 			var client = listener.EndAcceptTcpClient(ar);
 
-			ConsoleLog.WriteCyan("Going to Listen for Connections");
 			syncListener?.BeginAcceptTcpClient(OnTcpClientConnected, syncListener);
-
-			ConsoleLog.WriteBlue($"Client Connected from {client.Client.RemoteEndPoint}");
-			ConsoleLog.WriteBlue(". . . . . . . Connected!");
 
 			var buffer = new byte[bufferSize];
 
@@ -68,7 +64,7 @@ public class TcpServer : ITcpServer
 
 			if (stream.CanRead)
 			{
-				var dataRead = -1;
+				int dataRead;
 
 				do
 				{
@@ -77,10 +73,6 @@ public class TcpServer : ITcpServer
 					if (dataRead != 0)
 					{
 						var data = encoding.GetString(buffer, 0, dataRead);
-
-						ConsoleLog.WriteCyan("Reading . . . . . ");
-						ConsoleLog.WriteCyan($"{data}");
-						ConsoleLog.WriteCyan($". . . . . Done read data | {client.Client.RemoteEndPoint}");
 
 						fullMessage.Append(data);
 					}
