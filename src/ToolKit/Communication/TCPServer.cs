@@ -72,13 +72,14 @@ public class TcpServer : ITcpServer
 
 					if (dataRead != 0)
 					{
-						var data = encoding.GetString(buffer, 0, dataRead);
+						var encodingToUse = encoding ?? Encoding.UTF8;
+
+						var data = encodingToUse.GetString(buffer, 0, dataRead);
 
 						fullMessage.Append(data);
 					}
 				} while (dataRead != 0);
 			}
-			else ConsoleLog.WriteRed($"Cannot read the stream from <{client.Client.RemoteEndPoint}>");
 
 			stream?.Close();
 			client?.Close();
