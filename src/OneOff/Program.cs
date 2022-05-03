@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text;
+using FatCat.Toolkit.Communication;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Events;
 
@@ -7,7 +8,7 @@ namespace OneOff;
 
 public static class Program
 {
-	private static SpikeServer server;
+	private static TcpServer? server;
 
 	public static async Task Main(params string[] args)
 	{
@@ -19,9 +20,9 @@ public static class Program
 
 		if (args.Any(i => i.Contains("s")))
 		{
-			server = new SpikeServer(IPAddress.Any, tcpPort, 256);
-
-			server.Start();
+			server = new TcpServer();
+			
+			server.Start(IPAddress.Any, tcpPort);
 
 			server.OnMessageReceived += m => ConsoleLog.WriteMagenta($"{Environment.NewLine}{new string('-', 100)}{Environment.NewLine}{m}{Environment.NewLine}{new string('-', 100)}");
 		}
@@ -33,7 +34,7 @@ public static class Program
 
 			// for (var i = 0; i < 110; i++) longMessage.Append($"This will be a long message {i} | -=-=-=-=-=-=-=-=-=-=- |");
 
-			for (var i = 0; i < 75000; i++)
+			for (var i = 0; i < 75; i++)
 			{
 				await client.Send($"{i} || {i}{i}{i}{i}{i}{i}{i}{i}{i}{i}");
 
@@ -52,5 +53,7 @@ public static class Program
 		consoleUtilities.WaitForExit();
 
 		server?.Dispose();
+		
+		ConsoleLog.WriteBlue("After Server Dispose");
 	}
 }

@@ -3,44 +3,50 @@ using System.Net.Sockets;
 using System.Text;
 using FatCat.Toolkit.Console;
 
-namespace OneOff;
+namespace FatCat.Toolkit.Communication;
 
-public delegate void MessageReceived(string message);
+public delegate void TcpMessageReceived(string message);
 
-public class SpikeServer : IDisposable
+public interface ITcpServer : IDisposable
 {
-	private readonly int bufferSize;
-	private readonly CancellationTokenSource cancelSource;
-	private readonly TcpListener listener;
+	event TcpMessageReceived? OnMessageReceived;
 
-	public SpikeServer(IPAddress ipAddress, ushort port, int bufferSize = 1024)
+	void Start(IPAddress ipAddress, ushort port, int receiveBufferSize = 1024);
+
+	void Start(IPAddress ipAddress, ushort port, Encoding encoding, int receiveBufferSize = 1024);
+
+	void Stop();
+}
+
+public class TcpServer : ITcpServer
+{
+	private int bufferSize;
+	private Encoding? encoding;
+	private TcpListener? listener;
+
+	public event TcpMessageReceived? OnMessageReceived;
+
+	public void Dispose() => listener?.Stop();
+
+	public void Start(IPAddress ipAddress, ushort port, int receiveBufferSize = 1024) => Start(ipAddress, port, Encoding.UTF8, receiveBufferSize);
+
+	public void Start(IPAddress ipAddress, ushort port, Encoding encoding, int receiveBufferSize = 1024)
 	{
-		this.bufferSize = bufferSize;
+		bufferSize = receiveBufferSize;
+		this.encoding = encoding;
+
 		listener = new TcpListener(ipAddress, port);
 
-		cancelSource = new CancellationTokenSource();
-	}
-
-	public event MessageReceived? OnMessageReceived;
-
-	public void Dispose()
-	{
-		cancelSource.Dispose();
-		listener.Stop();
-	}
-
-	public void Start()
-	{
 		listener.Start();
 
-		ConsoleLog.WriteCyan($"Listening on <{listener.LocalEndpoint}>");
-
-		listener.BeginAcceptTcpClient(TcpClientConnected, listener);
+		listener.BeginAcceptTcpClient(OnTcpClientConnected, listener);
 	}
+
+	public void Stop() => Dispose();
 
 	protected virtual void InvokeMessageReceived(string message) => OnMessageReceived?.Invoke(message);
 
-	private void TcpClientConnected(IAsyncResult ar)
+	private void OnTcpClientConnected(IAsyncResult ar)
 	{
 		try
 		{
@@ -49,7 +55,7 @@ public class SpikeServer : IDisposable
 			var client = listener.EndAcceptTcpClient(ar);
 
 			ConsoleLog.WriteCyan("Going to Listen for Connections");
-			syncListener?.BeginAcceptTcpClient(TcpClientConnected, syncListener);
+			syncListener?.BeginAcceptTcpClient(OnTcpClientConnected, syncListener);
 
 			ConsoleLog.WriteBlue($"Client Connected from {client.Client.RemoteEndPoint}");
 			ConsoleLog.WriteBlue(". . . . . . . Connected!");
@@ -70,7 +76,7 @@ public class SpikeServer : IDisposable
 
 					if (dataRead != 0)
 					{
-						var data = Encoding.ASCII.GetString(buffer, 0, dataRead);
+						var data = encoding.GetString(buffer, 0, dataRead);
 
 						ConsoleLog.WriteCyan("Reading . . . . . ");
 						ConsoleLog.WriteCyan($"{data}");
