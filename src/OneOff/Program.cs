@@ -37,11 +37,11 @@ public static class Program
 			{
 				await client.Send($"{i} || {i}{i}{i}{i}{i}{i}{i}{i}{i}{i}");
 
-				// var delayTime = i % 3;
-				//
-				// if (i % 300 == 0) delayTime = 100;
-				//
-				// await Task.Delay(TimeSpan.FromMilliseconds(delayTime * 4));
+				var delayTime = i % 3;
+				
+				if (i % 300 == 0) delayTime = 100;
+				
+				await Task.Delay(TimeSpan.FromMilliseconds(delayTime * 4));
 			}
 
 			// await client.Send(longMessage.ToString());
