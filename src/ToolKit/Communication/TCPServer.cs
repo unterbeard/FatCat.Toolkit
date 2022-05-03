@@ -52,17 +52,17 @@ public class TcpServer : ITcpServer
 		{
 			var syncListener = ar.AsyncState as TcpListener;
 
-			var client = listener.EndAcceptTcpClient(ar);
+			var client = listener?.EndAcceptTcpClient(ar);
 
 			syncListener?.BeginAcceptTcpClient(OnTcpClientConnected, syncListener);
 
 			var buffer = new byte[bufferSize];
 
-			var stream = client.GetStream();
+			var stream = client?.GetStream();
 
 			var fullMessage = new StringBuilder();
 
-			if (stream.CanRead)
+			if (stream != null && stream.CanRead)
 			{
 				int dataRead;
 
@@ -80,8 +80,8 @@ public class TcpServer : ITcpServer
 			}
 			else ConsoleLog.WriteRed($"Cannot read the stream from <{client.Client.RemoteEndPoint}>");
 
-			stream.Close();
-			client.Close();
+			stream?.Close();
+			client?.Close();
 
 			InvokeMessageReceived(fullMessage.ToString());
 		}

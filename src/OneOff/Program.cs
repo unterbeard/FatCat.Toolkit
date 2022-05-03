@@ -21,28 +21,30 @@ public static class Program
 		if (args.Any(i => i.Contains("s")))
 		{
 			server = new TcpServer();
-			
+
 			server.Start(IPAddress.Any, tcpPort);
 
 			server.OnMessageReceived += m => ConsoleLog.WriteMagenta($"Message ===> {m}");
 		}
 		else
 		{
-			var client = new SpikeTcpClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), tcpPort));
+			var client = new SimpleTcpSender();
+
+			var ipEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), tcpPort);
 
 			var longMessage = new StringBuilder();
 
 			// for (var i = 0; i < 110; i++) longMessage.Append($"This will be a long message {i} | -=-=-=-=-=-=-=-=-=-=- |");
 
-			for (var i = 0; i < 5; i++)
+			for (var i = 0; i < 75; i++)
 			{
-				await client.Send($"{i} || {i}{i}{i}{i}{i}{i}{i}{i}{i}{i}");
+				await client.Send(ipEndPoint, $"{i} || {i}{i}{i}{i}{i}{i}{i}{i}{i}{i}");
 
-				// var delayTime = i % 3;
-				//
-				// if (i % 300 == 0) delayTime = 100;
-				//
-				// await Task.Delay(TimeSpan.FromMilliseconds(delayTime * 4));
+				var delayTime = i % 3;
+
+				if (i % 300 == 0) delayTime = 100;
+
+				await Task.Delay(TimeSpan.FromMilliseconds(delayTime * 4));
 			}
 
 			// await client.Send(longMessage.ToString());
@@ -53,7 +55,7 @@ public static class Program
 		consoleUtilities.WaitForExit();
 
 		server?.Dispose();
-		
+
 		ConsoleLog.WriteBlue("After Server Dispose");
 	}
 }
