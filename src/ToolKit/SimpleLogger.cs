@@ -61,9 +61,7 @@ public class SimpleLogger : ISimpleLogger
 	{
 		var fullMessage = $"{logLevel} | {Path.GetFileName(sourceFilePath)} @ {sourceLineNumber} {memberName} | {message}";
 
-		ConsoleLog.WriteMagenta("Enqueuing Message");
-
-		Task.Run(() => { ConsoleLog.WriteBlue(fullMessage); });
+		ConsoleLog.WriteBlue(fullMessage);
 	}
 
 	public void WriteDebug(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Debug, message, memberName, sourceFilePath, sourceLineNumber);
