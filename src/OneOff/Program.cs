@@ -2,13 +2,14 @@
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Events;
 
-var simpleLogger = new SimpleLogger(new ApplicationTools(),
+ConsoleLog.LogCallerInformation = false;
+
+using var simpleLogger = new SimpleLogger(new ApplicationTools(),
 									new AutoWaitEvent());
 
 ConsoleLog.Write("Before write");
 
 simpleLogger.WriteInformation("This is my first test");
 
-ConsoleLog.Write("After Write");
+ConsoleLog.Write("After Write | Exiting Application");
 
-await Task.Delay(TimeSpan.FromMilliseconds(250));
