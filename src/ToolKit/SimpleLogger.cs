@@ -1,7 +1,5 @@
-using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Events;
 
 namespace FatCat.Toolkit;
 
@@ -9,7 +7,7 @@ namespace FatCat.Toolkit;
 ///  Will write a {ApplicationName}.log file to executing directory to be used as a quick and easy way
 ///  to log messages to the file system without a lot of setup
 /// </summary>
-public interface ISimpleLogger : IDisposable
+public interface ISimpleLogger
 {
 	void SetLogLevel(LogLevel logLevel);
 
@@ -47,35 +45,14 @@ public class SimpleLogger : ISimpleLogger
 	private readonly IApplicationTools applicationTools;
 	private readonly string logName;
 
-	private readonly ConcurrentQueue<string> messageQueue = new();
-	private readonly IAutoWaitEvent queueEvent;
-
-	private bool active;
 	private LogLevel logLevel = LogLevel.Information;
 
-	private Thread writeMessageThread;
-
-	public int MessageQueueCount => messageQueue.Count;
-
 	public SimpleLogger(IApplicationTools applicationTools,
-						IAutoWaitEvent queueEvent,
 						string? logName = null)
 	{
 		this.applicationTools = applicationTools;
-		this.queueEvent = queueEvent;
 
 		this.logName = logName ?? this.applicationTools.ExecutableName;
-		Start();
-	}
-
-	public void Dispose()
-	{
-		active = false;
-
-		WriteAllMessages();
-
-		queueEvent.Trigger();
-		queueEvent.Dispose();
 	}
 
 	public void SetLogLevel(LogLevel logLevel) => this.logLevel = logLevel;
@@ -86,9 +63,7 @@ public class SimpleLogger : ISimpleLogger
 
 		ConsoleLog.WriteMagenta("Enqueuing Message");
 
-		messageQueue.Enqueue(fullMessage);
-
-		queueEvent.Trigger();
+		Task.Run(() => { ConsoleLog.WriteBlue(fullMessage); });
 	}
 
 	public void WriteDebug(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Debug, message, memberName, sourceFilePath, sourceLineNumber);
@@ -102,49 +77,4 @@ public class SimpleLogger : ISimpleLogger
 	public void WriteVerbose(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Verbose, message, memberName, sourceFilePath, sourceLineNumber);
 
 	public void WriteWarning(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Warning, message, memberName, sourceFilePath, sourceLineNumber);
-
-	private string? Dequeue() => messageQueue.TryDequeue(out var result) ? result : null;
-
-	private void LogWritingThread()
-	{
-		ConsoleLog.WriteCyan("Starting Logging Thread");
-
-		while (active)
-		{
-			queueEvent.Wait();
-
-			WriteAllMessages();
-		}
-	}
-
-	private void Start()
-	{
-		active = true;
-
-		ThreadStart threadStart = LogWritingThread;
-
-		writeMessageThread = new Thread(threadStart);
-
-		writeMessageThread.Start();
-	}
-
-	private void WriteAllMessages()
-	{
-		ConsoleLog.WriteMagenta($"Writing all Messages {MessageQueueCount}");
-
-		while (MessageQueueCount > 0)
-		{
-			var nextMessage = Dequeue();
-
-			if (nextMessage == null)
-			{
-				ConsoleLog.WriteDarkMagenta("SKIPPING Write of Message Next Message is NULL");
-
-				continue;
-			}
-
-			// TEMP to prove that queuing event works
-			ConsoleLog.Write(nextMessage);
-		}
-	}
 }
