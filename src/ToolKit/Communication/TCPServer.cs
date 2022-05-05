@@ -62,7 +62,7 @@ public class TcpServer : ITcpServer
 
 			var fullMessage = new StringBuilder();
 
-			if (stream != null && stream.CanRead)
+			if (stream is { CanRead: true })
 			{
 				int dataRead;
 
