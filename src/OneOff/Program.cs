@@ -1,61 +1,14 @@
-﻿using System.Net;
-using System.Text;
-using FatCat.Toolkit.Communication;
+﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Events;
 
-namespace OneOff;
+var simpleLogger = new SimpleLogger(new ApplicationTools(),
+									new AutoWaitEvent());
 
-public static class Program
-{
-	private static TcpServer? server;
+ConsoleLog.Write("Before write");
 
-	public static async Task Main(params string[] args)
-	{
-		const int tcpPort = 62222;
+simpleLogger.WriteInformation("This is my first test");
 
-		ConsoleLog.WriteBlue("Going to implement a TCP Client/Server");
+ConsoleLog.Write("After Write");
 
-		var consoleUtilities = new ConsoleUtilities(new ManualWaitEvent());
-
-		if (args.Any(i => i.Contains("s")))
-		{
-			server = new TcpServer();
-
-			server.Start(IPAddress.Any, tcpPort);
-
-			server.OnMessageReceived += m => ConsoleLog.WriteMagenta($"Message ===> {m}");
-		}
-		else
-		{
-			var client = new SimpleTcpSender();
-
-			var ipEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), tcpPort);
-
-			var longMessage = new StringBuilder();
-
-			// for (var i = 0; i < 110; i++) longMessage.Append($"This will be a long message {i} | -=-=-=-=-=-=-=-=-=-=- |");
-
-			for (var i = 0; i < 75; i++)
-			{
-				await client.Send(ipEndPoint, $"{i} || {i}{i}{i}{i}{i}{i}{i}{i}{i}{i}");
-
-				var delayTime = i % 3;
-
-				if (i % 300 == 0) delayTime = 100;
-
-				await Task.Delay(TimeSpan.FromMilliseconds(delayTime * 4));
-			}
-
-			// await client.Send(longMessage.ToString());
-
-			consoleUtilities.Exit();
-		}
-
-		consoleUtilities.WaitForExit();
-
-		server?.Dispose();
-
-		ConsoleLog.WriteBlue("After Server Dispose");
-	}
-}
+await Task.Delay(TimeSpan.FromMilliseconds(250));

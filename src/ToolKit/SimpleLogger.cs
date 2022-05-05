@@ -84,6 +84,8 @@ public class SimpleLogger : ISimpleLogger
 	{
 		var fullMessage = $"{logLevel} | {Path.GetFileName(sourceFilePath)} @ {sourceLineNumber} {memberName} | {message}";
 
+		ConsoleLog.WriteMagenta("Enqueuing Message");
+
 		messageQueue.Enqueue(fullMessage);
 
 		queueEvent.Trigger();
@@ -105,6 +107,8 @@ public class SimpleLogger : ISimpleLogger
 
 	private void LogWritingThread()
 	{
+		ConsoleLog.WriteCyan("Starting Logging Thread");
+
 		while (active)
 		{
 			queueEvent.Wait();
@@ -115,6 +119,8 @@ public class SimpleLogger : ISimpleLogger
 
 	private void Start()
 	{
+		active = true;
+
 		ThreadStart threadStart = LogWritingThread;
 
 		writeMessageThread = new Thread(threadStart);
@@ -124,11 +130,18 @@ public class SimpleLogger : ISimpleLogger
 
 	private void WriteAllMessages()
 	{
+		ConsoleLog.WriteMagenta($"Writing all Messages {MessageQueueCount}");
+
 		while (MessageQueueCount > 0)
 		{
 			var nextMessage = Dequeue();
 
-			if (nextMessage == null) continue;
+			if (nextMessage == null)
+			{
+				ConsoleLog.WriteDarkMagenta("SKIPPING Write of Message Next Message is NULL");
+
+				continue;
+			}
 
 			// TEMP to prove that queuing event works
 			ConsoleLog.Write(nextMessage);

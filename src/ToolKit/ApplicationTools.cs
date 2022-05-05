@@ -12,7 +12,7 @@ public interface IApplicationTools
 
 public class ApplicationTools : IApplicationTools
 {
-	private string executableName;
+	private string? executableName;
 	private string? executingDirectory;
 
 	public string ExecutableName
@@ -44,6 +44,4 @@ public class ApplicationTools : IApplicationTools
 			return executingDirectory;
 		}
 	}
-
-	public ApplicationTools(string executableName) => this.executableName = executableName;
 }
