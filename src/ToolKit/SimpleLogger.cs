@@ -9,4 +9,10 @@ public interface ISimpleLogger
 	
 }
 
-public class SimpleLogger : ISimpleLogger { }
+public class SimpleLogger : ISimpleLogger
+{
+	public SimpleLogger(string logName, IApplicationTools applicationTools)
+	{
+		
+	}
+}
