@@ -13,6 +13,9 @@ public class SimpleLogger : ISimpleLogger
 {
 	public SimpleLogger(string logName, IApplicationTools applicationTools)
 	{
-		
+		/*
+		 *  - Take Log Messages into Queue
+		 *	- On Separate thread write to log file
+		 */
 	}
 }
