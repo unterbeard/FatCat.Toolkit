@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Events;
 
 namespace FatCat.Toolkit;
@@ -44,48 +45,93 @@ public interface ISimpleLogger : IDisposable
 public class SimpleLogger : ISimpleLogger
 {
 	private readonly IApplicationTools applicationTools;
-	private readonly IAutoWaitEvent autoWaitEvent;
 	private readonly string logName;
 
 	private readonly ConcurrentQueue<string> messageQueue = new();
-	private TaskFactory taskFactory;
+	private readonly IAutoWaitEvent queueEvent;
+
+	private bool active;
+	private LogLevel logLevel = LogLevel.Information;
 
 	private Thread writeMessageThread;
-
-	public CancellationToken CanelToken { get; }
 
 	public int MessageQueueCount => messageQueue.Count;
 
 	public SimpleLogger(IApplicationTools applicationTools,
-						IAutoWaitEvent autoWaitEvent,
+						IAutoWaitEvent queueEvent,
 						string? logName = null)
 	{
 		this.applicationTools = applicationTools;
-		this.autoWaitEvent = autoWaitEvent;
+		this.queueEvent = queueEvent;
 
 		this.logName = logName ?? this.applicationTools.ExecutableName;
-
-		/*
-		 *  - Take Log Messages into Queue
-		 *	- On Separate thread write to log file
-		 */
+		Start();
 	}
 
-	public void Dispose() { autoWaitEvent.Dispose(); }
+	public void Dispose()
+	{
+		active = false;
 
-	public void SetLogLevel(LogLevel logLevel) { throw new NotImplementedException(); }
+		WriteAllMessages();
 
-	public void Write(LogLevel logLevel, string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) { throw new NotImplementedException(); }
+		queueEvent.Trigger();
+		queueEvent.Dispose();
+	}
 
-	public void WriteDebug(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) { throw new NotImplementedException(); }
+	public void SetLogLevel(LogLevel logLevel) => this.logLevel = logLevel;
 
-	public void WriteError(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) { throw new NotImplementedException(); }
+	public void Write(LogLevel logLevel, string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0)
+	{
+		var fullMessage = $"{logLevel} | {Path.GetFileName(sourceFilePath)} @ {sourceLineNumber} {memberName} | {message}";
 
-	public void WriteFatal(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) { throw new NotImplementedException(); }
+		messageQueue.Enqueue(fullMessage);
 
-	public void WriteInformation(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) { throw new NotImplementedException(); }
+		queueEvent.Trigger();
+	}
 
-	public void WriteVerbose(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) { throw new NotImplementedException(); }
+	public void WriteDebug(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Debug, message, memberName, sourceFilePath, sourceLineNumber);
 
-	public void WriteWarning(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) { throw new NotImplementedException(); }
+	public void WriteError(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Error, message, memberName, sourceFilePath, sourceLineNumber);
+
+	public void WriteFatal(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Fatal, message, memberName, sourceFilePath, sourceLineNumber);
+
+	public void WriteInformation(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Information, message, memberName, sourceFilePath, sourceLineNumber);
+
+	public void WriteVerbose(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Verbose, message, memberName, sourceFilePath, sourceLineNumber);
+
+	public void WriteWarning(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Warning, message, memberName, sourceFilePath, sourceLineNumber);
+
+	private string? Dequeue() => messageQueue.TryDequeue(out var result) ? result : null;
+
+	private void LogWritingThread()
+	{
+		while (active)
+		{
+			queueEvent.Wait();
+
+			WriteAllMessages();
+		}
+	}
+
+	private void Start()
+	{
+		ThreadStart threadStart = LogWritingThread;
+
+		writeMessageThread = new Thread(threadStart);
+
+		writeMessageThread.Start();
+	}
+
+	private void WriteAllMessages()
+	{
+		while (MessageQueueCount > 0)
+		{
+			var nextMessage = Dequeue();
+
+			if (nextMessage == null) continue;
+
+			// TEMP to prove that queuing event works
+			ConsoleLog.Write(nextMessage);
+		}
+	}
 }
