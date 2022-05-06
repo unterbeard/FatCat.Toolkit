@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using FatCat.Toolkit.Console;
 
 namespace FatCat.Toolkit;
 
@@ -59,9 +58,22 @@ public class SimpleLogger : ISimpleLogger
 
 	public void Write(LogLevel logLevel, string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0)
 	{
-		var fullMessage = $"{logLevel} | {Path.GetFileName(sourceFilePath)} @ {sourceLineNumber} {memberName} | {message}";
+		var fullMessage = $"{DateTime.Now} | {logLevel} | {Path.GetFileName(sourceFilePath)} @ {sourceLineNumber} {memberName} | {message}";
 
-		ConsoleLog.WriteBlue(fullMessage);
+		var logFileFullPath = Path.Join(applicationTools.ExecutingDirectory, $"{logName}.log");
+
+		if (!File.Exists(logFileFullPath))
+		{
+			var createStream = File.Create(logFileFullPath);
+
+			createStream.Dispose();
+		}
+
+		using var fileStream = File.Open(logFileFullPath, FileMode.Append);
+
+		using var streamWriter = new StreamWriter(fileStream);
+
+		streamWriter.WriteLine(fullMessage);
 	}
 
 	public void WriteDebug(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Debug, message, memberName, sourceFilePath, sourceLineNumber);

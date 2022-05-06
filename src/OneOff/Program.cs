@@ -10,5 +10,3 @@ ConsoleLog.Write("Before write");
 simpleLogger.WriteInformation("This is my first test");
 
 ConsoleLog.Write("After Write | Exiting Application");
-
-await Task.Delay(TimeSpan.FromMilliseconds(250));
