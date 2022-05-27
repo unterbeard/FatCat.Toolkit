@@ -3,10 +3,12 @@ using FatCat.Toolkit.Console;
 
 ConsoleLog.LogCallerInformation = false;
 
-var simpleLogger = new SimpleLogger(new ApplicationTools());
+ConsoleLog.Write("Going to test Registry Repository stuff");
 
-ConsoleLog.Write("Before write");
+var registryRepository = new RegistryRepository();
 
-simpleLogger.WriteInformation("This is my first test");
+registryRepository.Set("OneOff", "Dude", $"Perfect | {DateTime.Now}");
 
-ConsoleLog.Write("After Write | Exiting Application");
+var value = registryRepository.Get("OneOff", "Dude");
+
+ConsoleLog.WriteCyan($"Found from the Registry <{value}>");
