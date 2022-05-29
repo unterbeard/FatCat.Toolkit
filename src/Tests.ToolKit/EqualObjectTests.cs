@@ -1,0 +1,64 @@
+using FatCat.Fakes;
+using FatCat.Toolkit;
+using FluentAssertions;
+using Xunit;
+
+namespace Tests.FatCat.Toolkit;
+
+public class EqualObjectTests
+{
+	[Fact]
+	public void TwoObjectsAreTheSameForEqualsOperator()
+	{
+		var (firstObject, secondObject) = GetObjects();
+
+		var result = firstObject == secondObject;
+
+		result
+			.Should()
+			.BeTrue();
+	}
+
+	[Fact]
+	public void TwoObjectsAreTheSameWithEqualsMethod()
+	{
+		var (firstObject, secondObject) = GetObjects();
+
+		var result = firstObject.Equals(secondObject);
+
+		result.Should()
+			.BeTrue();
+	}
+
+	private static (TestObject, TestObject) GetObjects()
+	{
+		var firstObject = Faker.Create<TestObject>();
+
+		var secondObject = new TestObject
+							{
+								Length = firstObject.Length,
+								CreatedDate = firstObject.CreatedDate,
+								FirstName = firstObject.FirstName,
+								LastName = firstObject.LastName,
+								TheNumber = firstObject.TheNumber,
+								On = firstObject.On
+							};
+
+		return (firstObject, secondObject);
+	}
+
+	private class TestObject : EqualObject
+	{
+		public DateTime CreatedDate { get; set; }
+
+		public string? FirstName { get; set; }
+
+		public string? LastName { get; set; }
+
+		public TimeSpan Length { get; set; }
+
+		public bool On { get; set; }
+
+		public int TheNumber { get; set; }
+	}
+}
