@@ -9,16 +9,16 @@ public class WebResult : IActionResult
 {
 	public static WebResult BadRequest(ModelStateDictionary modelState) => new(HttpStatusCode.BadRequest, modelState);
 
-	public static WebResult BadRequest(string fieldName, string messageId)
+	public static WebResult BadRequest(string fieldName, string? messageId)
 	{
 		var modelState = new ModelStateDictionary();
 
-		if (messageId.IsNotNullOrEmpty()) modelState.AddModelError(fieldName, messageId);
+		if (messageId.IsNotNullOrEmpty()) modelState.AddModelError(fieldName, messageId!);
 
 		return BadRequest(modelState);
 	}
 
-	public static WebResult BadRequest(string messageId) => BadRequest("General", messageId);
+	public static WebResult BadRequest(string? messageId) => BadRequest("General", messageId);
 
 	public static WebResult NotAcceptable(string? content = null) => new(HttpStatusCode.NotAcceptable, content);
 

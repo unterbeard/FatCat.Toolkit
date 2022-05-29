@@ -41,7 +41,7 @@ public static class StringExtensions
 
 	public static string InsertSafeFileDate(this string stringWithFormat) => stringWithFormat.InsertSafeFileDate(DateTime.Now);
 
-	public static bool IsNotNullOrEmpty(this string value) => !string.IsNullOrWhiteSpace(value);
+	public static bool IsNotNullOrEmpty(this string? value) => !string.IsNullOrWhiteSpace(value);
 
 	public static bool IsNullOrEmpty(this string? value) => string.IsNullOrWhiteSpace(value);
 
