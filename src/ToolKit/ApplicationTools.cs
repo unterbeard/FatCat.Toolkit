@@ -5,7 +5,7 @@ namespace FatCat.Toolkit;
 
 public interface IApplicationTools
 {
-	string ExecutableName { get; }
+	string? ExecutableName { get; }
 
 	string? ExecutingDirectory { get; }
 }
@@ -15,7 +15,7 @@ public class ApplicationTools : IApplicationTools
 	private string? executableName;
 	private string? executingDirectory;
 
-	public string ExecutableName
+	public string? ExecutableName
 	{
 		get
 		{
@@ -23,7 +23,7 @@ public class ApplicationTools : IApplicationTools
 			{
 				var fileName = Process.GetCurrentProcess().MainModule?.FileName;
 
-				if (fileName.IsNotNullOrEmpty()) executableName = Path.GetFileNameWithoutExtension(fileName);
+				if (fileName!.IsNotNullOrEmpty()) executableName = Path.GetFileNameWithoutExtension(fileName);
 			}
 
 			return executableName;
@@ -38,7 +38,7 @@ public class ApplicationTools : IApplicationTools
 			{
 				var fileName = Process.GetCurrentProcess().MainModule?.FileName;
 
-				if (fileName.IsNotNullOrEmpty()) executingDirectory = Path.GetDirectoryName(fileName);
+				if (fileName!.IsNotNullOrEmpty()) executingDirectory = Path.GetDirectoryName(fileName);
 			}
 
 			return executingDirectory;

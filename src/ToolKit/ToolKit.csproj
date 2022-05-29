@@ -17,5 +17,10 @@
     <NoWarn>CS8002,CS1700</NoWarn>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
-
+  <ItemGroup>
+      <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
 </Project>

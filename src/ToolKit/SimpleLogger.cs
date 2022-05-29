@@ -42,7 +42,7 @@ public interface ISimpleLogger
 public class SimpleLogger : ISimpleLogger
 {
 	private readonly IApplicationTools applicationTools;
-	private readonly string logName;
+	private readonly string? logName;
 
 	private LogLevel logLevel = LogLevel.Information;
 

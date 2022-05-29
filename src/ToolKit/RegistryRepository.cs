@@ -2,6 +2,8 @@ using Microsoft.Win32;
 
 namespace FatCat.Toolkit;
 
+#pragma warning disable CA1416
+
 public interface IRegistryRepository
 {
 	object? Get(string applicationName, string keyName);

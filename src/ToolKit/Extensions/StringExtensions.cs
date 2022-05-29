@@ -61,7 +61,7 @@ public static class StringExtensions
 
 	public static string RemoveAllWhitespace(this string value) => Regex.Replace(value, @"\s+", "");
 
-	public static string RemoveSuffix(this string item, string suffix)
+	public static string RemoveSuffix(this string item, string? suffix)
 	{
 		if (suffix == null) return item;
 
@@ -70,16 +70,16 @@ public static class StringExtensions
 
 	public static string ReplaceAllWhitespace(this string value, string replacement) => Regex.Replace(value, @"\s+", replacement);
 
-	public static List<string> SplitByLine(this string data) => SplitByString(data, Environment.NewLine).ToList();
+	public static List<string> SplitByLine(this string? data) => SplitByString(data, Environment.NewLine).ToList();
 
-	public static string[] SplitByString(this string data, string separator)
+	public static string[] SplitByString(this string? data, string separator)
 	{
 		if (data == null) return new[] { string.Empty };
 
 		return data.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
 	}
 
-	public static byte[] ToASCIIByteArray(this string value) => Encoding.ASCII.GetBytes(value);
+	public static byte[] ToAsciiByteArray(this string value) => Encoding.ASCII.GetBytes(value);
 
 	public static string ToBase64Encoded(this string plainText)
 	{
@@ -90,7 +90,7 @@ public static class StringExtensions
 		return Convert.ToBase64String(plainTextBytes);
 	}
 
-	public static bool ToBool(this string value)
+	public static bool ToBool(this string? value)
 	{
 		if (value == null) return false;
 
@@ -113,48 +113,40 @@ public static class StringExtensions
 	///  Encoding type, UTF8, Unicode, etc. If unspecified, the default is UTF8.
 	///  And really, that's what we should be using everywhere. Seriously.
 	/// </param>
-	public static byte[] ToByteArray(this string value, Encoding encoding = null) => encoding?.GetBytes(value) ?? Encoding.UTF8.GetBytes(value);
+	public static byte[] ToByteArray(this string value, Encoding? encoding = null) => encoding?.GetBytes(value) ?? Encoding.UTF8.GetBytes(value);
 
-	public static double ToDouble(this string value, double? defaultValue = null)
+	public static double ToDouble(this string? value, double? defaultValue = null)
 	{
 		if (!defaultValue.HasValue) return value == null ? default : double.Parse(value);
 
-		double parsedNumber;
-
-		return double.TryParse(value, out parsedNumber) ? parsedNumber : defaultValue.Value;
+		return double.TryParse(value, out var parsedNumber) ? parsedNumber : defaultValue.Value;
 	}
 
 	public static Guid ToGuid(this string value) => Guid.Parse(value);
 
-	public static int ToInt(this string value, int? defaultValue = null)
+	public static int ToInt(this string? value, int? defaultValue = null)
 	{
 		if (!defaultValue.HasValue) return value == null ? default : int.Parse(value);
 
-		int parsedNumber;
-
-		return int.TryParse(value, out parsedNumber) ? parsedNumber : defaultValue.Value;
+		return int.TryParse(value, out var parsedNumber) ? parsedNumber : defaultValue.Value;
 	}
 
-	public static long ToLong(this string value, long? defaultValue = null)
+	public static long ToLong(this string? value, long? defaultValue = null)
 	{
 		if (!defaultValue.HasValue) return value == null ? default : long.Parse(value);
 
-		long parsedNumber;
-
-		return long.TryParse(value, out parsedNumber) ? parsedNumber : defaultValue.Value;
+		return long.TryParse(value, out var parsedNumber) ? parsedNumber : defaultValue.Value;
 	}
 
 	public static string ToSlug(this string value) => value.ToLowerInvariant().Replace(" ", "_");
 
-	public static Stream ToStream(this string value) => new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
+	public static Stream ToStream(this string? value) => new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
 
-	public static ushort ToUShort(this string value, ushort? defaultValue = null)
+	public static ushort ToUShort(this string? value, ushort? defaultValue = null)
 	{
 		if (!defaultValue.HasValue) return value == null ? default : ushort.Parse(value);
 
-		ushort parsedNumber;
-
-		return ushort.TryParse(value, out parsedNumber) ? parsedNumber : defaultValue.Value;
+		return ushort.TryParse(value, out var parsedNumber) ? parsedNumber : defaultValue.Value;
 	}
 
 	public static string TruncateString(this string value, int maxLength) => value.IsNullOrEmpty() ? string.Empty : value.Substring(0, Math.Min(value.Length, maxLength));
@@ -164,9 +156,9 @@ public static class StringExtensions
 	/// </summary>
 	/// <param name="value"></param>
 	/// <returns></returns>
-	public static byte[] WithEmbeddedHexCodesToByteArray(this string value)
+	public static byte[] WithEmbeddedHexCodesToByteArray(this string? value)
 	{
-		if (value == null) return new byte[0];
+		if (value == null) return Array.Empty<byte>();
 
 		var returnValue = new List<byte>();
 
@@ -182,8 +174,7 @@ public static class StringExtensions
 				if (nextTwoCharactersPossiblyIndicateHex)
 				{
 					var twoCharactersAfterIndicator = value.Substring(currentPosition + 2, 2);
-					int hexValue;
-					var twoCharactersAfterIndicatorAreHexValues = int.TryParse(twoCharactersAfterIndicator, NumberStyles.HexNumber, null, out hexValue);
+					var twoCharactersAfterIndicatorAreHexValues = int.TryParse(twoCharactersAfterIndicator, NumberStyles.HexNumber, null, out var hexValue);
 
 					if (twoCharactersAfterIndicatorAreHexValues)
 					{
