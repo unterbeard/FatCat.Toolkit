@@ -8,6 +8,33 @@ namespace Tests.FatCat.Toolkit;
 public class EqualObjectTests
 {
 	[Fact]
+	public void IfOneIsNullThenTheyAreNotEqual()
+	{
+		var (firstObject, secondObject) = GetObjects();
+
+		secondObject = null;
+
+		var result = firstObject == secondObject;
+
+		result
+			.Should()
+			.BeFalse();
+	}
+
+	[Fact]
+	public void TwoObjectsAreNotTheSameIfAPropertyIsDifferent()
+	{
+		var (firstObject, secondObject) = GetObjects();
+
+		secondObject.LastName = Faker.RandomString();
+
+		var result = firstObject.Equals(secondObject);
+
+		result.Should()
+			.BeFalse();
+	}
+
+	[Fact]
 	public void TwoObjectsAreTheSameForEqualsOperator()
 	{
 		var (firstObject, secondObject) = GetObjects();
