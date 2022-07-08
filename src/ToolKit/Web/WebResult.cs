@@ -20,7 +20,7 @@ public class WebResult : IActionResult
 
 	public static WebResult BadRequest(string? messageId) => BadRequest("General", messageId);
 
-	public static WebResult NotAcceptable(string? content = null) => new(HttpStatusCode.NotAcceptable, content);
+	public static WebResult NotAcceptable(string content = null) => new(HttpStatusCode.NotAcceptable, content);
 
 	public static WebResult NotFound(ModelStateDictionary modelState) => new(HttpStatusCode.NotFound, modelState);
 
@@ -33,11 +33,11 @@ public class WebResult : IActionResult
 		return NotFound(modelState);
 	}
 
-	public static WebResult NotFound(string? content = null) => new(HttpStatusCode.NotFound, content);
+	public static WebResult NotFound(string content = null) => new(HttpStatusCode.NotFound, content);
 
-	public static WebResult NotImplemented(string? content = null) => new(HttpStatusCode.NotImplemented, content);
+	public static WebResult NotImplemented(string content = null) => new(HttpStatusCode.NotImplemented, content);
 
-	public static WebResult Ok(string? content = null) => new(content.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content);
+	public static WebResult Ok(string content = null) => new(content.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content);
 
 	public static WebResult Ok(EqualObject? returnObject) => new(returnObject == null ? HttpStatusCode.NoContent : HttpStatusCode.OK, returnObject!);
 
@@ -45,15 +45,15 @@ public class WebResult : IActionResult
 
 	public static WebResult Ok(List<EqualObject> returnList) => new(returnList);
 
-	public static WebResult PreconditionFailed(string? content = null) => new(HttpStatusCode.PreconditionFailed, content);
+	public static WebResult PreconditionFailed(string content = null) => new(HttpStatusCode.PreconditionFailed, content);
 
 	public static WebResult Timeout() => new(HttpStatusCode.RequestTimeout);
 
 	private readonly HttpContent? httpContent;
 
-	private string? content;
+	private string content;
 
-	public string? Content
+	public string Content
 	{
 		get
 		{
@@ -69,6 +69,8 @@ public class WebResult : IActionResult
 	public bool IsSuccessful => (int)StatusCode >= 200 && (int)StatusCode <= 299;
 
 	public bool IsUnsuccessful => !IsSuccessful;
+	
+	public T? To<T>() => this.ConvertTo<T>();
 
 	public HttpStatusCode StatusCode { get; set; }
 
@@ -86,7 +88,7 @@ public class WebResult : IActionResult
 	/// <summary>
 	///  If you call this with an empty string or null for content, it will return a 204.
 	/// </summary>
-	public WebResult(string? content = null) : this(content.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content) { }
+	public WebResult(string content = null) : this(content.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content) { }
 
 	public WebResult(HttpStatusCode statusCode, EqualObject resultObject) : this(statusCode, Json.Serialize(resultObject)) { }
 
@@ -96,7 +98,7 @@ public class WebResult : IActionResult
 
 	public WebResult(HttpStatusCode statusCode, ModelStateDictionary modelState) : this(statusCode, Json.Serialize(new SerializableError(modelState))) { }
 
-	public WebResult(HttpStatusCode statusCode, string? content)
+	public WebResult(HttpStatusCode statusCode, string content)
 	{
 		Content = content;
 		StatusCode = statusCode;

@@ -18,7 +18,7 @@ public class SimpleResponse : EqualObject
 
 	public int StatusCode { get; set; }
 
-	public string? Text { get; set; }
+	public string Text { get; set; }
 
 	public WebResult ToResult() => new()
 									{

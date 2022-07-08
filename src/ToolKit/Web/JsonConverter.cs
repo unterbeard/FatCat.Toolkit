@@ -9,7 +9,7 @@ public interface IJsonConvert
 
 	T? DeserializeObjectWithTypeHandling<T>(string json, params Newtonsoft.Json.JsonConverter[] converters);
 
-	string? SerializeObject(object value);
+	string SerializeObject(object value);
 }
 
 public class JsonConverter : IJsonConvert
@@ -35,9 +35,9 @@ public class JsonConverter : IJsonConvert
 		return JsonConvert.DeserializeObject<T>(json, settingsWithTypeHandling);
 	}
 
-	public string? SerializeObject(object value) => SerializeObject(value, Formatting.None, false);
+	public string SerializeObject(object value) => SerializeObject(value, Formatting.None, false);
 
-	public string? SerializeObject(object value, Formatting formatting, bool includeNullProperties) => JsonConvert.SerializeObject(value, formatting, includeNullProperties ? jsonSettingsReturnNulls : jsonSettingsDoNotReturnNulls);
+	public string SerializeObject(object value, Formatting formatting, bool includeNullProperties) => JsonConvert.SerializeObject(value, formatting, includeNullProperties ? jsonSettingsReturnNulls : jsonSettingsDoNotReturnNulls);
 
 	private static JsonSerializerSettings JsonSerializerSettingsFactory(NullValueHandling nullValueHandling) => new()
 																												{
