@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace FatCat.Toolkit.Web;
 
@@ -16,11 +17,11 @@ public abstract class Endpoint : ControllerBase
 
 	protected WebResult NotImplemented() => WebResult.NotImplemented();
 
-	protected WebResult Ok(EqualObject model) => Ok(model);
+	protected WebResult Ok(EqualObject model) => Ok(JsonConvert.SerializeObject(model));
 
-	protected WebResult Ok<T>(List<T> list) where T : EqualObject => Ok(list);
+	protected WebResult Ok<T>(List<T> list) where T : EqualObject => Ok(JsonConvert.SerializeObject(list));
 
-	protected WebResult Ok<T>(IEnumerable<T> list) where T : EqualObject => Ok(list);
+	protected WebResult Ok<T>(IEnumerable<T> list) where T : EqualObject => Ok(JsonConvert.SerializeObject(list));
 
 	/// <summary>
 	///  If you call this with an empty string or null for content, it will return a 204.
