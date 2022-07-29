@@ -1,4 +1,5 @@
 using FatCat.Toolkit.Extensions;
+using Newtonsoft.Json;
 
 namespace FatCat.Toolkit;
 
@@ -13,4 +14,5 @@ public abstract class EqualObject
 	public override bool Equals(object? obj) => obj != null && ObjectEquals.AreEqual(this, obj as EqualObject);
 
 	public override int GetHashCode() => ObjectEquals.GenerateHashCode(this);
+	
 }
