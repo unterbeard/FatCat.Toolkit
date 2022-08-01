@@ -2,12 +2,25 @@ using FatCat.Fakes;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Web;
 using FluentAssertions;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Tests.FatCat.Toolkit;
 
 public class WebResultAsTests
 {
+	[Fact]
+	public void CanConvertAMoreComplicatedItem()
+	{
+		var item = Faker.Create<TestingModel>();
+
+		var result = WebResult.Ok(item);
+
+		result.To<TestingModel>()
+			.Should()
+			.BeEquivalentTo(item);
+	}
+
 	[Fact]
 	public void CanConvertList()
 	{
@@ -30,6 +43,34 @@ public class WebResultAsTests
 		result.To<TestItem>()
 			.Should()
 			.BeEquivalentTo(testItem);
+	}
+
+	[Fact]
+	public void CanGetProperItemBackFromEndpoint()
+	{
+		var item = Faker.Create<TestingModel>();
+
+		var endpoint = new TestingEndpoint(item);
+
+		var result = endpoint.DoSomeWork();
+
+		result.To<TestingModel>()
+			.Should()
+			.BeEquivalentTo(item);
+	}
+
+	[Fact]
+	public void JsonConvertedWithStringCanWork()
+	{
+		var item = Faker.Create<TestingModel>();
+
+		var json = JsonConvert.SerializeObject(item);
+
+		var result = WebResult.Ok(json);
+
+		result.To<TestingModel>()
+			.Should()
+			.BeEquivalentTo(item);
 	}
 
 	private class TestItem : EqualObject
