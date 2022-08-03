@@ -37,7 +37,7 @@ public class ApplicationTools : IApplicationTools
 	{
 		get
 		{
-			if (executableName.IsNullOrEmpty())
+			if (executableName!.IsNullOrEmpty())
 			{
 				var fileName = Process.GetCurrentProcess().MainModule?.FileName;
 
@@ -52,7 +52,7 @@ public class ApplicationTools : IApplicationTools
 	{
 		get
 		{
-			if (executingDirectory.IsNullOrEmpty())
+			if (executingDirectory!.IsNullOrEmpty())
 			{
 				var fileName = Process.GetCurrentProcess().MainModule?.FileName;
 
@@ -67,7 +67,7 @@ public class ApplicationTools : IApplicationTools
 	{
 		get
 		{
-			if (macAddress.IsNullOrEmpty()) FindMacAddress();
+			if (macAddress!.IsNullOrEmpty()) FindMacAddress();
 
 			return macAddress;
 		}

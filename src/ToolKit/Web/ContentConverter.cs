@@ -12,9 +12,9 @@ internal static class ContentConverter
 	{
 		if (result.Content.IsNullOrEmpty()) return ToDefaultValue<T>();
 
-		if (TypeSetters.ContainsKey(typeof(T))) return (T)TypeSetters[typeof(T)](result.Content);
+		if (TypeSetters.ContainsKey(typeof(T))) return (T)TypeSetters[typeof(T)](result.Content!);
 
-		return JsonConvert.DeserializeObject<T>(result.Content);
+		return JsonConvert.DeserializeObject<T>(result.Content!);
 	}
 
 	static ContentConverter()
@@ -26,13 +26,6 @@ internal static class ContentConverter
 		TypeSetters.Add(typeof(bool), SetBool);
 		TypeSetters.Add(typeof(Guid), SetGuid);
 		TypeSetters.Add(typeof(TimeSpan), SetTimespan);
-	}
-
-	private static T? ToDefaultValue<T>()
-	{
-		var typeToCreate = typeof(T);
-
-		return IsList(typeToCreate) ? CreateEmptyList<T>(typeToCreate) : default;
 	}
 
 	private static T CreateEmptyList<T>(Type typeToCreate)
@@ -62,4 +55,11 @@ internal static class ContentConverter
 	private static object SetString(string content) => content;
 
 	private static object SetTimespan(string content) => TimeSpan.Parse(content);
+
+	private static T? ToDefaultValue<T>()
+	{
+		var typeToCreate = typeof(T);
+
+		return IsList(typeToCreate) ? CreateEmptyList<T>(typeToCreate) : default;
+	}
 }

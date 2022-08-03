@@ -11,9 +11,9 @@ public abstract class Endpoint : ControllerBase
 
 	protected WebResult BadRequest(string fieldName, string? messageId) => WebResult.BadRequest(fieldName, messageId);
 
-	protected WebResult NotAcceptable(string message = null) => WebResult.NotAcceptable(message);
+	protected WebResult NotAcceptable(string? message = null) => WebResult.NotAcceptable(message);
 
-	protected WebResult NotFound(string message = null) => WebResult.NotFound(message);
+	protected WebResult NotFound(string? message = null) => WebResult.NotFound(message);
 
 	protected WebResult NotImplemented() => WebResult.NotImplemented();
 
@@ -26,7 +26,7 @@ public abstract class Endpoint : ControllerBase
 	/// <summary>
 	///  If you call this with an empty string or null for content, it will return a 204.
 	/// </summary>
-	protected WebResult Ok(string results = null) => WebResult.Ok(results);
+	protected WebResult Ok(string? results = null) => WebResult.Ok(results);
 
 	protected async Task<string> ReadContent() => await Request.ReadContent();
 }
