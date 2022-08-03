@@ -1,4 +1,6 @@
+using FatCat.Toolkit.Data;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace FatCat.Toolkit.Extensions;
 
@@ -8,7 +10,15 @@ public static class ObjectExtensions
 	{
 		if (objectToCopy == null) return null;
 
-		var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+		var settings = new JsonSerializerSettings
+						{
+							TypeNameHandling = TypeNameHandling.All,
+							Converters = new List<JsonConverter>
+										{
+											new StringEnumConverter(),
+											new ObjectIdConverter()
+										}
+						};
 
 		var json = JsonConvert.SerializeObject(objectToCopy, settings);
 
