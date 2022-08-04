@@ -1,9 +1,13 @@
 using FatCat.Toolkit.Data;
 using FatCat.Toolkit.Web;
+using Flurl;
 using Flurl.Http;
+using Flurl.Http.Configuration;
+using Humanizer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using JsonConverter = Newtonsoft.Json.JsonConverter;
+using NullValueHandling = Newtonsoft.Json.NullValueHandling;
 
 namespace FatCat.Toolkit.Communication;
 
@@ -38,45 +42,125 @@ public interface IWebCaller
 
 public class WebCaller : IWebCaller
 {
+	public static TimeSpan DefaultTimeout { get; set; } = 30.Seconds();
+
+	public Uri BaseUri { get; }
+
 	static WebCaller()
 	{
 		FlurlHttp.Configure(settings =>
 							{
-								var jsonSettings = new JsonSerializerSettings()
+								var jsonSettings = new JsonSerializerSettings
 													{
 														NullValueHandling = NullValueHandling.Ignore,
-														Converters = new List<JsonConverter>()
+														Converters = new List<JsonConverter>
 																	{
 																		new StringEnumConverter(),
 																		new ObjectIdConverter()
 																	}
 													};
+
+								settings.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings);
+								settings.Timeout = DefaultTimeout;
 							});
 	}
-	
-	public Uri BaseUri { get; }
 
-	public Task<WebResult> Delete(string url) => throw new NotImplementedException();
+	public WebCaller(Uri uri) => BaseUri = uri;
 
-	public Task<WebResult> Delete(string url, TimeSpan timeout) => throw new NotImplementedException();
+	public async Task<WebResult> Delete(string url) => await Delete(url, DefaultTimeout);
 
-	public Task<WebResult> Get(string url) => throw new NotImplementedException();
+	public async Task<WebResult> Delete(string url, TimeSpan timeout)
+	{
+		try
+		{
+			var response = await CreateRequest(url)
+								.WithTimeout(timeout)
+								.DeleteAsync();
 
-	public Task<WebResult> Get(string url, TimeSpan timeout) => throw new NotImplementedException();
+			return new WebResult(response.ResponseMessage);
+		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+	}
 
-	public Task<WebResult> Post<T>(string url, T data) where T : EqualObject => throw new NotImplementedException();
+	public Task<WebResult> Get(string url) => Get(url, DefaultTimeout);
 
-	public Task<WebResult> Post<T>(string url, List<T> data) where T : EqualObject => throw new NotImplementedException();
+	public async Task<WebResult> Get(string url, TimeSpan timeout)
+	{
+		try
+		{
+			var response = await CreateRequest(url)
+								.WithTimeout(timeout)
+								.GetAsync();
 
-	public Task<WebResult> Post(string url) => throw new NotImplementedException();
+			return new WebResult(response.ResponseMessage);
+		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+	}
 
-	public Task<WebResult> Post(string url, string data) => throw new NotImplementedException();
+	public Task<WebResult> Post<T>(string url, T data) where T : EqualObject => Post(url, data, DefaultTimeout);
 
-	public Task<WebResult> Post<T>(string url, T data, TimeSpan timeout) where T : EqualObject => throw new NotImplementedException();
+	public Task<WebResult> Post<T>(string url, List<T> data) where T : EqualObject => Post(url, data, DefaultTimeout);
 
-	public Task<WebResult> Post<T>(string url, List<T> data, TimeSpan timeout) where T : EqualObject => throw new NotImplementedException();
+	public Task<WebResult> Post(string url) => Post(url, DefaultTimeout);
 
-	public Task<WebResult> Post(string url, TimeSpan timeout) => throw new NotImplementedException();
+	public Task<WebResult> Post(string url, string data) => Post(url, data, DefaultTimeout);
 
-	public Task<WebResult> Post(string url, string data, TimeSpan timeout) => throw new NotImplementedException();
+	public async Task<WebResult> Post<T>(string url, T data, TimeSpan timeout) where T : EqualObject
+	{
+		try
+		{
+			var response = await CreateRequest(url)
+								.WithTimeout(timeout)
+								.PostJsonAsync(data);
+
+			return new WebResult(response.ResponseMessage);
+		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+	}
+
+	public async Task<WebResult> Post<T>(string url, List<T> data, TimeSpan timeout) where T : EqualObject
+	{
+		try
+		{
+			var response = await CreateRequest(url)
+								.WithTimeout(timeout)
+								.PostJsonAsync(data);
+
+			return new WebResult(response.ResponseMessage);
+		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+	}
+
+	public async Task<WebResult> Post(string url, TimeSpan timeout)
+	{
+		try
+		{
+			var response = await CreateRequest(url)
+								.WithTimeout(timeout)
+								.PostAsync();
+
+			return new WebResult(response.ResponseMessage);
+		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+	}
+
+	public async Task<WebResult> Post(string url, string data, TimeSpan timeout)
+	{
+		try
+		{
+			var response = await CreateRequest(url)
+								.WithTimeout(timeout)
+								.PostJsonAsync(data);
+
+			return new WebResult(response.ResponseMessage);
+		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+	}
+
+	private Url CreateRequest(string pathSegment)
+	{
+		var url = new Url(BaseUri);
+
+		return url.AppendPathSegment(pathSegment);
+	}
 }
