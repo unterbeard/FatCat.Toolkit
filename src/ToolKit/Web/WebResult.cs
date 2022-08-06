@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FatCat.Toolkit.Web;
 
-public class WebResult<T> : IActionResult where T : EqualObject
+public class WebResult<T> : IActionResult where T : class
 {
 	private readonly WebResult result;
 
