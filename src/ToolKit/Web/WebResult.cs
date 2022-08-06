@@ -5,6 +5,17 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FatCat.Toolkit.Web;
 
+public class WebResult<T> : IActionResult where T : EqualObject
+{
+	private readonly WebResult result;
+
+	public T? Data => result.IsSuccessful ? result.To<T>() : null;
+
+	public WebResult(WebResult result) => this.result = result;
+
+	public async Task ExecuteResultAsync(ActionContext context) => await result.ExecuteResultAsync(context);
+}
+
 public class WebResult : IActionResult
 {
 	public static WebResult BadRequest(ModelStateDictionary modelState) => new(HttpStatusCode.BadRequest, modelState);
