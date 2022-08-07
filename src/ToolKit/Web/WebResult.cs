@@ -2,11 +2,24 @@ using System.Net;
 using FatCat.Toolkit.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
 
 namespace FatCat.Toolkit.Web;
 
 public class WebResult<T> : IActionResult where T : class
 {
+	public static WebResult<T> BadRequest(string message) => new(WebResult.BadRequest(message));
+
+	public static WebResult<T> BadRequest() => new(WebResult.BadRequest(string.Empty));
+
+	public static WebResult<T> NotFound() => new(WebResult.NotFound());
+
+	public static WebResult<T> NotImplemented() => new(WebResult.NotImplemented());
+
+	public static WebResult<T> Ok() => new(WebResult.Ok());
+
+	public static WebResult<T> Ok(T item) => new(WebResult.Ok(JsonConvert.SerializeObject(item)));
+
 	private readonly WebResult result;
 
 	public T? Data => result.IsSuccessful ? result.To<T>() : null;
