@@ -24,9 +24,17 @@ public class WebResult<T> : IActionResult where T : class
 
 	public T? Data => result.IsSuccessful ? result.To<T>() : null;
 
+	public bool IsSuccessful => result.IsSuccessful;
+
+	public bool IsUnsuccessful => result.IsUnsuccessful;
+
+	public HttpStatusCode StatusCode => result.StatusCode;
+
 	public WebResult(WebResult result) => this.result = result;
 
 	public async Task ExecuteResultAsync(ActionContext context) => await result.ExecuteResultAsync(context);
+
+	public override string ToString() => $"WebResult | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {result.Content}";
 }
 
 public class WebResult : IActionResult
