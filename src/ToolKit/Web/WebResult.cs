@@ -22,6 +22,10 @@ public class WebResult<T> : IActionResult where T : class
 
 	private readonly WebResult result;
 
+	public string? Content => result.Content;
+
+	public string ContentType => result.ContentType;
+
 	public T? Data => result.IsSuccessful ? result.To<T>() : null;
 
 	public bool IsSuccessful => result.IsSuccessful;
