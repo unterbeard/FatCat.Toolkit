@@ -1,74 +1,141 @@
-using System.IO.Abstractions;
 using FakeItEasy;
 using FatCat.Fakes;
-using FatCat.Toolkit;
-using FatCat.Toolkit.Data.FileSystem;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using FluentAssertions;
+using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.FIleSystem.FileSystemRepositorySpecs;
 
-public class GetTests { }
-
-public abstract class FileSystemRepositoryTests
+public class GetTests : FileSystemRepositoryTests
 {
-	protected const string ExecutingDirectory = @"C:\Some\Install\Directory";
+	public GetTests() => SetUpFileExists();
 
-	protected static string DataDirectory => Path.Join(ExecutingDirectory, "Data");
-
-	protected static string TestFileDataObjectPath => Path.Join(DataDirectory, "TestFileDataObject.data");
-
-	protected readonly FileSystemRepository<TestFileDataObject> repository;
-	protected IApplicationTools applicationTools = null!;
-	protected string dataJson = null!;
-	protected IFileSystem fileSystem = null!;
-	protected IJsonHelper jsonHelper = null!;
-	protected TestFileDataObject TestFileDataObject = null!;
-
-	protected FileSystemRepositoryTests()
+	[Fact]
+	public async Task CheckIfDataDirectoryExists()
 	{
-		SetUpFileSystem();
-		SetUpApplicationTools();
-		SetUpJsonHelper();
+		await repository.Get();
 
-		repository = new FileSystemRepository<TestFileDataObject>(fileSystem,
-																applicationTools,
-																jsonHelper);
+		A.CallTo(() => fileSystem.Directory.Exists(DataDirectory))
+		.MustHaveHappened();
 	}
 
-	private void SetUpApplicationTools()
+	[Fact]
+	public async Task CheckIfFileExists()
 	{
-		applicationTools = A.Fake<IApplicationTools>();
+		await repository.Get();
+
+		A.CallTo(() => fileSystem.File.Exists(TestFileDataObjectPath))
+		.MustHaveHappened();
+	}
+
+	[Fact]
+	public async Task ConvertJsonToTestFileDataObject()
+	{
+		await repository.Get();
+
+		A.CallTo(() => jsonHelper.FromJson<TestFileDataObject>(dataJson))
+		.MustHaveHappened();
+	}
+
+	[Fact]
+	public async Task GetExecutingDirectory()
+	{
+		await repository.Get();
 
 		A.CallTo(() => applicationTools.ExecutingDirectory)
-		.Returns(ExecutingDirectory);
+		.MustHaveHappened();
 	}
 
-	private void SetUpFileSystem()
+	[Fact]
+	public async Task GetFileText()
 	{
-		fileSystem = A.Fake<IFileSystem>();
+		await repository.Get();
 
-		dataJson = Faker.RandomString();
+		A.CallTo(() => fileSystem.File.ReadAllTextAsync(TestFileDataObjectPath, default))
+		.MustHaveHappened();
+	}
+
+	[Fact]
+	public async Task IfDataDirectoryDoesNotExistReturnNewObject()
+	{
+		A.CallTo(() => fileSystem.Directory.Exists(DataDirectory))
+		.Returns(false);
+
+		await RunDataFileNotFoundTest();
+	}
+
+	[Fact]
+	public async Task IfFileDoesNotExistReturnNewObject()
+	{
+		A.CallTo(() => fileSystem.File.Exists(A<string>._))
+		.Returns(false);
+
+		await RunDataFileNotFoundTest();
+	}
+
+	[Fact]
+	public async Task IfTestFileDataObjectIsNotNullReturnTestFileDataObject()
+	{
+		var prePopulatedData = Faker.Create<TestFileDataObject>();
+
+		repository.Data = prePopulatedData;
+
+		var result = await repository.Get();
+
+		result
+			.Should()
+			.Be(prePopulatedData);
+
+		VerifyNoCallsToFileSystemMade();
+	}
+
+	[Fact]
+	public async Task ReturnTestFileDataObjectObject()
+	{
+		var result = await repository.Get();
+
+		result.Should()
+			.Be(testObject);
+	}
+
+	[Fact]
+	public async Task SaveDataObjectOnRepository()
+	{
+		await repository.Get();
+
+		repository.Data
+				.Should()
+				.NotBeNull();
+
+		repository.Data
+				.Should()
+				.Be(testObject);
+	}
+
+	private async Task RunDataFileNotFoundTest()
+	{
+		var result = await repository.Get();
+
+		result.Should()
+			.Be(new TestFileDataObject());
+
+		VerifyNoCallsToFileSystemMade();
+	}
+
+	private void SetUpFileExists()
+	{
+		A.CallTo(() => fileSystem.Directory.Exists(A<string>._))
+		.Returns(true);
+
+		A.CallTo(() => fileSystem.File.Exists(A<string>._))
+		.Returns(true);
+	}
+
+	private void VerifyNoCallsToFileSystemMade()
+	{
+		A.CallTo(() => jsonHelper.FromJson<TestFileDataObject>(A<string>._))
+		.MustNotHaveHappened();
 
 		A.CallTo(() => fileSystem.File.ReadAllTextAsync(A<string>._, default))
-		.Returns(dataJson);
+		.MustNotHaveHappened();
 	}
-
-	private void SetUpJsonHelper()
-	{
-		jsonHelper = A.Fake<IJsonHelper>();
-
-		TestFileDataObject = Faker.Create<TestFileDataObject>();
-
-		A.CallTo(() => jsonHelper.FromJson<TestFileDataObject>(A<string>._))
-		.Returns(TestFileDataObject);
-	}
-}
-
-public class TestFileDataObject : FileSystemDataObject
-{
-	public string? FirstName { get; set; }
-
-	public DateTime JoinedDate { get; set; }
-
-	public string? LastName { get; set; }
 }

@@ -1,31 +1,60 @@
 using System.IO.Abstractions;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using FatCat.Toolkit.Json;
 
 namespace FatCat.Toolkit.Data.FileSystem;
 
-public interface IFileSystemRepository<T> where T : FileSystemDataObject
+public interface ISingleItemFileSystemRepository<T> where T : FileSystemDataObject, new()
 {
 	Task<T> Get();
 
 	Task Save(T item);
 }
 
-public class FileSystemRepository<T> : IFileSystemRepository<T> where T : FileSystemDataObject
+public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository<T> where T : FileSystemDataObject, new()
 {
-	private readonly IFileSystem fileSystem;
 	private readonly IApplicationTools applicationTools;
-	private readonly IJsonHelper jsonHelper;
+	private readonly IFileSystem fileSystem;
+	private readonly IJsonOperations jsonOperations;
 
-	public FileSystemRepository(IFileSystem fileSystem,
-								IApplicationTools applicationTools,
-								IJsonHelper jsonHelper)
+	public T? Data { get; set; }
+
+	private string DataDirectory => Path.Join(applicationTools.ExecutingDirectory, "Data");
+
+	private bool DataDirectoryDoesNotExist => !fileSystem.Directory.Exists(DataDirectory);
+
+	private bool DataFileNotFound => !fileSystem.File.Exists(DataPath);
+
+	private string DataPath => Path.Join(DataDirectory, $"{typeof(T).Name}.data");
+
+	public SingleItemFileSystemRepository(IFileSystem fileSystem,
+										IApplicationTools applicationTools,
+										IJsonOperations jsonOperations)
 	{
 		this.fileSystem = fileSystem;
 		this.applicationTools = applicationTools;
-		this.jsonHelper = jsonHelper;
+		this.jsonOperations = jsonOperations;
 	}
 
-	public Task<T> Get() => throw new NotImplementedException();
+	public async Task<T> Get()
+	{
+		if (Data != null) return Data;
+		if (DataDirectoryDoesNotExist || DataFileNotFound) return new T();
 
-	public Task Save(T item) => throw new NotImplementedException();
+		var json = await fileSystem.File.ReadAllTextAsync(DataPath);
+
+		Data = jsonOperations.FromJson<T>(json);
+
+		return Data!;
+	}
+
+	public async Task Save(T item)
+	{
+		Data = item;
+
+		var json = jsonOperations.ToJson(Data);
+
+		if (DataDirectoryDoesNotExist) fileSystem.Directory.CreateDirectory(DataDirectory);
+
+		await fileSystem.File.WriteAllTextAsync(DataPath, json);
+	}
 }
