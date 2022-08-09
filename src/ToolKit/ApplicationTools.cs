@@ -14,6 +14,8 @@ public interface IApplicationTools
 
 	string? MacAddress { get; }
 
+	string? MachineName { get; }
+
 	ushort FindNextOpenPort(ushort startingPort);
 
 	string GetHost();
@@ -72,6 +74,8 @@ public class ApplicationTools : IApplicationTools
 			return macAddress;
 		}
 	}
+
+	public string? MachineName => Environment.MachineName;
 
 	public ushort FindNextOpenPort(ushort startingPort)
 	{
