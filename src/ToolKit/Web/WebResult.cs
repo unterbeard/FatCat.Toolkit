@@ -20,25 +20,25 @@ public class WebResult<T> : IActionResult where T : class
 
 	public static WebResult<T> Ok(T item) => new(WebResult.Ok(JsonConvert.SerializeObject(item)));
 
-	private readonly WebResult result;
+	public WebResult BaseResult { get; }
 
-	public string? Content => result.Content;
+	public string? Content => BaseResult.Content;
 
-	public string ContentType => result.ContentType;
+	public string ContentType => BaseResult.ContentType;
 
-	public T? Data => result.IsSuccessful ? result.To<T>() : null;
+	public T? Data => BaseResult.IsSuccessful ? BaseResult.To<T>() : null;
 
-	public bool IsSuccessful => result.IsSuccessful;
+	public bool IsSuccessful => BaseResult.IsSuccessful;
 
-	public bool IsUnsuccessful => result.IsUnsuccessful;
+	public bool IsUnsuccessful => BaseResult.IsUnsuccessful;
 
-	public HttpStatusCode StatusCode => result.StatusCode;
+	public HttpStatusCode StatusCode => BaseResult.StatusCode;
 
-	public WebResult(WebResult result) => this.result = result;
+	public WebResult(WebResult result) => BaseResult = result;
 
-	public async Task ExecuteResultAsync(ActionContext context) => await result.ExecuteResultAsync(context);
+	public async Task ExecuteResultAsync(ActionContext context) => await BaseResult.ExecuteResultAsync(context);
 
-	public override string ToString() => $"WebResult | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {result.Content}";
+	public override string ToString() => $"WebResult | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {BaseResult.Content}";
 }
 
 public class WebResult : IActionResult
