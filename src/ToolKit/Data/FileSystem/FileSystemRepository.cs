@@ -5,6 +5,8 @@ namespace FatCat.Toolkit.Data.FileSystem;
 
 public interface ISingleItemFileSystemRepository<T> where T : FileSystemDataObject, new()
 {
+	bool Exists();
+
 	Task<T> Get();
 
 	Task Save(T item);
@@ -34,6 +36,8 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 		this.applicationTools = applicationTools;
 		this.jsonOperations = jsonOperations;
 	}
+
+	public bool Exists() => fileSystem.File.Exists(DataPath);
 
 	public async Task<T> Get()
 	{
