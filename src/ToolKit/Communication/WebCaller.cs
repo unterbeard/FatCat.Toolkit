@@ -45,6 +45,8 @@ public class WebCaller : IWebCaller
 {
 	public static TimeSpan DefaultTimeout { get; set; } = 30.Seconds();
 
+	private readonly IToolkitLogger logger;
+
 	public Uri BaseUri { get; }
 
 	static WebCaller()
@@ -66,7 +68,12 @@ public class WebCaller : IWebCaller
 							});
 	}
 
-	public WebCaller(Uri uri) => BaseUri = uri;
+	public WebCaller(Uri uri,
+					IToolkitLogger logger)
+	{
+		this.logger = logger;
+		BaseUri = uri;
+	}
 
 	public async Task<WebResult> Delete(string url) => await Delete(url, DefaultTimeout);
 
@@ -86,6 +93,12 @@ public class WebCaller : IWebCaller
 			if (ex.StatusCode == null) throw;
 
 			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+		}
+		catch (Exception ex)
+		{
+			logger.Error($"Exception of type of {ex.GetType().FullName}");
+
+			throw;
 		}
 	}
 
@@ -107,6 +120,12 @@ public class WebCaller : IWebCaller
 			if (ex.StatusCode == null) throw;
 
 			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+		}
+		catch (Exception ex)
+		{
+			logger.Error($"Exception of type of {ex.GetType().FullName}");
+
+			throw;
 		}
 	}
 
@@ -135,6 +154,12 @@ public class WebCaller : IWebCaller
 
 			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
 		}
+		catch (Exception ex)
+		{
+			logger.Error($"Exception of type of {ex.GetType().FullName}");
+
+			throw;
+		}
 	}
 
 	public async Task<WebResult> Post<T>(string url, List<T> data, TimeSpan timeout) where T : EqualObject
@@ -153,6 +178,12 @@ public class WebCaller : IWebCaller
 			if (ex.StatusCode == null) throw;
 
 			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+		}
+		catch (Exception ex)
+		{
+			logger.Error($"Exception of type of {ex.GetType().FullName}");
+
+			throw;
 		}
 	}
 
@@ -173,6 +204,12 @@ public class WebCaller : IWebCaller
 
 			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
 		}
+		catch (Exception ex)
+		{
+			logger.Error($"Exception of type of {ex.GetType().FullName}");
+
+			throw;
+		}
 	}
 
 	public async Task<WebResult> Post(string url, string data, TimeSpan timeout)
@@ -191,6 +228,12 @@ public class WebCaller : IWebCaller
 			if (ex.StatusCode == null) throw;
 
 			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+		}
+		catch (Exception ex)
+		{
+			logger.Error($"Exception of type of {ex.GetType().FullName}");
+
+			throw;
 		}
 	}
 

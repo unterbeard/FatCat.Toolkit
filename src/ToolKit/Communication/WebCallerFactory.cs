@@ -7,5 +7,9 @@ public interface IWebCallerFactory
 
 public class WebCallerFactory : IWebCallerFactory
 {
-	public IWebCaller GetWebCaller(Uri baseUri) => new WebCaller(baseUri);
+	private readonly IToolkitLogger toolkitLogger;
+
+	public WebCallerFactory(IToolkitLogger toolkitLogger) => this.toolkitLogger = toolkitLogger;
+
+	public IWebCaller GetWebCaller(Uri baseUri) => new WebCaller(baseUri, toolkitLogger);
 }
