@@ -1,3 +1,4 @@
+using System.Net;
 using FatCat.Toolkit.Data;
 using FatCat.Toolkit.Web;
 using Flurl;
@@ -80,6 +81,12 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+		catch (FlurlHttpException ex)
+		{
+			if (ex.StatusCode == null) throw;
+
+			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+		}
 	}
 
 	public Task<WebResult> Get(string url) => Get(url, DefaultTimeout);
@@ -95,6 +102,12 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+		catch (FlurlHttpException ex)
+		{
+			if (ex.StatusCode == null) throw;
+
+			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+		}
 	}
 
 	public Task<WebResult> Post<T>(string url, T data) where T : EqualObject => Post(url, data, DefaultTimeout);
@@ -116,6 +129,12 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+		catch (FlurlHttpException ex)
+		{
+			if (ex.StatusCode == null) throw;
+
+			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+		}
 	}
 
 	public async Task<WebResult> Post<T>(string url, List<T> data, TimeSpan timeout) where T : EqualObject
@@ -129,6 +148,12 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+		catch (FlurlHttpException ex)
+		{
+			if (ex.StatusCode == null) throw;
+
+			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+		}
 	}
 
 	public async Task<WebResult> Post(string url, TimeSpan timeout)
@@ -142,6 +167,12 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+		catch (FlurlHttpException ex)
+		{
+			if (ex.StatusCode == null) throw;
+
+			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+		}
 	}
 
 	public async Task<WebResult> Post(string url, string data, TimeSpan timeout)
@@ -155,6 +186,12 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
+		catch (FlurlHttpException ex)
+		{
+			if (ex.StatusCode == null) throw;
+
+			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+		}
 	}
 
 	private Url CreateRequest(string pathSegment)
