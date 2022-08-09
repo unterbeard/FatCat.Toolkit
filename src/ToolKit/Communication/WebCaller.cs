@@ -1,4 +1,5 @@
 using System.Net;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Data;
 using FatCat.Toolkit.Web;
 using Flurl;
@@ -88,12 +89,7 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			if (ex.StatusCode == null) throw;
-
-			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
+		catch (FlurlHttpException ex) { return ex.StatusCode == null ? WebResult.NotFound() : new WebResult((HttpStatusCode)ex.StatusCode, ex.Message); }
 		catch (Exception ex)
 		{
 			logger.Error($"Exception of type of {ex.GetType().FullName}");
@@ -108,6 +104,8 @@ public class WebCaller : IWebCaller
 	{
 		try
 		{
+			ConsoleLog.WriteGreen($"Going to attempt to call {url}");
+
 			var response = await CreateRequest(url)
 								.WithTimeout(timeout)
 								.GetAsync();
@@ -115,12 +113,7 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			if (ex.StatusCode == null) throw;
-
-			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
+		catch (FlurlHttpException ex) { return ex.StatusCode == null ? WebResult.NotFound() : new WebResult((HttpStatusCode)ex.StatusCode, ex.Message); }
 		catch (Exception ex)
 		{
 			logger.Error($"Exception of type of {ex.GetType().FullName}");
@@ -148,12 +141,7 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			if (ex.StatusCode == null) throw;
-
-			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
+		catch (FlurlHttpException ex) { return ex.StatusCode == null ? WebResult.NotFound() : new WebResult((HttpStatusCode)ex.StatusCode, ex.Message); }
 		catch (Exception ex)
 		{
 			logger.Error($"Exception of type of {ex.GetType().FullName}");
@@ -173,12 +161,7 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			if (ex.StatusCode == null) throw;
-
-			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
+		catch (FlurlHttpException ex) { return ex.StatusCode == null ? WebResult.NotFound() : new WebResult((HttpStatusCode)ex.StatusCode, ex.Message); }
 		catch (Exception ex)
 		{
 			logger.Error($"Exception of type of {ex.GetType().FullName}");
@@ -198,12 +181,7 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			if (ex.StatusCode == null) throw;
-
-			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
+		catch (FlurlHttpException ex) { return ex.StatusCode == null ? WebResult.NotFound() : new WebResult((HttpStatusCode)ex.StatusCode, ex.Message); }
 		catch (Exception ex)
 		{
 			logger.Error($"Exception of type of {ex.GetType().FullName}");
@@ -223,12 +201,7 @@ public class WebCaller : IWebCaller
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			if (ex.StatusCode == null) throw;
-
-			return new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
+		catch (FlurlHttpException ex) { return ex.StatusCode == null ? WebResult.NotFound() : new WebResult((HttpStatusCode)ex.StatusCode, ex.Message); }
 		catch (Exception ex)
 		{
 			logger.Error($"Exception of type of {ex.GetType().FullName}");

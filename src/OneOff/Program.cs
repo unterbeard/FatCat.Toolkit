@@ -1,14 +1,20 @@
 ﻿using FatCat.Toolkit;
+using FatCat.Toolkit.Communication;
 using FatCat.Toolkit.Console;
 
-ConsoleLog.LogCallerInformation = false;
+ConsoleLog.LogCallerInformation = true;
 
-ConsoleLog.Write("Going to test Registry Repository stuff");
+var webCaller = new WebCaller(new Uri("https://localhost:14555/api"), new ToolkitLogger());
 
-var registryRepository = new RegistryRepository();
+try
+{
+	var result = await webCaller.Get("Fog");
 
-registryRepository.Set("OneOff", "Dude", $"Perfect | {DateTime.Now}");
-
-var value = registryRepository.Get("OneOff", "Dude");
-
-ConsoleLog.WriteCyan($"Found from the Registry <{value}>");
+	ConsoleLog.WriteCyan($"Result StatusCode | <{result.StatusCode}> | Content <{result.Content}>");
+}
+catch (Exception ex)
+{
+	ConsoleLog.WriteMagenta($"DUDE EXCEPTION <{ex.GetType().FullName}>");
+	
+	ConsoleLog.WriteException(ex);
+}
