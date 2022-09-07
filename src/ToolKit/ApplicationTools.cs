@@ -12,6 +12,8 @@ public interface IApplicationTools
 
 	string? ExecutingDirectory { get; }
 
+	bool InContainer { get; }
+
 	string? MacAddress { get; }
 
 	string? MachineName { get; }
@@ -29,6 +31,8 @@ public interface IApplicationTools
 
 public class ApplicationTools : IApplicationTools
 {
+	public static bool IsInContainer => Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER").ToBool();
+
 	private string? executableName;
 	private string? executingDirectory;
 
@@ -64,6 +68,8 @@ public class ApplicationTools : IApplicationTools
 			return executingDirectory;
 		}
 	}
+
+	public bool InContainer => IsInContainer;
 
 	public string? MacAddress
 	{
