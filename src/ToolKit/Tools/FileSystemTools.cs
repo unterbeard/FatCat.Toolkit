@@ -47,7 +47,12 @@ public class FileSystemTools : IFileSystemTools
 		fileSystem.Directory.CreateDirectory(path);
 	}
 
-	public void EnsureFile(string path) { throw new NotImplementedException(); }
+	public void EnsureFile(string path)
+	{
+		if (FileExists(path)) return;
+
+		fileSystem.File.Create(path);
+	}
 
 	public bool FileExists(string path) => fileSystem.File.Exists(path);
 
