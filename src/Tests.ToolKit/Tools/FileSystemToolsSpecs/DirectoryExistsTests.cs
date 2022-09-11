@@ -11,9 +11,10 @@ public class DirectoryExistsTests : FileToolTests
 	{
 		tools.DirectoryExists(directoryPath);
 
-		A.CallTo(() => fileSystem.Directory.Exists(directoryPath))
-		.MustHaveHappened();
+		VerifyDirectoryExistsWasCalled();
 	}
+
+	
 
 	[Fact]
 	public void FalseIfDirectoryIsNotFound()

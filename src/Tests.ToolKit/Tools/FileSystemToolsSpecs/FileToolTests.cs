@@ -7,11 +7,12 @@ namespace Tests.FatCat.Toolkit.Tools.FileSystemToolsSpecs;
 
 public abstract class FileToolTests
 {
-	protected bool directoryExists = true;
-	protected readonly string filePath;
 	protected readonly string directoryPath;
+	protected readonly string filePath;
 	protected readonly IFileSystem fileSystem;
 	protected readonly FileSystemTools tools;
+
+	protected bool directoryExists = true;
 	private bool fileExists = true;
 
 	protected FileToolTests()
@@ -28,6 +29,12 @@ public abstract class FileToolTests
 	}
 
 	protected void SetFileDoesNotExist() => fileExists = false;
+
+	protected void VerifyDirectoryExistsWasCalled()
+	{
+		A.CallTo(() => fileSystem.Directory.Exists(directoryPath))
+		.MustHaveHappened();
+	}
 
 	protected void VerifyFileExistWasCalled()
 	{
