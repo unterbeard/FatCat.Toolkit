@@ -1,31 +1,11 @@
-using System.IO.Abstractions;
 using FakeItEasy;
-using FatCat.Fakes;
-using FatCat.Toolkit.Tools;
 using FluentAssertions;
 using Xunit;
 
 namespace Tests.FatCat.Toolkit.Tools.FileSystemToolsSpecs;
 
-public class DeleteFileTests
+public class DeleteFileTests : FileToolTests
 {
-	private readonly string filePath;
-	private readonly IFileSystem fileSystem;
-	private readonly FileSystemTools tools;
-	private bool fileExists = true;
-
-	public DeleteFileTests()
-	{
-		fileSystem = A.Fake<IFileSystem>();
-
-		tools = new FileSystemTools(fileSystem);
-
-		filePath = Faker.RandomString();
-
-		A.CallTo(() => fileSystem.File.Exists(A<string>._))
-		.ReturnsLazily(() => fileExists);
-	}
-
 	[Fact]
 	public void CheckIfFileExists()
 	{
@@ -72,6 +52,4 @@ public class DeleteFileTests
 			.Should()
 			.BeTrue();
 	}
-
-	private void SetFileDoesNotExist() => fileExists = false;
 }
