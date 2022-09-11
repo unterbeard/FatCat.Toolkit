@@ -7,6 +7,7 @@ namespace Tests.FatCat.Toolkit.Tools.FileSystemToolsSpecs;
 
 public abstract class FileToolTests
 {
+	private readonly bool directoryExists = true;
 	protected readonly string filePath;
 	protected readonly IFileSystem fileSystem;
 	protected readonly FileSystemTools tools;
@@ -20,8 +21,8 @@ public abstract class FileToolTests
 
 		filePath = Faker.RandomString();
 
-		A.CallTo(() => fileSystem.File.Exists(A<string>._))
-		.ReturnsLazily(() => fileExists);
+		SetUpFileExists();
+		SetUpDirectoryExists();
 	}
 
 	protected void SetFileDoesNotExist() => fileExists = false;
@@ -30,5 +31,17 @@ public abstract class FileToolTests
 	{
 		A.CallTo(() => fileSystem.File.Exists(filePath))
 		.MustHaveHappened();
+	}
+
+	private void SetUpDirectoryExists()
+	{
+		A.CallTo(() => fileSystem.Directory.Exists(A<string>._))
+		.ReturnsLazily(() => directoryExists);
+	}
+
+	private void SetUpFileExists()
+	{
+		A.CallTo(() => fileSystem.File.Exists(A<string>._))
+		.ReturnsLazily(() => fileExists);
 	}
 }
