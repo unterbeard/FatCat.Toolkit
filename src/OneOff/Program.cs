@@ -10,6 +10,6 @@ try
 
 	var fileTools = new FileSystemTools(new FileSystem());
 
-	fileTools.EnsureFile(somePathToCreate);
+	await fileTools.WriteAllText(somePathToCreate, "Go for it ");
 }
 catch (Exception ex) { ConsoleLog.WriteException(ex); }

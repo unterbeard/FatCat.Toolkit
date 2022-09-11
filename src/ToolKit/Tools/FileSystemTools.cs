@@ -56,7 +56,7 @@ public class FileSystemTools : IFileSystemTools
 
 		if (FileExists(path)) return;
 
-		fileSystem.File.Create(path);
+		using var _ = fileSystem.File.Create(path);
 	}
 
 	public bool FileExists(string path) => fileSystem.File.Exists(path);
@@ -68,5 +68,10 @@ public class FileSystemTools : IFileSystemTools
 		await fileSystem.File.WriteAllBytesAsync(path, bytes);
 	}
 
-	public Task WriteAllText(string path, string text) => throw new NotImplementedException();
+	public async Task WriteAllText(string path, string text)
+	{
+		EnsureFile(path);
+
+		await fileSystem.File.WriteAllTextAsync(path, text);
+	}
 }
