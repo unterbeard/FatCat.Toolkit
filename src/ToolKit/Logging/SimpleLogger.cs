@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
+using FatCat.Toolkit.Tools;
 
-namespace FatCat.Toolkit;
+namespace FatCat.Toolkit.Logging;
 
 /// <summary>
 ///  Will write a {ApplicationName}.log file to executing directory to be used as a quick and easy way

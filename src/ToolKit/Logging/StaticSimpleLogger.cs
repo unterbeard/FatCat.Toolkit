@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
+using FatCat.Toolkit.Tools;
 
-namespace FatCat.Toolkit;
+namespace FatCat.Toolkit.Logging;
 
 public static class StaticSimpleLogger
 {

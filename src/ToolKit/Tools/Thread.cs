@@ -1,4 +1,6 @@
-namespace FatCat.Toolkit;
+using FatCat.Toolkit.Logging;
+
+namespace FatCat.Toolkit.Tools;
 
 public interface IThread
 {

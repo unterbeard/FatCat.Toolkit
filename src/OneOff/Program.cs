@@ -1,20 +1,15 @@
-﻿using FatCat.Toolkit;
-using FatCat.Toolkit.Communication;
+﻿using System.IO.Abstractions;
 using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Tools;
 
 ConsoleLog.LogCallerInformation = true;
 
-var webCaller = new WebCaller(new Uri("https://localhost:14555/api"), new ToolkitLogger());
-
 try
 {
-	var result = await webCaller.Get("Fog");
+	var somePathToCreate = @"D:\Temp\ANewDirectory\AnotherBites\ThenThisOne\AndAgain\SomeFile.txt";
 
-	ConsoleLog.WriteCyan($"Result StatusCode | <{result.StatusCode}> | Content <{result.Content}>");
+	var fileTools = new FileSystemTools(new FileSystem());
+
+	await fileTools.WriteAllText(somePathToCreate, "Go for it ");
 }
-catch (Exception ex)
-{
-	ConsoleLog.WriteMagenta($"DUDE EXCEPTION <{ex.GetType().FullName}>");
-	
-	ConsoleLog.WriteException(ex);
-}
+catch (Exception ex) { ConsoleLog.WriteException(ex); }
