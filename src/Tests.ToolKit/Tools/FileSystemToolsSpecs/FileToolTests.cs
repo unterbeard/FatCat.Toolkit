@@ -25,4 +25,10 @@ public abstract class FileToolTests
 	}
 
 	protected void SetFileDoesNotExist() => fileExists = false;
+
+	protected void VerifyFileExistWasCalled()
+	{
+		A.CallTo(() => fileSystem.File.Exists(filePath))
+		.MustHaveHappened();
+	}
 }

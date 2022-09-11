@@ -11,8 +11,7 @@ public class DeleteFileTests : FileToolTests
 	{
 		tools.DeleteFile(filePath);
 
-		A.CallTo(() => fileSystem.File.Exists(filePath))
-		.MustHaveHappened();
+		VerifyFileExistWasCalled();
 	}
 
 	[Fact]
