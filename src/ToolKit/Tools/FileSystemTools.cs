@@ -12,6 +12,8 @@ public interface IFileSystemTools
 
 	void EnsureDirectory(string path);
 
+	void EnsureFile(string path);
+
 	bool FileExists(string path);
 
 	Task WriteAllBytes(string path, byte[] bytes);
@@ -36,9 +38,11 @@ public class FileSystemTools : IFileSystemTools
 		return true;
 	}
 
-	public bool DirectoryExists(string path) => throw new NotImplementedException();
+	public bool DirectoryExists(string path) => fileSystem.Directory.Exists(path);
 
 	public void EnsureDirectory(string path) { throw new NotImplementedException(); }
+
+	public void EnsureFile(string path) { throw new NotImplementedException(); }
 
 	public bool FileExists(string path) => fileSystem.File.Exists(path);
 

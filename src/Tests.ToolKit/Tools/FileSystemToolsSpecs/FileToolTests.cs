@@ -7,8 +7,9 @@ namespace Tests.FatCat.Toolkit.Tools.FileSystemToolsSpecs;
 
 public abstract class FileToolTests
 {
-	private readonly bool directoryExists = true;
+	protected bool directoryExists = true;
 	protected readonly string filePath;
+	protected readonly string directoryPath;
 	protected readonly IFileSystem fileSystem;
 	protected readonly FileSystemTools tools;
 	private bool fileExists = true;
@@ -20,6 +21,7 @@ public abstract class FileToolTests
 		tools = new FileSystemTools(fileSystem);
 
 		filePath = Faker.RandomString();
+		directoryPath = Faker.RandomString();
 
 		SetUpFileExists();
 		SetUpDirectoryExists();
