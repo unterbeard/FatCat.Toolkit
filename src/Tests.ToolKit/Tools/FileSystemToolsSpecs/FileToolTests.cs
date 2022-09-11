@@ -21,8 +21,9 @@ public abstract class FileToolTests
 
 		fileTools = new FileSystemTools(fileSystem);
 
-		filePath = Faker.RandomString();
-		directoryPath = Faker.RandomString();
+		directoryPath = $@"C:\SomePath\ToUse\{Faker.RandomString()}";
+
+		filePath = Path.Join(directoryPath, $"{Faker.RandomString()}.txt");
 
 		SetUpFileExists();
 		SetUpDirectoryExists();

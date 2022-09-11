@@ -27,7 +27,10 @@ public class FileSystemTools : IFileSystemTools
 
 	public FileSystemTools(IFileSystem fileSystem) => this.fileSystem = fileSystem;
 
-	public void DeleteDirectory(string path) { throw new NotImplementedException(); }
+	public void DeleteDirectory(string path)
+	{
+		if (DirectoryExists(path)) fileSystem.Directory.Delete(path);
+	}
 
 	public bool DeleteFile(string path)
 	{
@@ -49,6 +52,8 @@ public class FileSystemTools : IFileSystemTools
 
 	public void EnsureFile(string path)
 	{
+		EnsureDirectory(Path.GetDirectoryName(path)!);
+
 		if (FileExists(path)) return;
 
 		fileSystem.File.Create(path);
