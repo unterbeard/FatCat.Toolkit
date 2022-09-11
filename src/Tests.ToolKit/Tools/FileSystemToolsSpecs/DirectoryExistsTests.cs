@@ -9,7 +9,7 @@ public class DirectoryExistsTests : FileToolTests
 	[Fact]
 	public void CheckIfDirectoryExistsInFileSystem()
 	{
-		tools.DirectoryExists(directoryPath);
+		fileTools.DirectoryExists(directoryPath);
 
 		VerifyDirectoryExistsWasCalled();
 	}
@@ -21,7 +21,7 @@ public class DirectoryExistsTests : FileToolTests
 	{
 		directoryExists = false;
 
-		tools.DirectoryExists(directoryPath)
+		fileTools.DirectoryExists(directoryPath)
 			.Should()
 			.BeFalse();
 	}
@@ -29,7 +29,7 @@ public class DirectoryExistsTests : FileToolTests
 	[Fact]
 	public void TrueIfDirectoryIsFound()
 	{
-		tools.DirectoryExists(directoryPath)
+		fileTools.DirectoryExists(directoryPath)
 			.Should()
 			.BeTrue();
 	}

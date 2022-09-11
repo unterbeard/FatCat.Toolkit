@@ -8,7 +8,7 @@ public class FileExistsTests : FileToolTests
 	[Fact]
 	public void CheckIfFileExists()
 	{
-		tools.FileExists(filePath);
+		fileTools.FileExists(filePath);
 
 		VerifyFileExistWasCalled();
 	}
@@ -18,7 +18,7 @@ public class FileExistsTests : FileToolTests
 	{
 		SetFileDoesNotExist();
 
-		tools.FileExists(filePath)
+		fileTools.FileExists(filePath)
 			.Should()
 			.BeFalse();
 	}
@@ -26,7 +26,7 @@ public class FileExistsTests : FileToolTests
 	[Fact]
 	public void TrueIfFileExists()
 	{
-		tools.FileExists(filePath)
+		fileTools.FileExists(filePath)
 			.Should()
 			.BeTrue();
 	}

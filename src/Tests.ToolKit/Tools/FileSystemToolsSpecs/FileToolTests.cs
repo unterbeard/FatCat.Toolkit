@@ -10,7 +10,7 @@ public abstract class FileToolTests
 	protected readonly string directoryPath;
 	protected readonly string filePath;
 	protected readonly IFileSystem fileSystem;
-	protected readonly FileSystemTools tools;
+	protected readonly FileSystemTools fileTools;
 
 	protected bool directoryExists = true;
 	private bool fileExists = true;
@@ -19,7 +19,7 @@ public abstract class FileToolTests
 	{
 		fileSystem = A.Fake<IFileSystem>();
 
-		tools = new FileSystemTools(fileSystem);
+		fileTools = new FileSystemTools(fileSystem);
 
 		filePath = Faker.RandomString();
 		directoryPath = Faker.RandomString();
