@@ -4,7 +4,6 @@ using FatCat.Toolkit.Testing;
 using FluentAssertions;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Tests.Fog.Common.Data;
 using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;

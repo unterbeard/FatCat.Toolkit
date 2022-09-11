@@ -3,7 +3,6 @@ using FatCat.Fakes;
 using FatCat.Toolkit.Testing;
 using FluentAssertions;
 using MongoDB.Driver;
-using Tests.Fog.Common.Data;
 using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;

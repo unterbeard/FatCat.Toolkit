@@ -4,7 +4,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using FatCat.Toolkit.Extensions;
 
-namespace FatCat.Toolkit.Tools;
+namespace FatCat.Toolkit;
 
 public interface IApplicationTools
 {

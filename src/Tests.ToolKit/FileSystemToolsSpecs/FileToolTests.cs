@@ -1,9 +1,9 @@
 using System.IO.Abstractions;
 using FakeItEasy;
 using FatCat.Fakes;
-using FatCat.Toolkit.Tools;
+using FatCat.Toolkit;
 
-namespace Tests.FatCat.Toolkit.Tools.FileSystemToolsSpecs;
+namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
 public abstract class FileToolTests
 {

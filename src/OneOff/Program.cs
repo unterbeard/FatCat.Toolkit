@@ -1,6 +1,6 @@
 ﻿using System.IO.Abstractions;
+using FatCat.Toolkit;
 using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Tools;
 
 ConsoleLog.LogCallerInformation = true;
 

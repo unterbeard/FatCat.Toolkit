@@ -4,7 +4,6 @@ using FatCat.Fakes;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Data.FileSystem;
 using FatCat.Toolkit.Json;
-using FatCat.Toolkit.Tools;
 
 namespace Tests.FatCat.Toolkit.Data.FIleSystem.FileSystemRepositorySpecs;
 

@@ -1,6 +1,6 @@
 using FatCat.Toolkit.Logging;
 
-namespace FatCat.Toolkit.Tools;
+namespace FatCat.Toolkit;
 
 public interface IThread
 {

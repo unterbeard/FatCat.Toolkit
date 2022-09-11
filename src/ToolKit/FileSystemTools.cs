@@ -1,6 +1,6 @@
 using System.IO.Abstractions;
 
-namespace FatCat.Toolkit.Tools;
+namespace FatCat.Toolkit;
 
 public interface IFileSystemTools
 {

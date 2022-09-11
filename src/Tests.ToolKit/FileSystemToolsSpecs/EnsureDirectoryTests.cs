@@ -1,7 +1,7 @@
 using FakeItEasy;
 using Xunit;
 
-namespace Tests.FatCat.Toolkit.Tools.FileSystemToolsSpecs;
+namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
 public class EnsureDirectoryTests : FileToolTests
 {

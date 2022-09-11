@@ -1,4 +1,4 @@
-namespace Tests.FatCat.Toolkit.Tools.FileSystemToolsSpecs;
+namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
 public class EnsureFileExistsTests : TestsToEnsureFileExists
 {
