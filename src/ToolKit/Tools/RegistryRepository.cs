@@ -1,6 +1,6 @@
 using Microsoft.Win32;
 
-namespace FatCat.Toolkit;
+namespace FatCat.Toolkit.Tools;
 
 #pragma warning disable CA1416
 

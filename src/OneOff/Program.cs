@@ -1,6 +1,7 @@
 ﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Communication;
 using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Logging;
 
 ConsoleLog.LogCallerInformation = true;
 

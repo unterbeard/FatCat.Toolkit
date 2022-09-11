@@ -1,6 +1,6 @@
 using FatCat.Toolkit.Console;
 
-namespace FatCat.Toolkit;
+namespace FatCat.Toolkit.Logging;
 
 public interface IToolkitLogger
 {

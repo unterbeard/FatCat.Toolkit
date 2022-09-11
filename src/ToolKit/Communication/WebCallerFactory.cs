@@ -1,3 +1,5 @@
+using FatCat.Toolkit.Logging;
+
 namespace FatCat.Toolkit.Communication;
 
 public interface IWebCallerFactory

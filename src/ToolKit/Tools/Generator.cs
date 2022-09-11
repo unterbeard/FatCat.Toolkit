@@ -1,7 +1,7 @@
 using FatCat.Fakes;
 using MongoDB.Bson;
 
-namespace FatCat.Toolkit;
+namespace FatCat.Toolkit.Tools;
 
 public interface IGenerator
 {

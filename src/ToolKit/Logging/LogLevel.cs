@@ -1,4 +1,4 @@
-namespace FatCat.Toolkit;
+namespace FatCat.Toolkit.Logging;
 
 public enum LogLevel
 {
