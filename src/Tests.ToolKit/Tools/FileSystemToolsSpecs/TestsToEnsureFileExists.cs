@@ -3,12 +3,12 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Tools.FileSystemToolsSpecs;
 
-public class EnsureFileTests : FileToolTests
+public abstract class TestsToEnsureFileExists : FileToolTests
 {
 	[Fact]
 	public void CheckIfDirectoryExists()
 	{
-		fileTools.EnsureFile(filePath);
+		RunMethodToTest();
 
 		VerifyDirectoryExistsWasCalled();
 	}
@@ -16,7 +16,7 @@ public class EnsureFileTests : FileToolTests
 	[Fact]
 	public void CheckIfFileExists()
 	{
-		fileTools.EnsureFile(filePath);
+		RunMethodToTest();
 
 		VerifyFileExistWasCalled();
 	}
@@ -26,7 +26,7 @@ public class EnsureFileTests : FileToolTests
 	{
 		SetFileDoesNotExist();
 
-		fileTools.EnsureFile(filePath);
+		RunMethodToTest();
 
 		A.CallTo(() => fileSystem.File.Create(filePath))
 		.MustHaveHappened();
@@ -35,7 +35,7 @@ public class EnsureFileTests : FileToolTests
 	[Fact]
 	public void DoNotCreateFileIfItIsFound()
 	{
-		fileTools.EnsureFile(filePath);
+		RunMethodToTest();
 
 		A.CallTo(() => fileSystem.File.Create(A<string>._))
 		.MustNotHaveHappened();
@@ -46,7 +46,7 @@ public class EnsureFileTests : FileToolTests
 	{
 		directoryExists = false;
 
-		fileTools.EnsureFile(filePath);
+		RunMethodToTest();
 
 		A.CallTo(() => fileSystem.Directory.CreateDirectory(directoryPath))
 		.MustHaveHappened();
@@ -55,9 +55,11 @@ public class EnsureFileTests : FileToolTests
 	[Fact]
 	public void IfDirectoryIsFoundDoNotCreate()
 	{
-		fileTools.EnsureFile(filePath);
+		RunMethodToTest();
 
 		A.CallTo(() => fileSystem.Directory.CreateDirectory(A<string>._))
 		.MustNotHaveHappened();
 	}
+
+	protected abstract void RunMethodToTest();
 }

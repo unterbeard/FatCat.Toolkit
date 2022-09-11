@@ -61,7 +61,12 @@ public class FileSystemTools : IFileSystemTools
 
 	public bool FileExists(string path) => fileSystem.File.Exists(path);
 
-	public Task WriteAllBytes(string path, byte[] bytes) => throw new NotImplementedException();
+	public async Task WriteAllBytes(string path, byte[] bytes)
+	{
+		EnsureFile(path);
+
+		await fileSystem.File.WriteAllBytesAsync(path, bytes);
+	}
 
 	public Task WriteAllText(string path, string text) => throw new NotImplementedException();
 }
