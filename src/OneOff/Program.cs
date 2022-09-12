@@ -1,15 +1,30 @@
-﻿using System.IO.Abstractions;
-using FatCat.Toolkit;
+﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Extensions;
 
 ConsoleLog.LogCallerInformation = true;
 
+async Task<byte[]> GetHash(string s)
+{
+	var fileBytes = await File.ReadAllBytesAsync(s);
+
+	var hashTools = new HashTools();
+
+	var bytes = await hashTools.CalculateHash(fileBytes);
+	return bytes;
+}
+
 try
 {
-	var somePathToCreate = @"D:\Temp\ANewDirectory\AnotherBites\ThenThisOne\AndAgain\SomeFile.txt";
+	var testFilePath = @"D:\FogFIleChunkTesting\FileToTestWith.txt";
+	var otherFilePath = @"D:\FogFIleChunkTesting\ReAssembledFileToTestWith.txt";
 
-	var fileTools = new FileSystemTools(new FileSystem());
+	var firstHash = await GetHash(testFilePath);
 
-	await fileTools.WriteAllText(somePathToCreate, "Go for it ");
+	ConsoleLog.WriteBlue($"Hash.Length <{firstHash.Length}> | {firstHash.ToReadableString()} | {testFilePath}");
+
+	var secondHash = await GetHash(otherFilePath);
+
+	ConsoleLog.WriteBlue($"Hash.Length <{secondHash.Length}> | {secondHash.ToReadableString()} | {otherFilePath}");
 }
 catch (Exception ex) { ConsoleLog.WriteException(ex); }
