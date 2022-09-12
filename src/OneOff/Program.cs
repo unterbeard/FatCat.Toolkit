@@ -1,4 +1,5 @@
-﻿using FatCat.Toolkit;
+﻿using System.Diagnostics;
+using FatCat.Toolkit;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Extensions;
 
@@ -10,7 +11,14 @@ async Task<byte[]> GetHash(string s)
 
 	var hashTools = new HashTools();
 
+	var watch = Stopwatch.StartNew();
+
 	var bytes = await hashTools.CalculateHash(fileBytes);
+
+	watch.Stop();
+
+	ConsoleLog.WriteMagenta($"Time to compute hash {watch.Elapsed}");
+
 	return bytes;
 }
 
