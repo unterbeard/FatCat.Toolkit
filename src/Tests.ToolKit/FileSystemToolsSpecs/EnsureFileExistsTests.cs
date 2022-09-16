@@ -2,5 +2,10 @@ namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
 public class EnsureFileExistsTests : TestsToEnsureFileExists
 {
-	protected override void RunMethodToTest() { fileTools.EnsureFile(filePath); }
+	protected override Task RunMethodToTest()
+	{
+		fileTools.EnsureFile(filePath);
+
+		return Task.CompletedTask;
+	}
 }

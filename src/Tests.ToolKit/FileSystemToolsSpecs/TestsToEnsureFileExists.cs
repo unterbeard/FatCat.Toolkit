@@ -61,5 +61,5 @@ public abstract class TestsToEnsureFileExists : FileToolTests
 		.MustNotHaveHappened();
 	}
 
-	protected abstract void RunMethodToTest();
+	protected abstract Task RunMethodToTest();
 }

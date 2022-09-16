@@ -32,7 +32,7 @@ public class FileSystemTools : IFileSystemTools
 	public async Task AppendToFile(string path, string text)
 	{
 		EnsureFile(path);
-
+		
 		await fileSystem.File.AppendAllTextAsync(path, text);
 	}
 

@@ -19,5 +19,5 @@ public class WriteAllTextTests : TestsToEnsureFileExists
 		.MustHaveHappened();
 	}
 
-	protected override void RunMethodToTest() => fileTools.WriteAllText(filePath, textToCreate).Wait();
+	protected override async Task RunMethodToTest() => await fileTools.WriteAllText(filePath, textToCreate);
 }

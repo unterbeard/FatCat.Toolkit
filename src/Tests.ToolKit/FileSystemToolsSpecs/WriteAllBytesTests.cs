@@ -18,13 +18,13 @@ public class WriteAllBytesTests : TestsToEnsureFileExists
 	}
 
 	[Fact]
-	public void WriteAllTheBytesToTheFile()
+	public async Task WriteAllTheBytesToTheFile()
 	{
-		RunMethodToTest();
+		await RunMethodToTest();
 
 		A.CallTo(() => fileSystem.File.WriteAllBytesAsync(filePath, bytesToCreate, default))
 		.MustHaveHappened();
 	}
 
-	protected override void RunMethodToTest() => fileTools.WriteAllBytes(filePath, bytesToCreate).Wait();
+	protected override async Task RunMethodToTest() => await fileTools.WriteAllBytes(filePath, bytesToCreate);
 }
