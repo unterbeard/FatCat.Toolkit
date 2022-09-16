@@ -4,6 +4,8 @@ namespace FatCat.Toolkit;
 
 public interface IFileSystemTools
 {
+	Task AppendToFile(string path, string text);
+
 	void DeleteDirectory(string path);
 
 	bool DeleteFile(string path);
@@ -26,6 +28,13 @@ public class FileSystemTools : IFileSystemTools
 	private readonly IFileSystem fileSystem;
 
 	public FileSystemTools(IFileSystem fileSystem) => this.fileSystem = fileSystem;
+
+	public async Task AppendToFile(string path, string text)
+	{
+		EnsureFile(path);
+
+		await fileSystem.File.AppendAllTextAsync(path, text);
+	}
 
 	public void DeleteDirectory(string path)
 	{
