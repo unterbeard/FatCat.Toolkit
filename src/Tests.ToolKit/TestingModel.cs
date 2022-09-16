@@ -4,9 +4,9 @@ namespace Tests.FatCat.Toolkit;
 
 public class TestingModel : EqualObject
 {
-	public string? Description { get; set; }
+	public string Description { get; set; }
 
-	public string? Name { get; set; }
+	public string Name { get; set; }
 
 	public List<SubModel> SubModels { get; set; } = new();
 
@@ -15,7 +15,7 @@ public class TestingModel : EqualObject
 
 public class SubModel : EqualObject
 {
-	public string? Name { get; set; }
+	public string Name { get; set; }
 
 	public Guid SubId { get; set; }
 }

@@ -11,9 +11,9 @@ public class WriteAllTextTests : TestsToEnsureFileExists
 	public WriteAllTextTests() => textToCreate = Faker.RandomString();
 
 	[Fact]
-	public void WriteTextToFile()
+	public async Task WriteTextToFile()
 	{
-		RunMethodToTest();
+		await RunMethodToTest();
 
 		A.CallTo(() => fileSystem.File.WriteAllTextAsync(filePath, textToCreate, default))
 		.MustHaveHappened();

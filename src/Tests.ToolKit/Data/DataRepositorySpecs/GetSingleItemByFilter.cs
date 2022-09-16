@@ -10,7 +10,7 @@ namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
 public class GetSingleItemByFilter : DataRepositoryTests
 {
 	private readonly EasyCapture<ExpressionFilterDefinition<TestingDataObject>> expressionCapture;
-	private readonly TestingDataObject? filterItem;
+	private readonly TestingDataObject filterItem;
 	private readonly int filterNumber;
 
 	public GetSingleItemByFilter()

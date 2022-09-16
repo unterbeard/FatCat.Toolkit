@@ -8,7 +8,7 @@ namespace Tests.FatCat.Toolkit.Data.FIleSystem.FileSystemRepositorySpecs;
 public class SaveTests : FileSystemRepositoryTests
 {
 	private readonly TestFileDataObject dataToSave;
-	private string? saveJson;
+	private string saveJson;
 
 	public SaveTests()
 	{

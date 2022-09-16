@@ -77,7 +77,7 @@ public class WebResultAsTests
 	{
 		public DateTime DateTime { get; set; }
 
-		public string? FirstName { get; set; }
+		public string FirstName { get; set; }
 
 		public int Number { get; set; }
 	}

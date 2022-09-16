@@ -4,7 +4,7 @@ namespace Tests.FatCat.Toolkit.Data;
 
 public class TestingDataObject : DataObject
 {
-	public string? Name { get; set; }
+	public string Name { get; set; }
 
 	public int Number { get; set; }
 
