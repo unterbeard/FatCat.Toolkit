@@ -17,6 +17,14 @@
     <NoWarn>CS8002,CS1700</NoWarn>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
   <ItemGroup>
       <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
