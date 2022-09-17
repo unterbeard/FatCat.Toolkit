@@ -74,14 +74,9 @@ public class FileSystemTools : IFileSystemTools
 
 	public bool FileExists(string path) => fileSystem.File.Exists(path);
 
-	public async Task<byte[]> ReadAllBytes(string path)
-	{
-		if (FileExists(path)) return await fileSystem.File.ReadAllBytesAsync(path);
+	public async Task<byte[]> ReadAllBytes(string path) => FileDoesNotExist(path) ? Array.Empty<byte>() : await fileSystem.File.ReadAllBytesAsync(path);
 
-		return Array.Empty<byte>();
-	}
-
-	public Task<string> ReadAllText(string path) => throw new NotImplementedException();
+	public async Task<string> ReadAllText(string path) => FileDoesNotExist(path) ? string.Empty : await fileSystem.File.ReadAllTextAsync(path);
 
 	public async Task WriteAllBytes(string path, byte[] bytes)
 	{
@@ -96,4 +91,6 @@ public class FileSystemTools : IFileSystemTools
 
 		await fileSystem.File.WriteAllTextAsync(path, text);
 	}
+
+	private bool FileDoesNotExist(string path) => !FileExists(path);
 }
