@@ -18,6 +18,10 @@ public interface IFileSystemTools
 
 	bool FileExists(string path);
 
+	Task<byte[]> ReadAllBytes(string path);
+
+	Task<string> ReadAllText(string path);
+
 	Task WriteAllBytes(string path, byte[] bytes);
 
 	Task WriteAllText(string path, string text);
@@ -32,7 +36,7 @@ public class FileSystemTools : IFileSystemTools
 	public async Task AppendToFile(string path, string text)
 	{
 		EnsureFile(path);
-		
+
 		await fileSystem.File.AppendAllTextAsync(path, text);
 	}
 
@@ -69,6 +73,15 @@ public class FileSystemTools : IFileSystemTools
 	}
 
 	public bool FileExists(string path) => fileSystem.File.Exists(path);
+
+	public async Task<byte[]> ReadAllBytes(string path)
+	{
+		if (FileExists(path)) return await fileSystem.File.ReadAllBytesAsync(path);
+
+		return Array.Empty<byte>();
+	}
+
+	public Task<string> ReadAllText(string path) => throw new NotImplementedException();
 
 	public async Task WriteAllBytes(string path, byte[] bytes)
 	{
