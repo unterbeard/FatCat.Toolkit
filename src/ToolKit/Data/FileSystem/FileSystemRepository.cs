@@ -1,64 +1,57 @@
-using System.IO.Abstractions;
-using FatCat.Toolkit.Json;
+using System.Linq.Expressions;
 
 namespace FatCat.Toolkit.Data.FileSystem;
 
-public interface ISingleItemFileSystemRepository<T> where T : FileSystemDataObject, new()
+public interface IFileSystemRepository<T> where T : FileSystemDataObject
 {
-	bool Exists();
+	Task<T> Create(T item);
 
-	Task<T> Get();
+	Task<List<T>> Create(List<T> items);
 
-	Task Save(T item);
+	Task<T> Delete(T item);
+
+	Task<List<T>> Delete(List<T> items);
+
+	Task<List<T>> GetAll();
+
+	Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter);
+
+	Task<T?> GetByFilter(Expression<Func<T, bool>> filter);
+
+	Task<T?> GetById(string id);
+
+	Task<T?> GetFirst();
+
+	Task<T> GetFirstOrCreate();
+
+	Task<T> Update(T item);
+
+	Task<List<T>> Update(List<T> items);
 }
 
-public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository<T> where T : FileSystemDataObject, new()
+public class FileSystemRepository<T> : IFileSystemRepository<T> where T : FileSystemDataObject
 {
-	private readonly IApplicationTools applicationTools;
-	private readonly IFileSystem fileSystem;
-	private readonly IJsonOperations jsonOperations;
+	public Task<T> Create(T item) => throw new NotImplementedException();
 
-	public T? Data { get; set; }
+	public Task<List<T>> Create(List<T> items) => throw new NotImplementedException();
 
-	private string DataDirectory => Path.Join(applicationTools.ExecutingDirectory, "Data");
+	public Task<T> Delete(T item) => throw new NotImplementedException();
 
-	private bool DataDirectoryDoesNotExist => !fileSystem.Directory.Exists(DataDirectory);
+	public Task<List<T>> Delete(List<T> items) => throw new NotImplementedException();
 
-	private bool DataFileNotFound => !fileSystem.File.Exists(DataPath);
+	public Task<List<T>> GetAll() => throw new NotImplementedException();
 
-	private string DataPath => Path.Join(DataDirectory, $"{typeof(T).Name}.data");
+	public Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter) => throw new NotImplementedException();
 
-	public SingleItemFileSystemRepository(IFileSystem fileSystem,
-										IApplicationTools applicationTools,
-										IJsonOperations jsonOperations)
-	{
-		this.fileSystem = fileSystem;
-		this.applicationTools = applicationTools;
-		this.jsonOperations = jsonOperations;
-	}
+	public Task<T?> GetByFilter(Expression<Func<T, bool>> filter) => throw new NotImplementedException();
 
-	public bool Exists() => fileSystem.File.Exists(DataPath);
+	public Task<T?> GetById(string id) => throw new NotImplementedException();
 
-	public async Task<T> Get()
-	{
-		if (Data != null) return Data;
-		if (DataDirectoryDoesNotExist || DataFileNotFound) return new T();
+	public Task<T?> GetFirst() => throw new NotImplementedException();
 
-		var json = await fileSystem.File.ReadAllTextAsync(DataPath);
+	public Task<T> GetFirstOrCreate() => throw new NotImplementedException();
 
-		Data = jsonOperations.FromJson<T>(json);
+	public Task<T> Update(T item) => throw new NotImplementedException();
 
-		return Data!;
-	}
-
-	public async Task Save(T item)
-	{
-		Data = item;
-
-		var json = jsonOperations.ToJson(Data);
-
-		if (DataDirectoryDoesNotExist) fileSystem.Directory.CreateDirectory(DataDirectory);
-
-		await fileSystem.File.WriteAllTextAsync(DataPath, json);
-	}
+	public Task<List<T>> Update(List<T> items) => throw new NotImplementedException();
 }
