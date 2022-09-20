@@ -40,7 +40,4 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Lite" />
-  </ItemGroup>
 </Project>

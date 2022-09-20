@@ -9,9 +9,9 @@ public interface IMongoNames : IDataNames
 
 public class MongoNames : IMongoNames
 {
-	private readonly DataNames dataNames;
+	private readonly IDataNames dataNames;
 
-	public MongoNames() => dataNames = new DataNames();
+	public MongoNames(IDataNames dataNames) => this.dataNames = dataNames;
 
 	public string GetCollectionName<T>() where T : DataObject => dataNames.GetCollectionName<T>();
 
