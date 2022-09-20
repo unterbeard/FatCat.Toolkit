@@ -2,13 +2,19 @@ using System.Linq.Expressions;
 
 namespace FatCat.Toolkit.Data.Lite;
 
-public interface ILiteDbRepository<T> : IDataRepository<T> where T : DataObject
+public interface ILiteDbRepository<T> : IDataRepository<T> where T : LiteDbObject
 {
-	void LoadDatabase(string databaseFullPath);
+	void Connect(string databaseFullPath);
 }
 
-public class LiteDbRepository<T> : ILiteDbRepository<T> where T : DataObject
+public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 {
+	private readonly ILiteDbConnection<T> liteDbConnection;
+
+	public LiteDbRepository(ILiteDbConnection<T> liteDbConnection) => this.liteDbConnection = liteDbConnection;
+
+	public void Connect(string databaseFullPath) => throw new NotImplementedException();
+
 	public Task<T> Create(T item) => throw new NotImplementedException();
 
 	public Task<List<T>> Create(List<T> items) => throw new NotImplementedException();
@@ -28,8 +34,6 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : DataObject
 	public Task<T?> GetFirst() => throw new NotImplementedException();
 
 	public Task<T> GetFirstOrCreate() => throw new NotImplementedException();
-
-	public void LoadDatabase(string databaseFullPath) => throw new NotImplementedException();
 
 	public Task<T> Update(T item) => throw new NotImplementedException();
 
