@@ -9,17 +9,17 @@ namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
 
 public class GetFirstTests : DataRepositoryTests
 {
-	private readonly EasyCapture<ExpressionFilterDefinition<TestingDataObject>> expressionCapture;
-	private readonly TestingDataObject firstItem;
+	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> expressionCapture;
+	private readonly TestingMongoObject firstItem;
 
 	public GetFirstTests()
 	{
-		firstItem = Faker.Create<TestingDataObject>();
+		firstItem = Faker.Create<TestingMongoObject>();
 
-		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingDataObject>>();
+		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
-		A.CallTo(() => collection.FindAsync<TestingDataObject>(expressionCapture!, default, default))
-		.Returns(new TestingAsyncCursor<TestingDataObject>(new List<TestingDataObject> { firstItem }));
+		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture!, default, default))
+		.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { firstItem }));
 	}
 
 	[Fact]
@@ -27,12 +27,12 @@ public class GetFirstTests : DataRepositoryTests
 	{
 		await repository.GetFirst();
 
-		A.CallTo(() => collection.FindAsync<TestingDataObject>(A<ExpressionFilterDefinition<TestingDataObject>>._!, default, default))
+		A.CallTo(() => collection.FindAsync<TestingMongoObject>(A<ExpressionFilterDefinition<TestingMongoObject>>._!, default, default))
 		.MustHaveHappened();
 
 		var filter = expressionCapture.Value.Expression.Compile();
 
-		filter(Faker.Create<TestingDataObject>())
+		filter(Faker.Create<TestingMongoObject>())
 			.Should()
 			.BeTrue();
 	}

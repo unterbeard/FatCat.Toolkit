@@ -1,8 +1,9 @@
 using FatCat.Toolkit.Data;
+using FatCat.Toolkit.Data.Mongo;
 
 namespace Tests.FatCat.Toolkit.Data;
 
-public class TestingDataObject : DataObject
+public class TestingMongoObject : MongoObject
 {
 	public string Name { get; set; }
 

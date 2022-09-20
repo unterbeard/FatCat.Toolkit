@@ -2,9 +2,9 @@ using System.Linq.Expressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace FatCat.Toolkit.Data;
+namespace FatCat.Toolkit.Data.Mongo;
 
-public interface IDataRepository<T> where T : DataObject
+public interface IMongoRepository<T> where T : MongoObject
 {
 	string DatabaseName { get; }
 
@@ -35,21 +35,21 @@ public interface IDataRepository<T> where T : DataObject
 	Task<List<T>> Update(List<T> items);
 }
 
-public class DataRepository<T> : IDataRepository<T> where T : DataObject, new()
+public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new()
 {
-	private readonly IDataConnection dataConnection;
+	private readonly IMongoDataConnection mongoDataConnection;
 
 	public IMongoCollection<T> Collection { get; }
 
 	public string DatabaseName { get; }
 
-	public DataRepository(IDataConnection dataConnection,
-						IDataNames dataNames)
+	public MongoRepository(IMongoDataConnection mongoDataConnection,
+						IMongoNames mongoNames)
 	{
-		this.dataConnection = dataConnection;
+		this.mongoDataConnection = mongoDataConnection;
 
-		Collection = dataConnection.GetCollection<T>();
-		DatabaseName = dataNames.GetDatabaseName<T>();
+		Collection = mongoDataConnection.GetCollection<T>();
+		DatabaseName = mongoNames.GetDatabaseName<T>();
 	}
 
 	public async Task<T> Create(T item)

@@ -19,7 +19,7 @@ public class CreateItemTests : DataRepositoryTests
 	[Fact]
 	public async Task PlayingWithCapture()
 	{
-		var easyCapture = new EasyCapture<TestingDataObject>();
+		var easyCapture = new EasyCapture<TestingMongoObject>();
 
 		A.CallTo(() => collection.InsertOneAsync(easyCapture, default, default))
 		.Returns(Task.CompletedTask);

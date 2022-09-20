@@ -1,6 +1,7 @@
 ﻿using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.Data;
+using FatCat.Toolkit.Data.Mongo;
 using FluentAssertions;
 using MongoDB.Driver;
 using Xunit;
@@ -9,11 +10,11 @@ namespace Tests.FatCat.Toolkit.Data;
 
 public class DataConnectionTests
 {
-	private readonly DataConnection connection;
+	private readonly MongoDataConnection connection;
 	private string collectionName = null!;
 	private string databaseName = null!;
-	private IDataNames dataNames = null!;
-	private IMongoCollection<TestingDataObject> mongoCollection = null!;
+	private IMongoNames mongoNames = null!;
+	private IMongoCollection<TestingMongoObject> mongoCollection = null!;
 	private IMongoConnection mongoConnection = null!;
 	private IMongoDatabase mongoDatabase = null!;
 
@@ -22,31 +23,31 @@ public class DataConnectionTests
 		SetUpDataNames();
 		SetUpMongoConnection();
 
-		connection = new DataConnection(dataNames!, mongoConnection!);
+		connection = new MongoDataConnection(mongoNames!, mongoConnection!);
 	}
 
 	[Fact]
 	public void GetCollectionFromDatabase()
 	{
-		connection.GetCollection<TestingDataObject>();
+		connection.GetCollection<TestingMongoObject>();
 
-		A.CallTo(() => mongoDatabase.GetCollection<TestingDataObject>(collectionName, null))
+		A.CallTo(() => mongoDatabase.GetCollection<TestingMongoObject>(collectionName, null))
 		.MustHaveHappened();
 	}
 
 	[Fact]
 	public void GetCollectionName()
 	{
-		connection.GetCollection<TestingDataObject>();
+		connection.GetCollection<TestingMongoObject>();
 
-		A.CallTo(() => dataNames.GetCollectionName<TestingDataObject>())
+		A.CallTo(() => mongoNames.GetCollectionName<TestingMongoObject>())
 		.MustHaveHappened();
 	}
 
 	[Fact]
 	public void GetDatabase()
 	{
-		connection.GetCollection<TestingDataObject>();
+		connection.GetCollection<TestingMongoObject>();
 
 		A.CallTo(() => mongoConnection.GetDatabase(databaseName))
 		.MustHaveHappened();
@@ -55,16 +56,16 @@ public class DataConnectionTests
 	[Fact]
 	public void GetDatabaseName()
 	{
-		connection.GetCollection<TestingDataObject>();
+		connection.GetCollection<TestingMongoObject>();
 
-		A.CallTo(() => dataNames.GetDatabaseName<TestingDataObject>())
+		A.CallTo(() => mongoNames.GetDatabaseName<TestingMongoObject>())
 		.MustHaveHappened();
 	}
 
 	[Fact]
 	public void ReturnCollectionFromMongoDatabase()
 	{
-		connection.GetCollection<TestingDataObject>()
+		connection.GetCollection<TestingMongoObject>()
 				.Should()
 				.Be(mongoCollection);
 	}
@@ -73,7 +74,7 @@ public class DataConnectionTests
 	{
 		collectionName = Faker.RandomString();
 
-		A.CallTo(() => dataNames.GetCollectionName<TestingDataObject>())
+		A.CallTo(() => mongoNames.GetCollectionName<TestingMongoObject>())
 		.Returns(collectionName);
 	}
 
@@ -81,13 +82,13 @@ public class DataConnectionTests
 	{
 		databaseName = Faker.RandomString();
 
-		A.CallTo(() => dataNames.GetDatabaseName<TestingDataObject>())
+		A.CallTo(() => mongoNames.GetDatabaseName<TestingMongoObject>())
 		.Returns(databaseName);
 	}
 
 	private void SetUpDataNames()
 	{
-		dataNames = A.Fake<IDataNames>();
+		mongoNames = A.Fake<IMongoNames>();
 
 		SetUpDatabaseName();
 		SetUpCollectionName();
@@ -95,9 +96,9 @@ public class DataConnectionTests
 
 	private void SetUpMongoCollection()
 	{
-		mongoCollection = A.Fake<IMongoCollection<TestingDataObject>>();
+		mongoCollection = A.Fake<IMongoCollection<TestingMongoObject>>();
 
-		A.CallTo(() => mongoDatabase.GetCollection<TestingDataObject>(A<string>._, A<MongoCollectionSettings>._))
+		A.CallTo(() => mongoDatabase.GetCollection<TestingMongoObject>(A<string>._, A<MongoCollectionSettings>._))
 		.Returns(mongoCollection);
 	}
 

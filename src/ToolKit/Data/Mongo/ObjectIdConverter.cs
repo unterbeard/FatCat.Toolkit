@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using Newtonsoft.Json;
 
-namespace FatCat.Toolkit.Data;
+namespace FatCat.Toolkit.Data.Mongo;
 
 public class ObjectIdConverter : JsonConverter
 {

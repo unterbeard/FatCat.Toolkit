@@ -8,12 +8,12 @@ namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
 
 public class UpdateTests : DataRepositoryTests
 {
-	private readonly EasyCapture<ExpressionFilterDefinition<TestingDataObject>> updateFilterCapture;
+	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> updateFilterCapture;
 
 	public UpdateTests()
 	{
-		updateFilterCapture = new EasyCapture<ExpressionFilterDefinition<TestingDataObject>>();
-		var updateCapture = new EasyCapture<TestingDataObject>();
+		updateFilterCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
+		var updateCapture = new EasyCapture<TestingMongoObject>();
 
 		A.CallTo(() => collection.ReplaceOneAsync(updateFilterCapture, updateCapture, A<ReplaceOptions>._, default))
 		.Returns(new ReplaceOneResult.Acknowledged(1, 1, default));
@@ -24,7 +24,7 @@ public class UpdateTests : DataRepositoryTests
 	{
 		await repository.Update(item);
 
-		A.CallTo(() => collection.ReplaceOneAsync(A<ExpressionFilterDefinition<TestingDataObject>>._, item, A<ReplaceOptions>._, default))
+		A.CallTo(() => collection.ReplaceOneAsync(A<ExpressionFilterDefinition<TestingMongoObject>>._, item, A<ReplaceOptions>._, default))
 		.MustHaveHappened();
 
 		var filter = updateFilterCapture.Value.Expression.Compile();

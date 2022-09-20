@@ -1,49 +1,50 @@
 using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.Data;
+using FatCat.Toolkit.Data.Mongo;
 using MongoDB.Driver;
 
 namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
 
 public abstract class DataRepositoryTests
 {
-	protected readonly TestingDataObject item;
-	protected readonly List<TestingDataObject> itemList;
-	protected readonly DataRepository<TestingDataObject> repository;
-	protected IMongoCollection<TestingDataObject> collection = null!;
+	protected readonly TestingMongoObject item;
+	protected readonly List<TestingMongoObject> itemList;
+	protected readonly MongoRepository<TestingMongoObject> repository;
+	protected IMongoCollection<TestingMongoObject> collection = null!;
 	protected string databaseName = null!;
-	protected IDataConnection dataConnection = null!;
-	protected IDataNames dataNames = null!;
+	protected IMongoDataConnection mongoDataConnection = null!;
+	protected IMongoNames mongoNames = null!;
 
 	protected DataRepositoryTests()
 	{
 		SetUpDataConnection();
 		SetUpDataNames();
 
-		item = Faker.Create<TestingDataObject>();
-		itemList = Faker.Create<List<TestingDataObject>>(4);
+		item = Faker.Create<TestingMongoObject>();
+		itemList = Faker.Create<List<TestingMongoObject>>(4);
 
-		repository = new DataRepository<TestingDataObject>(dataConnection,
-															dataNames);
+		repository = new MongoRepository<TestingMongoObject>(mongoDataConnection,
+															mongoNames);
 	}
 
 	private void SetUpDataConnection()
 	{
-		dataConnection = A.Fake<IDataConnection>();
+		mongoDataConnection = A.Fake<IMongoDataConnection>();
 
-		collection = A.Fake<IMongoCollection<TestingDataObject>>();
+		collection = A.Fake<IMongoCollection<TestingMongoObject>>();
 
-		A.CallTo(() => dataConnection.GetCollection<TestingDataObject>())
+		A.CallTo(() => mongoDataConnection.GetCollection<TestingMongoObject>())
 		.Returns(collection);
 	}
 
 	private void SetUpDataNames()
 	{
-		dataNames = A.Fake<IDataNames>();
+		mongoNames = A.Fake<IMongoNames>();
 
 		databaseName = Faker.RandomString();
 
-		A.CallTo(() => dataNames.GetDatabaseName<TestingDataObject>())
+		A.CallTo(() => mongoNames.GetDatabaseName<TestingMongoObject>())
 		.Returns(databaseName);
 	}
 }

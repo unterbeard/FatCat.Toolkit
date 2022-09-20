@@ -1,39 +1,36 @@
-﻿using System.Diagnostics;
-using System.IO.Abstractions;
-using FatCat.Toolkit;
-using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Extensions;
+﻿using FatCat.Toolkit.Console;
+using LiteDB;
+using Newtonsoft.Json;
 
 ConsoleLog.LogCallerInformation = true;
 
-async Task<byte[]> GetHash(byte[] bytesToHash)
-{
-	var hashTools = new HashTools();
-
-	var watch = Stopwatch.StartNew();
-
-	var bytes = await hashTools.CalculateHash(bytesToHash);
-
-	watch.Stop();
-
-	ConsoleLog.WriteMagenta($"Time to compute hash {watch.Elapsed}");
-
-	return bytes;
-}
-
 try
 {
-	var fileTools = new FileSystemTools(new FileSystem());
+	using var db = new LiteDatabase(@"C:\TempWorking\ToolkitSpike\LiteDatabaseSpike\ToolkitData.db");
 
-	var testFilePath = @"C:\FogFileChunkTesting\FileToTestWith.txt";
-	var otherFilePath = @"C:\FogFileChunkTesting\FileToTestWith.txt";
+	var collection = db.GetCollection<Customer>("customers");
 
-	var firstHash = await GetHash(await fileTools.ReadAllBytes(testFilePath));
+	var customer = new Customer
+					{
+						Name = "John Doe",
+						IsActive = true
+					};
 
-	ConsoleLog.WriteBlue($"Hash.Length <{firstHash.Length}> | {firstHash.ToReadableString()} | {testFilePath}");
+	collection.Insert(customer);
 
-	var secondHash = await GetHash(await fileTools.ReadAllBytes(otherFilePath));
+	var allCustomers = collection.Find(i => true).ToList();
 
-	ConsoleLog.WriteBlue($"Hash.Length <{secondHash.Length}> | {secondHash.ToReadableString()} | {otherFilePath}");
+	ConsoleLog.WriteCyan($"{JsonConvert.SerializeObject(allCustomers, Formatting.Indented)}");
 }
 catch (Exception ex) { ConsoleLog.WriteException(ex); }
+
+public class Customer
+{
+	public int Id { get; set; }
+
+	public bool IsActive { get; set; }
+
+	public string Name { get; set; }
+
+	public List<string> Phones { get; set; }
+}

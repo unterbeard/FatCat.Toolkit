@@ -8,12 +8,12 @@ namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
 
 public class UpdateListTests : DataRepositoryTests
 {
-	private readonly EasyCapture<ExpressionFilterDefinition<TestingDataObject>> updateFilterCapture;
+	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> updateFilterCapture;
 
 	public UpdateListTests()
 	{
-		updateFilterCapture = new EasyCapture<ExpressionFilterDefinition<TestingDataObject>>();
-		var updateCapture = new EasyCapture<TestingDataObject>();
+		updateFilterCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
+		var updateCapture = new EasyCapture<TestingMongoObject>();
 
 		A.CallTo(() => collection.ReplaceOneAsync(updateFilterCapture, updateCapture, A<ReplaceOptions>._, default))
 		.Returns(new ReplaceOneResult.Acknowledged(1, 1, default));
@@ -26,7 +26,7 @@ public class UpdateListTests : DataRepositoryTests
 
 		foreach (var currentItem in itemList)
 		{
-			A.CallTo(() => collection.ReplaceOneAsync(A<ExpressionFilterDefinition<TestingDataObject>>._, currentItem, A<ReplaceOptions>._, default))
+			A.CallTo(() => collection.ReplaceOneAsync(A<ExpressionFilterDefinition<TestingMongoObject>>._, currentItem, A<ReplaceOptions>._, default))
 			.MustHaveHappened();
 		}
 

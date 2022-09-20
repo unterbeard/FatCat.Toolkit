@@ -1,4 +1,5 @@
 using FatCat.Toolkit.Data;
+using FatCat.Toolkit.Data.Mongo;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

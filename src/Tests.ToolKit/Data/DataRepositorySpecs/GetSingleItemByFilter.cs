@@ -9,20 +9,20 @@ namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
 
 public class GetSingleItemByFilter : DataRepositoryTests
 {
-	private readonly EasyCapture<ExpressionFilterDefinition<TestingDataObject>> expressionCapture;
-	private readonly TestingDataObject filterItem;
+	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> expressionCapture;
+	private readonly TestingMongoObject filterItem;
 	private readonly int filterNumber;
 
 	public GetSingleItemByFilter()
 	{
 		filterNumber = Faker.RandomInt();
 
-		filterItem = Faker.Create<TestingDataObject>(afterCreate: i => i.Number = filterNumber);
+		filterItem = Faker.Create<TestingMongoObject>(afterCreate: i => i.Number = filterNumber);
 
-		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingDataObject>>();
+		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
-		A.CallTo(() => collection.FindAsync<TestingDataObject>(expressionCapture!, default, default))
-		.Returns(new TestingAsyncCursor<TestingDataObject>(new List<TestingDataObject> { filterItem }));
+		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture!, default, default))
+		.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { filterItem }));
 	}
 
 	[Fact]
@@ -30,7 +30,7 @@ public class GetSingleItemByFilter : DataRepositoryTests
 	{
 		await repository.GetByFilter(i => i!.Number == filterNumber);
 
-		A.CallTo(() => collection.FindAsync<TestingDataObject>(A<ExpressionFilterDefinition<TestingDataObject>>._!, default, default))
+		A.CallTo(() => collection.FindAsync<TestingMongoObject>(A<ExpressionFilterDefinition<TestingMongoObject>>._!, default, default))
 		.MustHaveHappened();
 
 		expressionCapture.Value

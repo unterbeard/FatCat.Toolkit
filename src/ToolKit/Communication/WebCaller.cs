@@ -1,6 +1,7 @@
 using System.Net;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Data;
+using FatCat.Toolkit.Data.Mongo;
 using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Web;
 using Flurl;

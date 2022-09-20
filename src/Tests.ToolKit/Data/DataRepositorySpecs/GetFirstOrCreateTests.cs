@@ -9,17 +9,17 @@ namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
 
 public class GetFirstOrCreateTests : DataRepositoryTests
 {
-	private readonly EasyCapture<ExpressionFilterDefinition<TestingDataObject>> expressionCapture;
-	private readonly TestingDataObject firstItem;
-	private EasyCapture<TestingDataObject> insertCapture = null!;
+	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> expressionCapture;
+	private readonly TestingMongoObject firstItem;
+	private EasyCapture<TestingMongoObject> insertCapture = null!;
 
 	public GetFirstOrCreateTests()
 	{
 		SetUpInsertCapture();
 
-		firstItem = Faker.Create<TestingDataObject>();
+		firstItem = Faker.Create<TestingMongoObject>();
 
-		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingDataObject>>();
+		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
 		SetUpToReturnItem();
 	}
@@ -29,12 +29,12 @@ public class GetFirstOrCreateTests : DataRepositoryTests
 	{
 		await repository.GetFirstOrCreate();
 
-		A.CallTo(() => collection.FindAsync<TestingDataObject>(A<ExpressionFilterDefinition<TestingDataObject>>._!, default, default))
+		A.CallTo(() => collection.FindAsync<TestingMongoObject>(A<ExpressionFilterDefinition<TestingMongoObject>>._!, default, default))
 		.MustHaveHappened();
 
 		var filter = expressionCapture.Value.Expression.Compile();
 
-		filter(Faker.Create<TestingDataObject>())
+		filter(Faker.Create<TestingMongoObject>())
 			.Should()
 			.BeTrue();
 	}
@@ -48,7 +48,7 @@ public class GetFirstOrCreateTests : DataRepositoryTests
 				.Should()
 				.Be(firstItem);
 
-		A.CallTo(() => collection.InsertOneAsync(A<TestingDataObject>._, default, default))
+		A.CallTo(() => collection.InsertOneAsync(A<TestingMongoObject>._, default, default))
 		.MustNotHaveHappened();
 	}
 
@@ -59,7 +59,7 @@ public class GetFirstOrCreateTests : DataRepositoryTests
 
 		await repository.GetFirstOrCreate();
 
-		A.CallTo(() => collection.InsertOneAsync(A<TestingDataObject>._, default, default))
+		A.CallTo(() => collection.InsertOneAsync(A<TestingMongoObject>._, default, default))
 		.MustHaveHappened();
 
 		var insertedItem = insertCapture.Value;
@@ -94,7 +94,7 @@ public class GetFirstOrCreateTests : DataRepositoryTests
 
 	private void SetUpInsertCapture()
 	{
-		insertCapture = new EasyCapture<TestingDataObject>();
+		insertCapture = new EasyCapture<TestingMongoObject>();
 
 		A.CallTo(() => collection.InsertOneAsync(insertCapture, default, default))
 		.Returns(Task.CompletedTask);
@@ -102,13 +102,13 @@ public class GetFirstOrCreateTests : DataRepositoryTests
 
 	private void SetUpToNotReturnAnItem()
 	{
-		A.CallTo(() => collection.FindAsync<TestingDataObject>(expressionCapture, default, default))
-		.Returns(new TestingAsyncCursor<TestingDataObject>(new List<TestingDataObject>()));
+		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture, default, default))
+		.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject>()));
 	}
 
 	private void SetUpToReturnItem()
 	{
-		A.CallTo(() => collection.FindAsync<TestingDataObject>(expressionCapture, default, default))
-		.Returns(new TestingAsyncCursor<TestingDataObject>(new List<TestingDataObject> { firstItem }));
+		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture, default, default))
+		.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { firstItem }));
 	}
 }

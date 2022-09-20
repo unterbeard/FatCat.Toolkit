@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 
-namespace FatCat.Toolkit.Data;
+namespace FatCat.Toolkit.Data.Mongo;
 
 public interface IMongoConnection
 {
@@ -32,7 +32,7 @@ public class MongoConnection : IMongoConnection
 
 		foreach (var assembly in dataAssemblies)
 		{
-			foreach (var mongoObjectType in assembly.TypesImplementing<DataObject>())
+			foreach (var mongoObjectType in assembly.TypesImplementing<MongoObject>())
 			{
 				if (mongoObjectType.IsGenericTypeDefinition) continue;
 

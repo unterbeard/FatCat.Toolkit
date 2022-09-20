@@ -11,14 +11,14 @@ public class DeleteItemTests : DataRepositoryTests
 	[Fact]
 	public async Task CallDeleteOneOnCollection()
 	{
-		var filterCapture = new EasyCapture<ExpressionFilterDefinition<TestingDataObject>>();
+		var filterCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
 		A.CallTo(() => collection.DeleteOneAsync(filterCapture, default))
 		.Returns(new DeleteResult.Acknowledged(1));
 
 		await repository.Delete(item);
 
-		A.CallTo(() => collection.DeleteOneAsync(A<ExpressionFilterDefinition<TestingDataObject>>._, default))
+		A.CallTo(() => collection.DeleteOneAsync(A<ExpressionFilterDefinition<TestingMongoObject>>._, default))
 		.MustHaveHappened();
 
 		filterCapture.Value.Should().NotBeNull();

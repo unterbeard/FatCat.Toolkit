@@ -9,8 +9,8 @@ public class GetAllTests : DataRepositoryTests
 {
 	public GetAllTests()
 	{
-		A.CallTo(() => collection.FindAsync<TestingDataObject>(A<ExpressionFilterDefinition<TestingDataObject>>._, default, default))
-		.Returns(new TestingAsyncCursor<TestingDataObject>(itemList));
+		A.CallTo(() => collection.FindAsync<TestingMongoObject>(A<ExpressionFilterDefinition<TestingMongoObject>>._, default, default))
+		.Returns(new TestingAsyncCursor<TestingMongoObject>(itemList));
 	}
 
 	[Fact]
@@ -18,7 +18,7 @@ public class GetAllTests : DataRepositoryTests
 	{
 		await repository.GetAll();
 
-		A.CallTo(() => collection.FindAsync<TestingDataObject>(A<ExpressionFilterDefinition<TestingDataObject>>._, default, default))
+		A.CallTo(() => collection.FindAsync<TestingMongoObject>(A<ExpressionFilterDefinition<TestingMongoObject>>._, default, default))
 		.MustHaveHappened();
 	}
 

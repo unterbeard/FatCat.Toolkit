@@ -9,14 +9,14 @@ public class DataRepositoryCtorTests : DataRepositoryTests
 	[Fact]
 	public void GetCollection()
 	{
-		A.CallTo(() => dataConnection.GetCollection<TestingDataObject>())
+		A.CallTo(() => mongoDataConnection.GetCollection<TestingMongoObject>())
 		.MustHaveHappened();
 	}
 
 	[Fact]
 	public void GetDatabaseName()
 	{
-		A.CallTo(() => dataNames.GetDatabaseName<TestingDataObject>())
+		A.CallTo(() => mongoNames.GetDatabaseName<TestingMongoObject>())
 		.MustHaveHappened();
 	}
 

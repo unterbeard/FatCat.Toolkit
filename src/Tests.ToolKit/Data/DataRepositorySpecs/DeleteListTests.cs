@@ -12,7 +12,7 @@ public class DeleteListTests : DataRepositoryTests
 	{
 		await repository.Delete(itemList);
 
-		A.CallTo(() => collection.DeleteOneAsync(A<ExpressionFilterDefinition<TestingDataObject>>._, default))
+		A.CallTo(() => collection.DeleteOneAsync(A<ExpressionFilterDefinition<TestingMongoObject>>._, default))
 		.MustHaveHappened(itemList.Count, Times.Exactly);
 	}
 
