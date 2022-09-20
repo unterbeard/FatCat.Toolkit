@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
+namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
 public class DataRepositoryCtorTests : DataRepositoryTests
 {

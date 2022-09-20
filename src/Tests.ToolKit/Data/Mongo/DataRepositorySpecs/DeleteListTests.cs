@@ -3,7 +3,7 @@ using FatCat.Toolkit.Testing;
 using MongoDB.Driver;
 using Xunit;
 
-namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
+namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
 public class DeleteListTests : DataRepositoryTests
 {

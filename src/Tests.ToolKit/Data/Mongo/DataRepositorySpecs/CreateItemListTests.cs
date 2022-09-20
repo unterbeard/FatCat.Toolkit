@@ -2,7 +2,7 @@
 using FatCat.Toolkit.Testing;
 using Xunit;
 
-namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
+namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
 public class CreateItemListTests : DataRepositoryTests
 {

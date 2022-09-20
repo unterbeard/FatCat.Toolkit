@@ -1,12 +1,11 @@
 ﻿using FakeItEasy;
 using FatCat.Fakes;
-using FatCat.Toolkit.Data;
 using FatCat.Toolkit.Data.Mongo;
 using FluentAssertions;
 using MongoDB.Driver;
 using Xunit;
 
-namespace Tests.FatCat.Toolkit.Data;
+namespace Tests.FatCat.Toolkit.Data.Mongo;
 
 public class DataConnectionTests
 {

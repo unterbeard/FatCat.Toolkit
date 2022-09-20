@@ -1,7 +1,6 @@
-using FatCat.Toolkit.Data;
 using FatCat.Toolkit.Data.Mongo;
 
-namespace Tests.FatCat.Toolkit.Data;
+namespace Tests.FatCat.Toolkit.Data.Mongo;
 
 public class TestingMongoObject : MongoObject
 {

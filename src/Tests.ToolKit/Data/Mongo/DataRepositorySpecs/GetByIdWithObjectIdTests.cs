@@ -2,22 +2,23 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Testing;
 using FluentAssertions;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit;
 
-namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
+namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class GetSingleItemByFilter : DataRepositoryTests
+public class GetByIdWithObjectIdTests : DataRepositoryTests
 {
 	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> expressionCapture;
 	private readonly TestingMongoObject filterItem;
-	private readonly int filterNumber;
+	private readonly ObjectId id;
 
-	public GetSingleItemByFilter()
+	public GetByIdWithObjectIdTests()
 	{
-		filterNumber = Faker.RandomInt();
+		id = ObjectId.GenerateNewId();
 
-		filterItem = Faker.Create<TestingMongoObject>(afterCreate: i => i.Number = filterNumber);
+		filterItem = Faker.Create<TestingMongoObject>(afterCreate: i => i.Id = id);
 
 		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
@@ -28,7 +29,7 @@ public class GetSingleItemByFilter : DataRepositoryTests
 	[Fact]
 	public async Task CallFindAsyncWithFilter()
 	{
-		await repository.GetByFilter(i => i!.Number == filterNumber);
+		await repository.GetById(id);
 
 		A.CallTo(() => collection.FindAsync<TestingMongoObject>(A<ExpressionFilterDefinition<TestingMongoObject>>._!, default, default))
 		.MustHaveHappened();
@@ -54,7 +55,7 @@ public class GetSingleItemByFilter : DataRepositoryTests
 	[Fact]
 	public void ReturnFilterItem()
 	{
-		repository.GetByFilter(i => i!.Number == filterNumber)
+		repository.GetById(id)
 				.Should()
 				.Be(filterItem);
 	}

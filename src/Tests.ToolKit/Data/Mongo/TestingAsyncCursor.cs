@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 
-namespace Tests.FatCat.Toolkit.Data;
+namespace Tests.FatCat.Toolkit.Data.Mongo;
 
 public class TestingAsyncCursor<T> : IAsyncCursor<T>
 {

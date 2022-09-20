@@ -1,10 +1,9 @@
 using FakeItEasy;
 using FatCat.Fakes;
-using FatCat.Toolkit.Data;
 using FatCat.Toolkit.Data.Mongo;
 using MongoDB.Driver;
 
-namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
+namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
 public abstract class DataRepositoryTests
 {

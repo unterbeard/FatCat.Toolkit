@@ -6,15 +6,15 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit;
 
-namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
+namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class GetByIdWithObjectIdTests : DataRepositoryTests
+public class GetByIdTests : DataRepositoryTests
 {
 	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> expressionCapture;
 	private readonly TestingMongoObject filterItem;
 	private readonly ObjectId id;
 
-	public GetByIdWithObjectIdTests()
+	public GetByIdTests()
 	{
 		id = ObjectId.GenerateNewId();
 
@@ -29,7 +29,7 @@ public class GetByIdWithObjectIdTests : DataRepositoryTests
 	[Fact]
 	public async Task CallFindAsyncWithFilter()
 	{
-		await repository.GetById(id);
+		await repository.GetById(id.ToString());
 
 		A.CallTo(() => collection.FindAsync<TestingMongoObject>(A<ExpressionFilterDefinition<TestingMongoObject>>._!, default, default))
 		.MustHaveHappened();
@@ -55,7 +55,7 @@ public class GetByIdWithObjectIdTests : DataRepositoryTests
 	[Fact]
 	public void ReturnFilterItem()
 	{
-		repository.GetById(id)
+		repository.GetById(id.ToString())
 				.Should()
 				.Be(filterItem);
 	}

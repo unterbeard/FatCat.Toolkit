@@ -2,23 +2,22 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Testing;
 using FluentAssertions;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit;
 
-namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
+namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class GetByIdTests : DataRepositoryTests
+public class GetSingleItemByFilter : DataRepositoryTests
 {
 	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> expressionCapture;
 	private readonly TestingMongoObject filterItem;
-	private readonly ObjectId id;
+	private readonly int filterNumber;
 
-	public GetByIdTests()
+	public GetSingleItemByFilter()
 	{
-		id = ObjectId.GenerateNewId();
+		filterNumber = Faker.RandomInt();
 
-		filterItem = Faker.Create<TestingMongoObject>(afterCreate: i => i.Id = id);
+		filterItem = Faker.Create<TestingMongoObject>(afterCreate: i => i.Number = filterNumber);
 
 		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
@@ -29,7 +28,7 @@ public class GetByIdTests : DataRepositoryTests
 	[Fact]
 	public async Task CallFindAsyncWithFilter()
 	{
-		await repository.GetById(id.ToString());
+		await repository.GetByFilter(i => i!.Number == filterNumber);
 
 		A.CallTo(() => collection.FindAsync<TestingMongoObject>(A<ExpressionFilterDefinition<TestingMongoObject>>._!, default, default))
 		.MustHaveHappened();
@@ -55,7 +54,7 @@ public class GetByIdTests : DataRepositoryTests
 	[Fact]
 	public void ReturnFilterItem()
 	{
-		repository.GetById(id.ToString())
+		repository.GetByFilter(i => i!.Number == filterNumber)
 				.Should()
 				.Be(filterItem);
 	}

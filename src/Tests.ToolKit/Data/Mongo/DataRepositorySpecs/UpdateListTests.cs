@@ -4,13 +4,13 @@ using FluentAssertions;
 using MongoDB.Driver;
 using Xunit;
 
-namespace Tests.FatCat.Toolkit.Data.DataRepositorySpecs;
+namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class UpdateTests : DataRepositoryTests
+public class UpdateListTests : DataRepositoryTests
 {
 	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> updateFilterCapture;
 
-	public UpdateTests()
+	public UpdateListTests()
 	{
 		updateFilterCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 		var updateCapture = new EasyCapture<TestingMongoObject>();
@@ -22,23 +22,29 @@ public class UpdateTests : DataRepositoryTests
 	[Fact]
 	public async Task CallReplaceOneToUpdate()
 	{
-		await repository.Update(item);
+		await repository.Update(itemList);
 
-		A.CallTo(() => collection.ReplaceOneAsync(A<ExpressionFilterDefinition<TestingMongoObject>>._, item, A<ReplaceOptions>._, default))
-		.MustHaveHappened();
+		foreach (var currentItem in itemList)
+		{
+			A.CallTo(() => collection.ReplaceOneAsync(A<ExpressionFilterDefinition<TestingMongoObject>>._, currentItem, A<ReplaceOptions>._, default))
+			.MustHaveHappened();
+		}
 
-		var filter = updateFilterCapture.Value.Expression.Compile();
+		var filter = updateFilterCapture.Values.FirstOrDefault()!.Expression.Compile();
 
-		filter(item)
-			.Should()
-			.BeTrue();
+		foreach (var currentItem in itemList)
+		{
+			filter(currentItem)
+				.Should()
+				.BeTrue();
+		}
 	}
 
 	[Fact]
 	public void ReturnUpdatedItem()
 	{
-		repository.Update(item)
+		repository.Update(itemList)
 				.Should()
-				.Be(item);
+				.Be(itemList);
 	}
 }
