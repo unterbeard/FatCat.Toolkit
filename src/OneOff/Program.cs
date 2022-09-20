@@ -30,7 +30,7 @@ public class Customer
 
 	public bool IsActive { get; set; }
 
-	public string Name { get; set; }
+	public string? Name { get; set; }
 
-	public List<string> Phones { get; set; }
+	public List<string>? Phones { get; set; }
 }
