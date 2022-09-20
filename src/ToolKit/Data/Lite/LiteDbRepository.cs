@@ -18,15 +18,15 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 
 	public void Connect(string databaseFullPath) => Collection = liteDbConnection.Connect(databaseFullPath);
 
-	public async Task<T> Create(T item)
+	public Task<T> Create(T item)
 	{
 		if (Collection == null) throw new LiteDbConnectionException();
 
 		var createdId = Collection.Insert(item);
 
-		await Task.CompletedTask;
+		item.Id = createdId.AsInt32;
 
-		return null!;
+		return Task.FromResult(item);
 	}
 
 	public Task<List<T>> Create(List<T> items) => throw new NotImplementedException();
