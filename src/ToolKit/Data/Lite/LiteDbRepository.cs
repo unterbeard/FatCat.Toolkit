@@ -18,11 +18,13 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 
 	public void Connect(string databaseFullPath) => Collection = liteDbConnection.Connect(databaseFullPath);
 
-	public Task<T> Create(T item)
+	public async Task<T> Create(T item)
 	{
 		if (Collection == null) throw new LiteDbConnectionException();
 
 		var createdId = Collection.Insert(item);
+
+		await Task.CompletedTask;
 
 		return null!;
 	}

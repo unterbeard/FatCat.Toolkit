@@ -18,7 +18,7 @@ public abstract class LiteDbRepositoryTests
 
 		repository = new LiteDbRepository<LiteDbTestObject>(liteDbConnection) { Collection = collection };
 
-		testObject = Faker.Create<LiteDbTestObject>();
+		testObject = Faker.Create<LiteDbTestObject>(afterCreate: i => i.Id = default);
 	}
 
 	private void SetUpLiteDbConnection()
