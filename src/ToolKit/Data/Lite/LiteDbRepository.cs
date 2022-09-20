@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using LiteDB;
 
 namespace FatCat.Toolkit.Data.Lite;
 
@@ -11,9 +12,11 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 {
 	private readonly ILiteDbConnection<T> liteDbConnection;
 
+	public ILiteCollection<T>? Collection { get; internal set; }
+
 	public LiteDbRepository(ILiteDbConnection<T> liteDbConnection) => this.liteDbConnection = liteDbConnection;
 
-	public void Connect(string databaseFullPath) => throw new NotImplementedException();
+	public void Connect(string databaseFullPath) => Collection = liteDbConnection.Connect(databaseFullPath);
 
 	public Task<T> Create(T item) => throw new NotImplementedException();
 
