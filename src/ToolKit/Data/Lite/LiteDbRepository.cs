@@ -29,7 +29,19 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 		return Task.FromResult(item);
 	}
 
-	public Task<List<T>> Create(List<T> items) => throw new NotImplementedException();
+	public async Task<List<T>> Create(List<T> items)
+	{
+		var resultList = new List<T>();
+
+		foreach (var item in items)
+		{
+			var createdItem = await Create(item);
+
+			resultList.Add(createdItem);
+		}
+
+		return resultList;
+	}
 
 	public Task<T> Delete(T item) => throw new NotImplementedException();
 
