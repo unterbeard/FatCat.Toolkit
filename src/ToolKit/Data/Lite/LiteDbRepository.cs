@@ -18,7 +18,14 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 
 	public void Connect(string databaseFullPath) => Collection = liteDbConnection.Connect(databaseFullPath);
 
-	public Task<T> Create(T item) => throw new NotImplementedException();
+	public Task<T> Create(T item)
+	{
+		if (Collection == null) throw new LiteDbConnectionException();
+
+		var createdId = Collection.Insert(item);
+
+		return null!;
+	}
 
 	public Task<List<T>> Create(List<T> items) => throw new NotImplementedException();
 

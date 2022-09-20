@@ -16,7 +16,9 @@ try
 						IsActive = true
 					};
 
-	collection.Insert(customer);
+	var createdObject =  collection.Insert(customer);
+	
+	ConsoleLog.WriteCyan($"Created Object {createdObject}");
 
 	var allCustomers = collection.Find(i => true).ToList();
 

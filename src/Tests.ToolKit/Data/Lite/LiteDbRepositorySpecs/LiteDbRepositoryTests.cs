@@ -1,4 +1,5 @@
 ﻿using FakeItEasy;
+using FatCat.Fakes;
 using FatCat.Toolkit.Data.Lite;
 using LiteDB;
 
@@ -9,12 +10,15 @@ public abstract class LiteDbRepositoryTests
 	protected readonly LiteDbRepository<LiteDbTestObject> repository;
 	protected ILiteCollection<LiteDbTestObject> collection;
 	protected ILiteDbConnection<LiteDbTestObject> liteDbConnection;
+	protected LiteDbTestObject testObject;
 
 	protected LiteDbRepositoryTests()
 	{
 		SetUpLiteDbConnection();
 
-		repository = new LiteDbRepository<LiteDbTestObject>(liteDbConnection);
+		repository = new LiteDbRepository<LiteDbTestObject>(liteDbConnection) { Collection = collection };
+
+		testObject = Faker.Create<LiteDbTestObject>();
 	}
 
 	private void SetUpLiteDbConnection()
