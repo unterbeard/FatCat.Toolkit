@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace FatCat.Toolkit.Data.Mongo;
 
-public abstract class MongoObject : EqualObject
+public abstract class MongoObject : DataObject
 {
 	[BsonId]
 	[BsonRepresentation(BsonType.ObjectId)]

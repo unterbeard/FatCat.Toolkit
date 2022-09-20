@@ -4,35 +4,11 @@ using MongoDB.Driver;
 
 namespace FatCat.Toolkit.Data.Mongo;
 
-public interface IMongoRepository<T> where T : MongoObject
+public interface IMongoRepository<T> : IDataRepository<T> where T : MongoObject
 {
 	string DatabaseName { get; }
 
-	Task<T> Create(T item);
-
-	Task<List<T>> Create(List<T> items);
-
-	Task<T> Delete(T item);
-
-	Task<List<T>> Delete(List<T> items);
-
-	Task<List<T>> GetAll();
-
-	Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter);
-
-	Task<T?> GetByFilter(Expression<Func<T, bool>> filter);
-
-	Task<T?> GetById(string id);
-
 	Task<T?> GetById(ObjectId id);
-
-	Task<T?> GetFirst();
-
-	Task<T> GetFirstOrCreate();
-
-	Task<T> Update(T item);
-
-	Task<List<T>> Update(List<T> items);
 }
 
 public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new()
@@ -44,7 +20,7 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 	public string DatabaseName { get; }
 
 	public MongoRepository(IMongoDataConnection mongoDataConnection,
-						IMongoNames mongoNames)
+							IMongoNames mongoNames)
 	{
 		this.mongoDataConnection = mongoDataConnection;
 
