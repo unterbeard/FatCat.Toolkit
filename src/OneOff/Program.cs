@@ -1,14 +1,15 @@
 ﻿using FatCat.Toolkit.Console;
-using LiteDB;
+using FatCat.Toolkit.Data;
+using FatCat.Toolkit.Data.Lite;
 using Newtonsoft.Json;
 
 ConsoleLog.LogCallerInformation = true;
 
 try
 {
-	using var db = new LiteDatabase(@"C:\TempWorking\ToolkitSpike\LiteDatabaseSpike\ToolkitData.db");
+	var liteRepository = new LiteDbRepository<Customer>(new LiteDbConnection<Customer>(new DataNames()));
 
-	var collection = db.GetCollection<Customer>("customers");
+	liteRepository.Connect(@"C:\TempWorking\ToolkitSpike\LiteDatabaseSpike\ToolkitData.db");
 
 	var customer = new Customer
 					{
@@ -16,17 +17,13 @@ try
 						IsActive = true
 					};
 
-	var createdObject =  collection.Insert(customer);
-	
-	ConsoleLog.WriteCyan($"Created Object {createdObject}");
+	var createdObject = await liteRepository.Create(customer);
 
-	var allCustomers = collection.Find(i => true).ToList();
-
-	ConsoleLog.WriteCyan($"{JsonConvert.SerializeObject(allCustomers, Formatting.Indented)}");
+	ConsoleLog.WriteCyan($"Created Object {JsonConvert.SerializeObject(createdObject, Formatting.Indented)}");
 }
 catch (Exception ex) { ConsoleLog.WriteException(ex); }
 
-public class Customer
+public class Customer : LiteDbObject
 {
 	public int Id { get; set; }
 
