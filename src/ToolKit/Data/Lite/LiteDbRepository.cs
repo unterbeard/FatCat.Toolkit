@@ -12,7 +12,7 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 {
 	private readonly ILiteDbConnection<T> liteDbConnection;
 
-	public ILiteCollection<T>? Collection { get; internal set; }
+	public ILiteCollection<T>? Collection { get; set; }
 
 	public LiteDbRepository(ILiteDbConnection<T> liteDbConnection) => this.liteDbConnection = liteDbConnection;
 

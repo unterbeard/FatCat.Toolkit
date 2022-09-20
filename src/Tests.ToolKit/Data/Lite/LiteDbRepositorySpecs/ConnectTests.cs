@@ -1,25 +1,18 @@
 ﻿using FakeItEasy;
 using FatCat.Fakes;
-using FatCat.Toolkit.Data.Lite;
 using FluentAssertions;
-using LiteDB;
 using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
-public class ConnectTests
+public class ConnectTests : LiteDbRepositoryTests
 {
 	private readonly string databasePath;
-	private readonly LiteDbRepository<LiteDbTestObject> repository;
-	private ILiteCollection<LiteDbTestObject> collection;
-	private ILiteDbConnection<LiteDbTestObject> liteDbConnection;
 
 	public ConnectTests()
 	{
-		SetUpLiteDbConnection();
-
-		repository = new LiteDbRepository<LiteDbTestObject>(liteDbConnection);
-
+		repository.Collection = null;
+		
 		databasePath = Faker.RandomString();
 	}
 
@@ -40,15 +33,5 @@ public class ConnectTests
 		repository.Collection
 				.Should()
 				.Be(collection);
-	}
-
-	private void SetUpLiteDbConnection()
-	{
-		liteDbConnection = A.Fake<ILiteDbConnection<LiteDbTestObject>>();
-
-		collection = A.Fake<ILiteCollection<LiteDbTestObject>>();
-
-		A.CallTo(() => liteDbConnection.Connect(A<string>._))
-		.Returns(collection);
 	}
 }
