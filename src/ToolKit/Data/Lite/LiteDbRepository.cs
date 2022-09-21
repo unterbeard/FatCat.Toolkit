@@ -10,7 +10,7 @@ public interface ILiteDbRepository<T> : IDisposable, IDataRepository<T> where T 
 	T? GetById(int id);
 }
 
-public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
+public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, new()
 {
 	private readonly ILiteDbConnection<T> liteDbConnection;
 
@@ -101,9 +101,23 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 		return allItems.FirstOrDefault();
 	}
 
-	public Task<T> GetFirstOrCreate() => throw new NotImplementedException();
+	public async Task<T> GetFirstOrCreate()
+	{
+		var item = await GetFirst();
 
-	public Task<T> Update(T item) => throw new NotImplementedException();
+		if (item == null) item = await Create(new T());
+
+		return item;
+	}
+
+	public Task<T> Update(T item)
+	{
+		EnsureCollection();
+
+		Collection?.Update(item);
+
+		return Task.FromResult(item);
+	}
 
 	public Task<List<T>> Update(List<T> items) => throw new NotImplementedException();
 
