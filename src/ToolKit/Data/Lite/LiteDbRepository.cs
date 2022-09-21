@@ -6,6 +6,8 @@ namespace FatCat.Toolkit.Data.Lite;
 public interface ILiteDbRepository<T> : IDataRepository<T> where T : LiteDbObject
 {
 	void Connect(string databaseFullPath);
+
+	T GetById(int id);
 }
 
 public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
@@ -43,15 +45,31 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 		return resultList;
 	}
 
-	public Task<T> Delete(T item) => throw new NotImplementedException();
+	public Task<T> Delete(T item)
+	{
+		EnsureCollection();
 
-	public Task<List<T>> Delete(List<T> items) => throw new NotImplementedException();
+		var bsonId = GetIdBsonValue(item);
+
+		Collection?.Delete(bsonId);
+
+		return Task.FromResult(item);
+	}
+
+	public async Task<List<T>> Delete(List<T> items)
+	{
+		foreach (var item in items) await Delete(item);
+
+		return items;
+	}
 
 	public Task<List<T>> GetAll() => throw new NotImplementedException();
 
 	public Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter) => throw new NotImplementedException();
 
 	public Task<T?> GetByFilter(Expression<Func<T, bool>> filter) => throw new NotImplementedException();
+
+	public T GetById(int id) => throw new NotImplementedException();
 
 	public Task<T?> GetById(string id) => throw new NotImplementedException();
 
@@ -62,4 +80,11 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 	public Task<T> Update(T item) => throw new NotImplementedException();
 
 	public Task<List<T>> Update(List<T> items) => throw new NotImplementedException();
+
+	private void EnsureCollection()
+	{
+		if (Collection == null) throw new LiteDbConnectionException();
+	}
+
+	private BsonValue GetIdBsonValue(T item) => new(item.Id);
 }

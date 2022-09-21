@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
-public class CreateListTests : LiteDbRepositoryTests
+public class CreateListTests : RequireCollectionLiteDbRepositoryTests<List<LiteDbTestObject>>
 {
 	private readonly List<int> createdIds;
 	private readonly List<LiteDbTestObject> itemsToCreate;
@@ -30,7 +30,7 @@ public class CreateListTests : LiteDbRepositoryTests
 	[Fact]
 	public async Task CallInsertForeachItem()
 	{
-		await repository.Create(itemsToCreate);
+		await RunTest();
 
 		foreach (var item in itemsToCreate)
 		{
@@ -46,9 +46,11 @@ public class CreateListTests : LiteDbRepositoryTests
 
 		for (var i = 0; i < expectedResultList.Count; i++) { expectedResultList[i].Id = createdIds[i]; }
 
-		var resultList = await repository.Create(itemsToCreate);
+		var resultList = await RunTest();
 
 		resultList.Should()
 				.BeEquivalentTo(expectedResultList);
 	}
+
+	protected override async Task<List<LiteDbTestObject>> RunTest() => await repository.Create(itemsToCreate);
 }

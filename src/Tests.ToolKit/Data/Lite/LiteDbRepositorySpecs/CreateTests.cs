@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
-public class CreateTests : LiteDbRepositoryTests
+public class CreateTests : RequireCollectionLiteDbRepositoryTests<LiteDbTestObject>
 {
 	private readonly int createdId;
 
@@ -22,22 +22,24 @@ public class CreateTests : LiteDbRepositoryTests
 	[Fact]
 	public async Task InsertObjectIntoCollection()
 	{
-		await repository.Create(testObject);
+		await RunTest();
 
-		A.CallTo(() => collection.Insert(testObject))
+		A.CallTo(() => collection.Insert(testItem))
 		.MustHaveHappened();
 	}
 
 	[Fact]
 	public async Task ReturnTestObjectWithIdPopulated()
 	{
-		var expectedObject = testObject.DeepCopy();
+		var expectedObject = testItem.DeepCopy();
 
 		expectedObject.Id = createdId;
 
-		var result = await repository.Create(testObject);
+		var result = await RunTest();
 
 		result.Should()
 			.Be(expectedObject);
 	}
+
+	protected override async Task<LiteDbTestObject> RunTest() => await repository.Create(testItem);
 }

@@ -8,9 +8,10 @@ namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 public abstract class LiteDbRepositoryTests
 {
 	protected readonly LiteDbRepository<LiteDbTestObject> repository;
+	protected readonly LiteDbTestObject testItem;
+	protected readonly List<LiteDbTestObject> testItemList;
 	protected ILiteCollection<LiteDbTestObject> collection;
 	protected ILiteDbConnection<LiteDbTestObject> liteDbConnection;
-	protected LiteDbTestObject testObject;
 
 	protected LiteDbRepositoryTests()
 	{
@@ -18,7 +19,11 @@ public abstract class LiteDbRepositoryTests
 
 		repository = new LiteDbRepository<LiteDbTestObject>(liteDbConnection) { Collection = collection };
 
-		testObject = Faker.Create<LiteDbTestObject>(afterCreate: i => i.Id = default);
+		testItem = Faker.Create<LiteDbTestObject>(afterCreate: i => i.Id = default);
+
+		testItemList = Faker.Create<List<LiteDbTestObject>>();
+
+		foreach (var item in testItemList) item.Id = default;
 	}
 
 	private void SetUpLiteDbConnection()
