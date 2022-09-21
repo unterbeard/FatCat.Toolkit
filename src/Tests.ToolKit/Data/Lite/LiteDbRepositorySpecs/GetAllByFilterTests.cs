@@ -1,26 +1,13 @@
-﻿using System.Linq.Expressions;
-using FakeItEasy;
-using FatCat.Fakes;
+﻿using FakeItEasy;
 using FatCat.Toolkit.Testing;
 using FluentAssertions;
 using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
-public class GetAllByFilterTests : RequireCollectionLiteDbRepositoryTests<List<LiteDbTestObject>>
+public class GetAllByFilterTests : FilterLiteDbRepositoryTests<List<LiteDbTestObject>>
 {
-	private readonly EasyCapture<Expression<Func<LiteDbTestObject, bool>>> filterCapture;
-	private readonly int numberToFind;
-
-	public GetAllByFilterTests()
-	{
-		numberToFind = Faker.RandomInt();
-
-		filterCapture = new EasyCapture<Expression<Func<LiteDbTestObject, bool>>>();
-
-		A.CallTo(() => collection.Find(filterCapture, A<int>._, A<int>._))
-		.Returns(testItemList);
-	}
+	protected override List<LiteDbTestObject> ItemsToReturn => testItemList;
 
 	[Fact]
 	public async Task GetAllByFilter()
