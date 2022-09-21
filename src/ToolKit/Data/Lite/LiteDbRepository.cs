@@ -85,7 +85,12 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 		return Task.FromResult(result.ToList());
 	}
 
-	public Task<T?> GetByFilter(Expression<Func<T, bool>> filter) => throw new NotImplementedException();
+	public Task<T?> GetByFilter(Expression<Func<T, bool>> filter)
+	{
+		EnsureCollection();
+
+		return Task.FromResult(default(T));
+	}
 
 	public T GetById(int id) => throw new NotImplementedException();
 
