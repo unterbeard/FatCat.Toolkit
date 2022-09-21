@@ -3,7 +3,7 @@ using LiteDB;
 
 namespace FatCat.Toolkit.Data.Lite;
 
-public interface ILiteDbRepository<T> : IDataRepository<T> where T : LiteDbObject
+public interface ILiteDbRepository<T> : IDisposable, IDataRepository<T> where T : LiteDbObject
 {
 	void Connect(string databaseFullPath);
 
@@ -62,6 +62,8 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 
 		return items;
 	}
+
+	public void Dispose() => liteDbConnection.Dispose();
 
 	public async Task<List<T>> GetAll()
 	{

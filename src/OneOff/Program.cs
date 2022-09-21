@@ -7,9 +7,11 @@ ConsoleLog.LogCallerInformation = true;
 
 try
 {
-	var liteRepository = new LiteDbRepository<Customer>(new LiteDbConnection<Customer>(new DataNames()));
+	using var liteRepository = new LiteDbRepository<Customer>(new LiteDbConnection<Customer>(new DataNames()));
 
-	liteRepository.Connect(@"C:\TempWorking\ToolkitSpike\LiteDatabaseSpike\ToolkitData.db");
+	var databaseFullPath = @"C:\TempWorking\ToolkitSpike\LiteDatabaseSpike\ToolkitData.db";
+	
+	liteRepository.Connect(databaseFullPath);
 
 	var customer = new Customer
 					{
