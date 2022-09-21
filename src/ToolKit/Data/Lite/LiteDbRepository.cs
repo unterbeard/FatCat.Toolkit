@@ -7,7 +7,7 @@ public interface ILiteDbRepository<T> : IDisposable, IDataRepository<T> where T 
 {
 	void Connect(string databaseFullPath);
 
-	T GetById(int id);
+	T? GetById(int id);
 }
 
 public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
@@ -92,7 +92,7 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 		return result.FirstOrDefault();
 	}
 
-	public T GetById(int id) => throw new NotImplementedException();
+	public T? GetById(int id) => GetByFilter(i => i.Id == id).Result;
 
 	public Task<T?> GetById(string id) => throw new NotImplementedException();
 
