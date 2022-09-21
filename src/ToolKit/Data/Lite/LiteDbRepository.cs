@@ -94,9 +94,12 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 
 	public T? GetById(int id) => GetByFilter(i => i.Id == id).Result;
 
-	public Task<T?> GetById(string id) => throw new NotImplementedException();
+	public async Task<T?> GetFirst()
+	{
+		var allItems = await GetAll();
 
-	public Task<T?> GetFirst() => throw new NotImplementedException();
+		return allItems.FirstOrDefault();
+	}
 
 	public Task<T> GetFirstOrCreate() => throw new NotImplementedException();
 

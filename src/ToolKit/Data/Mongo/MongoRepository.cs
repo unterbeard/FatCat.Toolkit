@@ -8,6 +8,8 @@ public interface IMongoRepository<T> : IDataRepository<T> where T : MongoObject
 {
 	string DatabaseName { get; }
 
+	Task<T?> GetById(string id);
+
 	Task<T?> GetById(ObjectId id);
 }
 
