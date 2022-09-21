@@ -25,8 +25,6 @@ catch (Exception ex) { ConsoleLog.WriteException(ex); }
 
 public class Customer : LiteDbObject
 {
-	public int Id { get; set; }
-
 	public bool IsActive { get; set; }
 
 	public string? Name { get; set; }
