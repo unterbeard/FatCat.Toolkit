@@ -76,7 +76,14 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject
 		return result ?? new List<T>();
 	}
 
-	public Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter) => throw new NotImplementedException();
+	public Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter)
+	{
+		EnsureCollection();
+
+		var result = Collection?.Find(filter)!;
+
+		return Task.FromResult(result.ToList());
+	}
 
 	public Task<T?> GetByFilter(Expression<Func<T, bool>> filter) => throw new NotImplementedException();
 

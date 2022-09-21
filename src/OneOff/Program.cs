@@ -26,10 +26,9 @@ try
 
 	const string nameToFind = "9462bc67a";
 
-	var foundItems = liteRepository.Collection.Find(i => i.Name == nameToFind);
-	
-	ConsoleLog.WriteBlue($"{JsonConvert.SerializeObject(foundItems, Formatting.Indented)}");
+	var foundItems = await liteRepository.GetAllByFilter(i => i.Name == nameToFind);
 
+	ConsoleLog.WriteBlue($"{JsonConvert.SerializeObject(foundItems, Formatting.Indented)}");
 }
 catch (Exception ex) { ConsoleLog.WriteException(ex); }
 
