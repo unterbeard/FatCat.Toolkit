@@ -119,7 +119,12 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 		return Task.FromResult(item);
 	}
 
-	public Task<List<T>> Update(List<T> items) => throw new NotImplementedException();
+	public async Task<List<T>> Update(List<T> items)
+	{
+		foreach (var item in items) await Update(item);
+
+		return items;
+	}
 
 	private void EnsureCollection()
 	{
