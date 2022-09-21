@@ -7,6 +7,7 @@
         <RootNamespace>Tests.FatCat.Toolkit</RootNamespace>
         <AssemblyName>Tests.FatCat.Toolkit</AssemblyName>
         <LangVersion>default</LangVersion>
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

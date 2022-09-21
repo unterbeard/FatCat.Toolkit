@@ -21,18 +21,7 @@ public class EasyCapture<T>
 
 	public bool HasValues => values.Any();
 
-	public T Value
-	{
-		get
-		{
-			return values.Count switch
-			{
-				0 => throw new InvalidOperationException("No values have been captured"),
-				> 1 => throw new InvalidOperationException("Multiple values were captured, uses Values property instead"),
-				_ => values.First()
-			};
-		}
-	}
+	public T Value => values.First();
 
 	public IReadOnlyList<T> Values => values.AsReadOnly();
 

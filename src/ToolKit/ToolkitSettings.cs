@@ -1,3 +1,4 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
-[assembly:AssemblyKeyFile("FatCatToolKit.snk")]
+[assembly: AssemblyKeyFile("FatCatToolKit.snk")]

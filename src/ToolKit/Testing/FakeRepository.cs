@@ -2,13 +2,14 @@ using System.Linq.Expressions;
 using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.Data;
+using FatCat.Toolkit.Data.Mongo;
 using MongoDB.Bson;
 
 namespace FatCat.Toolkit.Testing;
 
-public class FakeRepository<T> : IDataRepository<T> where T : DataObject
+public class FakeRepository<T> : IMongoRepository<T> where T : MongoObject
 {
-	private readonly IDataRepository<T> repository;
+	private readonly IMongoRepository<T> repository;
 
 	public EasyCapture<T> CreatedCapture { get; } = new();
 
@@ -36,7 +37,7 @@ public class FakeRepository<T> : IDataRepository<T> where T : DataObject
 
 	public FakeRepository()
 	{
-		repository = A.Fake<IDataRepository<T>>();
+		repository = A.Fake<IMongoRepository<T>>();
 
 		SetUpGet();
 		SetUpCreate();

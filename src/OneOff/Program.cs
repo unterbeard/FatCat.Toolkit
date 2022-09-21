@@ -1,39 +1,42 @@
-﻿using System.Diagnostics;
-using System.IO.Abstractions;
-using FatCat.Toolkit;
+﻿using FatCat.Fakes;
 using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Extensions;
+using FatCat.Toolkit.Data;
+using FatCat.Toolkit.Data.Lite;
+using Newtonsoft.Json;
 
 ConsoleLog.LogCallerInformation = true;
 
-async Task<byte[]> GetHash(byte[] bytesToHash)
-{
-	var hashTools = new HashTools();
-
-	var watch = Stopwatch.StartNew();
-
-	var bytes = await hashTools.CalculateHash(bytesToHash);
-
-	watch.Stop();
-
-	ConsoleLog.WriteMagenta($"Time to compute hash {watch.Elapsed}");
-
-	return bytes;
-}
-
 try
 {
-	var fileTools = new FileSystemTools(new FileSystem());
+	using var liteRepository = new LiteDbRepository<Customer>(new LiteDbConnection<Customer>(new DataNames()));
 
-	var testFilePath = @"C:\FogFileChunkTesting\FileToTestWith.txt";
-	var otherFilePath = @"C:\FogFileChunkTesting\FileToTestWith.txt";
+	var databaseFullPath = @"C:\TempWorking\ToolkitSpike\LiteDatabaseSpike\ToolkitData.db";
 
-	var firstHash = await GetHash(await fileTools.ReadAllBytes(testFilePath));
+	liteRepository.Connect(databaseFullPath);
 
-	ConsoleLog.WriteBlue($"Hash.Length <{firstHash.Length}> | {firstHash.ToReadableString()} | {testFilePath}");
+	var customer = Faker.Create<Customer>(afterCreate: i => i.Id = default);
 
-	var secondHash = await GetHash(await fileTools.ReadAllBytes(otherFilePath));
+	var createdObject = await liteRepository.Create(customer);
 
-	ConsoleLog.WriteBlue($"Hash.Length <{secondHash.Length}> | {secondHash.ToReadableString()} | {otherFilePath}");
+	ConsoleLog.WriteCyan($"Created Object {JsonConvert.SerializeObject(createdObject, Formatting.Indented)}");
+
+	var allObjects = liteRepository.Collection.FindAll()!;
+
+	ConsoleLog.WriteMagenta($"{JsonConvert.SerializeObject(allObjects, Formatting.Indented)}");
+
+	const string nameToFind = "9462bc67a";
+
+	var foundItems = await liteRepository.GetAllByFilter(i => i.Name == nameToFind);
+
+	ConsoleLog.WriteBlue($"{JsonConvert.SerializeObject(foundItems, Formatting.Indented)}");
 }
 catch (Exception ex) { ConsoleLog.WriteException(ex); }
+
+public class Customer : LiteDbObject
+{
+	public bool IsActive { get; set; }
+
+	public string? Name { get; set; }
+
+	public List<string>? Phones { get; set; }
+}
