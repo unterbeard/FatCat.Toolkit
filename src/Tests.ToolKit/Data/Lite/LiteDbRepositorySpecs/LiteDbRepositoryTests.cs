@@ -11,13 +11,13 @@ public abstract class LiteDbRepositoryTests
 	protected readonly LiteDbTestObject testItem;
 	protected readonly List<LiteDbTestObject> testItemList;
 	protected ILiteCollection<LiteDbTestObject> collection;
-	protected ILiteDbConnection<LiteDbTestObject> liteDbConnection;
+	protected ILiteDbConnection connection;
 
 	protected LiteDbRepositoryTests()
 	{
 		SetUpLiteDbConnection();
 
-		repository = new LiteDbRepository<LiteDbTestObject>(liteDbConnection) { Collection = collection };
+		repository = new LiteDbRepository<LiteDbTestObject>(connection) { Collection = collection };
 
 		testItem = Faker.Create<LiteDbTestObject>(afterCreate: i => i.Id = default);
 
@@ -28,11 +28,11 @@ public abstract class LiteDbRepositoryTests
 
 	private void SetUpLiteDbConnection()
 	{
-		liteDbConnection = A.Fake<ILiteDbConnection<LiteDbTestObject>>();
+		connection = A.Fake<ILiteDbConnection>();
 
 		collection = A.Fake<ILiteCollection<LiteDbTestObject>>();
 
-		A.CallTo(() => liteDbConnection.Connect(A<string>._))
+		A.CallTo(() => connection.GetCollection<LiteDbTestObject>())
 		.Returns(collection);
 	}
 }

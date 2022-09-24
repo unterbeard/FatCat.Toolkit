@@ -15,7 +15,7 @@ public abstract class RequireCollectionLiteDbRepositoryTests<T> : LiteDbReposito
 
 		testAction
 			.Should()
-			.Throw<LiteDbConnectionException>();
+			.Throw<LiteDbCollectionException>();
 	}
 
 	protected abstract Task<T> RunTest();

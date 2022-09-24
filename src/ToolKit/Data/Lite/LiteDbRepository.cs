@@ -12,19 +12,24 @@ public interface ILiteDbRepository<T> : IDisposable, IDataRepository<T> where T 
 
 public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, new()
 {
-	private readonly ILiteDbConnection<T> liteDbConnection;
+	private readonly ILiteDbConnection connection;
 
 	public ILiteCollection<T>? Collection { get; set; }
 
-	public LiteDbRepository(ILiteDbConnection<T> liteDbConnection) => this.liteDbConnection = liteDbConnection;
+	public LiteDbRepository(ILiteDbConnection connection) => this.connection = connection;
 
-	public void Connect(string databaseFullPath) => Collection = liteDbConnection.Connect(databaseFullPath);
+	public void Connect(string databaseFullPath)
+	{
+		connection.Connect(databaseFullPath);
+
+		Collection = connection.GetCollection<T>();
+	}
 
 	public Task<T> Create(T item)
 	{
-		if (Collection == null) throw new LiteDbConnectionException();
+		EnsureCollection();
 
-		var createdId = Collection.Insert(item);
+		var createdId = Collection?.Insert(item)!;
 
 		item.Id = createdId.AsInt32;
 
@@ -63,7 +68,7 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 		return items;
 	}
 
-	public void Dispose() => liteDbConnection.Dispose();
+	public void Dispose() => connection.Dispose();
 
 	public async Task<List<T>> GetAll()
 	{
@@ -128,7 +133,7 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 
 	private void EnsureCollection()
 	{
-		if (Collection == null) throw new LiteDbConnectionException();
+		if (Collection == null) throw new LiteDbCollectionException();
 	}
 
 	private BsonValue GetIdBsonValue(T item) => new(item.Id);

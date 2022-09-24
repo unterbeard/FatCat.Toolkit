@@ -12,16 +12,25 @@ public class ConnectTests : LiteDbRepositoryTests
 	public ConnectTests()
 	{
 		repository.Collection = null;
-		
+
 		databasePath = Faker.RandomString();
 	}
 
 	[Fact]
-	public void ConnectToDbConnection()
+	public void ConnectToTheDatabase()
 	{
 		repository.Connect(databasePath);
 
-		A.CallTo(() => liteDbConnection.Connect(databasePath))
+		A.CallTo(() => connection.Connect(databasePath))
+		.MustHaveHappened();
+	}
+
+	[Fact]
+	public void GetTheCollection()
+	{
+		repository.Connect(databasePath);
+
+		A.CallTo(() => connection.GetCollection<LiteDbTestObject>())
 		.MustHaveHappened();
 	}
 
