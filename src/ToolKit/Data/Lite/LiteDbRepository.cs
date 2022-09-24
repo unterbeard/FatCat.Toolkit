@@ -27,9 +27,9 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 
 	public Task<T> Create(T item)
 	{
-		if (Collection == null) throw new LiteDbCollectionException();
+		EnsureCollection();
 
-		var createdId = Collection.Insert(item);
+		var createdId = Collection?.Insert(item)!;
 
 		item.Id = createdId.AsInt32;
 
