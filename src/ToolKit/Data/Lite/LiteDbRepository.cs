@@ -22,7 +22,7 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 
 	public Task<T> Create(T item)
 	{
-		if (Collection == null) throw new LiteDbConnectionException();
+		if (Collection == null) throw new LiteDbCollectionException();
 
 		var createdId = Collection.Insert(item);
 
@@ -128,7 +128,7 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 
 	private void EnsureCollection()
 	{
-		if (Collection == null) throw new LiteDbConnectionException();
+		if (Collection == null) throw new LiteDbCollectionException();
 	}
 
 	private BsonValue GetIdBsonValue(T item) => new(item.Id);
