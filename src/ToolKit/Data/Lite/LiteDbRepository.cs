@@ -12,13 +12,13 @@ public interface ILiteDbRepository<T> : IDisposable, IDataRepository<T> where T 
 
 public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, new()
 {
-	private readonly ILiteDbConnection<T> liteDbConnection;
+	private readonly ILiteDbCollection<T> liteDbCollection;
 
 	public ILiteCollection<T>? Collection { get; set; }
 
-	public LiteDbRepository(ILiteDbConnection<T> liteDbConnection) => this.liteDbConnection = liteDbConnection;
+	public LiteDbRepository(ILiteDbCollection<T> liteDbCollection) => this.liteDbCollection = liteDbCollection;
 
-	public void Connect(string databaseFullPath) => Collection = liteDbConnection.Connect(databaseFullPath);
+	public void Connect(string databaseFullPath) => Collection = liteDbCollection.GetCollection(databaseFullPath);
 
 	public Task<T> Create(T item)
 	{
@@ -63,7 +63,7 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 		return items;
 	}
 
-	public void Dispose() => liteDbConnection.Dispose();
+	public void Dispose() => liteDbCollection.Dispose();
 
 	public async Task<List<T>> GetAll()
 	{

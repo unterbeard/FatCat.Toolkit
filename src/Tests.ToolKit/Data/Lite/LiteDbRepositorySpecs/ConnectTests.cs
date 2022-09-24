@@ -21,7 +21,7 @@ public class ConnectTests : LiteDbRepositoryTests
 	{
 		repository.Connect(databasePath);
 
-		A.CallTo(() => liteDbConnection.Connect(databasePath))
+		A.CallTo(() => liteDbCollection.GetCollection(databasePath))
 		.MustHaveHappened();
 	}
 
