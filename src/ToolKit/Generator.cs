@@ -7,6 +7,8 @@ public interface IGenerator
 {
 	Guid NewGuid();
 
+	string NewId();
+
 	ObjectId NewObjectId();
 
 	int NextRandom(int? minNumber = null, int? maxNumber = null);
@@ -17,6 +19,8 @@ public interface IGenerator
 public class Generator : IGenerator
 {
 	public Guid NewGuid() => Guid.NewGuid();
+
+	public string NewId() => NewObjectId().ToString();
 
 	public ObjectId NewObjectId() => ObjectId.GenerateNewId();
 
