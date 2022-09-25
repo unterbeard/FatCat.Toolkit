@@ -2,6 +2,7 @@
 using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.Data.Lite;
+using FluentAssertions;
 
 namespace FatCat.Toolkit.Testing;
 
@@ -41,8 +42,6 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 		SetUpDelete();
 	}
 
-	public void SetDatabasePath(string databaseFullPath) => repository.SetDatabasePath(databaseFullPath);
-
 	public async Task<T> Create(T item) => await repository.Create(item);
 
 	public async Task<List<T>> Create(List<T> items) => await repository.Create(items);
@@ -65,6 +64,8 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 
 	public async Task<T> GetFirstOrCreate() => await repository.GetFirstOrCreate();
 
+	public void SetDatabasePath(string databaseFullPath) => repository.SetDatabasePath(databaseFullPath);
+
 	public async Task<T> Update(T item) => await repository.Update(item);
 
 	public async Task<List<T>> Update(List<T> items) => await repository.Update(items);
@@ -75,10 +76,14 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 		.MustHaveHappened();
 	}
 
-	public void VerifyCreate()
+	public void VerifyCreate(T expectedItem)
 	{
 		A.CallTo(() => repository.Create(A<T>._))
 		.MustHaveHappened();
+
+		CreatedCapture.Value
+					.Should()
+					.Be(expectedItem);
 	}
 
 	public void VerifyGetAll()
