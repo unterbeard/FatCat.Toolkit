@@ -12,7 +12,7 @@ try
 
 	var databaseFullPath = @"C:\TempWorking\ToolkitSpike\LiteDatabaseSpike\ToolkitData.db";
 
-	liteRepository.Connect(databaseFullPath);
+	liteRepository.SetDatabasePath(databaseFullPath);
 
 	var customer = Faker.Create<Customer>(afterCreate: i => i.Id = default);
 

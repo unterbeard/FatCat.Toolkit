@@ -41,7 +41,7 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 		SetUpDelete();
 	}
 
-	public void Connect(string databaseFullPath) => repository.Connect(databaseFullPath);
+	public void SetDatabasePath(string databaseFullPath) => repository.SetDatabasePath(databaseFullPath);
 
 	public async Task<T> Create(T item) => await repository.Create(item);
 
@@ -71,7 +71,7 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 
 	public void VerifyConnect(string expectedDatabasePath)
 	{
-		A.CallTo(() => repository.Connect(expectedDatabasePath))
+		A.CallTo(() => repository.SetDatabasePath(expectedDatabasePath))
 		.MustHaveHappened();
 	}
 

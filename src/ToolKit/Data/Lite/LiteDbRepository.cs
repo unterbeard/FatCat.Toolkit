@@ -5,9 +5,9 @@ namespace FatCat.Toolkit.Data.Lite;
 
 public interface ILiteDbRepository<T> : IDisposable, IDataRepository<T> where T : LiteDbObject
 {
-	void Connect(string databaseFullPath);
-
 	T? GetById(int id);
+
+	void SetDatabasePath(string databaseFullPath);
 }
 
 public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, new()
@@ -16,14 +16,9 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 
 	public ILiteCollection<T>? Collection { get; set; }
 
+	public string? DatabasePath { get; set; }
+
 	public LiteDbRepository(ILiteDbConnection connection) => this.connection = connection;
-
-	public void Connect(string databaseFullPath)
-	{
-		connection.Connect(databaseFullPath);
-
-		Collection = connection.GetCollection<T>();
-	}
 
 	public Task<T> Create(T item)
 	{
@@ -115,6 +110,8 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 		return item;
 	}
 
+	public void SetDatabasePath(string databaseFullPath) => DatabasePath = databaseFullPath;
+
 	public Task<T> Update(T item)
 	{
 		EnsureCollection();
@@ -129,6 +126,15 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 		foreach (var item in items) await Update(item);
 
 		return items;
+	}
+
+	private void Connect()
+	{
+		if (DatabasePath == null) throw new LiteDbConnectionException();
+
+		connection.Connect(DatabasePath);
+
+		Collection = connection.GetCollection<T>();
 	}
 
 	private void EnsureCollection()
