@@ -86,6 +86,12 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 					.Be(expectedItem);
 	}
 
+	public void VerifyCreate()
+	{
+		A.CallTo(() => repository.Create(A<T>._))
+		.MustHaveHappened();
+	}
+
 	public void VerifyGetAll()
 	{
 		A.CallTo(() => repository.GetAll())
