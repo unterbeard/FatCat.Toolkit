@@ -1,19 +1,11 @@
-﻿using FatCat.Fakes;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
 public class SetDatabaseNameTests : LiteDbRepositoryTests
 {
-	private readonly string databasePath;
-
-	public SetDatabaseNameTests()
-	{
-		repository.Collection = null;
-
-		databasePath = Faker.RandomString();
-	}
+	public SetDatabaseNameTests() => repository.DatabasePath = null;
 
 	[Fact]
 	public void RetainTheDatabaseName()

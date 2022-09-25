@@ -24,7 +24,12 @@ public class LiteDbConnection : ILiteDbConnection
 		database = new LiteDatabase(databasePath);
 	}
 
-	public void Dispose() => database?.Dispose();
+	public void Dispose()
+	{
+		database?.Dispose();
+
+		database = null;
+	}
 
 	public ILiteCollection<T> GetCollection<T>() where T : LiteDbObject
 	{

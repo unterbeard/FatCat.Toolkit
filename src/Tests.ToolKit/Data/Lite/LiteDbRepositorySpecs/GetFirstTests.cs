@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
-public class GetFirstTests : RequireCollectionLiteDbRepositoryTests<LiteDbTestObject>
+public class GetFirstTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestObject>
 {
 	public GetFirstTests()
 	{

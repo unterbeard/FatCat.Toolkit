@@ -12,12 +12,15 @@ public abstract class LiteDbRepositoryTests
 	protected readonly List<LiteDbTestObject> testItemList;
 	protected ILiteCollection<LiteDbTestObject> collection;
 	protected ILiteDbConnection connection;
+	protected readonly string databasePath;
 
 	protected LiteDbRepositoryTests()
 	{
+		databasePath = Faker.RandomString();
+
 		SetUpLiteDbConnection();
 
-		repository = new LiteDbRepository<LiteDbTestObject>(connection) { Collection = collection };
+		repository = new LiteDbRepository<LiteDbTestObject>(connection) { DatabasePath = databasePath };
 
 		testItem = Faker.Create<LiteDbTestObject>(afterCreate: i => i.Id = default);
 

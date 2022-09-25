@@ -22,11 +22,13 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 
 	public Task<T> Create(T item)
 	{
-		EnsureCollection();
+		Connect();
 
 		var createdId = Collection?.Insert(item)!;
 
 		item.Id = createdId.AsInt32;
+
+		Disconnect();
 
 		return Task.FromResult(item);
 	}
@@ -47,11 +49,13 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 
 	public Task<T> Delete(T item)
 	{
-		EnsureCollection();
+		Connect();
 
 		var bsonId = GetIdBsonValue(item);
 
 		Collection?.Delete(bsonId);
+
+		Disconnect();
 
 		return Task.FromResult(item);
 	}
@@ -63,24 +67,28 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 		return items;
 	}
 
-	public void Dispose() => connection.Dispose();
+	public void Dispose() => Disconnect();
 
 	public async Task<List<T>> GetAll()
 	{
-		EnsureCollection();
+		Connect();
 
 		await Task.CompletedTask;
 
 		var result = Collection?.FindAll().ToList();
+
+		Disconnect();
 
 		return result ?? new List<T>();
 	}
 
 	public Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter)
 	{
-		EnsureCollection();
+		Connect();
 
 		var result = Collection?.Find(filter)!;
+
+		Disconnect();
 
 		return Task.FromResult(result.ToList());
 	}
@@ -114,9 +122,11 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 
 	public Task<T> Update(T item)
 	{
-		EnsureCollection();
+		Connect();
 
 		Collection?.Update(item);
+
+		Disconnect();
 
 		return Task.FromResult(item);
 	}
@@ -137,9 +147,11 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 		Collection = connection.GetCollection<T>();
 	}
 
-	private void EnsureCollection()
+	private void Disconnect()
 	{
-		if (Collection == null) throw new LiteDbCollectionException();
+		Collection = null;
+
+		connection.Dispose();
 	}
 
 	private BsonValue GetIdBsonValue(T item) => new(item.Id);

@@ -6,7 +6,7 @@ using FluentAssertions;
 
 namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
-public abstract class FilterLiteDbRepositoryTests<T> : RequireCollectionLiteDbRepositoryTests<T>
+public abstract class FilterLiteDbRepositoryTests<T> : ConnectionHandlingLiteDbRepositoryTests<T>
 {
 	protected readonly EasyCapture<Expression<Func<LiteDbTestObject, bool>>> filterCapture;
 	protected readonly int numberToFind;

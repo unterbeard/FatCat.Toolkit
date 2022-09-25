@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
-public class CreateListTests : RequireCollectionLiteDbRepositoryTests<List<LiteDbTestObject>>
+public class CreateListTests : ConnectionHandlingLiteDbRepositoryTests<List<LiteDbTestObject>>
 {
 	private readonly List<int> createdIds;
 	private readonly List<LiteDbTestObject> itemsToCreate;

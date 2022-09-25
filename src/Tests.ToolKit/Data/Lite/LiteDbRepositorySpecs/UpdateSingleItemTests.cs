@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
-public class UpdateSingleItemTests : RequireCollectionLiteDbRepositoryTests<LiteDbTestObject>
+public class UpdateSingleItemTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestObject>
 {
 	[Fact]
 	public async Task CallUpdateOnCollection()

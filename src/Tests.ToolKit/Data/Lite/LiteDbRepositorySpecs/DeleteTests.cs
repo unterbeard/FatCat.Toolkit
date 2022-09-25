@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
-public class DeleteTests : RequireCollectionLiteDbRepositoryTests<LiteDbTestObject>
+public class DeleteTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestObject>
 {
 	private readonly EasyCapture<BsonValue> deleteCapture;
 
