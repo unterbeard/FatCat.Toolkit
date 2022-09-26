@@ -2,9 +2,9 @@
 
 public class FakeThread : IThread
 {
-	public void Run(Action action) { action(); }
+	public void Run(Action action) => action();
 
-	public void Run(Func<Task> action) { action().Wait(); }
+	public void Run(Func<Task> action) => action().Wait();
 
 	public Task Sleep(TimeSpan sleepTime) => Task.CompletedTask;
 
