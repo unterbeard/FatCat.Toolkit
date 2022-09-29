@@ -69,7 +69,8 @@ public class EqualObjectTests
 								FirstName = firstObject.FirstName,
 								LastName = firstObject.LastName,
 								TheNumber = firstObject.TheNumber,
-								On = firstObject.On
+								On = firstObject.On,
+								SomeId = firstObject.SomeId
 							};
 
 		return (firstObject, secondObject);
@@ -86,6 +87,8 @@ public class EqualObjectTests
 		public TimeSpan Length { get; set; }
 
 		public bool On { get; set; }
+
+		public Guid SomeId { get; set; }
 
 		public int TheNumber { get; set; }
 	}
