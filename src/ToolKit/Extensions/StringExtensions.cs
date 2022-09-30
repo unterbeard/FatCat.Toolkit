@@ -142,6 +142,8 @@ public static class StringExtensions
 
 	public static Stream ToStream(this string? value) => new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
 
+	public static Uri ToUri(this string text) => new(text);
+
 	public static ushort ToUShort(this string? value, ushort? defaultValue = null)
 	{
 		if (!defaultValue.HasValue) return value == null ? default : ushort.Parse(value);
