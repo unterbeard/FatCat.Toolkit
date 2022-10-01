@@ -86,6 +86,88 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 		.MustHaveHappened();
 	}
 
+	public void VerifyDidNotAdd(T? expectedItem = null)
+	{
+		if (expectedItem == null)
+		{
+			A.CallTo(() => Cache.Add(A<T>._))
+			.MustNotHaveHappened();
+		}
+		else
+		{
+			A.CallTo(() => Cache.Add(expectedItem))
+			.MustNotHaveHappened();
+		}
+	}
+
+	public void VerifyDidNotAddList(List<T>? expectedItems = null)
+	{
+		if (expectedItems == null)
+		{
+			A.CallTo(() => Cache.Add(A<List<T>>._))
+			.MustNotHaveHappened();
+		}
+		else
+		{
+			A.CallTo(() => Cache.Add(expectedItems))
+			.MustNotHaveHappened();
+		}
+	}
+
+	public void VerifyDidNotClear()
+	{
+		A.CallTo(() => Cache.Clear())
+		.MustNotHaveHappened();
+	}
+
+	public void VerifyDidNotGet(string? expectedCacheId)
+	{
+		if (expectedCacheId == null)
+		{
+			A.CallTo(() => Cache.Get(A<string>._))
+			.MustNotHaveHappened();
+		}
+		else
+		{
+			A.CallTo(() => Cache.Get(expectedCacheId))
+			.MustNotHaveHappened();
+		}
+	}
+
+	public void VerifyDidNotGetAll()
+	{
+		A.CallTo(() => Cache.GetAll())
+		.MustNotHaveHappened();
+	}
+
+	public void VerifyDidNotInCache(string? expectedId = null)
+	{
+		if (expectedId == null)
+		{
+			A.CallTo(() => Cache.InCache(A<string>._))
+			.MustNotHaveHappened();
+		}
+		else
+		{
+			A.CallTo(() => Cache.InCache(expectedId))
+			.MustNotHaveHappened();
+		}
+	}
+
+	public void VerifyDidNotRemove(string? expectedId = null)
+	{
+		if (expectedId == null)
+		{
+			A.CallTo(() => Cache.Remove(A<string>._))
+			.MustNotHaveHappened();
+		}
+		else
+		{
+			A.CallTo(() => Cache.Remove(expectedId))
+			.MustNotHaveHappened();
+		}
+	}
+
 	public void VerifyGet(string? expectedCacheId)
 	{
 		if (expectedCacheId == null)
