@@ -65,4 +65,72 @@ public class FakeCache<T> : IFatCatCache<T> where T : class, ICacheItem
 			.MustHaveHappened();
 		}
 	}
+
+	public void VerifyAddList(List<T>? expectedItems = null)
+	{
+		if (expectedItems == null)
+		{
+			A.CallTo(() => Cache.Add(A<List<T>>._))
+			.MustHaveHappened();
+		}
+		else
+		{
+			A.CallTo(() => Cache.Add(expectedItems))
+			.MustHaveHappened();
+		}
+	}
+
+	public void VerifyClear()
+	{
+		A.CallTo(() => Cache.Clear())
+		.MustHaveHappened();
+	}
+
+	public void VerifyGet(string? expectedCacheId)
+	{
+		if (expectedCacheId == null)
+		{
+			A.CallTo(() => Cache.Get(A<string>._))
+			.MustHaveHappened();
+		}
+		else
+		{
+			A.CallTo(() => Cache.Get(expectedCacheId))
+			.MustHaveHappened();
+		}
+	}
+
+	public void VerifyGetAll()
+	{
+		A.CallTo(() => Cache.GetAll())
+		.MustHaveHappened();
+	}
+
+	public void VerifyInCache(string? expectedId = null)
+	{
+		if (expectedId == null)
+		{
+			A.CallTo(() => Cache.InCache(A<string>._))
+			.MustHaveHappened();
+		}
+		else
+		{
+			A.CallTo(() => Cache.InCache(expectedId))
+			.MustHaveHappened();
+		}
+	}
+
+	public void VerifyRemove(string? expectedId = null)
+	{
+		if (expectedId == null)
+		{
+			A.CallTo(() => Cache.Remove(A<string>._))
+			.MustHaveHappened();
+		}
+		else
+		{
+			A.CallTo(() => Cache.Remove(expectedId))
+			.MustHaveHappened();
+		}
+	}
 }
