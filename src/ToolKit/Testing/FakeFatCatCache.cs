@@ -4,7 +4,7 @@ using FatCat.Toolkit.Caching;
 
 namespace FatCat.Toolkit.Testing;
 
-public class FakeCache<T> : IFatCatCache<T> where T : class, ICacheItem
+public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 {
 	public IFatCatCache<T> Cache { get; }
 
@@ -12,7 +12,7 @@ public class FakeCache<T> : IFatCatCache<T> where T : class, ICacheItem
 
 	public List<T> CacheList { get; set; }
 
-	public FakeCache()
+	public FakeFatCatCache()
 	{
 		Cache = A.Fake<IFatCatCache<T>>();
 		CacheItem = Faker.Create<T>();
