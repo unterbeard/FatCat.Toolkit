@@ -104,6 +104,12 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 		.MustHaveHappened();
 	}
 
+	public void VerifyGetFirst()
+	{
+		A.CallTo(() => repository.GetFirst())
+		.MustHaveHappened();
+	}
+
 	public void VerifyUpdate(T expectedData)
 	{
 		A.CallTo(() => repository.Update(expectedData))
@@ -141,6 +147,9 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 		Item = Faker.Create<T>();
 
 		A.CallTo(() => repository.GetById(A<int>._))
+		.ReturnsLazily(() => Item);
+
+		A.CallTo(() => repository.GetFirst())
 		.ReturnsLazily(() => Item);
 
 		A.CallTo(() => repository.GetAll())
