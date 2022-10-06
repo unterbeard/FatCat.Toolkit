@@ -20,6 +20,8 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 
 	public List<T> DeletedList { get; set; } = null!;
 
+	public EasyCapture<Expression<Func<T, bool>>> FilterCapture { get; private set; } = null!;
+
 	public T Item { get; set; } = null!;
 
 	public int ItemId { get; set; }
@@ -40,6 +42,7 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 		SetUpCreate();
 		SetUpUpdate();
 		SetUpDelete();
+		SetUpGetByFilter();
 	}
 
 	public async Task<T> Create(T item) => await repository.Create(item);
@@ -96,6 +99,19 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 	{
 		A.CallTo(() => repository.GetAll())
 		.MustHaveHappened();
+	}
+
+	public void VerifyGetByFilterByItemTrue(T item)
+	{
+		FilterCapture.Value
+					.Should()
+					.NotBeNull();
+
+		var compliedExpression = FilterCapture.Value.Compile();
+
+		compliedExpression(item)
+			.Should()
+			.BeTrue();
 	}
 
 	public void VerifyGetById()
@@ -157,6 +173,14 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 
 		A.CallTo(() => repository.GetAllByFilter(A<Expression<Func<T, bool>>>._))
 		.ReturnsLazily(() => Items);
+	}
+
+	private void SetUpGetByFilter()
+	{
+		FilterCapture = new EasyCapture<Expression<Func<T, bool>>>();
+
+		A.CallTo(() => repository.GetByFilter(FilterCapture))
+		.ReturnsLazily(() => Item);
 	}
 
 	private void SetUpUpdate()
