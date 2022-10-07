@@ -101,6 +101,19 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 		.MustHaveHappened();
 	}
 
+	public void VerifyGetByFilterByItemFalse(T item)
+	{
+		FilterCapture.Value
+					.Should()
+					.NotBeNull();
+
+		var compliedExpression = FilterCapture.Value.Compile();
+
+		compliedExpression(item)
+			.Should()
+			.BeFalse();
+	}
+
 	public void VerifyGetByFilterByItemTrue(T item)
 	{
 		FilterCapture.Value
