@@ -3,7 +3,7 @@ using FatCat.Toolkit.Logging;
 
 namespace FatCat.Toolkit.Threading;
 
-public interface IFifoThreadQueue
+public interface IFifoThreadQueue : IDisposable
 {
 	CancellationToken CancelToken { get; }
 
