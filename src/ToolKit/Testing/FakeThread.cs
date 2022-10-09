@@ -1,4 +1,6 @@
-﻿namespace FatCat.Toolkit.Testing;
+﻿using FatCat.Toolkit.Threading;
+
+namespace FatCat.Toolkit.Testing;
 
 public class FakeThread : IThread
 {
