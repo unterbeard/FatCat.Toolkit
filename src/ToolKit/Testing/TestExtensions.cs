@@ -1,5 +1,6 @@
 using FakeItEasy;
 using FakeItEasy.Configuration;
+using FatCat.Toolkit.Threading;
 using FluentAssertions;
 
 namespace FatCat.Toolkit.Testing;
