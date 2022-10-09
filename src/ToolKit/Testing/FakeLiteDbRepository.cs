@@ -95,6 +95,43 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 		.MustHaveHappened();
 	}
 
+	public void VerifyDidNotConnect()
+	{
+		A.CallTo(() => repository.SetDatabasePath(A<string>._))
+		.MustNotHaveHappened();
+	}
+
+	public void VerifyDidNotCreate()
+	{
+		A.CallTo(() => repository.Create(A<T>._))
+		.MustNotHaveHappened();
+	}
+
+	public void VerifyDidNotGetAll()
+	{
+		A.CallTo(() => repository.GetAll())
+		.MustNotHaveHappened();
+	}
+
+	public void VerifyDidNotGetByFilter()
+	{
+		FilterCapture.Value
+					.Should()
+					.BeNull();
+	}
+
+	public void VerifyDidNotGetById()
+	{
+		A.CallTo(() => repository.GetById(A<int>._))
+		.MustHaveHappened();
+	}
+
+	public void VerifyDidNotUpdate()
+	{
+		A.CallTo(() => repository.Update(A<T>._))
+		.MustNotHaveHappened();
+	}
+
 	public void VerifyGetAll()
 	{
 		A.CallTo(() => repository.GetAll())
@@ -137,6 +174,12 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObje
 	{
 		A.CallTo(() => repository.GetFirst())
 		.MustHaveHappened();
+	}
+
+	public void VerifyNotGetFirst()
+	{
+		A.CallTo(() => repository.GetFirst())
+		.MustNotHaveHappened();
 	}
 
 	public void VerifyUpdate(T expectedData)
