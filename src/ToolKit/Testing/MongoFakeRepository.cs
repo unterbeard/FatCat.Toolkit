@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.Data.Mongo;
+using FluentAssertions;
 using MongoDB.Bson;
 
 namespace FatCat.Toolkit.Testing;
@@ -22,9 +23,11 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 	public List<T> DeletedList { get; set; } = null!;
 
+	public EasyCapture<Expression<Func<T, bool>>> FilterCapture { get; private set; } = null!;
+
 	public T Item { get; set; } = null!;
 
-	public string ItemId { get; set; } = null!;
+	public int ItemId { get; set; }
 
 	public List<T> Items { get; set; } = null!;
 
@@ -42,6 +45,7 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 		SetUpCreate();
 		SetUpUpdate();
 		SetUpDelete();
+		SetUpGetByFilter();
 	}
 
 	public async Task<T> Create(T item) => await repository.Create(item);
@@ -58,6 +62,8 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 	public async Task<T?> GetByFilter(Expression<Func<T, bool>> filter) => await repository.GetByFilter(filter);
 
+	public T? GetById(int id) => repository.GetById(id);
+
 	public async Task<T?> GetById(string id) => await repository.GetById(id);
 
 	public async Task<T?> GetById(ObjectId id) => await repository.GetById(id);
@@ -70,10 +76,51 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 	public async Task<List<T>> Update(List<T> items) => await repository.Update(items);
 
+	public void VerifyCreate(T expectedItem)
+	{
+		A.CallTo(() => repository.Create(A<T>._))
+		.MustHaveHappened();
+
+		CreatedCapture.Value
+					.Should()
+					.Be(expectedItem);
+	}
+
 	public void VerifyCreate()
 	{
 		A.CallTo(() => repository.Create(A<T>._))
 		.MustHaveHappened();
+	}
+
+	public void VerifyDidNotCreate()
+	{
+		A.CallTo(() => repository.Create(A<T>._))
+		.MustNotHaveHappened();
+	}
+
+	public void VerifyDidNotGetAll()
+	{
+		A.CallTo(() => repository.GetAll())
+		.MustNotHaveHappened();
+	}
+
+	public void VerifyDidNotGetByFilter()
+	{
+		FilterCapture.Value
+					.Should()
+					.BeNull();
+	}
+
+	public void VerifyDidNotGetById()
+	{
+		A.CallTo(() => repository.GetById(A<int>._))
+		.MustHaveHappened();
+	}
+
+	public void VerifyDidNotUpdate()
+	{
+		A.CallTo(() => repository.Update(A<T>._))
+		.MustNotHaveHappened();
 	}
 
 	public void VerifyGetAll()
@@ -82,10 +129,48 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 		.MustHaveHappened();
 	}
 
+	public void VerifyGetByFilterByItemFalse(T item)
+	{
+		FilterCapture.Value
+					.Should()
+					.NotBeNull();
+
+		var compliedExpression = FilterCapture.Value.Compile();
+
+		compliedExpression(item)
+			.Should()
+			.BeFalse();
+	}
+
+	public void VerifyGetByFilterByItemTrue(T item)
+	{
+		FilterCapture.Value
+					.Should()
+					.NotBeNull();
+
+		var compliedExpression = FilterCapture.Value.Compile();
+
+		compliedExpression(item)
+			.Should()
+			.BeTrue();
+	}
+
 	public void VerifyGetById()
 	{
 		A.CallTo(() => repository.GetById(ItemId))
 		.MustHaveHappened();
+	}
+
+	public void VerifyGetFirst()
+	{
+		A.CallTo(() => repository.GetFirst())
+		.MustHaveHappened();
+	}
+
+	public void VerifyNotGetFirst()
+	{
+		A.CallTo(() => repository.GetFirst())
+		.MustNotHaveHappened();
 	}
 
 	public void VerifyUpdate(T expectedData)
@@ -120,14 +205,14 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 	private void SetUpGet()
 	{
-		ItemId = Faker.RandomString();
+		ItemId = Faker.RandomInt(4, 458);
 		Items = Faker.Create<List<T>>();
 		Item = Faker.Create<T>();
 
-		A.CallTo(() => repository.GetById(A<string>._))
+		A.CallTo(() => repository.GetById(A<int>._))
 		.ReturnsLazily(() => Item);
 
-		A.CallTo(() => repository.GetById(A<ObjectId>._))
+		A.CallTo(() => repository.GetFirst())
 		.ReturnsLazily(() => Item);
 
 		A.CallTo(() => repository.GetAll())
@@ -135,6 +220,14 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 		A.CallTo(() => repository.GetAllByFilter(A<Expression<Func<T, bool>>>._))
 		.ReturnsLazily(() => Items);
+	}
+
+	private void SetUpGetByFilter()
+	{
+		FilterCapture = new EasyCapture<Expression<Func<T, bool>>>();
+
+		A.CallTo(() => repository.GetByFilter(FilterCapture))
+		.ReturnsLazily(() => Item);
 	}
 
 	private void SetUpUpdate()
