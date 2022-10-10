@@ -27,7 +27,7 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 	public T Item { get; set; } = null!;
 
-	public int ItemId { get; set; }
+	public string ItemId { get; set; } = null!;
 
 	public List<T> Items { get; set; } = null!;
 
@@ -61,8 +61,6 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 	public async Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter) => await repository.GetAllByFilter(filter);
 
 	public async Task<T?> GetByFilter(Expression<Func<T, bool>> filter) => await repository.GetByFilter(filter);
-
-	public T? GetById(int id) => repository.GetById(id);
 
 	public async Task<T?> GetById(string id) => await repository.GetById(id);
 
@@ -113,7 +111,7 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 	public void VerifyDidNotGetById()
 	{
-		A.CallTo(() => repository.GetById(A<int>._))
+		A.CallTo(() => repository.GetById(A<string>._))
 		.MustHaveHappened();
 	}
 
@@ -205,11 +203,11 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 	private void SetUpGet()
 	{
-		ItemId = Faker.RandomInt(4, 458);
+		ItemId = Faker.RandomString();
 		Items = Faker.Create<List<T>>();
 		Item = Faker.Create<T>();
 
-		A.CallTo(() => repository.GetById(A<int>._))
+		A.CallTo(() => repository.GetById(A<string>._))
 		.ReturnsLazily(() => Item);
 
 		A.CallTo(() => repository.GetFirst())
