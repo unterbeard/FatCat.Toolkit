@@ -1,38 +1,34 @@
-﻿using FatCat.Fakes;
+﻿using System.Reflection;
+using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Data;
-using FatCat.Toolkit.Data.Lite;
-using Newtonsoft.Json;
+using FatCat.Toolkit.Data.Mongo;
 
-ConsoleLog.LogCallerInformation = true;
+namespace OneOff;
 
-try
+public static class Program
 {
-	using var liteRepository = new LiteDbRepository<Customer>(new LiteDbConnection(new DataNames()));
+	public static async Task Main(params string[] args)
+	{
+		ConsoleLog.LogCallerInformation = true;
 
-	var databaseFullPath = @"C:\TempWorking\ToolkitSpike\LiteDatabaseSpike\ToolkitData.db";
+		try
+		{
+			var mongoConnectionString = @"mongodb://localhost:27017";
 
-	liteRepository.SetDatabasePath(databaseFullPath);
+			var mongoRepository = new MongoRepository<Customer>(new MongoDataConnection(new MongoNames(new DataNames()), new MongoConnection(new List<Assembly> { typeof(Program).Assembly })),
+																new MongoNames(new DataNames()),
+																mongoConnectionString);
 
-	var customer = Faker.Create<Customer>(afterCreate: i => i.Id = default);
+			var testObject = Faker.Create<Customer>();
 
-	var createdObject = await liteRepository.Create(customer);
-
-	ConsoleLog.WriteCyan($"Created Object {JsonConvert.SerializeObject(createdObject, Formatting.Indented)}");
-
-	var allObjects = liteRepository.Collection.FindAll()!;
-
-	ConsoleLog.WriteMagenta($"{JsonConvert.SerializeObject(allObjects, Formatting.Indented)}");
-
-	const string nameToFind = "9462bc67a";
-
-	var foundItems = await liteRepository.GetAllByFilter(i => i.Name == nameToFind);
-
-	ConsoleLog.WriteBlue($"{JsonConvert.SerializeObject(foundItems, Formatting.Indented)}");
+			await mongoRepository.Create(testObject);
+		}
+		catch (Exception ex) { ConsoleLog.WriteException(ex); }
+	}
 }
-catch (Exception ex) { ConsoleLog.WriteException(ex); }
 
-public class Customer : LiteDbObject
+public class Customer : MongoObject
 {
 	public bool IsActive { get; set; }
 
