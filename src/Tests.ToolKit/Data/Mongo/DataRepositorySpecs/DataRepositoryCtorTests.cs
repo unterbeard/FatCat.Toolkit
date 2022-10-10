@@ -9,7 +9,7 @@ public class DataRepositoryCtorTests : DataRepositoryTests
 	[Fact]
 	public void GetCollection()
 	{
-		A.CallTo(() => mongoDataConnection.GetCollection<TestingMongoObject>())
+		A.CallTo(() => mongoDataConnection.GetCollection<TestingMongoObject>(default))
 		.MustHaveHappened();
 	}
 

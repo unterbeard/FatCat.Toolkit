@@ -12,10 +12,10 @@ public class DataConnectionTests
 	private readonly MongoDataConnection connection;
 	private string collectionName = null!;
 	private string databaseName = null!;
-	private IMongoNames mongoNames = null!;
 	private IMongoCollection<TestingMongoObject> mongoCollection = null!;
 	private IMongoConnection mongoConnection = null!;
 	private IMongoDatabase mongoDatabase = null!;
+	private IMongoNames mongoNames = null!;
 
 	public DataConnectionTests()
 	{
@@ -48,7 +48,7 @@ public class DataConnectionTests
 	{
 		connection.GetCollection<TestingMongoObject>();
 
-		A.CallTo(() => mongoConnection.GetDatabase(databaseName))
+		A.CallTo(() => mongoConnection.GetDatabase(databaseName, default))
 		.MustHaveHappened();
 	}
 
@@ -113,7 +113,7 @@ public class DataConnectionTests
 	{
 		mongoDatabase = A.Fake<IMongoDatabase>();
 
-		A.CallTo(() => mongoConnection.GetDatabase(A<string>._))
+		A.CallTo(() => mongoConnection.GetDatabase(A<string>._, A<string>._))
 		.Returns(mongoDatabase);
 	}
 }

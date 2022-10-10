@@ -10,20 +10,22 @@ namespace FatCat.Toolkit.Data.Mongo;
 
 public interface IMongoConnection
 {
-	IMongoDatabase GetDatabase(string databaseName);
+	IMongoDatabase GetDatabase(string databaseName, string? connectionString);
 }
 
 public class MongoConnection : IMongoConnection
 {
+	private const string NotSetConnectionString = "NOT_SET";
+
 	private static readonly MongoClientSettings mongoClientSettings = new()
 																	{
 																		MinConnectionPoolSize = 100,
 																		MaxConnectionPoolSize = 1001
 																	};
 
-	private readonly ConcurrentDictionary<string, IMongoDatabase> databases = new();
+	private readonly ConcurrentDictionary<string, MongoClient> connections = new();
 
-	private readonly MongoClient mongoClient = new(mongoClientSettings);
+	private readonly ConcurrentDictionary<string, IMongoDatabase> databases = new();
 
 	public MongoConnection(List<Assembly> dataAssemblies)
 	{
@@ -41,9 +43,20 @@ public class MongoConnection : IMongoConnection
 		}
 	}
 
-	public IMongoDatabase GetDatabase(string databaseName)
+	public IMongoDatabase GetDatabase(string databaseName, string? connectionString)
 	{
 		if (databases.TryGetValue(databaseName, out var database)) return database;
+
+		if (connectionString == null) connectionString = NotSetConnectionString;
+
+		if (!connections.TryGetValue(connectionString, out var mongoClient))
+		{
+			MongoClientSettings? settings;
+
+			settings = connectionString == NotSetConnectionString ? mongoClientSettings : MongoClientSettings.FromConnectionString(connectionString);
+
+			mongoClient = new MongoClient(settings);
+		}
 
 		var newDatabaseConnection = mongoClient.GetDatabase(databaseName);
 

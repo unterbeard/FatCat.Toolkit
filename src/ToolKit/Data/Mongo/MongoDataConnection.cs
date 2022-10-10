@@ -4,7 +4,7 @@ namespace FatCat.Toolkit.Data.Mongo;
 
 public interface IMongoDataConnection
 {
-	IMongoCollection<T> GetCollection<T>() where T : MongoObject;
+	IMongoCollection<T> GetCollection<T>(string? connectionString = null) where T : MongoObject;
 }
 
 public class MongoDataConnection : IMongoDataConnection
@@ -19,17 +19,17 @@ public class MongoDataConnection : IMongoDataConnection
 		this.mongoConnection = mongoConnection;
 	}
 
-	public IMongoCollection<T> GetCollection<T>() where T : MongoObject
+	public IMongoCollection<T> GetCollection<T>(string? connectionString = null) where T : MongoObject
 	{
-		var database = GetDatabase<T>();
+		var database = GetDatabase<T>(connectionString);
 
 		return database.GetCollection<T>(mongoNames.GetCollectionName<T>());
 	}
 
-	private IMongoDatabase GetDatabase<T>() where T : MongoObject
+	private IMongoDatabase GetDatabase<T>(string? connectionString) where T : MongoObject
 	{
 		var databaseName = mongoNames.GetDatabaseName<T>();
 
-		return mongoConnection.GetDatabase(databaseName);
+		return mongoConnection.GetDatabase(databaseName, connectionString);
 	}
 }

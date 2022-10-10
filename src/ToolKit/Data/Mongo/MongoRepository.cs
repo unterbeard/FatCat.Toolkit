@@ -22,11 +22,12 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 	public string DatabaseName { get; }
 
 	public MongoRepository(IMongoDataConnection mongoDataConnection,
-							IMongoNames mongoNames)
+							IMongoNames mongoNames,
+							string? connectionString = null)
 	{
 		this.mongoDataConnection = mongoDataConnection;
 
-		Collection = mongoDataConnection.GetCollection<T>();
+		Collection = mongoDataConnection.GetCollection<T>(connectionString);
 		DatabaseName = mongoNames.GetDatabaseName<T>();
 	}
 
