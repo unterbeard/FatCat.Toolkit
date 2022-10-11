@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class GetByIdTests : DataRepositoryTests
+public class GetByIdTests : EnsureCollectionTests
 {
 	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> expressionCapture;
 	private readonly TestingMongoObject filterItem;
@@ -59,4 +59,6 @@ public class GetByIdTests : DataRepositoryTests
 				.Should()
 				.Be(filterItem);
 	}
+
+	protected override Task TestMethod() => repository.GetById(id.ToString());
 }

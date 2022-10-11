@@ -55,6 +55,8 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public async Task<T> Delete(T item)
 	{
+		EnsureCollection();
+
 		await Collection.DeleteOneAsync(i => i.Id == item.Id);
 
 		return item;
@@ -69,6 +71,8 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public async Task<List<T>> GetAll()
 	{
+		EnsureCollection();
+		
 		var cursor = await Collection.FindAsync(i => true);
 
 		return await cursor.ToListAsync();
@@ -76,6 +80,8 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public async Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter)
 	{
+		EnsureCollection();
+		
 		var cursor = await Collection.FindAsync(filter);
 
 		return await cursor.ToListAsync();
@@ -110,6 +116,8 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public async Task<T> Update(T item)
 	{
+		EnsureCollection();
+		
 		await Collection.ReplaceOneAsync(i => i.Id == item.Id, item);
 
 		return item;

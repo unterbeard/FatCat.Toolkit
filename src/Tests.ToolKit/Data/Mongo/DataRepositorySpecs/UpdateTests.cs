@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class UpdateTests : DataRepositoryTests
+public class UpdateTests : EnsureCollectionTests
 {
 	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> updateFilterCapture;
 
@@ -41,4 +41,6 @@ public class UpdateTests : DataRepositoryTests
 				.Should()
 				.Be(item);
 	}
+
+	protected override Task TestMethod() => repository.Update(item);
 }

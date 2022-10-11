@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class CreateItemListTests : DataRepositoryTests
+public class CreateItemListTests : EnsureCollectionTests
 {
 	[Fact]
 	public async Task CallInsertOneForEachItemInList()
@@ -25,4 +25,6 @@ public class CreateItemListTests : DataRepositoryTests
 				.Should()
 				.BeEquivalentTo(itemList);
 	}
+
+	protected override async Task TestMethod() => await repository.Create(itemList);
 }

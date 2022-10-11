@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class GetFirstTests : DataRepositoryTests
+public class GetFirstTests : EnsureCollectionTests
 {
 	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> expressionCapture;
 	private readonly TestingMongoObject firstItem;
@@ -44,4 +44,6 @@ public class GetFirstTests : DataRepositoryTests
 				.Should()
 				.Be(firstItem);
 	}
+
+	protected override Task TestMethod() => repository.GetFirst();
 }
