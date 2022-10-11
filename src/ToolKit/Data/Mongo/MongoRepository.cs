@@ -8,7 +8,7 @@ public interface IMongoRepository<T> : IDataRepository<T> where T : MongoObject
 {
 	string DatabaseName { get; }
 
-	void Connect(string? connectionString);
+	void Connect(string? connectionString = null, string? databaseName = null);
 
 	Task<T?> GetById(string id);
 
@@ -31,10 +31,10 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 		this.mongoNames = mongoNames;
 	}
 
-	public void Connect(string? connectionString = null)
+	public void Connect(string? connectionString = null, string? databaseName = null)
 	{
-		Collection = mongoDataConnection.GetCollection<T>(connectionString);
-		DatabaseName = mongoNames.GetDatabaseName<T>();
+		Collection = mongoDataConnection.GetCollection<T>(connectionString, databaseName);
+		DatabaseName = databaseName ?? mongoNames.GetDatabaseName<T>();
 	}
 
 	public async Task<T> Create(T item)
@@ -72,7 +72,7 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 	public async Task<List<T>> GetAll()
 	{
 		EnsureCollection();
-		
+
 		var cursor = await Collection.FindAsync(i => true);
 
 		return await cursor.ToListAsync();
@@ -81,7 +81,7 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 	public async Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter)
 	{
 		EnsureCollection();
-		
+
 		var cursor = await Collection.FindAsync(filter);
 
 		return await cursor.ToListAsync();
@@ -117,7 +117,7 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 	public async Task<T> Update(T item)
 	{
 		EnsureCollection();
-		
+
 		await Collection.ReplaceOneAsync(i => i.Id == item.Id, item);
 
 		return item;

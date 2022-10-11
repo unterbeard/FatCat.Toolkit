@@ -33,7 +33,7 @@ public abstract class DataRepositoryTests
 
 		collection = A.Fake<IMongoCollection<TestingMongoObject>>();
 
-		A.CallTo(() => mongoDataConnection.GetCollection<TestingMongoObject>(A<string>._))
+		A.CallTo(() => mongoDataConnection.GetCollection<TestingMongoObject>(A<string>._, A<string>._))
 		.Returns(collection);
 	}
 
