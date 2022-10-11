@@ -15,11 +15,12 @@ public static class Program
 		try
 		{
 			var mongoConnectionString = @"mongodb://localhost:27017";
+			var databaseName = "CustomName34";
 
 			var mongoRepository = new MongoRepository<Customer>(new MongoDataConnection(new MongoNames(new DataNames()), new MongoConnection(new List<Assembly> { typeof(Program).Assembly })),
 																new MongoNames(new DataNames()));
 
-			mongoRepository.Connect(mongoConnectionString);
+			mongoRepository.Connect(mongoConnectionString, databaseName);
 
 			var testObject = Faker.Create<Customer>();
 
