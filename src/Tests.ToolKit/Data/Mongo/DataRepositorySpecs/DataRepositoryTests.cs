@@ -24,7 +24,7 @@ public abstract class DataRepositoryTests
 		itemList = Faker.Create<List<TestingMongoObject>>(4);
 
 		repository = new MongoRepository<TestingMongoObject>(mongoDataConnection,
-															mongoNames);
+															mongoNames) { Collection = collection };
 	}
 
 	private void SetUpDataConnection()

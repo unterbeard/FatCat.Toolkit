@@ -5,12 +5,12 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class CreateItemTests : DataRepositoryTests
+public class CreateItemTests : EnsureCollectionTests
 {
 	[Fact]
 	public async Task InsertOneOnTheCollection()
 	{
-		await repository.Create(item);
+		await TestMethod();
 
 		A.CallTo(() => collection.InsertOneAsync(item, default, default))
 		.MustHaveHappened();
@@ -24,7 +24,7 @@ public class CreateItemTests : DataRepositoryTests
 		A.CallTo(() => collection.InsertOneAsync(easyCapture, default, default))
 		.Returns(Task.CompletedTask);
 
-		await repository.Create(item);
+		await TestMethod();
 
 		easyCapture.Value
 					.Should()
@@ -38,4 +38,6 @@ public class CreateItemTests : DataRepositoryTests
 				.Should()
 				.Be(item);
 	}
+
+	protected override Task TestMethod() => repository.Create(item);
 }

@@ -17,8 +17,9 @@ public static class Program
 			var mongoConnectionString = @"mongodb://localhost:27017";
 
 			var mongoRepository = new MongoRepository<Customer>(new MongoDataConnection(new MongoNames(new DataNames()), new MongoConnection(new List<Assembly> { typeof(Program).Assembly })),
-																new MongoNames(new DataNames()),
-																mongoConnectionString);
+																new MongoNames(new DataNames()));
+
+			mongoRepository.Connect(mongoConnectionString);
 
 			var testObject = Faker.Create<Customer>();
 
