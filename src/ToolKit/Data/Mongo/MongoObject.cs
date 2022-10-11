@@ -10,6 +10,4 @@ public abstract class MongoObject : DataObject
 	[BsonRepresentation(BsonType.ObjectId)]
 	[JsonConverter(typeof(ObjectIdConverter))]
 	public ObjectId Id { get; set; }
-
-	protected MongoObject() => Id = ObjectId.GenerateNewId();
 }
