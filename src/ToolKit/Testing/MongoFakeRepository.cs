@@ -48,6 +48,8 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 		SetUpGetByFilter();
 	}
 
+	public void Connect(string? connectionString) => repository.Connect(connectionString);
+
 	public async Task<T> Create(T item) => await repository.Create(item);
 
 	public async Task<List<T>> Create(List<T> items) => await repository.Create(items);

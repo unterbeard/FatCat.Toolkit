@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class GetAllTests : DataRepositoryTests
+public class GetAllTests : EnsureCollectionTests
 {
 	public GetAllTests()
 	{
@@ -29,4 +29,6 @@ public class GetAllTests : DataRepositoryTests
 				.Should()
 				.BeEquivalentTo(itemList);
 	}
+
+	protected override Task TestMethod() => repository.GetAll();
 }

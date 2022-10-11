@@ -8,6 +8,8 @@ public interface IMongoRepository<T> : IDataRepository<T> where T : MongoObject
 {
 	string DatabaseName { get; }
 
+	void Connect(string? connectionString);
+
 	Task<T?> GetById(string id);
 
 	Task<T?> GetById(ObjectId id);
@@ -16,24 +18,30 @@ public interface IMongoRepository<T> : IDataRepository<T> where T : MongoObject
 public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new()
 {
 	private readonly IMongoDataConnection mongoDataConnection;
+	private readonly IMongoNames mongoNames;
 
-	public IMongoCollection<T> Collection { get; }
+	public IMongoCollection<T>? Collection { get; set; }
 
-	public string DatabaseName { get; }
+	public string DatabaseName { get; set; } = null!;
 
 	public MongoRepository(IMongoDataConnection mongoDataConnection,
-							IMongoNames mongoNames,
-							string? connectionString = null)
+							IMongoNames mongoNames)
 	{
 		this.mongoDataConnection = mongoDataConnection;
+		this.mongoNames = mongoNames;
+	}
 
+	public void Connect(string? connectionString = null)
+	{
 		Collection = mongoDataConnection.GetCollection<T>(connectionString);
 		DatabaseName = mongoNames.GetDatabaseName<T>();
 	}
 
 	public async Task<T> Create(T item)
 	{
-		await Collection.InsertOneAsync(item);
+		EnsureCollection();
+
+		await Collection!.InsertOneAsync(item);
 
 		return item;
 	}
@@ -47,6 +55,8 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public async Task<T> Delete(T item)
 	{
+		EnsureCollection();
+
 		await Collection.DeleteOneAsync(i => i.Id == item.Id);
 
 		return item;
@@ -61,6 +71,8 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public async Task<List<T>> GetAll()
 	{
+		EnsureCollection();
+		
 		var cursor = await Collection.FindAsync(i => true);
 
 		return await cursor.ToListAsync();
@@ -68,6 +80,8 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public async Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter)
 	{
+		EnsureCollection();
+		
 		var cursor = await Collection.FindAsync(filter);
 
 		return await cursor.ToListAsync();
@@ -102,6 +116,8 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public async Task<T> Update(T item)
 	{
+		EnsureCollection();
+		
 		await Collection.ReplaceOneAsync(i => i.Id == item.Id, item);
 
 		return item;
@@ -112,5 +128,10 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 		foreach (var item in items) await Update(item);
 
 		return items;
+	}
+
+	private void EnsureCollection()
+	{
+		if (Collection == null) throw new ConnectionToMongoIsRequired();
 	}
 }

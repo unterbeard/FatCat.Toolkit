@@ -1,21 +1,30 @@
 ﻿using FakeItEasy;
+using FatCat.Fakes;
 using FluentAssertions;
 using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class DataRepositoryCtorTests : DataRepositoryTests
+public class DataRepositoryConnectTests : DataRepositoryTests
 {
+	private readonly string connectionString;
+
+	public DataRepositoryConnectTests() => connectionString = Faker.RandomString();
+
 	[Fact]
 	public void GetCollection()
 	{
-		A.CallTo(() => mongoDataConnection.GetCollection<TestingMongoObject>(default))
+		repository.Connect(connectionString);
+
+		A.CallTo(() => mongoDataConnection.GetCollection<TestingMongoObject>(connectionString))
 		.MustHaveHappened();
 	}
 
 	[Fact]
 	public void GetDatabaseName()
 	{
+		repository.Connect(connectionString);
+
 		A.CallTo(() => mongoNames.GetDatabaseName<TestingMongoObject>())
 		.MustHaveHappened();
 	}
@@ -23,6 +32,8 @@ public class DataRepositoryCtorTests : DataRepositoryTests
 	[Fact]
 	public void SetCollectionOnRepository()
 	{
+		repository.Connect(connectionString);
+
 		repository.Collection
 				.Should()
 				.Be(collection);
@@ -31,6 +42,8 @@ public class DataRepositoryCtorTests : DataRepositoryTests
 	[Fact]
 	public void SetDatabaseNameOnRepository()
 	{
+		repository.Connect(connectionString);
+
 		repository.DatabaseName
 				.Should()
 				.Be(databaseName);

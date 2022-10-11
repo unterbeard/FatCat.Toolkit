@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class DeleteItemTests : DataRepositoryTests
+public class DeleteItemTests : EnsureCollectionTests
 {
 	[Fact]
 	public async Task CallDeleteOneOnCollection()
@@ -37,4 +37,6 @@ public class DeleteItemTests : DataRepositoryTests
 				.Should()
 				.BeEquivalentTo(item);
 	}
+
+	protected override Task TestMethod() => repository.Delete(item);
 }

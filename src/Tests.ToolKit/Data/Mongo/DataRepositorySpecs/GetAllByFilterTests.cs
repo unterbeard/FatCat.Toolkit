@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
-public class GetAllByFilterTests : DataRepositoryTests
+public class GetAllByFilterTests : EnsureCollectionTests
 {
 	private readonly EasyCapture<ExpressionFilterDefinition<TestingMongoObject>> expressionCapture;
 	private readonly List<TestingMongoObject> filterItems;
@@ -63,4 +63,6 @@ public class GetAllByFilterTests : DataRepositoryTests
 				.Should()
 				.BeEquivalentTo(filterItems);
 	}
+
+	protected override Task TestMethod() => repository.GetAllByFilter(i => i.Number == filterNumber);
 }
