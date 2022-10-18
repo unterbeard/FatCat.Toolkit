@@ -1,14 +1,71 @@
-﻿using FatCat.Toolkit.Threading;
+﻿using FakeItEasy;
+using FatCat.Toolkit.Threading;
 
 namespace FatCat.Toolkit.Testing;
 
 public class FakeThread : IThread
 {
-	public void Run(Action action) => action();
+	private readonly IThread thread;
 
-	public void Run(Func<Task> action) => action().Wait();
+	public FakeThread()
+	{
+		thread = A.Fake<IThread>();
 
-	public Task Sleep(TimeSpan sleepTime) => Task.CompletedTask;
+		SetUpRunActionOnCall();
+		SetUnRunFuncOnCall();
+	}
 
-	public Task Sleep(TimeSpan sleepTime, CancellationToken token) => Task.CompletedTask;
+	public void Run(Action action) => thread.Run(action);
+
+	public void Run(Func<Task> action) => thread.Run(action);
+
+	public Task Sleep(TimeSpan sleepTime) => thread.Sleep(sleepTime);
+
+	public Task Sleep(TimeSpan sleepTime, CancellationToken token) => thread.Sleep(sleepTime, token);
+
+	public void VerifyRunAction()
+	{
+		A.CallTo(() => thread.Run(A<Action>._))
+		.MustHaveHappened();
+	}
+
+	public void VerifyRunFunc()
+	{
+		A.CallTo(() => thread.Run(A<Func<Task>>._))
+		.MustHaveHappened();
+	}
+
+	public void VerifySleep(TimeSpan expectedSleep)
+	{
+		A.CallTo(() => thread.Sleep(expectedSleep))
+		.MustHaveHappened();
+	}
+
+	public void VerifySleep(TimeSpan expectedSleep, CancellationToken token)
+	{
+		A.CallTo(() => thread.Sleep(expectedSleep, token))
+		.MustHaveHappened();
+	}
+
+	private void SetUnRunFuncOnCall()
+	{
+		A.CallTo(() => thread.Run(A<Func<Task>>._))
+		.Invokes(callObject =>
+				{
+					var passedFunction = callObject.Arguments[0] as Func<Task>;
+
+					passedFunction?.Invoke().Wait();
+				});
+	}
+
+	private void SetUpRunActionOnCall()
+	{
+		A.CallTo(() => thread.Run(A<Action>._))
+		.Invokes(callObject =>
+				{
+					var passedAction = callObject.Arguments[0] as Action;
+
+					passedAction?.Invoke();
+				});
+	}
 }
