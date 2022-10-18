@@ -7,6 +7,8 @@ public interface IHashTools
 	Task<byte[]> CalculateHash(byte[] data);
 
 	Task<string> CalculateHash(string data);
+
+	bool HashEquals(byte[] hash1, byte[] hash2);
 }
 
 public class HashTools : IHashTools
@@ -14,6 +16,8 @@ public class HashTools : IHashTools
 	public async Task<byte[]> CalculateHash(byte[] data) => await new ByteHashProcessor().CalculateHash(data);
 
 	public async Task<string> CalculateHash(string data) => await new StringHashProcessor().CalculateHash(data);
+
+	public bool HashEquals(byte[] hash1, byte[] hash2) => hash1.SequenceEqual(hash2);
 
 	private class ByteHashProcessor : IDisposable
 	{
