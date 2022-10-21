@@ -13,7 +13,7 @@ public static class CollectionExtensions
 		var firstCopy = new List<T>(firstList);
 		var secondCopy = new List<T>(secondList);
 
-		if (typeof(T).Implements<IComparable>())
+		if (typeof(T).Implements<IComparable<T>>() || typeof(T).Implements<IComparable>())
 		{
 			var orderFirstList = firstCopy.OrderBy(i => i).ToList();
 			var orderSecondList = secondCopy.OrderBy(i => i).ToList();

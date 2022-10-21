@@ -1,4 +1,5 @@
-﻿using FatCat.Toolkit;
+﻿using Fasterflect;
+using FatCat.Toolkit;
 using FatCat.Toolkit.Extensions;
 using FluentAssertions;
 using Xunit;
@@ -63,6 +64,14 @@ public class CollectionExtensionsTests
 		firstList.ListsAreEqual(secondList)
 				.Should()
 				.BeTrue();
+	}
+	
+	[Fact]
+	public void DetermineIfTypeHasIComparable()
+	{
+		typeof(ComparableTestItem).Implements<IComparable<ComparableTestItem>>()
+								.Should()
+								.BeTrue();
 	}
 
 	[Fact]
