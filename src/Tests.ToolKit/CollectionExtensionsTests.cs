@@ -8,6 +8,28 @@ namespace Tests.FatCat.Toolkit;
 public class CollectionExtensionsTests
 {
 	[Fact]
+	public void ComparableItemWorksCorrectly()
+	{
+		var oneItem = new ComparableTestItem
+					{
+						Number = 1,
+						AName = "One"
+					};
+
+		var twoItem = new ComparableTestItem
+					{
+						Number = 2,
+						AName = "Two"
+					};
+		
+		oneItem.CompareTo(twoItem)
+				.Should()
+				.BeLessThan(0);
+		
+		
+	}
+
+	[Fact]
 	public void ComparableTestObjectWillBeTrueRegardlessOfOrder()
 	{
 		var firstList = new List<ComparableTestItem>

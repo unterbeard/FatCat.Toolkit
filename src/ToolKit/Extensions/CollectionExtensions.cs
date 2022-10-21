@@ -1,3 +1,5 @@
+using Fasterflect;
+
 namespace FatCat.Toolkit.Extensions;
 
 public static class CollectionExtensions
@@ -11,7 +13,7 @@ public static class CollectionExtensions
 		var firstCopy = new List<T>(firstList);
 		var secondCopy = new List<T>(secondList);
 
-		if (typeof(T).Implements(typeof(IComparable)))
+		if (typeof(T).Implements<IComparable>())
 		{
 			var orderFirstList = firstCopy.OrderBy(i => i).ToList();
 			var orderSecondList = secondCopy.OrderBy(i => i).ToList();
