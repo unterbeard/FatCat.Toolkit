@@ -1,6 +1,6 @@
 namespace FatCat.Toolkit.Extensions;
 
-internal static class CollectionExtensions
+public static class CollectionExtensions
 {
 	public static bool ListsAreEqual<T>(this IEnumerable<T>? firstList, IEnumerable<T>? secondList)
 	{
@@ -10,6 +10,14 @@ internal static class CollectionExtensions
 
 		var firstCopy = new List<T>(firstList);
 		var secondCopy = new List<T>(secondList);
+
+		if (typeof(T).Implements(typeof(IComparable)))
+		{
+			var orderFirstList = firstCopy.OrderBy(i => i).ToList();
+			var orderSecondList = secondCopy.OrderBy(i => i).ToList();
+
+			return orderFirstList.SequenceEqual(orderSecondList);
+		}
 
 		return firstCopy.SequenceEqual(secondCopy);
 	}
