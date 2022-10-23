@@ -1,11 +1,13 @@
-﻿namespace FatCat.Toolkit;
+﻿using FatCat.Toolkit.Extensions;
+
+namespace FatCat.Toolkit;
 
 public interface IObjectTools
 {
-	bool IsEquals(object obj1, object obj2);
+	bool IsEquals(EqualObject? obj1, EqualObject? obj2);
 }
 
 public class ObjectTools : IObjectTools
 {
-	public bool IsEquals(object obj1, object obj2) => obj1.Equals(obj2);
+	public bool IsEquals(EqualObject? obj1, EqualObject? obj2) => ObjectEquals.AreEqual(obj1, obj2);
 }
