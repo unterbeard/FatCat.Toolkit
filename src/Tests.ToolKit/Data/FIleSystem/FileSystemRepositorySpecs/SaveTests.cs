@@ -22,7 +22,7 @@ public class SaveTests : FileSystemRepositoryTests
 	{
 		await repository.Save(dataToSave);
 
-		A.CallTo(() => jsonHelper.ToJson(dataToSave))
+		A.CallTo(() => jsonHelper.Serialize(dataToSave))
 		.MustHaveHappened();
 	}
 
@@ -70,7 +70,7 @@ public class SaveTests : FileSystemRepositoryTests
 	{
 		saveJson = Faker.RandomString();
 
-		A.CallTo(() => jsonHelper.ToJson(A<TestFileDataObject>._))
+		A.CallTo(() => jsonHelper.Serialize(A<TestFileDataObject>._))
 		.Returns(saveJson);
 	}
 }

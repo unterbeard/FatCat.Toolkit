@@ -32,7 +32,7 @@ public class GetTests : FileSystemRepositoryTests
 	{
 		await repository.Get();
 
-		A.CallTo(() => jsonHelper.FromJson<TestFileDataObject>(dataJson))
+		A.CallTo(() => jsonHelper.Deserialize<TestFileDataObject>(dataJson))
 		.MustHaveHappened();
 	}
 
@@ -132,7 +132,7 @@ public class GetTests : FileSystemRepositoryTests
 
 	private void VerifyNoCallsToFileSystemMade()
 	{
-		A.CallTo(() => jsonHelper.FromJson<TestFileDataObject>(A<string>._))
+		A.CallTo(() => jsonHelper.Deserialize<TestFileDataObject>(A<string>._))
 		.MustNotHaveHappened();
 
 		A.CallTo(() => fileSystem.File.ReadAllTextAsync(A<string>._, default))

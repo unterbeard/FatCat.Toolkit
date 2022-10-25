@@ -57,7 +57,7 @@ public abstract class FileSystemRepositoryTests
 
 		testObject = Faker.Create<TestFileDataObject>();
 
-		A.CallTo(() => jsonHelper.FromJson<TestFileDataObject>(A<string>._))
+		A.CallTo(() => jsonHelper.Deserialize<TestFileDataObject>(A<string>._))
 		.Returns(testObject);
 	}
 }
