@@ -46,7 +46,7 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 
 		var json = await fileSystem.File.ReadAllTextAsync(DataPath);
 
-		Data = jsonOperations.FromJson<T>(json);
+		Data = jsonOperations.Deserialize<T>(json);
 
 		return Data!;
 	}
@@ -55,7 +55,7 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 	{
 		Data = item;
 
-		var json = jsonOperations.ToJson(Data);
+		var json = jsonOperations.Serialize(Data);
 
 		if (DataDirectoryDoesNotExist) fileSystem.Directory.CreateDirectory(DataDirectory);
 
