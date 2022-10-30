@@ -92,6 +92,18 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 		.MustHaveHappened();
 	}
 
+	public void VerifyDelete()
+	{
+		A.CallTo(() => repository.Delete(A<T>._))
+		.MustHaveHappened();
+	}
+
+	public void VerifyDelete(T expectedItem)
+	{
+		A.CallTo(() => repository.Delete(expectedItem))
+		.MustHaveHappened();
+	}
+
 	public void VerifyDidNotCreate()
 	{
 		A.CallTo(() => repository.Create(A<T>._))
