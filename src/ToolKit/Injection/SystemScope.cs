@@ -41,7 +41,7 @@ public class SystemScope : ISystemScope
 
 	public static void Initialize(ContainerBuilder builder, List<Assembly> assemblies, ScopeOptions options = ScopeOptions.None)
 	{
-		if (!assemblies.Contains(typeof(SystemScope).Assembly)) assemblies.Add(typeof(SystemScope).Assembly);
+		if (!assemblies.Contains(typeof(SystemScope).Assembly)) assemblies.Insert(0, typeof(SystemScope).Assembly);
 
 		Container.BuildContainer(builder, assemblies.ToArray());
 
