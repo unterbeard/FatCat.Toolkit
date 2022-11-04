@@ -1,8 +1,8 @@
-﻿using System.Reflection;
+﻿using Autofac;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Data;
 using FatCat.Toolkit.Data.Mongo;
+using FatCat.Toolkit.Injection;
 
 namespace OneOff;
 
@@ -14,11 +14,14 @@ public static class Program
 
 		try
 		{
+			var builder = new ContainerBuilder();
+
+			SystemScope.Initialize(builder, ScopeOptions.SetLifetimeScope);
+
 			var mongoConnectionString = @"mongodb://localhost:27017";
 			var databaseName = "CustomName34";
 
-			var mongoRepository = new MongoRepository<Customer>(new MongoDataConnection(new MongoNames(new DataNames()), new MongoConnection(new List<Assembly> { typeof(Program).Assembly })),
-																new MongoNames(new DataNames()));
+			var mongoRepository = SystemScope.Container.Resolve<IMongoRepository<Customer>>();
 
 			mongoRepository.Connect(mongoConnectionString, databaseName);
 
