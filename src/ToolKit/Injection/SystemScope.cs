@@ -41,12 +41,14 @@ public class SystemScope : ISystemScope
 
 	public static void Initialize(ContainerBuilder builder, List<Assembly> assemblies, ScopeOptions options = ScopeOptions.None)
 	{
+		if (!assemblies.Contains(typeof(SystemScope).Assembly)) assemblies.Add(typeof(SystemScope).Assembly);
+
 		Container.BuildContainer(builder, assemblies.ToArray());
 
 		if (options.IsFlagSet(ScopeOptions.SetLifetimeScope))
 		{
 			ConsoleLog.WriteMagenta("Setting lifetime scope");
-			
+
 			Container.LifetimeScope = builder.Build();
 		}
 	}

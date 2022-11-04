@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Data.Mongo;
@@ -16,6 +17,7 @@ public static class Program
 		{
 			var builder = new ContainerBuilder();
 
+			// SystemScope.Initialize(builder, new List<Assembly> { typeof(Program).Assembly }, ScopeOptions.SetLifetimeScope);
 			SystemScope.Initialize(builder, ScopeOptions.SetLifetimeScope);
 
 			var mongoConnectionString = @"mongodb://localhost:27017";
