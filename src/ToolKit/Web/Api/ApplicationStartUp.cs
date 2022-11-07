@@ -1,4 +1,5 @@
-﻿using Autofac.Extensions.DependencyInjection;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 using Microsoft.AspNetCore.Builder;
@@ -20,6 +21,8 @@ public class ApplicationStartUp
 {
 	public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 	{
+		ConsoleLog.WriteDarkMagenta("Application Start up Configure");
+
 		app.Use(CaptureMiddlewareExceptions);
 
 		app.UseFileServer();
@@ -34,10 +37,16 @@ public class ApplicationStartUp
 
 		app.UseEndpoints(endpoints => endpoints.MapControllers());
 
+		ConsoleLog.WriteDarkMagenta("Before GetAutofacRoot");
+
 		SystemScope.Container.LifetimeScope = app.ApplicationServices.GetAutofacRoot();
+
+		ConsoleLog.WriteDarkMagenta("After GetAutofacRoot");
 
 		SetUpSignalR(app);
 	}
+
+	public void ConfigureContainer(ContainerBuilder builder) => SystemScope.Initialize(builder, WebApplication.Settings.ContainerAssemblies);
 
 	public virtual void ConfigureServices(IServiceCollection services)
 	{
@@ -136,6 +145,7 @@ public class ApplicationStartUp
 		ConsoleLog.Write("TODO SetUp SignalR");
 		ConsoleLog.Write("TODO SetUp SignalR");
 		ConsoleLog.Write("TODO SetUp SignalR");
+
 		// app.UseEndpoints(endpoints => { endpoints.MapHub<FogHub>("/api/events"); });
 	}
 

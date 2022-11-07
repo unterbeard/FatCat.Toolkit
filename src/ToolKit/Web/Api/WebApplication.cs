@@ -2,6 +2,7 @@
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Enumerations;
 using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json;
 
 namespace FatCat.Toolkit.Web.Api;
 
@@ -12,6 +13,13 @@ public static class WebApplication
 	public static void Run(ApplicationSettings settings)
 	{
 		Settings = settings;
+		
+		ConsoleLog.WriteDarkYellow($"Running application");
+		ConsoleLog.WriteDarkYellow($"    CertificationLocation := {Settings.CertificationLocation}");
+		ConsoleLog.WriteDarkYellow($"    CertificationPassword := {Settings.CertificationPassword}");
+		ConsoleLog.WriteDarkYellow($"    CorsUri               := {JsonConvert.SerializeObject(settings.CorsUri)}");
+		ConsoleLog.WriteDarkYellow($"    Options               := {Settings.Options}");
+		ConsoleLog.WriteDarkYellow($"    Port                  := {Settings.Port}");
 		
 		var host = new WebHostBuilder()
 					.UseAutofac()

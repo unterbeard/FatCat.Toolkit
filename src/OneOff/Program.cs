@@ -17,9 +17,9 @@ public static class Program
 										Options = WebApplicationOptions.UseHttps,
 										CertificationLocation = @"C:\DevelopmentCert\DevelopmentCert.pfx",
 										CertificationPassword = "basarab_cert",
-										Port = 8524,
+										Port = 14555,
 										ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
-										CorsUri = new List<Uri> { new("https://localhost:8524") }
+										CorsUri = new List<Uri> { new("https://localhost:14555") }
 									};
 
 			WebApplication.Run(applicationSettings);
