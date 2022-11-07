@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
+﻿using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 using Microsoft.AspNetCore.Builder;
@@ -15,13 +13,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Converters;
-using ILogger = Serilog.ILogger;
 
 namespace FatCat.Toolkit.Web.Api;
 
 public class ApplicationStartUp
 {
-
 	public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 	{
 		app.Use(CaptureMiddlewareExceptions);
@@ -42,12 +38,6 @@ public class ApplicationStartUp
 
 		SetUpSignalR(app);
 	}
-
-	public void ConfigureContainer(ContainerBuilder builder) => SystemScope.Initialize(builder, new List<Assembly>
-																								{
-																									typeof(CommonModule).Assembly,
-																									Assembly.GetEntryAssembly()!
-																								});
 
 	public virtual void ConfigureServices(IServiceCollection services)
 	{
@@ -77,9 +67,7 @@ public class ApplicationStartUp
 						{
 							o.AddPolicy("CorsPolicy", configurePolicy =>
 													{
-														AddCorsForUri(ApplicationRunner.Uri, configurePolicy);
-
-														if (Configuration.UserInterfaceDevelopmentPort != ushort.MaxValue) AddCorsForUri(new Uri($"http://localhost:{Configuration.UserInterfaceDevelopmentPort}/"), configurePolicy);
+														foreach (var corsUri in WebApplication.Settings.CorsUri) AddCorsForUri(corsUri, configurePolicy);
 													});
 						});
 	}
@@ -103,7 +91,7 @@ public class ApplicationStartUp
 								domainCors
 							};
 
-		foreach (var corsOrigin in originsToAdd) QuickLog.WriteDarkCyan($"   Using Origin <{corsOrigin}>");
+		foreach (var corsOrigin in originsToAdd) ConsoleLog.WriteDarkCyan($"   Using Origin <{corsOrigin}>");
 
 		builder
 			.WithOrigins(originsToAdd.ToArray())
@@ -120,14 +108,14 @@ public class ApplicationStartUp
 		{
 			var displayUrl = context.Request.GetDisplayUrl();
 
-			Logger.Information($"Could not complete call to {displayUrl}");
+			ConsoleLog.WriteCyan($"Could not complete call to {displayUrl}");
 		}
 		catch (Exception e)
 		{
 			var displayUrl = context.Request.GetDisplayUrl();
 
-			Logger.Error($"Error calling {displayUrl}");
-			Logger.Exception(e);
+			ConsoleLog.WriteCyan($"Error calling {displayUrl}");
+			ConsoleLog.WriteException(e);
 
 			throw;
 		}
@@ -140,11 +128,16 @@ public class ApplicationStartUp
 
 		var applicationParts = builder.PartManager.ApplicationParts;
 
-		applicationParts.Add(new AssemblyPart(typeof(ApplicationStartUp).Assembly));
-		applicationParts.Add(new AssemblyPart(Configuration.ServiceAssembly));
+		foreach (var assembly in WebApplication.Settings.ContainerAssemblies) applicationParts.Add(new AssemblyPart(assembly));
 	}
 
-	private void SetUpSignalR(IApplicationBuilder app) => app.UseEndpoints(endpoints => { endpoints.MapHub<FogHub>("/api/events"); });
+	private void SetUpSignalR(IApplicationBuilder app)
+	{
+		ConsoleLog.Write("TODO SetUp SignalR");
+		ConsoleLog.Write("TODO SetUp SignalR");
+		ConsoleLog.Write("TODO SetUp SignalR");
+		// app.UseEndpoints(endpoints => { endpoints.MapHub<FogHub>("/api/events"); });
+	}
 
 	private void SetUpStaticFiles(IApplicationBuilder app)
 	{
@@ -152,12 +145,12 @@ public class ApplicationStartUp
 
 		var rootWebFolder = Path.Combine(applicationTools.ExecutingDirectory!, "userInterface");
 
-		QuickLog.WriteMagenta($"First WebRootFolder <{rootWebFolder}> | CurrentDirectory <{Directory.GetCurrentDirectory()}>");
+		ConsoleLog.WriteMagenta($"First WebRootFolder <{rootWebFolder}> | CurrentDirectory <{Directory.GetCurrentDirectory()}>");
 
 		if (!Directory.Exists(rootWebFolder)) rootWebFolder = Path.Combine(Directory.GetCurrentDirectory(), "userInterface");
 		if (!Directory.Exists(rootWebFolder)) rootWebFolder = Environment.GetEnvironmentVariable("FogHazeDevelopmentUiLocation");
 
-		QuickLog.WriteDarkCyan($"WebRootFolder <{rootWebFolder}>");
+		ConsoleLog.WriteDarkCyan($"WebRootFolder <{rootWebFolder}>");
 
 		if (!Directory.Exists(rootWebFolder))
 		{
