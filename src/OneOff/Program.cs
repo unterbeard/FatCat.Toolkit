@@ -1,9 +1,6 @@
 ﻿using System.Reflection;
-using Autofac;
-using FatCat.Fakes;
 using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Data.Mongo;
-using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.Web.Api;
 
 namespace OneOff;
 
@@ -15,31 +12,18 @@ public static class Program
 
 		try
 		{
-			var builder = new ContainerBuilder();
+			var applicationSettings = new ApplicationSettings
+									{
+										Options = WebApplicationOptions.UseHttps,
+										CertificationLocation = @"C:\DevelopmentCert\DevelopmentCert.pfx",
+										CertificationPassword = "basarab_cert",
+										Port = 8524,
+										ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
+										CorsUri = new List<Uri> { new("https://localhost:8524") }
+									};
 
-			// SystemScope.Initialize(builder, new List<Assembly> { typeof(Program).Assembly }, ScopeOptions.SetLifetimeScope);
-			SystemScope.Initialize(builder, ScopeOptions.SetLifetimeScope);
-
-			var mongoConnectionString = @"mongodb://localhost:27017";
-			var databaseName = "CustomName34";
-
-			var mongoRepository = SystemScope.Container.Resolve<IMongoRepository<Customer>>();
-
-			mongoRepository.Connect(mongoConnectionString, databaseName);
-
-			var testObject = Faker.Create<Customer>();
-
-			await mongoRepository.Create(testObject);
+			WebApplication.Run(applicationSettings);
 		}
 		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}
-}
-
-public class Customer : MongoObject
-{
-	public bool IsActive { get; set; }
-
-	public string Name { get; set; }
-
-	public List<string> Phones { get; set; }
 }
