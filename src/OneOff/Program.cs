@@ -19,11 +19,17 @@ public static class Program
 										CertificationPassword = "basarab_cert",
 										Port = 14555,
 										ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
-										CorsUri = new List<Uri> { new("https://localhost:14555") }
+										CorsUri = new List<Uri> { new("https://localhost:14555") },
+										OnWebApplicationStarted = Started
 									};
 
 			WebApplication.Run(applicationSettings);
 		}
 		catch (Exception ex) { ConsoleLog.WriteException(ex); }
+	}
+
+	private static void Started()
+	{
+		ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
 	}
 }

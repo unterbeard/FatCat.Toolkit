@@ -44,6 +44,8 @@ public class ApplicationStartUp
 		ConsoleLog.WriteDarkMagenta("After GetAutofacRoot");
 
 		SetUpSignalR(app);
+
+		WebApplication.Settings.OnWebApplicationStarted?.Invoke();
 	}
 
 	public void ConfigureContainer(ContainerBuilder builder) => SystemScope.Initialize(builder, WebApplication.Settings.ContainerAssemblies);

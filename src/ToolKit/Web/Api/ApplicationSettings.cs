@@ -12,6 +12,8 @@ public class ApplicationSettings : EqualObject
 
 	public List<Uri> CorsUri { get; set; } = new();
 
+	public Action? OnWebApplicationStarted { get; set; }
+
 	public WebApplicationOptions Options { get; set; }
 
 	public ushort Port { get; set; } = 443;
