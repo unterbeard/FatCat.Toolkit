@@ -7,6 +7,7 @@ using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.Web.Api;
 using FatCat.Toolkit.Web.Api.SignalR;
 using Humanizer;
+using Newtonsoft.Json;
 
 namespace OneOff;
 
@@ -46,7 +47,7 @@ public static class Program
 
 						await thread.Sleep(1.Seconds());
 
-						await hubConnection.Send(31, "Hello World");
+						await hubConnection.SendNoResponse(31, "Hello World");
 
 						thread.Run(async () =>
 									{
@@ -54,9 +55,15 @@ public static class Program
 
 										var secondConnection = await hubFactory.Connect(hubUrl);
 
-										await secondConnection.Send(32, "More Message");
+										await secondConnection.SendNoResponse(32, "More Message");
 
 										await thread.Sleep(3.Seconds());
+
+										ConsoleLog.WriteCyan("Going to send a message and wait for a response");
+
+										var response = await secondConnection.Send(44, "Go for it");
+
+										ConsoleLog.WriteMagenta($"Response: {JsonConvert.SerializeObject(response)}");
 
 										consoleUtilities.Exit();
 									});
