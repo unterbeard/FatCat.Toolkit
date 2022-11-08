@@ -1,5 +1,4 @@
-﻿using FatCat.Toolkit.Console;
-using Microsoft.AspNetCore.SignalR.Client;
+﻿using Microsoft.AspNetCore.SignalR.Client;
 
 namespace FatCat.Toolkit.Web.Api.SignalR;
 
@@ -7,14 +6,15 @@ public interface IToolkitHubConnection : IAsyncDisposable
 {
 	Task Connect(string hubUrl);
 
-	Task Send(int messageId, string sessionId, string data);
+	Task Send(int messageId, string data, string? sessionId = null);
 }
 
 public class ToolkitHubConnection : IToolkitHubConnection
 {
+	private readonly IGenerator generator;
 	private HubConnection connection = null!;
 
-	public ToolkitHubConnection() => ConsoleLog.WriteDarkCyan("CTOR of HubConnection should only see once");
+	public ToolkitHubConnection(IGenerator generator) => this.generator = generator;
 
 	public async Task Connect(string hubUrl)
 	{
@@ -27,5 +27,5 @@ public class ToolkitHubConnection : IToolkitHubConnection
 
 	public ValueTask DisposeAsync() => connection.DisposeAsync();
 
-	public Task Send(int messageId, string sessionId, string data) => connection.SendAsync("Message", messageId, sessionId, data);
+	public Task Send(int messageId, string data, string? sessionId = null) => connection.SendAsync("Message", messageId, sessionId ?? generator.NewId(), data);
 }

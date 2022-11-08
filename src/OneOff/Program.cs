@@ -46,7 +46,7 @@ public static class Program
 
 						await thread.Sleep(1.Seconds());
 
-						await hubConnection.Send(31, generator.NewId(), "Hello World");
+						await hubConnection.Send(31, "Hello World");
 
 						thread.Run(async () =>
 									{
@@ -54,7 +54,7 @@ public static class Program
 
 										var secondConnection = await hubFactory.Connect(hubUrl);
 
-										await secondConnection.Send(32, generator.NewId(), "More Message");
+										await secondConnection.Send(32, "More Message");
 									});
 					});
 
