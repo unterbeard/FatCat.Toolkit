@@ -5,8 +5,8 @@ using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.Web.Api;
+using FatCat.Toolkit.Web.Api.SignalR;
 using Humanizer;
-using Microsoft.AspNetCore.SignalR.Client;
 
 namespace OneOff;
 
@@ -39,17 +39,15 @@ public static class Program
 
 		thread.Run(async () =>
 					{
+						var hubConnection = SystemScope.Container.Resolve<IToolkitHubConnection>();
+
 						var hubUrl = $"https://localhost:{WebPort}/api/events";
 
-						var connection = new HubConnectionBuilder()
-										.WithUrl(hubUrl)
-										.Build();
+						await hubConnection.Connect(hubUrl);
 
-						await connection.StartAsync();
+						await thread.Sleep(1.Seconds());
 
-						await thread.Sleep(3.Seconds());
-
-						await connection.SendAsync("Message", 31, generator.NewId(), "Hello World");
+						await hubConnection.Send(31, generator.NewId(), "Hello World");
 					});
 
 		consoleUtilities.WaitForExit();
