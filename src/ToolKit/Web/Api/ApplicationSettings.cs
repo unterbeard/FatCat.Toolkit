@@ -17,4 +17,6 @@ public class ApplicationSettings : EqualObject
 	public WebApplicationOptions Options { get; set; }
 
 	public ushort Port { get; set; } = 443;
+
+	public string SignalRPath { get; set; } = "/api/events";
 }
