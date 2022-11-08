@@ -71,8 +71,15 @@ public static class Program
 									Port = WebPort,
 									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
 									CorsUri = new List<Uri> { new($"https://localhost:{WebPort}") },
-									OnWebApplicationStarted = Started
+									OnWebApplicationStarted = Started,
 								};
+
+		applicationSettings.ClientHubMessage += (messageId, data) =>
+												{
+													ConsoleLog.WriteDarkCyan($"MessageId <{messageId}> | Data <{data}>");
+
+													return Task.FromResult($"MessageBack {DateTime.Now:h:mm:ss tt zzs}");
+												};
 
 		WebApplication.Run(applicationSettings);
 	}
