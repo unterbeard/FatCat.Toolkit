@@ -1,7 +1,9 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Enumerations;
 using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.Web.Api.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
@@ -144,11 +146,13 @@ public class ApplicationStartUp
 
 	private void SetUpSignalR(IApplicationBuilder app)
 	{
+		if (WebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseSignalR)) return;
+
 		ConsoleLog.Write("TODO SetUp SignalR");
 		ConsoleLog.Write("TODO SetUp SignalR");
 		ConsoleLog.Write("TODO SetUp SignalR");
 
-		// app.UseEndpoints(endpoints => { endpoints.MapHub<FogHub>("/api/events"); });
+		app.UseEndpoints(endpoints => endpoints.MapHub<ToolkitHub>(WebApplication.Settings.SignalRPath));
 	}
 
 	private void SetUpStaticFiles(IApplicationBuilder app)
