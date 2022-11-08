@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using FatCat.Toolkit.Console;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace FatCat.Toolkit.Web.Api.SignalR;
 
@@ -23,6 +24,15 @@ public class ToolkitHubConnection : IToolkitHubConnection
 					.Build();
 
 		await connection.StartAsync();
+
+		var responseMethod = OnServerMessageReceived;
+
+		connection.On(ToolkitHub.ServerMessage, responseMethod);
+	}
+
+	private void OnServerMessageReceived(int messageId, string sessionId, string data)
+	{
+		ConsoleLog.WriteCyan($"On ServerMessageReceived | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
 	}
 
 	public ValueTask DisposeAsync() => connection.DisposeAsync();

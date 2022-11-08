@@ -5,6 +5,8 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public class ToolkitHub : Hub
 {
+	public const string ServerMessage = "ServerMessage";
+	
 	public Task Message(int messageId, string sessionId, string data)
 	{
 		ConsoleLog.WriteCyan($"Got Message | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
