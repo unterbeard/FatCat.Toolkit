@@ -11,9 +11,11 @@ public class ToolkitHub : Hub
 	{
 		ConsoleLog.WriteCyan($"Got Message | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
 
-		var receivedMessage = await WebApplication.Settings.OnOnClientHubMessage(messageId, data);
-		
-		ConsoleLog.WriteDarkMagenta($"Response for message | <{receivedMessage}>");
+		var responseMessage = await WebApplication.Settings.OnOnClientHubMessage(messageId, data);
+
+		ConsoleLog.WriteDarkMagenta($"Response for message | <{responseMessage}>");
+
+		await Clients.Client(Context.ConnectionId).SendAsync(ServerMessage, messageId, sessionId, responseMessage);
 	}
 
 	public override Task OnConnectedAsync()

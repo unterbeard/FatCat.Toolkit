@@ -55,6 +55,10 @@ public static class Program
 										var secondConnection = await hubFactory.Connect(hubUrl);
 
 										await secondConnection.Send(32, "More Message");
+
+										await thread.Sleep(3.Seconds());
+
+										consoleUtilities.Exit();
 									});
 					});
 
