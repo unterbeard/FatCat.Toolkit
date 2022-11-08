@@ -5,6 +5,13 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public class ToolkitHub : Hub
 {
+	public Task Message(int messageId, string sessionId, string data)
+	{
+		ConsoleLog.WriteCyan($"Got Message | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
+		
+		return Task.CompletedTask;
+	}
+	
 	public override Task OnConnectedAsync()
 	{
 		try { ConsoleLog.WriteCyan($"Connected | <{Context.ConnectionId}>"); }
