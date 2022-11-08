@@ -7,7 +7,7 @@ public interface IToolkitHubConnection : IAsyncDisposable
 {
 	Task Connect(string hubUrl);
 
-	Task Send(int messageId, string data, string? sessionId = null);
+	Task Send(int messageId, string data);
 }
 
 public class ToolkitHubConnection : IToolkitHubConnection
@@ -30,12 +30,11 @@ public class ToolkitHubConnection : IToolkitHubConnection
 		connection.On(ToolkitHub.ServerMessage, responseMethod);
 	}
 
-	private void OnServerMessageReceived(int messageId, string sessionId, string data)
-	{
-		ConsoleLog.WriteCyan($"On ServerMessageReceived | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
-	}
-
 	public ValueTask DisposeAsync() => connection.DisposeAsync();
 
-	public Task Send(int messageId, string data, string? sessionId = null) => connection.SendAsync("Message", messageId, sessionId ?? generator.NewId(), data);
+	public Task Send(int messageId, string data) => SendSessionMessage(messageId, data, generator.NewId());
+
+	private void OnServerMessageReceived(int messageId, string sessionId, string data) { ConsoleLog.WriteCyan($"On ServerMessageReceived | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>"); }
+
+	private Task SendSessionMessage(int messageId, string data, string sessionId) => connection.SendAsync("Message", messageId, sessionId, data);
 }
