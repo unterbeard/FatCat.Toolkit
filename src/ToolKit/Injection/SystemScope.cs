@@ -9,7 +9,7 @@ namespace FatCat.Toolkit.Injection;
 
 public interface ISystemScope
 {
-	Assembly[] SystemAssemblies { get; }
+	List<Assembly> SystemAssemblies { get; }
 
 	TItem Resolve<TItem>() where TItem : class;
 
@@ -29,13 +29,17 @@ public enum ScopeOptions
 
 public class SystemScope : ISystemScope
 {
-	private static readonly Assembly[] defaultAssemblies = { typeof(SystemScope).Assembly, Assembly.GetEntryAssembly()! };
+	private static readonly List<Assembly> defaultAssemblies = new()
+																{
+																	typeof(SystemScope).Assembly,
+																	Assembly.GetEntryAssembly()!
+																};
 
 	private static readonly Lazy<SystemScope> instance = new(() => new SystemScope());
 
 	public static SystemScope Container => instance.Value;
 
-	public static Assembly[] LoadedAssemblies { get; private set; } = defaultAssemblies;
+	public static List<Assembly> ContainerAssemblies { get; set; } = defaultAssemblies;
 
 	public static void Initialize(ContainerBuilder builder, ScopeOptions options = ScopeOptions.None) => Initialize(builder, defaultAssemblies.ToList(), options);
 
@@ -43,7 +47,7 @@ public class SystemScope : ISystemScope
 	{
 		if (!assemblies.Contains(typeof(SystemScope).Assembly)) assemblies.Insert(0, typeof(SystemScope).Assembly);
 
-		Container.BuildContainer(builder, assemblies.ToArray());
+		Container.BuildContainer(builder, assemblies);
 
 		if (options.IsFlagSet(ScopeOptions.SetLifetimeScope))
 		{
@@ -55,7 +59,7 @@ public class SystemScope : ISystemScope
 
 	public ILifetimeScope? LifetimeScope { get; set; }
 
-	public Assembly[] SystemAssemblies => LoadedAssemblies;
+	public List<Assembly> SystemAssemblies => ContainerAssemblies;
 
 	private SystemScope() { }
 
@@ -83,18 +87,18 @@ public class SystemScope : ISystemScope
 		return false;
 	}
 
-	private void BuildContainer(ContainerBuilder builder, Assembly[] assemblies)
+	private void BuildContainer(ContainerBuilder builder, List<Assembly> assemblies)
 	{
-		LoadedAssemblies = assemblies;
+		ContainerAssemblies = assemblies;
 
-		foreach (var assembly in LoadedAssemblies) ConsoleLog.WriteDarkCyan($"   Loading modules for assembly {assembly.FullName}");
+		foreach (var assembly in ContainerAssemblies) ConsoleLog.WriteDarkCyan($"   Loading modules for assembly {assembly.FullName}");
 
-		builder.RegisterAssemblyModules(LoadedAssemblies);
+		builder.RegisterAssemblyModules(ContainerAssemblies.ToArray());
 
 		builder.RegisterInstance(this)
 				.As<ISystemScope>();
 
-		builder.RegisterAssemblyTypes(LoadedAssemblies)
+		builder.RegisterAssemblyTypes(ContainerAssemblies.ToArray())
 				.AsImplementedInterfaces()
 				.HasPublicConstructor()
 				.PublicOnly()

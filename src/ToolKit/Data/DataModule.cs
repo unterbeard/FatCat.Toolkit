@@ -9,7 +9,7 @@ public class DataModule : Module
 {
 	protected override void Load(ContainerBuilder builder)
 	{
-		builder.RegisterInstance(new MongoConnection(SystemScope.LoadedAssemblies.ToList()))
+		builder.RegisterInstance(new MongoConnection(SystemScope.ContainerAssemblies.ToList()))
 				.As<IMongoConnection>()
 				.SingleInstance();
 

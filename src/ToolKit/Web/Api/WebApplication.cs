@@ -1,6 +1,7 @@
 ﻿using Autofac.AspNetCore.Extensions;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Enumerations;
+using FatCat.Toolkit.Injection;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 
@@ -13,6 +14,8 @@ public static class WebApplication
 	public static void Run(ApplicationSettings settings)
 	{
 		Settings = settings;
+
+		SystemScope.ContainerAssemblies = settings.ContainerAssemblies;
 		
 		ConsoleLog.WriteDarkYellow($"Running application");
 		ConsoleLog.WriteDarkYellow($"    CertificationLocation := {Settings.CertificationLocation}");
