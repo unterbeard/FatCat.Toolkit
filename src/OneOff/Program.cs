@@ -36,18 +36,26 @@ public static class Program
 
 		var thread = SystemScope.Container.Resolve<IThread>();
 		var generator = SystemScope.Container.Resolve<IGenerator>();
+		var hubFactory = SystemScope.Container.Resolve<IToolkitHubConnectionFactory>();
 
 		thread.Run(async () =>
 					{
-						var hubConnection = SystemScope.Container.Resolve<IToolkitHubConnection>();
-
 						var hubUrl = $"https://localhost:{WebPort}/api/events";
 
-						await hubConnection.Connect(hubUrl);
+						var hubConnection = await hubFactory.Connect(hubUrl);
 
 						await thread.Sleep(1.Seconds());
 
 						await hubConnection.Send(31, generator.NewId(), "Hello World");
+
+						thread.Run(async () =>
+									{
+										await thread.Sleep(3.Seconds());
+
+										var secondConnection = await hubFactory.Connect(hubUrl);
+
+										await secondConnection.Send(32, generator.NewId(), "More Message");
+									});
 					});
 
 		consoleUtilities.WaitForExit();

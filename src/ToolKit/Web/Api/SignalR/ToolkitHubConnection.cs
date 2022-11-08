@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using FatCat.Toolkit.Console;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace FatCat.Toolkit.Web.Api.SignalR;
 
@@ -12,6 +13,8 @@ public interface IToolkitHubConnection : IAsyncDisposable
 public class ToolkitHubConnection : IToolkitHubConnection
 {
 	private HubConnection connection = null!;
+
+	public ToolkitHubConnection() => ConsoleLog.WriteDarkCyan("CTOR of HubConnection should only see once");
 
 	public async Task Connect(string hubUrl)
 	{
