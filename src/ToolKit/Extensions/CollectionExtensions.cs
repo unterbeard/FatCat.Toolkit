@@ -1,3 +1,4 @@
+#nullable enable
 using Fasterflect;
 
 namespace FatCat.Toolkit.Extensions;

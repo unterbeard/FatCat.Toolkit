@@ -1,3 +1,4 @@
+#nullable enable
 using System.IO.Abstractions;
 using FatCat.Toolkit.Json;
 

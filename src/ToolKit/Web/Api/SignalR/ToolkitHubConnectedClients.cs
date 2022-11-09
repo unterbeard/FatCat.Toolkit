@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿#nullable enable
+using Microsoft.AspNetCore.SignalR;
 
 namespace FatCat.Toolkit.Web.Api.SignalR;
 

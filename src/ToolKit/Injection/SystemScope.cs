@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿#nullable enable
+using System.Reflection;
 using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Enumerations;

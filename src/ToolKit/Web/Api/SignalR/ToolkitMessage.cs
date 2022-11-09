@@ -1,3 +1,4 @@
+#nullable enable
 namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public class ToolkitMessage

@@ -1,3 +1,4 @@
+#nullable enable
 using System.Reflection;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;

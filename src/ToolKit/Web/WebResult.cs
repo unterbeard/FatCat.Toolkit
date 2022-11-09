@@ -1,3 +1,4 @@
+#nullable enable
 using System.Net;
 using FatCat.Toolkit.Extensions;
 using Microsoft.AspNetCore.Mvc;

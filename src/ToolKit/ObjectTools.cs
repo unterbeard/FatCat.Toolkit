@@ -1,4 +1,5 @@
-﻿using FatCat.Toolkit.Extensions;
+﻿#nullable enable
+using FatCat.Toolkit.Extensions;
 
 namespace FatCat.Toolkit;
 

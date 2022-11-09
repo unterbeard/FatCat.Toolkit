@@ -1,3 +1,4 @@
+#nullable enable
 namespace FatCat.Toolkit.Data;
 
 public interface IEnvironmentRepository

@@ -1,3 +1,4 @@
+#nullable enable
 using System.Net;
 
 namespace FatCat.Toolkit.Web;

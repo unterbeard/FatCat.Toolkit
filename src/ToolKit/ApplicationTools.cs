@@ -1,3 +1,4 @@
+#nullable enable
 using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;

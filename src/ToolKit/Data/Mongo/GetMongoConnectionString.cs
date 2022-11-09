@@ -1,4 +1,5 @@
-﻿namespace FatCat.Toolkit.Data.Mongo;
+﻿#nullable enable
+namespace FatCat.Toolkit.Data.Mongo;
 
 public interface IGetMongoConnectionString
 {

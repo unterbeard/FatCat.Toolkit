@@ -1,3 +1,4 @@
+#nullable enable
 using MongoDB.Bson;
 using Newtonsoft.Json;
 

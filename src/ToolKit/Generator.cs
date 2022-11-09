@@ -1,3 +1,4 @@
+#nullable enable
 using FatCat.Fakes;
 using MongoDB.Bson;
 

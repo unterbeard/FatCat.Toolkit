@@ -1,4 +1,5 @@
-﻿using FatCat.Toolkit.Console;
+﻿#nullable enable
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 using Microsoft.AspNetCore.SignalR;
 

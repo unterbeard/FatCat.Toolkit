@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿#nullable enable
+using System.Collections.Concurrent;
 using FatCat.Toolkit.Console;
 using Humanizer;
 using Microsoft.AspNetCore.SignalR.Client;
