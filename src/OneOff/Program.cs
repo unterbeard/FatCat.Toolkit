@@ -48,42 +48,44 @@ public static class Program
 						hubConnection.ServerMessage += OnServerMessage;
 
 						await thread.Sleep(1.Seconds());
+						
+						ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
 
-						await hubConnection.SendNoResponse(new ToolkitMessage
-															{
-																MessageId = 5,
-																Data = $"Some Data {Faker.RandomString()}"
-															});
+						// await hubConnection.SendNoResponse(new ToolkitMessage
+						// 									{
+						// 										MessageId = 5,
+						// 										Data = $"Some Data {Faker.RandomString()}"
+						// 									});
 
-						thread.Run(async () =>
-									{
-										await thread.Sleep(3.Seconds());
-
-										var secondConnection = await hubFactory.ConnectToClient(hubUrl);
-
-										await secondConnection.SendNoResponse(new ToolkitMessage
-																			{
-																				MessageId = 2,
-																				Data = $"Hello World {Faker.RandomString()}"
-																			});
-
-										await thread.Sleep(3.Seconds());
-
-										ConsoleLog.WriteCyan("Going to send a message and wait for a response");
-
-										var watch = Stopwatch.StartNew();
-
-										var response = await secondConnection.Send(new ToolkitMessage
-																					{
-																						MessageId = 2 * 1000,
-																						Data = $"Go More {Faker.RandomString()}"
-																					});
-
-										watch.Stop();
-
-										ConsoleLog.WriteMagenta($"Response: {JsonConvert.SerializeObject(response)}");
-										ConsoleLog.WriteGreen($"Took <{watch.Elapsed}>");
-									});
+						// thread.Run(async () =>
+						// 			{
+						// 				await thread.Sleep(3.Seconds());
+						//
+						// 				var secondConnection = await hubFactory.ConnectToClient(hubUrl);
+						//
+						// 				await secondConnection.SendNoResponse(new ToolkitMessage
+						// 													{
+						// 														MessageId = 2,
+						// 														Data = $"Hello World {Faker.RandomString()}"
+						// 													});
+						//
+						// 				await thread.Sleep(3.Seconds());
+						//
+						// 				ConsoleLog.WriteCyan("Going to send a message and wait for a response");
+						//
+						// 				var watch = Stopwatch.StartNew();
+						//
+						// 				var response = await secondConnection.Send(new ToolkitMessage
+						// 															{
+						// 																MessageId = 2 * 1000,
+						// 																Data = $"Go More {Faker.RandomString()}"
+						// 															});
+						//
+						// 				watch.Stop();
+						//
+						// 				ConsoleLog.WriteMagenta($"Response: {JsonConvert.SerializeObject(response)}");
+						// 				ConsoleLog.WriteGreen($"Took <{watch.Elapsed}>");
+						// 			});
 					});
 
 		consoleUtilities.WaitForExit();
@@ -154,8 +156,10 @@ public static class Program
 
 		Task.Delay(10.Seconds()).Wait();
 
+		ConsoleLog.WriteDarkGreen("Going to print all clients");
+
 		var connectedClients = hubServer.GetConnections();
 
-		foreach (var client in connectedClients) { ConsoleLog.WriteMagenta($"Client: {client}"); }
+		foreach (var client in connectedClients) ConsoleLog.WriteMagenta($"Client: {client}");
 	}
 }
