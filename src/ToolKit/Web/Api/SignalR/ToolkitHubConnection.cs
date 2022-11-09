@@ -35,7 +35,7 @@ public class ToolkitHubConnection : IToolkitHubConnection
 
 		var responseMethod = OnServerMessageReceived;
 
-		connection.On(ToolkitHub.ServerMessage, responseMethod);
+		connection.On(ToolkitHub.ServerResponseMessage, responseMethod);
 	}
 
 	public ValueTask DisposeAsync() => connection.DisposeAsync();

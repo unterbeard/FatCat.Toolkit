@@ -5,7 +5,7 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public class ToolkitHub : Hub
 {
-	public const string ServerMessage = "ServerResponseMessage";
+	public const string ServerResponseMessage = "ServerResponseMessage";
 
 	public async Task Message(int messageId, string sessionId, string data)
 	{
@@ -17,7 +17,7 @@ public class ToolkitHub : Hub
 
 		await Task.Delay(messageId);
 
-		await Clients.Client(Context.ConnectionId).SendAsync(ServerMessage, messageId, sessionId, responseMessage);
+		await Clients.Client(Context.ConnectionId).SendAsync(ServerResponseMessage, messageId, sessionId, responseMessage);
 	}
 
 	public override Task OnConnectedAsync()
