@@ -1,5 +1,7 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using Autofac;
+using FatCat.Fakes;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
@@ -47,7 +49,11 @@ public static class Program
 
 						await thread.Sleep(1.Seconds());
 
-						await hubConnection.SendNoResponse(31, "Hello World");
+						await hubConnection.SendNoResponse(new ToolkitMessage
+															{
+																MessageId = 5,
+																Data = $"Some Data {Faker.RandomString()}"
+															});
 
 						thread.Run(async () =>
 									{
@@ -55,15 +61,28 @@ public static class Program
 
 										var secondConnection = await hubFactory.Connect(hubUrl);
 
-										await secondConnection.SendNoResponse(32, "More Message");
+										await secondConnection.SendNoResponse(new ToolkitMessage
+																			{
+																				MessageId = 2,
+																				Data = $"Hello World {Faker.RandomString()}"
+																			});
 
 										await thread.Sleep(3.Seconds());
 
 										ConsoleLog.WriteCyan("Going to send a message and wait for a response");
 
-										var response = await secondConnection.Send(44, "Go for it");
+										var watch = Stopwatch.StartNew();
+
+										var response = await secondConnection.Send(new ToolkitMessage
+																					{
+																						MessageId = 2 * 1000,
+																						Data = $"Go More {Faker.RandomString()}"
+																					});
+
+										watch.Stop();
 
 										ConsoleLog.WriteMagenta($"Response: {JsonConvert.SerializeObject(response)}");
+										ConsoleLog.WriteGreen($"Took <{watch.Elapsed}>");
 
 										consoleUtilities.Exit();
 									});

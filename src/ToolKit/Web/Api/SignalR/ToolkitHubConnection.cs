@@ -9,9 +9,9 @@ public interface IToolkitHubConnection : IAsyncDisposable
 {
 	Task Connect(string hubUrl);
 
-	Task<ToolkitMessage> Send(int messageId, string data, TimeSpan? timeout = null);
+	Task<ToolkitMessage> Send(ToolkitMessage message, TimeSpan? timeout = null);
 
-	Task SendNoResponse(int messageId, string data);
+	Task SendNoResponse(ToolkitMessage message);
 }
 
 public class ToolkitHubConnection : IToolkitHubConnection
@@ -19,6 +19,8 @@ public class ToolkitHubConnection : IToolkitHubConnection
 	private readonly IGenerator generator;
 
 	private readonly ConcurrentDictionary<string, ToolkitMessage> responses = new();
+	private readonly ConcurrentDictionary<string, int> timedOutResponses = new();
+	private readonly ConcurrentDictionary<string, ToolkitMessage> waitingForResponses = new();
 	private HubConnection connection = null!;
 
 	public ToolkitHubConnection(IGenerator generator) => this.generator = generator;
@@ -38,30 +40,40 @@ public class ToolkitHubConnection : IToolkitHubConnection
 
 	public ValueTask DisposeAsync() => connection.DisposeAsync();
 
-	public async Task<ToolkitMessage> Send(int messageId, string data, TimeSpan? timeout = null)
+	public async Task<ToolkitMessage> Send(ToolkitMessage message, TimeSpan? timeout = null)
 	{
 		timeout ??= 30.Seconds();
 
 		var sessionId = generator.NewId();
 
-		await SendSessionMessage(messageId, data, sessionId);
+		waitingForResponses.TryAdd(sessionId, message);
+
+		await SendSessionMessage(message.MessageId, message.Data ?? string.Empty, sessionId);
 
 		var startTime = DateTime.UtcNow;
-		
+
 		while (true)
 		{
 			if (responses.TryRemove(sessionId, out var response)) return response;
 
-			if (DateTime.UtcNow - startTime > timeout) throw new TimeoutException();
+			if (DateTime.UtcNow - startTime > timeout)
+			{
+				timedOutResponses.TryAdd(sessionId, message.MessageId);
+
+				throw new TimeoutException();
+			}
 
 			await Task.Delay(100);
 		}
 	}
 
-	public Task SendNoResponse(int messageId, string data) => SendSessionMessage(messageId, data, generator.NewId());
+	public Task SendNoResponse(ToolkitMessage message) => SendSessionMessage(message.MessageId, message.Data ?? string.Empty, generator.NewId());
 
 	private void OnServerMessageReceived(int messageId, string sessionId, string data)
 	{
+		if (timedOutResponses.TryRemove(sessionId, out _)) return;
+		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
+
 		ConsoleLog.WriteCyan($"On ServerMessageReceived | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
 
 		responses.TryAdd(sessionId, new ToolkitMessage
@@ -72,11 +84,4 @@ public class ToolkitHubConnection : IToolkitHubConnection
 	}
 
 	private Task SendSessionMessage(int messageId, string data, string sessionId) => connection.SendAsync("Message", messageId, sessionId, data);
-}
-
-public class ToolkitMessage
-{
-	public string? Data { get; set; }
-
-	public int MessageId { get; set; }
 }
