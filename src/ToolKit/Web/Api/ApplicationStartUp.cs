@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Enumerations;
 using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.Web.Api.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -47,7 +48,9 @@ public class ApplicationStartUp
 
 		SetUpSignalR(app);
 
-		WebApplication.Settings.OnWebApplicationStarted?.Invoke();
+		var thread = SystemScope.Container.Resolve<IThread>();
+
+		thread.Run(() => WebApplication.Settings.OnWebApplicationStarted?.Invoke());
 	}
 
 	public void ConfigureContainer(ContainerBuilder builder) => SystemScope.Initialize(builder, WebApplication.Settings.ContainerAssemblies);
