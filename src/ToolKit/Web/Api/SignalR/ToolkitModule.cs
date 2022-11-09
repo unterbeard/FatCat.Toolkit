@@ -9,8 +9,8 @@ public class ToolkitModule : Module
 	{
 		ConsoleLog.WriteDarkYellow("ToolkitModule.Load");
 
-		builder.RegisterType<ToolkitHubConnectionFactory>()
-				.As<IToolkitHubConnectionFactory>()
+		builder.RegisterType<ToolkitHubClientFactory>()
+				.As<IToolkitHubClientFactory>()
 				.SingleInstance();
 	}
 }

@@ -39,13 +39,13 @@ public static class Program
 
 		var thread = SystemScope.Container.Resolve<IThread>();
 		var generator = SystemScope.Container.Resolve<IGenerator>();
-		var hubFactory = SystemScope.Container.Resolve<IToolkitHubConnectionFactory>();
+		var hubFactory = SystemScope.Container.Resolve<IToolkitHubClientFactory>();
 
 		thread.Run(async () =>
 					{
 						var hubUrl = $"https://localhost:{WebPort}/api/events";
 
-						var hubConnection = await hubFactory.Connect(hubUrl);
+						var hubConnection = await hubFactory.ConnectToClient(hubUrl);
 
 						await thread.Sleep(1.Seconds());
 
@@ -59,7 +59,7 @@ public static class Program
 									{
 										await thread.Sleep(3.Seconds());
 
-										var secondConnection = await hubFactory.Connect(hubUrl);
+										var secondConnection = await hubFactory.ConnectToClient(hubUrl);
 
 										await secondConnection.SendNoResponse(new ToolkitMessage
 																			{

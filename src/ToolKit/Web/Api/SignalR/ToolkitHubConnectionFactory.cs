@@ -3,23 +3,23 @@ using FatCat.Toolkit.Injection;
 
 namespace FatCat.Toolkit.Web.Api.SignalR;
 
-public interface IToolkitHubConnectionFactory : IAsyncDisposable
+public interface IToolkitHubClientFactory : IAsyncDisposable
 {
-	Task<IToolkitHubConnection> Connect(string hubUrl);
+	Task<IToolkitHubClientConnection> ConnectToClient(string hubUrl);
 }
 
-public class ToolkitHubConnectionFactory : IToolkitHubConnectionFactory
+public class ToolkitHubClientFactory : IToolkitHubClientFactory
 {
-	private readonly ConcurrentDictionary<string, IToolkitHubConnection> connections = new();
+	private readonly ConcurrentDictionary<string, IToolkitHubClientConnection> connections = new();
 	private readonly ISystemScope scope;
 
-	public ToolkitHubConnectionFactory(ISystemScope scope) => this.scope = scope;
+	public ToolkitHubClientFactory(ISystemScope scope) => this.scope = scope;
 
-	public async Task<IToolkitHubConnection> Connect(string hubUrl)
+	public async Task<IToolkitHubClientConnection> ConnectToClient(string hubUrl)
 	{
 		if (connections.TryGetValue(hubUrl, out var connection)) return connection;
 
-		connection = scope.Resolve<IToolkitHubConnection>();
+		connection = scope.Resolve<IToolkitHubClientConnection>();
 
 		await connection.Connect(hubUrl);
 

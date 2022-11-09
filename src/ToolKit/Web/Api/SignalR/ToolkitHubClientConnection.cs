@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace FatCat.Toolkit.Web.Api.SignalR;
 
-public interface IToolkitHubConnection : IAsyncDisposable
+public interface IToolkitHubClientConnection : IAsyncDisposable
 {
 	Task Connect(string hubUrl);
 
@@ -14,7 +14,7 @@ public interface IToolkitHubConnection : IAsyncDisposable
 	Task SendNoResponse(ToolkitMessage message);
 }
 
-public class ToolkitHubConnection : IToolkitHubConnection
+public class ToolkitHubClientConnection : IToolkitHubClientConnection
 {
 	private readonly IGenerator generator;
 
@@ -23,7 +23,7 @@ public class ToolkitHubConnection : IToolkitHubConnection
 	private readonly ConcurrentDictionary<string, ToolkitMessage> waitingForResponses = new();
 	private HubConnection connection = null!;
 
-	public ToolkitHubConnection(IGenerator generator) => this.generator = generator;
+	public ToolkitHubClientConnection(IGenerator generator) => this.generator = generator;
 
 	public async Task Connect(string hubUrl)
 	{
