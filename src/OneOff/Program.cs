@@ -83,8 +83,6 @@ public static class Program
 
 										ConsoleLog.WriteMagenta($"Response: {JsonConvert.SerializeObject(response)}");
 										ConsoleLog.WriteGreen($"Took <{watch.Elapsed}>");
-
-										consoleUtilities.Exit();
 									});
 					});
 
@@ -131,13 +129,15 @@ public static class Program
 
 																await thread.Sleep(1.5.Seconds());
 
+																ConsoleLog.WriteYellow("Going to send message to client and wait for a response");
+
 																var response = await hubServer.SendToClient(message.ConnectionId, new ToolkitMessage
 																																{
 																																	MessageId = 3,
 																																	Data = $"Waiting for Response {Faker.RandomString()}"
 																																});
 
-																ConsoleLog.WriteDarkCyan($"Response: {JsonConvert.SerializeObject(response)}");
+																ConsoleLog.WriteGreen($"Response: {JsonConvert.SerializeObject(response)}");
 															});
 
 												return Task.FromResult($"MessageBack {DateTime.Now:h:mm:ss tt zzs} | {Faker.RandomString()}");
@@ -146,5 +146,16 @@ public static class Program
 		WebApplication.Run(applicationSettings);
 	}
 
-	private static void Started() { ConsoleLog.WriteGreen("Hey the web application has started!!!!!"); }
+	private static void Started()
+	{
+		ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+
+		var hubServer = SystemScope.Container.Resolve<IToolkitHubServer>();
+
+		Task.Delay(10.Seconds()).Wait();
+
+		var connectedClients = hubServer.GetConnections();
+
+		foreach (var client in connectedClients) { ConsoleLog.WriteMagenta($"Client: {client}"); }
+	}
 }

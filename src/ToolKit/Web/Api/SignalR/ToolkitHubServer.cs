@@ -9,6 +9,12 @@ public interface IToolkitHubServer
 {
 	void ClientResponseMessage(string sessionId, ToolkitMessage toolkitMessage);
 
+	List<string> GetConnections();
+
+	void OnClientConnected(string connectionId);
+
+	void OnClientDisconnected(string connectionId);
+
 	Task SendToAllClients(ToolkitMessage message);
 
 	Task<ToolkitMessage> SendToClient(string connectionId, ToolkitMessage message, TimeSpan? timeout = null);
@@ -18,9 +24,9 @@ public interface IToolkitHubServer
 
 public class ToolkitHubServer : IToolkitHubServer
 {
+	private readonly ConcurrentDictionary<string, string> connections = new();
 	private readonly IGenerator generator;
 	private readonly IHubContext<ToolkitHub> hubContext;
-
 	private readonly ConcurrentDictionary<string, ToolkitMessage> responses = new();
 	private readonly ConcurrentDictionary<string, int> timedOutResponses = new();
 	private readonly ConcurrentDictionary<string, ToolkitMessage> waitingForResponses = new();
@@ -36,10 +42,26 @@ public class ToolkitHubServer : IToolkitHubServer
 	{
 		if (timedOutResponses.TryRemove(sessionId, out _)) return;
 		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
-		
+
 		ConsoleLog.WriteMagenta($"Got a client response!!!!!!! | SessionId {sessionId} | {JsonConvert.SerializeObject(toolkitMessage)}");
-		
+
 		responses.TryAdd(sessionId, toolkitMessage);
+	}
+
+	public List<string> GetConnections() => connections.Keys.ToList();
+
+	public void OnClientConnected(string connectionId)
+	{
+		ConsoleLog.WriteCyan($"Connected | <{connectionId}>");
+
+		connections.TryAdd(connectionId, connectionId);
+	}
+
+	public void OnClientDisconnected(string connectionId)
+	{
+		ConsoleLog.WriteDarkCyan($"Client Disconnected | <{connectionId}>");
+
+		connections.TryRemove(connectionId, out _);
 	}
 
 	public Task SendToAllClients(ToolkitMessage message) => throw new NotImplementedException();
