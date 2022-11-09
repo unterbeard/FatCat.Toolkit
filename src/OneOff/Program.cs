@@ -2,7 +2,6 @@
 using System.Reflection;
 using Autofac;
 using FatCat.Fakes;
-using FatCat.Toolkit;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Threading;
@@ -38,7 +37,6 @@ public static class Program
 		var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
 
 		var thread = SystemScope.Container.Resolve<IThread>();
-		var generator = SystemScope.Container.Resolve<IGenerator>();
 		var hubFactory = SystemScope.Container.Resolve<IToolkitHubClientFactory>();
 
 		thread.Run(async () =>
@@ -130,6 +128,16 @@ public static class Program
 																																MessageId = 2,
 																																Data = $"Hello World {Faker.RandomString()}"
 																															});
+
+																await thread.Sleep(1.5.Seconds());
+
+																var response = await hubServer.SendToClient(message.ConnectionId, new ToolkitMessage
+																																{
+																																	MessageId = 3,
+																																	Data = $"Waiting for Response {Faker.RandomString()}"
+																																});
+
+																ConsoleLog.WriteDarkCyan($"Response: {JsonConvert.SerializeObject(response)}");
 															});
 
 												return Task.FromResult($"MessageBack {DateTime.Now:h:mm:ss tt zzs} | {Faker.RandomString()}");

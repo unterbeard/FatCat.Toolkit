@@ -1,4 +1,5 @@
-﻿using FatCat.Toolkit.Console;
+﻿using System.Collections.Concurrent;
+using FatCat.Toolkit.Console;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
@@ -10,7 +11,7 @@ public interface IToolkitHubServer
 
 	Task SendToAllClients(ToolkitMessage message);
 
-	Task SendToClient(string connectionId, ToolkitMessage message);
+	Task<ToolkitMessage> SendToClient(string connectionId, ToolkitMessage message, TimeSpan? timeout = null);
 
 	Task SendToClientNoResponse(string connectionId, ToolkitMessage message);
 }
@@ -20,6 +21,10 @@ public class ToolkitHubServer : IToolkitHubServer
 	private readonly IGenerator generator;
 	private readonly IHubContext<ToolkitHub> hubContext;
 
+	private readonly ConcurrentDictionary<string, ToolkitMessage> responses = new();
+	private readonly ConcurrentDictionary<string, int> timedOutResponses = new();
+	private readonly ConcurrentDictionary<string, ToolkitMessage> waitingForResponses = new();
+
 	public ToolkitHubServer(IHubContext<ToolkitHub> hubContext,
 							IGenerator generator)
 	{
@@ -27,11 +32,44 @@ public class ToolkitHubServer : IToolkitHubServer
 		this.generator = generator;
 	}
 
-	public void ClientResponseMessage(string sessionId, ToolkitMessage toolkitMessage) { ConsoleLog.WriteMagenta($"Got a client response!!!!!!! | SessionId {sessionId} | {JsonConvert.SerializeObject(toolkitMessage)}"); }
+	public void ClientResponseMessage(string sessionId, ToolkitMessage toolkitMessage)
+	{
+		if (timedOutResponses.TryRemove(sessionId, out _)) return;
+		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
+		
+		ConsoleLog.WriteMagenta($"Got a client response!!!!!!! | SessionId {sessionId} | {JsonConvert.SerializeObject(toolkitMessage)}");
+		
+		responses.TryAdd(sessionId, toolkitMessage);
+	}
 
 	public Task SendToAllClients(ToolkitMessage message) => throw new NotImplementedException();
 
-	public Task SendToClient(string connectionId, ToolkitMessage message) => throw new NotImplementedException();
+	public async Task<ToolkitMessage> SendToClient(string connectionId, ToolkitMessage message, TimeSpan? timeout = null)
+	{
+		timeout ??= TimeSpan.FromSeconds(30);
+
+		var sessionId = generator.NewId();
+
+		waitingForResponses.TryAdd(sessionId, message);
+
+		await SendMessageToClient(connectionId, message, sessionId);
+
+		var startTime = DateTime.UtcNow;
+
+		while (true)
+		{
+			if (responses.TryRemove(sessionId, out var response)) return response;
+
+			if (DateTime.UtcNow - startTime > timeout)
+			{
+				timedOutResponses.TryAdd(sessionId, message.MessageId);
+
+				throw new TimeoutException();
+			}
+
+			await Task.Delay(100);
+		}
+	}
 
 	public async Task SendToClientNoResponse(string connectionId, ToolkitMessage message) => await SendMessageToClient(connectionId, message, generator.NewId());
 
