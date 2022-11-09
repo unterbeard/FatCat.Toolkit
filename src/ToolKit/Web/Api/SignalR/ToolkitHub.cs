@@ -5,13 +5,21 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public class ToolkitHub : Hub
 {
+	public const string ServerOriginatedMessage = "ServerOriginatedMessage";
 	public const string ServerResponseMessage = "ServerResponseMessage";
 
 	public async Task Message(int messageId, string sessionId, string data)
 	{
 		ConsoleLog.WriteCyan($"Got Message | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
 
-		var responseMessage = await WebApplication.Settings.OnOnClientHubMessage(messageId, data);
+		var toolkitMessage = new ToolkitMessage
+							{
+								Data = data,
+								ConnectionId = Context.ConnectionId,
+								MessageId = messageId
+							};
+
+		var responseMessage = await WebApplication.Settings.OnOnClientHubMessage(toolkitMessage);
 
 		ConsoleLog.WriteDarkMagenta($"Response for message | <{responseMessage}>");
 

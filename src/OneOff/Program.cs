@@ -104,11 +104,26 @@ public static class Program
 									OnWebApplicationStarted = Started,
 								};
 
-		applicationSettings.ClientHubMessage += (messageId, data) =>
+		applicationSettings.ClientHubMessage += message =>
 												{
-													ConsoleLog.WriteDarkCyan($"MessageId <{messageId}> | Data <{data}>");
+													ConsoleLog.WriteDarkCyan($"MessageId <{message.MessageId}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>");
 
-													return Task.FromResult($"MessageBack {DateTime.Now:h:mm:ss tt zzs}");
+													var thread = SystemScope.Container.Resolve<IThread>();
+
+													thread.Run(async () =>
+																{
+																	await Task.Delay(1.Seconds());
+
+																	var hubServer = SystemScope.Container.Resolve<IToolkitHubServer>();
+
+																	await hubServer.SendToClientNoResponse(message.ConnectionId, new ToolkitMessage
+																																{
+																																	MessageId = 2,
+																																	Data = $"Hello World {Faker.RandomString()}"
+																																});
+																});
+
+													return Task.FromResult($"MessageBack {DateTime.Now:h:mm:ss tt zzs} | {Faker.RandomString()}");
 												};
 
 		WebApplication.Run(applicationSettings);

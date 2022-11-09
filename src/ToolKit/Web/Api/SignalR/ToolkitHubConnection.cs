@@ -33,9 +33,11 @@ public class ToolkitHubConnection : IToolkitHubConnection
 
 		await connection.StartAsync();
 
-		var responseMethod = OnServerMessageReceived;
+		var responseMethod = OnServerResponseMessageReceived;
+		var originalMethod = OnServerOriginatedMessage;
 
 		connection.On(ToolkitHub.ServerResponseMessage, responseMethod);
+		connection.On(ToolkitHub.ServerOriginatedMessage, originalMethod);
 	}
 
 	public ValueTask DisposeAsync() => connection.DisposeAsync();
@@ -69,7 +71,14 @@ public class ToolkitHubConnection : IToolkitHubConnection
 
 	public Task SendNoResponse(ToolkitMessage message) => SendSessionMessage(message.MessageId, message.Data ?? string.Empty, generator.NewId());
 
-	private void OnServerMessageReceived(int messageId, string sessionId, string data)
+	private void OnServerOriginatedMessage(int messageId, string sessionId, string data)
+	{
+		ConsoleLog.WriteMagenta(new string('-', 80));
+		ConsoleLog.WriteMagenta($"OnServerOriginatedMessage | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
+		ConsoleLog.WriteMagenta(new string('-', 80));
+	}
+
+	private void OnServerResponseMessageReceived(int messageId, string sessionId, string data)
 	{
 		if (timedOutResponses.TryRemove(sessionId, out _)) return;
 		if (!waitingForResponses.TryRemove(sessionId, out _)) return;

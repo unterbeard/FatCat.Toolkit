@@ -1,8 +1,9 @@
 using System.Reflection;
+using FatCat.Toolkit.Web.Api.SignalR;
 
 namespace FatCat.Toolkit.Web.Api;
 
-public delegate Task<string?> ClientHubMessage(int messageId, string data);
+public delegate Task<string?> ClientHubMessage(ToolkitMessage message);
 
 public class ApplicationSettings : EqualObject
 {
@@ -24,5 +25,5 @@ public class ApplicationSettings : EqualObject
 
 	public event ClientHubMessage? ClientHubMessage;
 
-	public virtual Task<string?> OnOnClientHubMessage(int messageId, string data) => ClientHubMessage?.Invoke(messageId, data)!;
+	public virtual Task<string?> OnOnClientHubMessage(ToolkitMessage message) => ClientHubMessage?.Invoke(message)!;
 }
