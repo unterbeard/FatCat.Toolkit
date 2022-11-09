@@ -3,8 +3,6 @@ using FatCat.Toolkit.Web.Api.SignalR;
 
 namespace FatCat.Toolkit.Web.Api;
 
-public delegate Task<string?> ClientHubMessage(ToolkitMessage message);
-
 public class ApplicationSettings : EqualObject
 {
 	public string? CertificationLocation { get; set; }
@@ -23,7 +21,7 @@ public class ApplicationSettings : EqualObject
 
 	public string SignalRPath { get; set; } = "/api/events";
 
-	public event ClientHubMessage? ClientHubMessage;
+	public event HubMessage? ClientMessage;
 
-	public virtual Task<string?> OnOnClientHubMessage(ToolkitMessage message) => ClientHubMessage?.Invoke(message)!;
+	public virtual Task<string?> OnOnClientHubMessage(ToolkitMessage message) => ClientMessage?.Invoke(message)!;
 }

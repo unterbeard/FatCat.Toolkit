@@ -12,5 +12,9 @@ public class ToolkitModule : Module
 		builder.RegisterType<ToolkitHubClientFactory>()
 				.As<IToolkitHubClientFactory>()
 				.SingleInstance();
+
+		builder.RegisterType<ToolkitHubServer>()
+				.As<IToolkitHubServer>()
+				.SingleInstance();
 	}
 }

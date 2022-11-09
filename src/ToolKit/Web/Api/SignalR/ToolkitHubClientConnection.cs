@@ -7,6 +7,8 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public interface IToolkitHubClientConnection : IAsyncDisposable
 {
+	event HubMessage? ServerMessage;
+
 	Task Connect(string hubUrl);
 
 	Task<ToolkitMessage> Send(ToolkitMessage message, TimeSpan? timeout = null);
@@ -24,6 +26,8 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	private HubConnection connection = null!;
 
 	public ToolkitHubClientConnection(IGenerator generator) => this.generator = generator;
+
+	public event HubMessage? ServerMessage;
 
 	public async Task Connect(string hubUrl)
 	{
@@ -71,11 +75,23 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 	public Task SendNoResponse(ToolkitMessage message) => SendSessionMessage(message.MessageId, message.Data ?? string.Empty, generator.NewId());
 
-	private void OnServerOriginatedMessage(int messageId, string sessionId, string data)
+	private Task<string?> OnServerMessage(ToolkitMessage message) => ServerMessage?.Invoke(message)!;
+
+	private async Task OnServerOriginatedMessage(int messageId, string sessionId, string data)
 	{
 		ConsoleLog.WriteMagenta(new string('-', 80));
 		ConsoleLog.WriteMagenta($"OnServerOriginatedMessage | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
 		ConsoleLog.WriteMagenta(new string('-', 80));
+
+		var message = new ToolkitMessage
+					{
+						Data = data,
+						MessageId = messageId
+					};
+
+		var response = await OnServerMessage(message);
+
+		if (response is not null) await connection.SendAsync(nameof(ToolkitHub.ClientResponseMessage), messageId, sessionId, response);
 	}
 
 	private void OnServerResponseMessageReceived(int messageId, string sessionId, string data)
@@ -92,5 +108,5 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 									});
 	}
 
-	private Task SendSessionMessage(int messageId, string data, string sessionId) => connection.SendAsync("Message", messageId, sessionId, data);
+	private Task SendSessionMessage(int messageId, string data, string sessionId) => connection.SendAsync(nameof(ToolkitHub.ClientMessage), messageId, sessionId, data);
 }

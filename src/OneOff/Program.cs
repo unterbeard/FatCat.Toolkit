@@ -47,6 +47,8 @@ public static class Program
 
 						var hubConnection = await hubFactory.ConnectToClient(hubUrl);
 
+						hubConnection.ServerMessage += OnServerMessage;
+
 						await thread.Sleep(1.Seconds());
 
 						await hubConnection.SendNoResponse(new ToolkitMessage
@@ -91,6 +93,13 @@ public static class Program
 		consoleUtilities.WaitForExit();
 	}
 
+	private static async Task<string> OnServerMessage(ToolkitMessage message)
+	{
+		await Task.CompletedTask;
+
+		return $"This is the client response {Faker.RandomString()}";
+	}
+
 	private static void RunServer()
 	{
 		var applicationSettings = new ApplicationSettings
@@ -104,27 +113,27 @@ public static class Program
 									OnWebApplicationStarted = Started,
 								};
 
-		applicationSettings.ClientHubMessage += message =>
-												{
-													ConsoleLog.WriteDarkCyan($"MessageId <{message.MessageId}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>");
+		applicationSettings.ClientMessage += message =>
+											{
+												ConsoleLog.WriteDarkCyan($"MessageId <{message.MessageId}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>");
 
-													var thread = SystemScope.Container.Resolve<IThread>();
+												var thread = SystemScope.Container.Resolve<IThread>();
 
-													thread.Run(async () =>
-																{
-																	await Task.Delay(1.Seconds());
+												thread.Run(async () =>
+															{
+																await Task.Delay(1.Seconds());
 
-																	var hubServer = SystemScope.Container.Resolve<IToolkitHubServer>();
+																var hubServer = SystemScope.Container.Resolve<IToolkitHubServer>();
 
-																	await hubServer.SendToClientNoResponse(message.ConnectionId, new ToolkitMessage
-																																{
-																																	MessageId = 2,
-																																	Data = $"Hello World {Faker.RandomString()}"
-																																});
-																});
+																await hubServer.SendToClientNoResponse(message.ConnectionId, new ToolkitMessage
+																															{
+																																MessageId = 2,
+																																Data = $"Hello World {Faker.RandomString()}"
+																															});
+															});
 
-													return Task.FromResult($"MessageBack {DateTime.Now:h:mm:ss tt zzs} | {Faker.RandomString()}");
-												};
+												return Task.FromResult($"MessageBack {DateTime.Now:h:mm:ss tt zzs} | {Faker.RandomString()}");
+											};
 
 		WebApplication.Run(applicationSettings);
 	}
