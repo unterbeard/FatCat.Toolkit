@@ -25,7 +25,7 @@ public class ToolkitHub : Hub
 								MessageId = messageId
 							};
 
-		var responseMessage = await WebApplication.Settings.OnOnClientHubMessage(toolkitMessage);
+		var responseMessage = await ToolkitWebApplication.Settings.OnOnClientHubMessage(toolkitMessage);
 
 		Logger.Debug($"Response for message | <{responseMessage}>");
 

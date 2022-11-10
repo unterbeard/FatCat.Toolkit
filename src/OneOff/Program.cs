@@ -112,7 +112,7 @@ public static class Program
 
 	private static void RunServer()
 	{
-		var applicationSettings = new ApplicationSettings
+		var applicationSettings = new ToolkitWebApplicationSettings
 								{
 									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR,
 									CertificationLocation = @"C:\DevelopmentCert\DevelopmentCert.pfx",
@@ -161,7 +161,7 @@ public static class Program
 												return Task.FromResult(result);
 											};
 
-		WebApplication.Run(applicationSettings);
+		ToolkitWebApplication.Run(applicationSettings);
 	}
 
 	private static void Started()

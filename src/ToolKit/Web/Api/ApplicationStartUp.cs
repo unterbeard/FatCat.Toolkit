@@ -50,10 +50,10 @@ public class ApplicationStartUp
 
 		var thread = SystemScope.Container.Resolve<IThread>();
 
-		thread.Run(() => WebApplication.Settings.OnWebApplicationStarted?.Invoke());
+		thread.Run(() => ToolkitWebApplication.Settings.OnWebApplicationStarted?.Invoke());
 	}
 
-	public void ConfigureContainer(ContainerBuilder builder) => SystemScope.Initialize(builder, WebApplication.Settings.ContainerAssemblies);
+	public void ConfigureContainer(ContainerBuilder builder) => SystemScope.Initialize(builder, ToolkitWebApplication.Settings.ContainerAssemblies);
 
 	public virtual void ConfigureServices(IServiceCollection services)
 	{
@@ -83,7 +83,7 @@ public class ApplicationStartUp
 						{
 							o.AddPolicy("CorsPolicy", configurePolicy =>
 													{
-														foreach (var corsUri in WebApplication.Settings.CorsUri) AddCorsForUri(corsUri, configurePolicy);
+														foreach (var corsUri in ToolkitWebApplication.Settings.CorsUri) AddCorsForUri(corsUri, configurePolicy);
 													});
 						});
 	}
@@ -144,22 +144,22 @@ public class ApplicationStartUp
 
 		var applicationParts = builder.PartManager.ApplicationParts;
 
-		foreach (var assembly in WebApplication.Settings.ContainerAssemblies) applicationParts.Add(new AssemblyPart(assembly));
+		foreach (var assembly in ToolkitWebApplication.Settings.ContainerAssemblies) applicationParts.Add(new AssemblyPart(assembly));
 	}
 
 	private void SetUpSignalR(IApplicationBuilder app)
 	{
-		if (WebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseSignalR)) return;
+		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseSignalR)) return;
 
-		app.UseEndpoints(endpoints => endpoints.MapHub<ToolkitHub>(WebApplication.Settings.SignalRPath));
+		app.UseEndpoints(endpoints => endpoints.MapHub<ToolkitHub>(ToolkitWebApplication.Settings.SignalRPath));
 	}
 
 	private void SetUpStaticFiles(IApplicationBuilder app)
 	{
-		if (WebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseFileSystem)) return;
-		if (WebApplication.Settings.StaticFileLocation == null) return;
+		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseFileSystem)) return;
+		if (ToolkitWebApplication.Settings.StaticFileLocation == null) return;
 
-		var physicalFileProvider = new PhysicalFileProvider(WebApplication.Settings.StaticFileLocation);
+		var physicalFileProvider = new PhysicalFileProvider(ToolkitWebApplication.Settings.StaticFileLocation);
 		var options = new DefaultFilesOptions { FileProvider = physicalFileProvider };
 
 		app.UseDefaultFiles(options);
