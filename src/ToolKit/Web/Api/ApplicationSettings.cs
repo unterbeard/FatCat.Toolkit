@@ -22,6 +22,8 @@ public class ApplicationSettings : EqualObject
 
 	public string SignalRPath { get; set; } = "/api/events";
 
+	public string? StaticFileLocation { get; set; }
+
 	public event HubMessage? ClientMessage;
 
 	public virtual Task<string?> OnOnClientHubMessage(ToolkitMessage message) => ClientMessage?.Invoke(message)!;

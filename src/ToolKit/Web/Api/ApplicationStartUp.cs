@@ -151,35 +151,15 @@ public class ApplicationStartUp
 	{
 		if (WebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseSignalR)) return;
 
-		ConsoleLog.Write("TODO SetUp SignalR");
-		ConsoleLog.Write("TODO SetUp SignalR");
-		ConsoleLog.Write("TODO SetUp SignalR");
-
 		app.UseEndpoints(endpoints => endpoints.MapHub<ToolkitHub>(WebApplication.Settings.SignalRPath));
 	}
 
 	private void SetUpStaticFiles(IApplicationBuilder app)
 	{
-		var applicationTools = new ApplicationTools();
+		if (WebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseFileSystem)) return;
+		if (WebApplication.Settings.StaticFileLocation == null) return;
 
-		var rootWebFolder = Path.Combine(applicationTools.ExecutingDirectory!, "userInterface");
-
-		ConsoleLog.WriteMagenta($"First WebRootFolder <{rootWebFolder}> | CurrentDirectory <{Directory.GetCurrentDirectory()}>");
-
-		if (!Directory.Exists(rootWebFolder)) rootWebFolder = Path.Combine(Directory.GetCurrentDirectory(), "userInterface");
-		if (!Directory.Exists(rootWebFolder)) rootWebFolder = Environment.GetEnvironmentVariable("FogHazeDevelopmentUiLocation");
-
-		ConsoleLog.WriteDarkCyan($"WebRootFolder <{rootWebFolder}>");
-
-		if (!Directory.Exists(rootWebFolder))
-		{
-			//throw new InvalidOperationException($"Folder does not exist: <{rootWebFolder}>");
-			ConsoleLog.WriteRed($"Did not find a folder at <{rootWebFolder}>");
-
-			return;
-		}
-
-		var physicalFileProvider = new PhysicalFileProvider(rootWebFolder);
+		var physicalFileProvider = new PhysicalFileProvider(WebApplication.Settings.StaticFileLocation);
 		var options = new DefaultFilesOptions { FileProvider = physicalFileProvider };
 
 		app.UseDefaultFiles(options);
