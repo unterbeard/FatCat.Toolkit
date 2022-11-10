@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 using Autofac;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
@@ -48,7 +47,7 @@ public static class Program
 						hubConnection.ServerMessage += OnServerMessage;
 
 						await thread.Sleep(1.Seconds());
-						
+
 						ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
 
 						// await hubConnection.SendNoResponse(new ToolkitMessage
@@ -95,7 +94,11 @@ public static class Program
 	{
 		await Task.CompletedTask;
 
-		return $"This is the client response {Faker.RandomString()}";
+		var responseMessage = $"{Faker.RandomString()}";
+
+		ConsoleLog.WriteGreen($"Client Response: <{responseMessage}>");
+
+		return responseMessage;
 	}
 
 	private static void RunServer()
@@ -142,7 +145,11 @@ public static class Program
 																ConsoleLog.WriteGreen($"Response: {JsonConvert.SerializeObject(response)}");
 															});
 
-												return Task.FromResult($"MessageBack {DateTime.Now:h:mm:ss tt zzs} | {Faker.RandomString()}");
+												var result = $"MessageBack {DateTime.Now:h:mm:ss tt zzs} | {Faker.RandomString()}";
+
+												ConsoleLog.WriteDarkCyan($"Sending back Response: {result}");
+
+												return Task.FromResult(result);
 											};
 
 		WebApplication.Run(applicationSettings);
@@ -153,13 +160,34 @@ public static class Program
 		ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
 
 		var hubServer = SystemScope.Container.Resolve<IToolkitHubServer>();
+		var thread = SystemScope.Container.Resolve<IThread>();
 
-		Task.Delay(10.Seconds()).Wait();
+		thread.Run(() =>
+					{
+						while (true)
+						{
+							Task.Delay(10.Seconds()).Wait();
 
-		ConsoleLog.WriteDarkGreen("Going to print all clients");
+							ConsoleLog.WriteDarkGreen("Going to print all clients");
 
-		var connectedClients = hubServer.GetConnections();
+							var connectedClients = hubServer.GetConnections();
 
-		foreach (var client in connectedClients) ConsoleLog.WriteMagenta($"Client: {client}");
+							foreach (var connectionId in connectedClients)
+							{
+								ConsoleLog.WriteMagenta($"Sending to Client: {connectionId}");
+
+								var result = hubServer.SendToClient(connectionId, new ToolkitMessage
+																				{
+																					Data = "This is coming from the server",
+																					MessageId = 1337
+																				})
+													.Result;
+
+								ConsoleLog.WriteDarkBlue($"Result from <{connectionId}>: <{result}>");
+
+								Task.Delay(3.Seconds()).Wait();
+							}
+						}
+					});
 	}
 }
