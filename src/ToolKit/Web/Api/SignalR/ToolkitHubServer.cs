@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Logging;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
@@ -27,15 +27,18 @@ public class ToolkitHubServer : IToolkitHubServer
 	private readonly ConcurrentDictionary<string, string> connections = new();
 	private readonly IGenerator generator;
 	private readonly IHubContext<ToolkitHub> hubContext;
+	private readonly IToolkitLogger logger;
 	private readonly ConcurrentDictionary<string, ToolkitMessage> responses = new();
 	private readonly ConcurrentDictionary<string, int> timedOutResponses = new();
 	private readonly ConcurrentDictionary<string, ToolkitMessage> waitingForResponses = new();
 
 	public ToolkitHubServer(IHubContext<ToolkitHub> hubContext,
-							IGenerator generator)
+							IGenerator generator,
+							IToolkitLogger logger)
 	{
 		this.hubContext = hubContext;
 		this.generator = generator;
+		this.logger = logger;
 	}
 
 	public void ClientResponseMessage(string sessionId, ToolkitMessage toolkitMessage)
@@ -43,7 +46,7 @@ public class ToolkitHubServer : IToolkitHubServer
 		if (timedOutResponses.TryRemove(sessionId, out _)) return;
 		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
 
-		ConsoleLog.WriteMagenta($"Got a client response!!!!!!! | SessionId {sessionId} | {JsonConvert.SerializeObject(toolkitMessage)}");
+		logger.Debug($"Got a client response!!!!!!! | SessionId {sessionId} | {JsonConvert.SerializeObject(toolkitMessage)}");
 
 		responses.TryAdd(sessionId, toolkitMessage);
 	}
@@ -52,14 +55,14 @@ public class ToolkitHubServer : IToolkitHubServer
 
 	public void OnClientConnected(string connectionId)
 	{
-		ConsoleLog.WriteCyan($"Connected | <{connectionId}>");
+		logger.Debug($"Connected | <{connectionId}>");
 
 		connections.TryAdd(connectionId, connectionId);
 	}
 
 	public void OnClientDisconnected(string connectionId)
 	{
-		ConsoleLog.WriteDarkCyan($"Client Disconnected | <{connectionId}>");
+		logger.Debug($"Client Disconnected | <{connectionId}>");
 
 		connections.TryRemove(connectionId, out _);
 	}
@@ -89,7 +92,7 @@ public class ToolkitHubServer : IToolkitHubServer
 				throw new TimeoutException();
 			}
 
-			await Task.Delay(100);
+			await Task.Delay(35);
 		}
 	}
 

@@ -1,6 +1,6 @@
 ﻿#nullable enable
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.Logging;
 using Microsoft.AspNetCore.SignalR;
 
 namespace FatCat.Toolkit.Web.Api.SignalR;
@@ -12,9 +12,11 @@ public class ToolkitHub : Hub
 
 	private IToolkitHubServer HubServer => SystemScope.Container.Resolve<IToolkitHubServer>();
 
+	private IToolkitLogger Logger => SystemScope.Container.Resolve<IToolkitLogger>();
+
 	public async Task ClientMessage(int messageId, string sessionId, string data)
 	{
-		ConsoleLog.WriteCyan($"Got Message | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
+		Logger.Debug($"Got Message | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
 
 		var toolkitMessage = new ToolkitMessage
 							{
@@ -25,7 +27,7 @@ public class ToolkitHub : Hub
 
 		var responseMessage = await WebApplication.Settings.OnOnClientHubMessage(toolkitMessage);
 
-		ConsoleLog.WriteDarkMagenta($"Response for message | <{responseMessage}>");
+		Logger.Debug($"Response for message | <{responseMessage}>");
 
 		await Task.Delay(messageId);
 
@@ -49,7 +51,7 @@ public class ToolkitHub : Hub
 	public override Task OnConnectedAsync()
 	{
 		try { HubServer.OnClientConnected(Context.ConnectionId); }
-		catch (Exception ex) { ConsoleLog.WriteException(ex); }
+		catch (Exception ex) { Logger.Exception(ex); }
 
 		return base.OnConnectedAsync();
 	}
@@ -57,7 +59,7 @@ public class ToolkitHub : Hub
 	public override Task OnDisconnectedAsync(Exception? exception)
 	{
 		try { HubServer.OnClientDisconnected(Context.ConnectionId); }
-		catch (Exception ex) { ConsoleLog.WriteException(ex); }
+		catch (Exception ex) { Logger.Exception(ex); }
 
 		return base.OnDisconnectedAsync(exception);
 	}
