@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿#nullable enable
+using System.Collections.Concurrent;
 using FatCat.Toolkit.Injection;
 
 namespace FatCat.Toolkit.Web.Api.SignalR;
@@ -6,6 +7,8 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 public interface IToolkitHubClientFactory : IAsyncDisposable
 {
 	Task<IToolkitHubClientConnection> ConnectToClient(string hubUrl);
+
+	Task<ConnectionResult> TryToConnectToClient(string hubUrl);
 }
 
 public class ToolkitHubClientFactory : IToolkitHubClientFactory
@@ -31,5 +34,20 @@ public class ToolkitHubClientFactory : IToolkitHubClientFactory
 	public async ValueTask DisposeAsync()
 	{
 		foreach (var connection in connections.Values) await connection.DisposeAsync();
+	}
+
+	public async Task<ConnectionResult> TryToConnectToClient(string hubUrl)
+	{
+		if (connections.TryGetValue(hubUrl, out var connection)) return new ConnectionResult(true, connection);
+
+		connection = scope.Resolve<IToolkitHubClientConnection>();
+
+		var result = await connection.TryToConnect(hubUrl);
+
+		if (!result) return new ConnectionResult(false);
+
+		connections.TryAdd(hubUrl, connection);
+
+		return new ConnectionResult(true, connection);
 	}
 }

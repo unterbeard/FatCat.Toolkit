@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Collections.Concurrent;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Logging;
 using Humanizer;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -15,6 +16,8 @@ public interface IToolkitHubClientConnection : IAsyncDisposable
 	Task<ToolkitMessage> Send(ToolkitMessage message, TimeSpan? timeout = null);
 
 	Task SendNoResponse(ToolkitMessage message);
+
+	Task<bool> TryToConnect(string hubUrl);
 }
 
 public class ToolkitHubClientConnection : IToolkitHubClientConnection
@@ -81,6 +84,22 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	}
 
 	public Task SendNoResponse(ToolkitMessage message) => SendSessionMessage(message.MessageId, message.Data ?? string.Empty, generator.NewId());
+
+	public async Task<bool> TryToConnect(string hubUrl)
+	{
+		try
+		{
+			await Connect(hubUrl);
+
+			return true;
+		}
+		catch (Exception e)
+		{
+			ConsoleLog.WriteBlue($"Failed Exception is {e.GetType().FullName}");
+
+			return false;
+		}
+	}
 
 	private Task<string?> OnServerMessage(ToolkitMessage message) => ServerMessage?.Invoke(message)!;
 
