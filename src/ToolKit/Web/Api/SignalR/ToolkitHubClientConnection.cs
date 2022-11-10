@@ -9,7 +9,7 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public interface IToolkitHubClientConnection : IAsyncDisposable
 {
-	event HubMessage? ServerMessage;
+	event ToolkitHubMessage? ServerMessage;
 
 	Task Connect(string hubUrl);
 
@@ -37,7 +37,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		this.logger = logger;
 	}
 
-	public event HubMessage? ServerMessage;
+	public event ToolkitHubMessage? ServerMessage;
 
 	public async Task Connect(string hubUrl)
 	{

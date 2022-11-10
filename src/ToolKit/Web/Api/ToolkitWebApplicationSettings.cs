@@ -24,7 +24,7 @@ public class ToolkitWebApplicationSettings : EqualObject
 
 	public string? StaticFileLocation { get; set; }
 
-	public event HubMessage? ClientMessage;
+	public event ToolkitHubMessage? ClientMessage;
 
 	public virtual Task<string?> OnOnClientHubMessage(ToolkitMessage message) => ClientMessage?.Invoke(message)!;
 }

@@ -20,7 +20,7 @@ using Newtonsoft.Json.Converters;
 
 namespace FatCat.Toolkit.Web.Api;
 
-public class ApplicationStartUp
+internal class ApplicationStartUp
 {
 	public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 	{
