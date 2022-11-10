@@ -1,3 +1,4 @@
+#nullable enable
 using LiteDB;
 
 namespace FatCat.Toolkit.Data.Lite;

@@ -1,3 +1,4 @@
+#nullable enable
 namespace FatCat.Toolkit.Extensions;
 
 public static class TypeExtensions

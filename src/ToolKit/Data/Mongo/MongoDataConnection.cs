@@ -1,3 +1,4 @@
+#nullable enable
 using MongoDB.Driver;
 
 namespace FatCat.Toolkit.Data.Mongo;

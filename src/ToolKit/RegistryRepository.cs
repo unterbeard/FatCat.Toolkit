@@ -1,3 +1,4 @@
+#nullable enable
 using Microsoft.Win32;
 
 namespace FatCat.Toolkit;

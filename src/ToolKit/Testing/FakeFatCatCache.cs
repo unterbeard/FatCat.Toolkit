@@ -1,3 +1,4 @@
+#nullable enable
 using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.Caching;

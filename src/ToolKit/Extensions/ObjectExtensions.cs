@@ -1,3 +1,4 @@
+#nullable enable
 using FatCat.Toolkit.Json;
 using Newtonsoft.Json;
 

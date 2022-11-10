@@ -1,4 +1,5 @@
-﻿using FatCat.Toolkit.Enumerations;
+﻿#nullable enable
+using FatCat.Toolkit.Enumerations;
 using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Web;
 using FluentAssertions;

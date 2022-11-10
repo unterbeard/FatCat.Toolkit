@@ -1,3 +1,4 @@
+#nullable enable
 using FatCat.Toolkit.Events;
 
 namespace FatCat.Toolkit.Console;

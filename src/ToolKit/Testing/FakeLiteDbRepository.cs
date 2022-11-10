@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿#nullable enable
+using System.Linq.Expressions;
 using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.Data.Lite;
