@@ -42,7 +42,16 @@ public static class Program
 					{
 						var hubUrl = $"https://localhost:{WebPort}/api/events";
 
-						var hubConnection = await hubFactory.ConnectToClient(hubUrl);
+						var result = await hubFactory.TryToConnectToClient(hubUrl);
+
+						if (!result.Connected)
+						{
+							ConsoleLog.WriteRed($"Could not connect too <{hubUrl}>");
+
+							return;
+						}
+
+						var hubConnection = result.Connection;
 
 						hubConnection.ServerMessage += OnServerMessage;
 
