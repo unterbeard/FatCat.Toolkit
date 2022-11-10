@@ -1,6 +1,6 @@
 ﻿#nullable enable
 using System.Collections.Concurrent;
-using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Logging;
 using Humanizer;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -20,13 +20,19 @@ public interface IToolkitHubClientConnection : IAsyncDisposable
 public class ToolkitHubClientConnection : IToolkitHubClientConnection
 {
 	private readonly IGenerator generator;
+	private readonly IToolkitLogger logger;
 
 	private readonly ConcurrentDictionary<string, ToolkitMessage> responses = new();
 	private readonly ConcurrentDictionary<string, int> timedOutResponses = new();
 	private readonly ConcurrentDictionary<string, ToolkitMessage> waitingForResponses = new();
 	private HubConnection connection = null!;
 
-	public ToolkitHubClientConnection(IGenerator generator) => this.generator = generator;
+	public ToolkitHubClientConnection(IGenerator generator,
+									IToolkitLogger logger)
+	{
+		this.generator = generator;
+		this.logger = logger;
+	}
 
 	public event HubMessage? ServerMessage;
 
@@ -70,7 +76,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 				throw new TimeoutException();
 			}
 
-			await Task.Delay(100);
+			await Task.Delay(35);
 		}
 	}
 
@@ -80,9 +86,9 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 	private async Task OnServerOriginatedMessage(int messageId, string sessionId, string data)
 	{
-		ConsoleLog.WriteMagenta(new string('-', 80));
-		ConsoleLog.WriteMagenta($"OnServerOriginatedMessage | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
-		ConsoleLog.WriteMagenta(new string('-', 80));
+		logger.Debug(new string('-', 80));
+		logger.Debug($"OnServerOriginatedMessage | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
+		logger.Debug(new string('-', 80));
 
 		var message = new ToolkitMessage
 					{
@@ -100,7 +106,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		if (timedOutResponses.TryRemove(sessionId, out _)) return;
 		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
 
-		ConsoleLog.WriteCyan($"On ServerMessageReceived | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
+		logger.Debug($"On ServerMessageReceived | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
 
 		responses.TryAdd(sessionId, new ToolkitMessage
 									{
