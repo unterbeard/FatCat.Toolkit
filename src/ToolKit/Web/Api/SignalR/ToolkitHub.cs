@@ -34,11 +34,11 @@ public class ToolkitHub : Hub
 		await Clients.Client(Context.ConnectionId).SendAsync(ServerResponseMessage, messageId, sessionId, responseMessage);
 	}
 
-	public async Task ClientDataBufferMessage(int messageId, string data, byte[] buffer)
+	public async Task ClientDataBufferMessage(int messageId, string sessionId, string data, byte[] buffer)
 	{
 		await Task.CompletedTask;
 		
-		Logger.Debug($"Got Message | MessageId <{messageId}> | Data <{data}> | Buffer <{buffer.Length}>");
+		Logger.Debug($"Got Message | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}> | Buffer <{buffer.Length}>");
 	}
 
 	public async Task ClientResponseMessage(int messageId, string sessionId, string data)

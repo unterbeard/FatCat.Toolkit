@@ -15,6 +15,8 @@ public interface IToolkitHubClientConnection : IAsyncDisposable
 
 	Task<ToolkitMessage> Send(ToolkitMessage message, TimeSpan? timeout = null);
 
+	Task SendDataBufferNoResponse(ToolkitMessage message, byte[] dataBuffer);
+
 	Task SendNoResponse(ToolkitMessage message);
 
 	Task<bool> TryToConnect(string hubUrl);
@@ -49,7 +51,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 		var responseMethod = OnServerResponseMessageReceived;
 		var originalMethod = OnServerOriginatedMessage;
-		
+
 		connection.On(ToolkitHub.ServerResponseMessage, responseMethod);
 		connection.On(ToolkitHub.ServerOriginatedMessage, originalMethod);
 	}
@@ -81,6 +83,13 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 			await Task.Delay(35);
 		}
+	}
+
+	public async Task SendDataBufferNoResponse(ToolkitMessage message, byte[] dataBuffer)
+	{
+		var sessionId = generator.NewId();
+
+		await connection.SendAsync(nameof(ToolkitHub.ClientDataBufferMessage), message.MessageId, sessionId, message.Data, dataBuffer);
 	}
 
 	public Task SendNoResponse(ToolkitMessage message) => SendSessionMessage(message.MessageId, message.Data ?? string.Empty, generator.NewId());
