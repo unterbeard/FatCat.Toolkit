@@ -1,7 +1,5 @@
 #nullable enable
-using System.Reflection;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
+using System.Collections.Concurrent;
 
 namespace FatCat.Toolkit.Caching;
 
@@ -28,54 +26,27 @@ public interface IFatCatCache<T> where T : class, ICacheItem
 
 public class FatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 {
-	private readonly MemoryCache memoryCache;
+	private readonly ConcurrentDictionary<string, T> cache = new();
 
-	public FatCatCache() => memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
+	public void Add(T cacheItem) => cache.AddOrUpdate(cacheItem.CacheId, cacheItem, (key, value) => cacheItem);
 
-	public virtual void Add(T cacheItem)
+	public void Add(List<T> cacheItems)
 	{
-		if (InCache(cacheItem.CacheId)) Remove(cacheItem.CacheId);
-
-		memoryCache.Set(cacheItem.CacheId, cacheItem, CreateEntryOptions());
+		foreach (var item in cacheItems) Add(item);
 	}
 
-	public virtual void Add(List<T> cacheItems) => cacheItems.ForEach(Add);
-
-	public void Clear()
-	{
-		var allItems = GetAll();
-
-		foreach (var item in allItems) Remove(item.CacheId);
-	}
+	public void Clear() => cache.Clear();
 
 	public T? Get(string cacheId)
 	{
-		if (memoryCache.TryGetValue(cacheId, out var item)) return item as T;
+		cache.TryGetValue(cacheId, out var item);
 
-		return null;
+		return item;
 	}
 
-	public IList<T> GetAll()
-	{
-		var cacheEntriesCollectionDefinition = typeof(MemoryCache).GetProperty("EntriesCollection", BindingFlags.NonPublic | BindingFlags.Instance)!;
+	public IList<T> GetAll() => cache.Values.ToList();
 
-		var cacheEntriesCollection = cacheEntriesCollectionDefinition.GetValue(memoryCache) as dynamic;
+	public bool InCache(string cacheId) => cache.ContainsKey(cacheId);
 
-		var cacheCollectionValues = new List<ICacheEntry>();
-
-		foreach (var cacheItem in cacheEntriesCollection!)
-		{
-			ICacheEntry cacheItemValue = cacheItem.GetType().GetProperty("Value").GetValue(cacheItem, null);
-
-			cacheCollectionValues.Add(cacheItemValue);
-		}
-
-		return cacheCollectionValues.Select(i => i.Value).Cast<T>().ToList();
-	}
-
-	public bool InCache(string cacheId) => memoryCache.TryGetValue(cacheId, out _);
-
-	public void Remove(string cacheId) => memoryCache.Remove(cacheId);
-
-	private static MemoryCacheEntryOptions CreateEntryOptions() => new() { Priority = CacheItemPriority.NeverRemove };
+	public void Remove(string cacheId) => cache.TryRemove(cacheId, out _);
 }
