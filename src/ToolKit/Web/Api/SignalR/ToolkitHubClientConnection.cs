@@ -49,7 +49,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 		var responseMethod = OnServerResponseMessageReceived;
 		var originalMethod = OnServerOriginatedMessage;
-
+		
 		connection.On(ToolkitHub.ServerResponseMessage, responseMethod);
 		connection.On(ToolkitHub.ServerOriginatedMessage, originalMethod);
 	}
