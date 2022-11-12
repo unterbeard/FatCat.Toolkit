@@ -59,6 +59,16 @@ public static class Program
 
 						ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
 
+						var dataBuffer = Faker.Create<List<byte>>(1024).ToArray();
+
+						ConsoleLog.WriteCyan($"Going to send data message of length {dataBuffer.Length}");
+
+						await hubConnection.SendDataBufferNoResponse(new ToolkitMessage
+																	{
+																		Data = "Junk",
+																		MessageId = 123
+																	}, dataBuffer);
+
 						// await hubConnection.SendNoResponse(new ToolkitMessage
 						// 									{
 						// 										MessageId = 5,
