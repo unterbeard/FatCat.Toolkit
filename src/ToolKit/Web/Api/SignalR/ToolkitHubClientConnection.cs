@@ -82,7 +82,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 		waitingForResponses.TryAdd(sessionId, message);
 
-		await SendDataBufferNoResponse(message, dataBuffer);
+		await connection.SendAsync(nameof(ToolkitHub.ClientDataBufferMessage), message.MessageId, sessionId, message.Data, dataBuffer);
 
 		return await WaitForResponse(message, timeout, sessionId);
 	}
@@ -134,7 +134,13 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	private void OnServerResponseMessageReceived(int messageId, string sessionId, string data)
 	{
 		if (timedOutResponses.TryRemove(sessionId, out _)) return;
-		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
+
+		if (!waitingForResponses.TryRemove(sessionId, out _))
+		{
+			ConsoleLog.WriteDarkYellow($"Did not have a waiting for response for {sessionId}");
+
+			return;
+		}
 
 		logger.Debug($"On ServerMessageReceived | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
 
@@ -150,6 +156,8 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	private async Task<ToolkitMessage> WaitForResponse(ToolkitMessage message, [DisallowNull] TimeSpan? timeout, string sessionId)
 	{
 		var startTime = DateTime.UtcNow;
+
+		ConsoleLog.WriteDarkYellow($"Going to wait for a response for {timeout} | SessionId <{sessionId}>");
 
 		while (true)
 		{
