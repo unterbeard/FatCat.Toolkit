@@ -36,7 +36,7 @@ public class ToolkitHub : Hub
 	{
 		await Task.CompletedTask;
 		
-		Logger.Debug($"Got Message | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}> | Buffer <{dataBuffer.Length}>");
+		Logger.Debug($"Got DataBuffer Message | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}> | Buffer <{dataBuffer.Length}>");
 		
 		var toolkitMessage = new ToolkitMessage
 							{
@@ -50,6 +50,8 @@ public class ToolkitHub : Hub
 		Logger.Debug($"Response for message | <{responseMessage}>");
 		
 		await Clients.Client(Context.ConnectionId).SendAsync(ServerResponseMessage, messageId, sessionId, responseMessage);
+		
+		Logger.Debug($"Done sending response for message | <{responseMessage}> | SessionId <{sessionId}>");
 	}
 
 	public async Task ClientResponseMessage(int messageId, string sessionId, string data)
