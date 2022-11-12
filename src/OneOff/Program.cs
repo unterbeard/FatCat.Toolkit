@@ -63,11 +63,13 @@ public static class Program
 
 						ConsoleLog.WriteCyan($"Going to send data message of length {dataBuffer.Length}");
 
-						await hubConnection.SendDataBufferNoResponse(new ToolkitMessage
-																	{
-																		Data = "Junk",
-																		MessageId = 123
-																	}, dataBuffer);
+						var response = await hubConnection.SendDataBuffer(new ToolkitMessage
+																		{
+																			Data = "Junk",
+																			MessageId = 123
+																		}, dataBuffer);
+						
+						ConsoleLog.WriteCyan($"Response from server was {JsonConvert.SerializeObject(response, Formatting.Indented)}");
 
 						// await hubConnection.SendNoResponse(new ToolkitMessage
 						// 									{
@@ -132,6 +134,20 @@ public static class Program
 									CorsUri = new List<Uri> { new($"https://localhost:{WebPort}") },
 									OnWebApplicationStarted = Started,
 								};
+
+		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
+														{
+															ConsoleLog.WriteMagenta($"Got data buffer message: {JsonConvert.SerializeObject(message)}");
+															ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
+
+															await Task.CompletedTask;
+
+															var responseMessage = $"BufferResponse {Faker.RandomString()}";
+
+															ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
+
+															return responseMessage;
+														};
 
 		applicationSettings.ClientMessage += message =>
 											{

@@ -25,20 +25,31 @@ public class ToolkitHub : Hub
 								MessageId = messageId
 							};
 
-		var responseMessage = await ToolkitWebApplication.Settings.OnOnClientHubMessage(toolkitMessage);
+		var responseMessage = await ToolkitWebApplication.Settings.OnClientHubMessage(toolkitMessage);
 
 		Logger.Debug($"Response for message | <{responseMessage}>");
-
-		await Task.Delay(messageId);
 
 		await Clients.Client(Context.ConnectionId).SendAsync(ServerResponseMessage, messageId, sessionId, responseMessage);
 	}
 
-	public async Task ClientDataBufferMessage(int messageId, string sessionId, string data, byte[] buffer)
+	public async Task ClientDataBufferMessage(int messageId, string sessionId, string data, byte[] dataBuffer)
 	{
 		await Task.CompletedTask;
 		
-		Logger.Debug($"Got Message | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}> | Buffer <{buffer.Length}>");
+		Logger.Debug($"Got Message | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}> | Buffer <{dataBuffer.Length}>");
+		
+		var toolkitMessage = new ToolkitMessage
+							{
+								Data = data,
+								ConnectionId = Context.ConnectionId,
+								MessageId = messageId
+							};
+
+		var responseMessage = await ToolkitWebApplication.Settings.OnOnClientDataBufferMessage(toolkitMessage, dataBuffer);
+
+		Logger.Debug($"Response for message | <{responseMessage}>");
+		
+		await Clients.Client(Context.ConnectionId).SendAsync(ServerResponseMessage, messageId, sessionId, responseMessage);
 	}
 
 	public async Task ClientResponseMessage(int messageId, string sessionId, string data)

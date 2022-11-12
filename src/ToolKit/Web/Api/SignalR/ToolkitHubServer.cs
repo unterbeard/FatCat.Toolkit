@@ -7,6 +7,8 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public interface IToolkitHubServer
 {
+	void ClientResponseDataBufferMessage(string sessionId, ToolkitMessage toolkitMessage, byte[] dataBuffer);
+
 	void ClientResponseMessage(string sessionId, ToolkitMessage toolkitMessage);
 
 	List<string> GetConnections();
@@ -39,6 +41,16 @@ public class ToolkitHubServer : IToolkitHubServer
 		this.hubContext = hubContext;
 		this.generator = generator;
 		this.logger = logger;
+	}
+
+	public void ClientResponseDataBufferMessage(string sessionId, ToolkitMessage toolkitMessage, byte[] dataBuffer)
+	{
+		if (timedOutResponses.TryRemove(sessionId, out _)) return;
+		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
+
+		logger.Debug($"Got a client response for data buffer!!!!!!! | SessionId {sessionId} | {JsonConvert.SerializeObject(toolkitMessage)}");
+
+		responses.TryAdd(sessionId, toolkitMessage);
 	}
 
 	public void ClientResponseMessage(string sessionId, ToolkitMessage toolkitMessage)

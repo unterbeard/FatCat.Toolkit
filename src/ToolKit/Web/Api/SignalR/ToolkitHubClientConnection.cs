@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Logging;
 using Humanizer;
@@ -14,6 +15,8 @@ public interface IToolkitHubClientConnection : IAsyncDisposable
 	Task Connect(string hubUrl);
 
 	Task<ToolkitMessage> Send(ToolkitMessage message, TimeSpan? timeout = null);
+
+	Task<ToolkitMessage> SendDataBuffer(ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null);
 
 	Task SendDataBufferNoResponse(ToolkitMessage message, byte[] dataBuffer);
 
@@ -68,21 +71,20 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 		await SendSessionMessage(message.MessageId, message.Data ?? string.Empty, sessionId);
 
-		var startTime = DateTime.UtcNow;
+		return await WaitForResponse(message, timeout, sessionId);
+	}
 
-		while (true)
-		{
-			if (responses.TryRemove(sessionId, out var response)) return response;
+	public async Task<ToolkitMessage> SendDataBuffer(ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null)
+	{
+		timeout ??= 30.Seconds();
 
-			if (DateTime.UtcNow - startTime > timeout)
-			{
-				timedOutResponses.TryAdd(sessionId, message.MessageId);
+		var sessionId = generator.NewId();
 
-				throw new TimeoutException();
-			}
+		waitingForResponses.TryAdd(sessionId, message);
 
-			await Task.Delay(35);
-		}
+		await SendDataBufferNoResponse(message, dataBuffer);
+
+		return await WaitForResponse(message, timeout, sessionId);
 	}
 
 	public async Task SendDataBufferNoResponse(ToolkitMessage message, byte[] dataBuffer)
@@ -144,4 +146,23 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	}
 
 	private Task SendSessionMessage(int messageId, string data, string sessionId) => connection.SendAsync(nameof(ToolkitHub.ClientMessage), messageId, sessionId, data);
+
+	private async Task<ToolkitMessage> WaitForResponse(ToolkitMessage message, [DisallowNull] TimeSpan? timeout, string sessionId)
+	{
+		var startTime = DateTime.UtcNow;
+
+		while (true)
+		{
+			if (responses.TryRemove(sessionId, out var response)) return response;
+
+			if (DateTime.UtcNow - startTime > timeout)
+			{
+				timedOutResponses.TryAdd(sessionId, message.MessageId);
+
+				throw new TimeoutException();
+			}
+
+			await Task.Delay(35);
+		}
+	}
 }
