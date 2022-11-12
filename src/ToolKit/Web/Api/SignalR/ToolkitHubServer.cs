@@ -17,6 +17,8 @@ public interface IToolkitHubServer
 
 	void OnClientDisconnected(string connectionId);
 
+	Task<ToolkitMessage> SendDataBufferToClient(string connectionId, ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null);
+
 	Task SendToAllClients(ToolkitMessage message);
 
 	Task<ToolkitMessage> SendToClient(string connectionId, ToolkitMessage message, TimeSpan? timeout = null);
@@ -78,6 +80,8 @@ public class ToolkitHubServer : IToolkitHubServer
 
 		connections.TryRemove(connectionId, out _);
 	}
+
+	public Task<ToolkitMessage> SendDataBufferToClient(string connectionId, ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null) => throw new NotImplementedException();
 
 	public Task SendToAllClients(ToolkitMessage message) => throw new NotImplementedException();
 
