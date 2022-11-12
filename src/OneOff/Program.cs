@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using Autofac;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
@@ -63,12 +64,17 @@ public static class Program
 
 						ConsoleLog.WriteCyan($"Going to send data message of length {dataBuffer.Length}");
 
+						var watch = Stopwatch.StartNew();
+
 						var response = await hubConnection.SendDataBuffer(new ToolkitMessage
 																		{
 																			Data = "Junk",
 																			MessageId = 123
 																		}, dataBuffer);
-						
+
+						watch.Stop();
+
+						ConsoleLog.WriteYellow($"Send DataBuffer Message Took <{watch.Elapsed}>");
 						ConsoleLog.WriteCyan($"Response from server was {JsonConvert.SerializeObject(response, Formatting.Indented)}");
 
 						// await hubConnection.SendNoResponse(new ToolkitMessage
@@ -197,32 +203,32 @@ public static class Program
 		var hubServer = SystemScope.Container.Resolve<IToolkitHubServer>();
 		var thread = SystemScope.Container.Resolve<IThread>();
 
-		thread.Run(() =>
-					{
-						while (true)
-						{
-							Task.Delay(10.Seconds()).Wait();
-
-							ConsoleLog.WriteDarkGreen("Going to print all clients");
-
-							var connectedClients = hubServer.GetConnections();
-
-							foreach (var connectionId in connectedClients)
-							{
-								ConsoleLog.WriteMagenta($"Sending to Client: {connectionId}");
-
-								var result = hubServer.SendToClient(connectionId, new ToolkitMessage
-																				{
-																					Data = "This is coming from the server",
-																					MessageId = 1337
-																				})
-													.Result;
-
-								ConsoleLog.WriteDarkBlue($"Result from <{connectionId}>: <{result}>");
-
-								Task.Delay(3.Seconds()).Wait();
-							}
-						}
-					});
+		// thread.Run(() =>
+		// 			{
+		// 				while (true)
+		// 				{
+		// 					Task.Delay(10.Seconds()).Wait();
+		//
+		// 					ConsoleLog.WriteDarkGreen("Going to print all clients");
+		//
+		// 					var connectedClients = hubServer.GetConnections();
+		//
+		// 					foreach (var connectionId in connectedClients)
+		// 					{
+		// 						ConsoleLog.WriteMagenta($"Sending to Client: {connectionId}");
+		//
+		// 						var result = hubServer.SendToClient(connectionId, new ToolkitMessage
+		// 																		{
+		// 																			Data = "This is coming from the server",
+		// 																			MessageId = 1337
+		// 																		})
+		// 											.Result;
+		//
+		// 						ConsoleLog.WriteDarkBlue($"Result from <{connectionId}>: <{result}>");
+		//
+		// 						Task.Delay(3.Seconds()).Wait();
+		// 					}
+		// 				}
+		// 			});
 	}
 }
