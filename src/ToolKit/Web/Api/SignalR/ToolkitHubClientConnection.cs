@@ -42,6 +42,8 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		this.logger = logger;
 	}
 
+	public event ToolkitHubDataBufferMessage? ServerDataBufferMessage;
+
 	public event ToolkitHubMessage? ServerMessage;
 
 	public async Task Connect(string hubUrl)
@@ -107,6 +109,8 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 			return false;
 		}
 	}
+
+	private Task<string> OnDataBufferMessage(ToolkitMessage message, byte[] dataBuffer) => ServerDataBufferMessage?.Invoke(message, dataBuffer)!;
 
 	private Task<string?> OnServerMessage(ToolkitMessage message) => ServerMessage?.Invoke(message)!;
 
