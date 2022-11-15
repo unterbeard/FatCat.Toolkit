@@ -9,6 +9,7 @@ public class ToolkitHub : Hub
 {
 	public const string ServerOriginatedMessage = "ServerOriginatedMessage";
 	public const string ServerResponseMessage = "ServerResponseMessage";
+	public const string ServerDataBufferMessage = "ServerDataBufferMessage";
 
 	private IToolkitHubServer HubServer => SystemScope.Container.Resolve<IToolkitHubServer>();
 

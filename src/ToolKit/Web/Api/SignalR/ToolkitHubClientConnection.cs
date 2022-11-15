@@ -52,11 +52,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 		await connection.StartAsync();
 
-		var responseMethod = OnServerResponseMessageReceived;
-		var originalMethod = OnServerOriginatedMessage;
-
-		connection.On(ToolkitHub.ServerResponseMessage, responseMethod);
-		connection.On(ToolkitHub.ServerOriginatedMessage, originalMethod);
+		RegisterForServerMessages();
 	}
 
 	public ValueTask DisposeAsync() => connection.DisposeAsync();
@@ -114,6 +110,12 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 	private Task<string?> OnServerMessage(ToolkitMessage message) => ServerMessage?.Invoke(message)!;
 
+	private async Task OnServerOriginatedDataBufferMessage(int messageId, string sessionId, string data, byte[] bufferData)
+	{
+		await Task.CompletedTask;
+		await Task.CompletedTask;
+	}
+
 	private async Task OnServerOriginatedMessage(int messageId, string sessionId, string data)
 	{
 		logger.Debug(new string('-', 80));
@@ -149,6 +151,17 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 										MessageId = messageId,
 										Data = data
 									});
+	}
+
+	private void RegisterForServerMessages()
+	{
+		var responseMethod = OnServerResponseMessageReceived;
+		var originatedMessageMethod = OnServerOriginatedMessage;
+		var dataBufferMethod = OnServerOriginatedDataBufferMessage;
+
+		connection.On(ToolkitHub.ServerResponseMessage, responseMethod);
+		connection.On(ToolkitHub.ServerOriginatedMessage, originatedMessageMethod);
+		connection.On(ToolkitHub.ServerDataBufferMessage, dataBufferMethod);
 	}
 
 	private Task SendSessionMessage(int messageId, string data, string sessionId) => connection.SendAsync(nameof(ToolkitHub.ClientMessage), messageId, sessionId, data);
