@@ -110,14 +110,25 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		}
 	}
 
-	private Task<string> OnDataBufferMessage(ToolkitMessage message, byte[] dataBuffer) => ServerDataBufferMessage?.Invoke(message, dataBuffer)!;
+	private Task<string?> InvokeDataBufferMessage(ToolkitMessage message, byte[] dataBuffer) => ServerDataBufferMessage?.Invoke(message, dataBuffer)!;
 
-	private Task<string?> OnServerMessage(ToolkitMessage message) => ServerMessage?.Invoke(message)!;
+	private Task<string?> InvokeServerMessage(ToolkitMessage message) => ServerMessage?.Invoke(message)!;
 
 	private async Task OnServerOriginatedDataBufferMessage(int messageId, string sessionId, string data, byte[] bufferData)
 	{
-		await Task.CompletedTask;
-		await Task.CompletedTask;
+		logger.Debug(new string('-', 80));
+		logger.Debug($"OnServerOriginatedDataBufferMessage | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}> | bufferData <{bufferData.Length}>");
+		logger.Debug(new string('-', 80));
+
+		var message = new ToolkitMessage
+					{
+						Data = data,
+						MessageId = messageId
+					};
+
+		var response = await InvokeDataBufferMessage(message, bufferData);
+
+		if (response is not null) await connection.SendAsync(nameof(ToolkitHub.ClientResponseMessage), messageId, sessionId, response);
 	}
 
 	private async Task OnServerOriginatedMessage(int messageId, string sessionId, string data)
@@ -132,7 +143,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 						MessageId = messageId
 					};
 
-		var response = await OnServerMessage(message);
+		var response = await InvokeServerMessage(message);
 
 		if (response is not null) await connection.SendAsync(nameof(ToolkitHub.ClientResponseMessage), messageId, sessionId, response);
 	}
