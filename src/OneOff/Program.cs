@@ -55,6 +55,7 @@ public static class Program
 						var hubConnection = result.Connection;
 
 						hubConnection.ServerMessage += OnServerMessage;
+						hubConnection.ServerDataBufferMessage += OnDataBufferFromServer;
 
 						await thread.Sleep(1.Seconds());
 
@@ -115,6 +116,19 @@ public static class Program
 					});
 
 		consoleUtilities.WaitForExit();
+	}
+
+	private static async Task<string> OnDataBufferFromServer(ToolkitMessage message, byte[] dataBuffer)
+	{
+		await Task.CompletedTask;
+
+		ConsoleLog.WriteYellow($"Client Received DataBuffer Message of length {dataBuffer.Length}");
+
+		var responseMessage = Faker.RandomString("ClientDataBufferResponse_");
+
+		ConsoleLog.WriteMagenta($"Client DataBufferResponse : <{responseMessage}>");
+
+		return responseMessage;
 	}
 
 	private static async Task<string> OnServerMessage(ToolkitMessage message)
@@ -203,32 +217,31 @@ public static class Program
 		var hubServer = SystemScope.Container.Resolve<IToolkitHubServer>();
 		var thread = SystemScope.Container.Resolve<IThread>();
 
-		// thread.Run(() =>
-		// 			{
-		// 				while (true)
-		// 				{
-		// 					Task.Delay(10.Seconds()).Wait();
-		//
-		// 					ConsoleLog.WriteDarkGreen("Going to print all clients");
-		//
-		// 					var connectedClients = hubServer.GetConnections();
-		//
-		// 					foreach (var connectionId in connectedClients)
-		// 					{
-		// 						ConsoleLog.WriteMagenta($"Sending to Client: {connectionId}");
-		//
-		// 						var result = hubServer.SendToClient(connectionId, new ToolkitMessage
-		// 																		{
-		// 																			Data = "This is coming from the server",
-		// 																			MessageId = 1337
-		// 																		})
-		// 											.Result;
-		//
-		// 						ConsoleLog.WriteDarkBlue($"Result from <{connectionId}>: <{result}>");
-		//
-		// 						Task.Delay(3.Seconds()).Wait();
-		// 					}
-		// 				}
-		// 			});
+		thread.Run(async () =>
+					{
+						while (true)
+						{
+							var connections = hubServer.GetConnections();
+
+							foreach (var connection in connections)
+							{
+								ConsoleLog.WriteCyan("Going to send data buffer to the client from the server");
+
+								var dataBuffer = Faker.Create<List<byte>>(1024).ToArray();
+
+								var clientResponse = await hubServer.SendDataBufferToClient(connection,
+																							new ToolkitMessage
+																							{
+																								ConnectionId = connection,
+																								MessageId = 1344,
+																							},
+																							dataBuffer);
+
+								ConsoleLog.WriteGreen($"Client Response: {clientResponse}");
+
+								await Task.Delay(15.Seconds());
+							}
+						}
+					});
 	}
 }
