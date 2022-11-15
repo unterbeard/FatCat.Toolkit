@@ -237,7 +237,7 @@ public static class Program
 																							},
 																							dataBuffer);
 
-								ConsoleLog.WriteGreen($"Client Response: {clientResponse}");
+								ConsoleLog.WriteGreen($"Client Response: {clientResponse.Data}");
 
 								await Task.Delay(15.Seconds());
 							}
