@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using FatCat.Toolkit.Logging;
+using Humanizer;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
@@ -81,22 +82,37 @@ public class ToolkitHubServer : IToolkitHubServer
 		connections.TryRemove(connectionId, out _);
 	}
 
-	public Task<ToolkitMessage> SendDataBufferToClient(string connectionId, ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null)
+	public async Task<ToolkitMessage> SendDataBufferToClient(string connectionId, ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null)
 	{
-		throw new NotImplementedException();
+		var sessionId = generator.NewId();
+
+		waitingForResponses.TryAdd(sessionId, message);
+
+		await hubContext.Clients.Client(connectionId).SendAsync(ToolkitHub.ServerDataBufferMessage, message.MessageId, sessionId, message.Data, dataBuffer);
+
+		return await WaitForClientResponse(message, timeout, sessionId);
 	}
 
 	public Task SendToAllClients(ToolkitMessage message) => throw new NotImplementedException();
 
 	public async Task<ToolkitMessage> SendToClient(string connectionId, ToolkitMessage message, TimeSpan? timeout = null)
 	{
-		timeout ??= TimeSpan.FromSeconds(30);
-
 		var sessionId = generator.NewId();
 
 		waitingForResponses.TryAdd(sessionId, message);
 
 		await SendMessageToClient(connectionId, message, sessionId);
+
+		return await WaitForClientResponse(message, timeout, sessionId);
+	}
+
+	public async Task SendToClientNoResponse(string connectionId, ToolkitMessage message) => await SendMessageToClient(connectionId, message, generator.NewId());
+
+	private async Task SendMessageToClient(string connectionId, ToolkitMessage message, string sessionId) => await hubContext.Clients.Client(connectionId).SendAsync(ToolkitHub.ServerOriginatedMessage, message.MessageId, sessionId, message.Data);
+
+	private async Task<ToolkitMessage> WaitForClientResponse(ToolkitMessage message, TimeSpan? timeout, string sessionId)
+	{
+		timeout ??= 30.Seconds();
 
 		var startTime = DateTime.UtcNow;
 
@@ -114,8 +130,4 @@ public class ToolkitHubServer : IToolkitHubServer
 			await Task.Delay(35);
 		}
 	}
-
-	public async Task SendToClientNoResponse(string connectionId, ToolkitMessage message) => await SendMessageToClient(connectionId, message, generator.NewId());
-
-	private async Task SendMessageToClient(string connectionId, ToolkitMessage message, string sessionId) => await hubContext.Clients.Client(connectionId).SendAsync(ToolkitHub.ServerOriginatedMessage, message.MessageId, sessionId, message.Data);
 }
