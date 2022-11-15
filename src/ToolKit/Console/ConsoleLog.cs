@@ -20,7 +20,7 @@ public static class ConsoleLog
 							[CallerFilePath] string sourceFilePath = "",
 							[CallerLineNumber] int sourceLineNumber = 0)
 	{
-		var messageToLog = $"{Path.GetFileName(sourceFilePath)} @ {sourceLineNumber} {memberName} | {message}";
+		var messageToLog = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss:fff} | {Path.GetFileName(sourceFilePath)} @ {sourceLineNumber} {memberName} | {message}";
 
 		WriteLineWithColor(color, LogCallerInformation ? messageToLog : message);
 	}

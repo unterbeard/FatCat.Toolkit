@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using Autofac;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
@@ -54,10 +55,28 @@ public static class Program
 						var hubConnection = result.Connection;
 
 						hubConnection.ServerMessage += OnServerMessage;
+						hubConnection.ServerDataBufferMessage += OnDataBufferFromServer;
 
 						await thread.Sleep(1.Seconds());
 
 						ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
+
+						var dataBuffer = Faker.Create<List<byte>>(1024).ToArray();
+
+						ConsoleLog.WriteCyan($"Going to send data message of length {dataBuffer.Length}");
+
+						var watch = Stopwatch.StartNew();
+
+						var response = await hubConnection.SendDataBuffer(new ToolkitMessage
+																		{
+																			Data = "Junk",
+																			MessageId = 123
+																		}, dataBuffer);
+
+						watch.Stop();
+
+						ConsoleLog.WriteYellow($"Send DataBuffer Message Took <{watch.Elapsed}>");
+						ConsoleLog.WriteCyan($"Response from server was {JsonConvert.SerializeObject(response, Formatting.Indented)}");
 
 						// await hubConnection.SendNoResponse(new ToolkitMessage
 						// 									{
@@ -99,6 +118,19 @@ public static class Program
 		consoleUtilities.WaitForExit();
 	}
 
+	private static async Task<string> OnDataBufferFromServer(ToolkitMessage message, byte[] dataBuffer)
+	{
+		await Task.CompletedTask;
+
+		ConsoleLog.WriteYellow($"Client Received DataBuffer Message of length {dataBuffer.Length}");
+
+		var responseMessage = Faker.RandomString("ClientDataBufferResponse_");
+
+		ConsoleLog.WriteMagenta($"Client DataBufferResponse : <{responseMessage}>");
+
+		return responseMessage;
+	}
+
 	private static async Task<string> OnServerMessage(ToolkitMessage message)
 	{
 		await Task.CompletedTask;
@@ -122,6 +154,20 @@ public static class Program
 									CorsUri = new List<Uri> { new($"https://localhost:{WebPort}") },
 									OnWebApplicationStarted = Started,
 								};
+
+		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
+														{
+															ConsoleLog.WriteMagenta($"Got data buffer message: {JsonConvert.SerializeObject(message)}");
+															ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
+
+															await Task.CompletedTask;
+
+															var responseMessage = $"BufferResponse {Faker.RandomString()}";
+
+															ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
+
+															return responseMessage;
+														};
 
 		applicationSettings.ClientMessage += message =>
 											{
@@ -171,30 +217,29 @@ public static class Program
 		var hubServer = SystemScope.Container.Resolve<IToolkitHubServer>();
 		var thread = SystemScope.Container.Resolve<IThread>();
 
-		thread.Run(() =>
+		thread.Run(async () =>
 					{
 						while (true)
 						{
-							Task.Delay(10.Seconds()).Wait();
+							var connections = hubServer.GetConnections();
 
-							ConsoleLog.WriteDarkGreen("Going to print all clients");
-
-							var connectedClients = hubServer.GetConnections();
-
-							foreach (var connectionId in connectedClients)
+							foreach (var connection in connections)
 							{
-								ConsoleLog.WriteMagenta($"Sending to Client: {connectionId}");
+								ConsoleLog.WriteCyan("Going to send data buffer to the client from the server");
 
-								var result = hubServer.SendToClient(connectionId, new ToolkitMessage
-																				{
-																					Data = "This is coming from the server",
-																					MessageId = 1337
-																				})
-													.Result;
+								var dataBuffer = Faker.Create<List<byte>>(1024).ToArray();
 
-								ConsoleLog.WriteDarkBlue($"Result from <{connectionId}>: <{result}>");
+								var clientResponse = await hubServer.SendDataBufferToClient(connection,
+																							new ToolkitMessage
+																							{
+																								ConnectionId = connection,
+																								MessageId = 1344,
+																							},
+																							dataBuffer);
 
-								Task.Delay(3.Seconds()).Wait();
+								ConsoleLog.WriteGreen($"Client Response: {clientResponse.Data}");
+
+								await Task.Delay(15.Seconds());
 							}
 						}
 					});

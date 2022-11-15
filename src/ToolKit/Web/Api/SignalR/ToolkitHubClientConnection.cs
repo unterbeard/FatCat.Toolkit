@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Logging;
 using Humanizer;
@@ -9,11 +10,17 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public interface IToolkitHubClientConnection : IAsyncDisposable
 {
+	event ToolkitHubDataBufferMessage? ServerDataBufferMessage;
+
 	event ToolkitHubMessage? ServerMessage;
 
 	Task Connect(string hubUrl);
 
 	Task<ToolkitMessage> Send(ToolkitMessage message, TimeSpan? timeout = null);
+
+	Task<ToolkitMessage> SendDataBuffer(ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null);
+
+	Task SendDataBufferNoResponse(ToolkitMessage message, byte[] dataBuffer);
 
 	Task SendNoResponse(ToolkitMessage message);
 
@@ -37,6 +44,8 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		this.logger = logger;
 	}
 
+	public event ToolkitHubDataBufferMessage? ServerDataBufferMessage;
+
 	public event ToolkitHubMessage? ServerMessage;
 
 	public async Task Connect(string hubUrl)
@@ -47,11 +56,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 		await connection.StartAsync();
 
-		var responseMethod = OnServerResponseMessageReceived;
-		var originalMethod = OnServerOriginatedMessage;
-
-		connection.On(ToolkitHub.ServerResponseMessage, responseMethod);
-		connection.On(ToolkitHub.ServerOriginatedMessage, originalMethod);
+		RegisterForServerMessages();
 	}
 
 	public ValueTask DisposeAsync() => connection.DisposeAsync();
@@ -66,21 +71,27 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 		await SendSessionMessage(message.MessageId, message.Data ?? string.Empty, sessionId);
 
-		var startTime = DateTime.UtcNow;
+		return await WaitForResponse(message, timeout, sessionId);
+	}
 
-		while (true)
-		{
-			if (responses.TryRemove(sessionId, out var response)) return response;
+	public async Task<ToolkitMessage> SendDataBuffer(ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null)
+	{
+		timeout ??= 30.Seconds();
 
-			if (DateTime.UtcNow - startTime > timeout)
-			{
-				timedOutResponses.TryAdd(sessionId, message.MessageId);
+		var sessionId = generator.NewId();
 
-				throw new TimeoutException();
-			}
+		waitingForResponses.TryAdd(sessionId, message);
 
-			await Task.Delay(35);
-		}
+		await connection.SendAsync(nameof(ToolkitHub.ClientDataBufferMessage), message.MessageId, sessionId, message.Data, dataBuffer);
+
+		return await WaitForResponse(message, timeout, sessionId);
+	}
+
+	public async Task SendDataBufferNoResponse(ToolkitMessage message, byte[] dataBuffer)
+	{
+		var sessionId = generator.NewId();
+
+		await connection.SendAsync(nameof(ToolkitHub.ClientDataBufferMessage), message.MessageId, sessionId, message.Data, dataBuffer);
 	}
 
 	public Task SendNoResponse(ToolkitMessage message) => SendSessionMessage(message.MessageId, message.Data ?? string.Empty, generator.NewId());
@@ -101,7 +112,26 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		}
 	}
 
-	private Task<string?> OnServerMessage(ToolkitMessage message) => ServerMessage?.Invoke(message)!;
+	private Task<string?> InvokeDataBufferMessage(ToolkitMessage message, byte[] dataBuffer) => ServerDataBufferMessage?.Invoke(message, dataBuffer)!;
+
+	private Task<string?> InvokeServerMessage(ToolkitMessage message) => ServerMessage?.Invoke(message)!;
+
+	private async Task OnServerOriginatedDataBufferMessage(int messageId, string sessionId, string data, byte[] bufferData)
+	{
+		logger.Debug(new string('-', 80));
+		logger.Debug($"OnServerOriginatedDataBufferMessage | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}> | bufferData <{bufferData.Length}>");
+		logger.Debug(new string('-', 80));
+
+		var message = new ToolkitMessage
+					{
+						Data = data,
+						MessageId = messageId
+					};
+
+		var response = await InvokeDataBufferMessage(message, bufferData);
+
+		if (response is not null) await connection.SendAsync(nameof(ToolkitHub.ClientResponseMessage), messageId, sessionId, response);
+	}
 
 	private async Task OnServerOriginatedMessage(int messageId, string sessionId, string data)
 	{
@@ -115,7 +145,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 						MessageId = messageId
 					};
 
-		var response = await OnServerMessage(message);
+		var response = await InvokeServerMessage(message);
 
 		if (response is not null) await connection.SendAsync(nameof(ToolkitHub.ClientResponseMessage), messageId, sessionId, response);
 	}
@@ -123,7 +153,13 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	private void OnServerResponseMessageReceived(int messageId, string sessionId, string data)
 	{
 		if (timedOutResponses.TryRemove(sessionId, out _)) return;
-		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
+
+		if (!waitingForResponses.TryRemove(sessionId, out _))
+		{
+			ConsoleLog.WriteDarkYellow($"Did not have a waiting for response for {sessionId}");
+
+			return;
+		}
 
 		logger.Debug($"On ServerMessageReceived | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
 
@@ -134,5 +170,37 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 									});
 	}
 
+	private void RegisterForServerMessages()
+	{
+		var responseMethod = OnServerResponseMessageReceived;
+		var originatedMessageMethod = OnServerOriginatedMessage;
+		var dataBufferMethod = OnServerOriginatedDataBufferMessage;
+
+		connection.On(ToolkitHub.ServerResponseMessage, responseMethod);
+		connection.On(ToolkitHub.ServerOriginatedMessage, originatedMessageMethod);
+		connection.On(ToolkitHub.ServerDataBufferMessage, dataBufferMethod);
+	}
+
 	private Task SendSessionMessage(int messageId, string data, string sessionId) => connection.SendAsync(nameof(ToolkitHub.ClientMessage), messageId, sessionId, data);
+
+	private async Task<ToolkitMessage> WaitForResponse(ToolkitMessage message, [DisallowNull] TimeSpan? timeout, string sessionId)
+	{
+		var startTime = DateTime.UtcNow;
+
+		ConsoleLog.WriteDarkYellow($"Going to wait for a response for {timeout} | SessionId <{sessionId}>");
+
+		while (true)
+		{
+			if (responses.TryRemove(sessionId, out var response)) return response;
+
+			if (DateTime.UtcNow - startTime > timeout)
+			{
+				timedOutResponses.TryAdd(sessionId, message.MessageId);
+
+				throw new TimeoutException();
+			}
+
+			await Task.Delay(35);
+		}
+	}
 }
