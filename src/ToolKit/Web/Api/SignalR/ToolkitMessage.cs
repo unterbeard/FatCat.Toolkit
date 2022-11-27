@@ -7,5 +7,5 @@ public class ToolkitMessage
 
 	public string? Data { get; set; }
 
-	public int MessageId { get; set; }
+	public int MessageType { get; set; }
 }

@@ -70,7 +70,7 @@ public static class Program
 						var response = await hubConnection.SendDataBuffer(new ToolkitMessage
 																		{
 																			Data = "Junk",
-																			MessageId = 123
+																			MessageType = 123
 																		}, dataBuffer);
 
 						watch.Stop();
@@ -171,7 +171,7 @@ public static class Program
 
 		applicationSettings.ClientMessage += message =>
 											{
-												ConsoleLog.WriteDarkCyan($"MessageId <{message.MessageId}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>");
+												ConsoleLog.WriteDarkCyan($"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>");
 
 												var thread = SystemScope.Container.Resolve<IThread>();
 
@@ -183,7 +183,7 @@ public static class Program
 
 																await hubServer.SendToClientNoResponse(message.ConnectionId, new ToolkitMessage
 																															{
-																																MessageId = 2,
+																																MessageType = 2,
 																																Data = $"Hello World {Faker.RandomString()}"
 																															});
 
@@ -193,7 +193,7 @@ public static class Program
 
 																var response = await hubServer.SendToClient(message.ConnectionId, new ToolkitMessage
 																																{
-																																	MessageId = 3,
+																																	MessageType = 3,
 																																	Data = $"Waiting for Response {Faker.RandomString()}"
 																																});
 
@@ -233,7 +233,7 @@ public static class Program
 																							new ToolkitMessage
 																							{
 																								ConnectionId = connection,
-																								MessageId = 1344,
+																								MessageType = 1344,
 																							},
 																							dataBuffer);
 
