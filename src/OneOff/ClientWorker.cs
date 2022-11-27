@@ -44,22 +44,13 @@ public class ClientWorker
 
 						ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
 
-						var dataBuffer = Faker.Create<List<byte>>(1024).ToArray();
+						await hubConnection.Send(new ToolkitMessage
+												{
+													Data = "Dude",
+													MessageType = 1459
+												});
 
-						ConsoleLog.WriteCyan($"Going to send data message of length {dataBuffer.Length}");
-
-						var watch = Stopwatch.StartNew();
-
-						var response = await hubConnection.SendDataBuffer(new ToolkitMessage
-																		{
-																			Data = "Junk",
-																			MessageType = 123
-																		}, dataBuffer);
-
-						watch.Stop();
-
-						ConsoleLog.WriteYellow($"Send DataBuffer Message Took <{watch.Elapsed}>");
-						ConsoleLog.WriteCyan($"Response from server was {JsonConvert.SerializeObject(response, Formatting.Indented)}");
+						// await SendDataBuffer(hubConnection);
 
 						// await hubConnection.SendNoResponse(new ToolkitMessage
 						// 									{
@@ -98,7 +89,7 @@ public class ClientWorker
 						// 			});
 					});
 	}
-	
+
 	private static async Task<string> OnDataBufferFromServer(ToolkitMessage message, byte[] dataBuffer)
 	{
 		await Task.CompletedTask;
@@ -121,5 +112,25 @@ public class ClientWorker
 		ConsoleLog.WriteGreen($"Client Response: <{responseMessage}>");
 
 		return responseMessage;
+	}
+
+	private static async Task SendDataBuffer(IToolkitHubClientConnection hubConnection)
+	{
+		var dataBuffer = Faker.Create<List<byte>>(1024).ToArray();
+
+		ConsoleLog.WriteCyan($"Going to send data message of length {dataBuffer.Length}");
+
+		var watch = Stopwatch.StartNew();
+
+		var response = await hubConnection.SendDataBuffer(new ToolkitMessage
+														{
+															Data = "Junk",
+															MessageType = 123
+														}, dataBuffer);
+
+		watch.Stop();
+
+		ConsoleLog.WriteYellow($"Send DataBuffer Message Took <{watch.Elapsed}>");
+		ConsoleLog.WriteCyan($"Response from server was {JsonConvert.SerializeObject(response, Formatting.Indented)}");
 	}
 }

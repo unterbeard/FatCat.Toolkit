@@ -39,42 +39,46 @@ public class ServerWorker
 															return responseMessage;
 														};
 
-		applicationSettings.ClientMessage += message =>
+		applicationSettings.ClientMessage += async message =>
 											{
+												await Task.CompletedTask;
+
 												ConsoleLog.WriteDarkCyan($"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>");
 
-												var thread = SystemScope.Container.Resolve<IThread>();
+												return "ACK";
 
-												thread.Run(async () =>
-															{
-																await Task.Delay(1.Seconds());
-
-																var hubServer = SystemScope.Container.Resolve<IToolkitHubServer>();
-
-																await hubServer.SendToClientNoResponse(message.ConnectionId, new ToolkitMessage
-																															{
-																																MessageType = 2,
-																																Data = $"Hello World {Faker.RandomString()}"
-																															});
-
-																await thread.Sleep(1.5.Seconds());
-
-																ConsoleLog.WriteYellow("Going to send message to client and wait for a response");
-
-																var response = await hubServer.SendToClient(message.ConnectionId, new ToolkitMessage
-																																{
-																																	MessageType = 3,
-																																	Data = $"Waiting for Response {Faker.RandomString()}"
-																																});
-
-																ConsoleLog.WriteGreen($"Response: {JsonConvert.SerializeObject(response)}");
-															});
-
-												var result = $"MessageBack {DateTime.Now:h:mm:ss tt zzs} | {Faker.RandomString()}";
-
-												ConsoleLog.WriteDarkCyan($"Sending back Response: {result}");
-
-												return Task.FromResult(result);
+												// var thread = SystemScope.Container.Resolve<IThread>();
+												//
+												// thread.Run(async () =>
+												// 			{
+												// 				await Task.Delay(1.Seconds());
+												//
+												// 				var hubServer = SystemScope.Container.Resolve<IToolkitHubServer>();
+												//
+												// 				await hubServer.SendToClientNoResponse(message.ConnectionId, new ToolkitMessage
+												// 																			{
+												// 																				MessageType = 2,
+												// 																				Data = $"Hello World {Faker.RandomString()}"
+												// 																			});
+												//
+												// 				await thread.Sleep(1.5.Seconds());
+												//
+												// 				ConsoleLog.WriteYellow("Going to send message to client and wait for a response");
+												//
+												// 				var response = await hubServer.SendToClient(message.ConnectionId, new ToolkitMessage
+												// 																				{
+												// 																					MessageType = 3,
+												// 																					Data = $"Waiting for Response {Faker.RandomString()}"
+												// 																				});
+												//
+												// 				ConsoleLog.WriteGreen($"Response: {JsonConvert.SerializeObject(response)}");
+												// 			});
+												//
+												// var result = $"MessageBack {DateTime.Now:h:mm:ss tt zzs} | {Faker.RandomString()}";
+												//
+												// ConsoleLog.WriteDarkCyan($"Sending back Response: {result}");
+												//
+												// return Task.FromResult(result);
 											};
 
 		ToolkitWebApplication.Run(applicationSettings);
