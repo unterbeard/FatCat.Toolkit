@@ -5,7 +5,7 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public interface IToolkitHubConnectedClients
 {
-	Task SendMessage(string clientId, int messageId, string data, string? sessionId = null);
+	Task SendMessage(string clientId, int messageType, string data, string? sessionId = null);
 }
 
 public class ToolkitHubConnectedClients : IToolkitHubConnectedClients
@@ -20,13 +20,13 @@ public class ToolkitHubConnectedClients : IToolkitHubConnectedClients
 		this.generator = generator;
 	}
 
-	public async Task SendMessage(string clientId, int messageId, string data, string? sessionId = null)
+	public async Task SendMessage(string clientId, int messageType, string data, string? sessionId = null)
 	{
 		var client = hubContext.Clients.Client(clientId);
 
 		await client.SendCoreAsync(ToolkitHub.ServerResponseMessage, new object[]
 															{
-																messageId,
+																messageType,
 																data,
 																sessionId ?? generator.NewId()
 															});

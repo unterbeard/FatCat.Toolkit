@@ -88,7 +88,7 @@ public class ToolkitHubServer : IToolkitHubServer
 
 		waitingForResponses.TryAdd(sessionId, message);
 
-		await hubContext.Clients.Client(connectionId).SendAsync(ToolkitHub.ServerDataBufferMessage, message.MessageId, sessionId, message.Data, dataBuffer);
+		await hubContext.Clients.Client(connectionId).SendAsync(ToolkitHub.ServerDataBufferMessage, message.MessageType, sessionId, message.Data, dataBuffer);
 
 		return await WaitForClientResponse(message, timeout, sessionId);
 	}
@@ -108,7 +108,7 @@ public class ToolkitHubServer : IToolkitHubServer
 
 	public async Task SendToClientNoResponse(string connectionId, ToolkitMessage message) => await SendMessageToClient(connectionId, message, generator.NewId());
 
-	private async Task SendMessageToClient(string connectionId, ToolkitMessage message, string sessionId) => await hubContext.Clients.Client(connectionId).SendAsync(ToolkitHub.ServerOriginatedMessage, message.MessageId, sessionId, message.Data);
+	private async Task SendMessageToClient(string connectionId, ToolkitMessage message, string sessionId) => await hubContext.Clients.Client(connectionId).SendAsync(ToolkitHub.ServerOriginatedMessage, message.MessageType, sessionId, message.Data);
 
 	private async Task<ToolkitMessage> WaitForClientResponse(ToolkitMessage message, TimeSpan? timeout, string sessionId)
 	{
@@ -122,7 +122,7 @@ public class ToolkitHubServer : IToolkitHubServer
 
 			if (DateTime.UtcNow - startTime > timeout)
 			{
-				timedOutResponses.TryAdd(sessionId, message.MessageId);
+				timedOutResponses.TryAdd(sessionId, message.MessageType);
 
 				throw new TimeoutException();
 			}
