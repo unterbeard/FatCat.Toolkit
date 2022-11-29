@@ -10,4 +10,3 @@ public static class Json
 
 	public static string SerializeServiceModel(object value) => instance.SerializeObject(value, Formatting.Indented, false);
 }
-

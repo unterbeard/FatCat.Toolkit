@@ -28,7 +28,7 @@ public class LiteDbConnection : ILiteDbConnection
 	public void Dispose()
 	{
 		database?.Commit();
-		
+
 		database?.Dispose();
 
 		database = null;

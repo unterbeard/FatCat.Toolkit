@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Enumerations;
 using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.Web.Api.SignalR;
 using Microsoft.AspNetCore.Builder;
@@ -24,8 +24,6 @@ internal class ApplicationStartUp
 {
 	public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 	{
-		ConsoleLog.WriteDarkMagenta("Application Start up Configure");
-
 		app.Use(CaptureMiddlewareExceptions);
 
 		app.UseFileServer();
@@ -40,11 +38,7 @@ internal class ApplicationStartUp
 
 		app.UseEndpoints(endpoints => endpoints.MapControllers());
 
-		ConsoleLog.WriteDarkMagenta("Before GetAutofacRoot");
-
 		SystemScope.Container.LifetimeScope = app.ApplicationServices.GetAutofacRoot();
-
-		ConsoleLog.WriteDarkMagenta("After GetAutofacRoot");
 
 		SetUpSignalR(app);
 
@@ -70,13 +64,14 @@ internal class ApplicationStartUp
 									options.EnableDetailedErrors = true;
 								});
 		}
-		catch (Exception ex) { ConsoleLog.WriteException(ex); }
+		catch (Exception ex)
+		{
+			if (SystemScope.Container.TryResolve<IToolkitLogger>(out var logger)) logger!.Exception(ex);
+		}
 	}
 
 	private void AddCors(IServiceCollection services)
 	{
-		ConsoleLog.Write("Start Adding Cors");
-
 		services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
 		services.AddCors(o =>
@@ -94,8 +89,6 @@ internal class ApplicationStartUp
 
 		var originTemplate = $"{uri.Scheme}://+:{uri.Port}";
 
-		ConsoleLog.WriteMagenta($"Adding Cores for <{originTemplate}>");
-
 		var localHostCors = originTemplate.Replace("+", "localhost");
 		var machineCors = originTemplate.Replace("+", Environment.MachineName.ToLower());
 		var domainCors = originTemplate.Replace("+", applicationTools.GetHost().ToLower());
@@ -106,8 +99,6 @@ internal class ApplicationStartUp
 								machineCors,
 								domainCors
 							};
-
-		foreach (var corsOrigin in originsToAdd) ConsoleLog.WriteDarkCyan($"   Using Origin <{corsOrigin}>");
 
 		builder
 			.WithOrigins(originsToAdd.ToArray())
@@ -124,14 +115,17 @@ internal class ApplicationStartUp
 		{
 			var displayUrl = context.Request.GetDisplayUrl();
 
-			ConsoleLog.WriteCyan($"Could not complete call to {displayUrl}");
+			if (SystemScope.Container.TryResolve<IToolkitLogger>(out var logger)) logger!.Information($"Could not complete call to {displayUrl}");
 		}
 		catch (Exception e)
 		{
 			var displayUrl = context.Request.GetDisplayUrl();
 
-			ConsoleLog.WriteCyan($"Error calling {displayUrl}");
-			ConsoleLog.WriteException(e);
+			if (SystemScope.Container.TryResolve<IToolkitLogger>(out var logger))
+			{
+				logger!.Warning($"Error calling {displayUrl}");
+				logger!.Exception(e);
+			}
 
 			throw;
 		}

@@ -17,13 +17,6 @@ public static class ToolkitWebApplication
 
 		SystemScope.ContainerAssemblies = settings.ContainerAssemblies;
 
-		ConsoleLog.WriteDarkYellow("Running application");
-		ConsoleLog.WriteDarkYellow($"    CertificationLocation := {Settings.CertificationLocation}");
-		ConsoleLog.WriteDarkYellow($"    CertificationPassword := {Settings.CertificationPassword}");
-		ConsoleLog.WriteDarkYellow($"    CorsUri               := {JsonConvert.SerializeObject(settings.CorsUri)}");
-		ConsoleLog.WriteDarkYellow($"    Options               := {Settings.Options}");
-		ConsoleLog.WriteDarkYellow($"    Port                  := {Settings.Port}");
-
 		var host = new WebHostBuilder()
 					.UseAutofac()
 					.UseKestrel(options =>

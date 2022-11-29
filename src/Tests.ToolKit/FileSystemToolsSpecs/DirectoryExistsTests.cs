@@ -13,23 +13,21 @@ public class DirectoryExistsTests : FileToolTests
 		VerifyDirectoryExistsWasCalled();
 	}
 
-	
-
 	[Fact]
 	public void FalseIfDirectoryIsNotFound()
 	{
 		directoryExists = false;
 
 		fileTools.DirectoryExists(directoryPath)
-			.Should()
-			.BeFalse();
+				.Should()
+				.BeFalse();
 	}
 
 	[Fact]
 	public void TrueIfDirectoryIsFound()
 	{
 		fileTools.DirectoryExists(directoryPath)
-			.Should()
-			.BeTrue();
+				.Should()
+				.BeTrue();
 	}
 }

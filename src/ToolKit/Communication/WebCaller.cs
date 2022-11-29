@@ -1,6 +1,4 @@
 using System.Net;
-using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Data;
 using FatCat.Toolkit.Data.Mongo;
 using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Web;
@@ -106,8 +104,6 @@ public class WebCaller : IWebCaller
 	{
 		try
 		{
-			ConsoleLog.WriteGreen($"Going to attempt to call {url}");
-
 			var response = await CreateRequest(url)
 								.WithTimeout(timeout)
 								.GetAsync();

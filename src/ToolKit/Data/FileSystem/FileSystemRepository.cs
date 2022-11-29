@@ -30,11 +30,9 @@ public interface IFileSystemRepository<T> where T : FileSystemDataObject
 	Task<List<T>> Update(List<T> items);
 }
 
-
 /// <summary>
-/// Keep collection in memory and write changes to file system.
-///
-/// How do you handle a delete?
+///  Keep collection in memory and write changes to file system.
+///  How do you handle a delete?
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class FileSystemRepository<T> : IFileSystemRepository<T> where T : FileSystemDataObject

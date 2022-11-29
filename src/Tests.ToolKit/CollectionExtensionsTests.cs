@@ -22,12 +22,10 @@ public class CollectionExtensionsTests
 						Number = 2,
 						AName = "Two"
 					};
-		
+
 		oneItem.CompareTo(twoItem)
 				.Should()
 				.BeLessThan(0);
-		
-		
 	}
 
 	[Fact]
@@ -65,14 +63,6 @@ public class CollectionExtensionsTests
 				.Should()
 				.BeTrue();
 	}
-	
-	[Fact]
-	public void DetermineIfTypeHasIComparable()
-	{
-		typeof(ComparableTestItem).Implements<IComparable<ComparableTestItem>>()
-								.Should()
-								.BeTrue();
-	}
 
 	[Fact]
 	public void ComplicatedListsCanBeEqual()
@@ -108,6 +98,14 @@ public class CollectionExtensionsTests
 		firstList.ListsAreEqual(secondList)
 				.Should()
 				.BeTrue();
+	}
+
+	[Fact]
+	public void DetermineIfTypeHasIComparable()
+	{
+		typeof(ComparableTestItem).Implements<IComparable<ComparableTestItem>>()
+								.Should()
+								.BeTrue();
 	}
 
 	[Fact]

@@ -29,7 +29,7 @@ public class ReadAllBytesTests : FileToolTests
 	public async Task IfTheFileDoesNotExistReturnAnEmptyArray()
 	{
 		SetFileDoesNotExist();
-		
+
 		var resultingBytes = await fileTools.ReadAllBytes(filePath);
 
 		resultingBytes

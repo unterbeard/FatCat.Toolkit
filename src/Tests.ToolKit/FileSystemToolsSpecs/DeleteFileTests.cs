@@ -40,15 +40,15 @@ public class DeleteFileTests : FileToolTests
 		SetFileDoesNotExist();
 
 		fileTools.DeleteFile(filePath)
-			.Should()
-			.BeFalse();
+				.Should()
+				.BeFalse();
 	}
 
 	[Fact]
 	public void IfTheFileIsDeletedReturnTrue()
 	{
 		fileTools.DeleteFile(filePath)
-			.Should()
-			.BeTrue();
+				.Should()
+				.BeTrue();
 	}
 }

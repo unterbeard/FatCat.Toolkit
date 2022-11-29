@@ -7,12 +7,12 @@ namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
 public abstract class LiteDbRepositoryTests
 {
+	protected readonly string databasePath;
 	protected readonly LiteDbRepository<LiteDbTestObject> repository;
 	protected readonly LiteDbTestObject testItem;
 	protected readonly List<LiteDbTestObject> testItemList;
 	protected ILiteCollection<LiteDbTestObject> collection;
 	protected ILiteDbConnection connection;
-	protected readonly string databasePath;
 
 	protected LiteDbRepositoryTests()
 	{

@@ -44,7 +44,7 @@ public class CreateListTests : ConnectionHandlingLiteDbRepositoryTests<List<Lite
 	{
 		var expectedResultList = itemsToCreate.DeepCopy();
 
-		for (var i = 0; i < expectedResultList.Count; i++) { expectedResultList[i].Id = createdIds[i]; }
+		for (var i = 0; i < expectedResultList.Count; i++) expectedResultList[i].Id = createdIds[i];
 
 		var resultList = await RunTest();
 

@@ -1,5 +1,4 @@
-﻿using FakeItEasy;
-using FatCat.Toolkit.Testing;
+﻿using FatCat.Toolkit.Testing;
 using FluentAssertions;
 using Xunit;
 
@@ -40,6 +39,4 @@ public class GetByFilterTests : FilterLiteDbRepositoryTests<LiteDbTestObject>
 	}
 
 	protected override Task<LiteDbTestObject> RunTest() => repository.GetByFilter(i => i.SomeNumber == numberToFind);
-
-	
 }

@@ -1,7 +1,7 @@
 namespace FatCat.Toolkit.Events;
 
 /// <summary>
-/// An event that will auto reset when triggered
+///  An event that will auto reset when triggered
 /// </summary>
 public interface IAutoWaitEvent : IDisposable
 {

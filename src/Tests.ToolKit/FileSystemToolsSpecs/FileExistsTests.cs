@@ -19,15 +19,15 @@ public class FileExistsTests : FileToolTests
 		SetFileDoesNotExist();
 
 		fileTools.FileExists(filePath)
-			.Should()
-			.BeFalse();
+				.Should()
+				.BeFalse();
 	}
 
 	[Fact]
 	public void TrueIfFileExists()
 	{
 		fileTools.FileExists(filePath)
-			.Should()
-			.BeTrue();
+				.Should()
+				.BeTrue();
 	}
 }
