@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Logging;
 using Humanizer;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -104,12 +103,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 			return true;
 		}
-		catch (Exception e)
-		{
-			ConsoleLog.WriteBlue($"Failed Exception is {e.GetType().FullName}");
-
-			return false;
-		}
+		catch (Exception) { return false; }
 	}
 
 	private Task<string?> InvokeDataBufferMessage(ToolkitMessage message, byte[] dataBuffer) => ServerDataBufferMessage?.Invoke(message, dataBuffer)!;
@@ -154,12 +148,7 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	{
 		if (timedOutResponses.TryRemove(sessionId, out _)) return;
 
-		if (!waitingForResponses.TryRemove(sessionId, out _))
-		{
-			ConsoleLog.WriteDarkYellow($"Did not have a waiting for response for {sessionId}");
-
-			return;
-		}
+		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
 
 		logger.Debug($"On ServerMessageReceived | MessageId <{messageId}> | SessionId <{sessionId}> | Data <{data}>");
 
@@ -186,8 +175,6 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	private async Task<ToolkitMessage> WaitForResponse(ToolkitMessage message, [DisallowNull] TimeSpan? timeout, string sessionId)
 	{
 		var startTime = DateTime.UtcNow;
-
-		ConsoleLog.WriteDarkYellow($"Going to wait for a response for {timeout} | SessionId <{sessionId}>");
 
 		while (true)
 		{
