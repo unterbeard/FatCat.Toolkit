@@ -31,4 +31,22 @@ public class TaskTestAssertions<T> : ReferenceTypeAssertions<Task<T>, TaskTestAs
 
 		return this;
 	}
+
+	public TaskTestAssertions<T> BeFalse()
+	{
+		Subject.Result
+				.Should()
+				.Be(false);
+
+		return this;
+	}
+
+	public TaskTestAssertions<T> BeTrue()
+	{
+		Subject.Result
+				.Should()
+				.Be(true);
+
+		return this;
+	}
 }
