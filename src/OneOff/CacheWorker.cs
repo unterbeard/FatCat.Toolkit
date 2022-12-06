@@ -36,15 +36,29 @@ public class CacheWorker
 
 		cache.Add(secondItem);
 
+		var thirdItem = new TestCacheItem
+						{
+							Name = "Third Item",
+							Number = 3
+						};
+
+		cache.Add(thirdItem, 1.Seconds());
+
 		var allItems = cache.GetAll();
 
 		ConsoleLog.WriteCyan($"{JsonConvert.SerializeObject(allItems, Formatting.Indented)}");
 
-		thread.Sleep(5.Seconds()).Wait();
+		thread.Sleep(500.Milliseconds()).Wait();
 
 		var currentItems = cache.GetAll();
 
 		ConsoleLog.WriteMagenta($"{JsonConvert.SerializeObject(currentItems, Formatting.Indented)}");
+
+		thread.Sleep(2.Seconds()).Wait();
+
+		var lastItems = cache.GetAll();
+
+		ConsoleLog.WriteBlue($"{JsonConvert.SerializeObject(lastItems, Formatting.Indented)}");
 	}
 }
 

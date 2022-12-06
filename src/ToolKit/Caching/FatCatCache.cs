@@ -104,7 +104,7 @@ public class FatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 		{
 			if (Timeout == null) return false;
 
-			var timeSinceEntry = DateTime.Now - EntryTime;
+			var timeSinceEntry = DateTime.UtcNow - EntryTime;
 
 			return timeSinceEntry > Timeout;
 		}
