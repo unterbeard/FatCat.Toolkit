@@ -14,18 +14,17 @@ public static class Program
 
 		try
 		{
-			var isClient = args.Any() && args.Any(i => i.Equals("client", StringComparison.OrdinalIgnoreCase));
+			SystemScope.Initialize(new ContainerBuilder(), ScopeOptions.SetLifetimeScope);
 
-			if (isClient) ConnectClient();
-			else RunServer();
+			var worker = SystemScope.Container.Resolve<CacheWorker>();
+
+			worker.DoWork();
 		}
 		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}
 
 	private static void ConnectClient()
 	{
-		SystemScope.Initialize(new ContainerBuilder(), ScopeOptions.SetLifetimeScope);
-
 		var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
 
 		var clientWorker = SystemScope.Container.Resolve<ClientWorker>();
