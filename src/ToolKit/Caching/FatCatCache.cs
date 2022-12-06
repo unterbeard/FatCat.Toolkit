@@ -5,9 +5,9 @@ namespace FatCat.Toolkit.Caching;
 
 public interface IFatCatCache<T> where T : class, ICacheItem
 {
-	void Add(T cacheItem);
+	void Add(T cacheItem, TimeSpan? timeout = null);
 
-	void Add(List<T> cacheItems);
+	void Add(List<T> cacheItems, TimeSpan? timeout = null);
 
 	void Clear();
 
@@ -26,11 +26,20 @@ public interface IFatCatCache<T> where T : class, ICacheItem
 
 public class FatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 {
-	private readonly ConcurrentDictionary<string, T> cache = new();
+	private readonly ConcurrentDictionary<string, CacheEntry<T>> cache = new();
 
-	public void Add(T cacheItem) => cache.AddOrUpdate(cacheItem.CacheId, cacheItem, (key, value) => cacheItem);
+	private bool timeoutEnabled;
 
-	public void Add(List<T> cacheItems)
+	public void Add(T cacheItem, TimeSpan? timeout = null)
+	{
+		RemoveExpiredItems();
+
+		if (!timeoutEnabled && timeout != null) timeoutEnabled = true;
+
+		cache.AddOrUpdate(cacheItem.CacheId, new CacheEntry<T>(cacheItem, timeout), (key, value) => new CacheEntry<T>(cacheItem, timeout));
+	}
+
+	public void Add(List<T> cacheItems, TimeSpan? timeout = null)
 	{
 		foreach (var item in cacheItems) Add(item);
 	}
@@ -39,14 +48,65 @@ public class FatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 
 	public T? Get(string cacheId)
 	{
-		cache.TryGetValue(cacheId, out var item);
+		RemoveExpiredItems();
 
-		return item;
+		cache.TryGetValue(cacheId, out var entry);
+
+		return entry?.Item;
 	}
 
-	public IList<T> GetAll() => cache.Values.ToList();
+	public IList<T> GetAll()
+	{
+		RemoveExpiredItems();
 
-	public bool InCache(string cacheId) => cache.ContainsKey(cacheId);
+		return cache.Values.Select(i => i.Item).ToList();
+	}
 
-	public void Remove(string cacheId) => cache.TryRemove(cacheId, out _);
+	public bool InCache(string cacheId)
+	{
+		RemoveExpiredItems();
+
+		return cache.ContainsKey(cacheId);
+	}
+
+	public void Remove(string cacheId)
+	{
+		RemoveExpiredItems();
+
+		cache.TryRemove(cacheId, out _);
+	}
+
+	private void RemoveExpiredItems()
+	{
+		if (!timeoutEnabled || cache.IsEmpty) return;
+
+		foreach (var value in cache.Values.Where(i => i.HasExpired())) cache.Remove(value.Item.CacheId, out _);
+
+		if (cache.IsEmpty) timeoutEnabled = false;
+	}
+
+	private class CacheEntry<TType> where TType : class, ICacheItem
+	{
+		public DateTime EntryTime { get; }
+
+		public TType Item { get; }
+
+		public TimeSpan? Timeout { get; }
+
+		public CacheEntry(TType item, TimeSpan? timeout)
+		{
+			Item = item;
+			Timeout = timeout;
+			EntryTime = DateTime.UtcNow;
+		}
+
+		public bool HasExpired()
+		{
+			if (Timeout == null) return false;
+
+			var timeSinceEntry = DateTime.UtcNow - EntryTime;
+
+			return timeSinceEntry > Timeout;
+		}
+	}
 }

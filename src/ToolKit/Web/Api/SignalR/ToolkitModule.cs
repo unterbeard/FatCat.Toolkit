@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using FatCat.Toolkit.Caching;
 
 namespace FatCat.Toolkit.Web.Api.SignalR;
 
@@ -12,6 +13,10 @@ public class ToolkitModule : Module
 
 		builder.RegisterType<ToolkitHubServer>()
 				.As<IToolkitHubServer>()
+				.SingleInstance();
+
+		builder.RegisterGeneric(typeof(FatCatCache<>))
+				.As(typeof(IFatCatCache<>))
 				.SingleInstance();
 	}
 }
