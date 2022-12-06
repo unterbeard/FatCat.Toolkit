@@ -27,9 +27,9 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 		.ReturnsLazily(() => CacheList);
 	}
 
-	public void Add(T cacheItem) => Cache.Add(cacheItem);
+	public void Add(T cacheItem, TimeSpan? timeout = null) => Cache.Add(cacheItem);
 
-	public void Add(List<T> cacheItems) => Cache.Add(cacheItems);
+	public void Add(List<T> cacheItems, TimeSpan? timeout = null) => Cache.Add(cacheItems);
 
 	public void Clear() => Cache.Clear();
 
@@ -57,12 +57,12 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedItem == null)
 		{
-			A.CallTo(() => Cache.Add(A<T>._))
+			A.CallTo(() => Cache.Add(A<T>._, A<TimeSpan>._))
 			.MustHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItem))
+			A.CallTo(() => Cache.Add(expectedItem, A<TimeSpan>._))
 			.MustHaveHappened();
 		}
 	}
@@ -71,12 +71,12 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedItems == null)
 		{
-			A.CallTo(() => Cache.Add(A<List<T>>._))
+			A.CallTo(() => Cache.Add(A<List<T>>._, A<TimeSpan>._))
 			.MustHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItems))
+			A.CallTo(() => Cache.Add(expectedItems, A<TimeSpan>._))
 			.MustHaveHappened();
 		}
 	}
@@ -91,12 +91,12 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedItem == null)
 		{
-			A.CallTo(() => Cache.Add(A<T>._))
+			A.CallTo(() => Cache.Add(A<T>._, A<TimeSpan>._))
 			.MustNotHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItem))
+			A.CallTo(() => Cache.Add(expectedItem, A<TimeSpan>._))
 			.MustNotHaveHappened();
 		}
 	}
@@ -105,12 +105,12 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedItems == null)
 		{
-			A.CallTo(() => Cache.Add(A<List<T>>._))
+			A.CallTo(() => Cache.Add(A<List<T>>._, A<TimeSpan>._))
 			.MustNotHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItems))
+			A.CallTo(() => Cache.Add(expectedItems, A<TimeSpan>._))
 			.MustNotHaveHappened();
 		}
 	}
