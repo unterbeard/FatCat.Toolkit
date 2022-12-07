@@ -16,7 +16,7 @@ public static class Program
 		{
 			SystemScope.Initialize(new ContainerBuilder(), ScopeOptions.SetLifetimeScope);
 
-			var worker = SystemScope.Container.Resolve<CacheWorker>();
+			var worker = SystemScope.Container.Resolve<GeneratorWorker>();
 
 			worker.DoWork();
 		}
