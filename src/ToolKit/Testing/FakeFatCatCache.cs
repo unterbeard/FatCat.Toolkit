@@ -57,12 +57,12 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedItem == null)
 		{
-			A.CallTo(() => Cache.Add(A<T>._, A<TimeSpan>._))
+			A.CallTo(() => Cache.Add(A<T>._, default))
 			.MustHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItem, A<TimeSpan>._))
+			A.CallTo(() => Cache.Add(expectedItem, default))
 			.MustHaveHappened();
 		}
 	}
@@ -71,12 +71,12 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedItems == null)
 		{
-			A.CallTo(() => Cache.Add(A<List<T>>._, A<TimeSpan>._))
+			A.CallTo(() => Cache.Add(A<List<T>>._, default))
 			.MustHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItems, A<TimeSpan>._))
+			A.CallTo(() => Cache.Add(expectedItems, default))
 			.MustHaveHappened();
 		}
 	}
@@ -91,12 +91,12 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedItem == null)
 		{
-			A.CallTo(() => Cache.Add(A<T>._, A<TimeSpan>._))
+			A.CallTo(() => Cache.Add(A<T>._, default))
 			.MustNotHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItem, A<TimeSpan>._))
+			A.CallTo(() => Cache.Add(expectedItem, default))
 			.MustNotHaveHappened();
 		}
 	}
@@ -105,12 +105,12 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedItems == null)
 		{
-			A.CallTo(() => Cache.Add(A<List<T>>._, A<TimeSpan>._))
+			A.CallTo(() => Cache.Add(A<List<T>>._, default))
 			.MustNotHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItems, A<TimeSpan>._))
+			A.CallTo(() => Cache.Add(expectedItems, default))
 			.MustNotHaveHappened();
 		}
 	}
