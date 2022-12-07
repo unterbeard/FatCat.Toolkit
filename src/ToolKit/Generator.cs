@@ -14,6 +14,8 @@ public interface IGenerator
 
 	int NextRandom(int? minNumber = null, int? maxNumber = null);
 
+	int RandomNumber(int? minNumber = null, int? maxNumber = null);
+
 	string RandomString(string? prefix = null, int? length = null);
 }
 
@@ -26,6 +28,8 @@ public class Generator : IGenerator
 	public ObjectId NewObjectId() => ObjectId.GenerateNewId();
 
 	public int NextRandom(int? minNumber = null, int? maxNumber = null) => Faker.RandomInt(minNumber, maxNumber);
+
+	public int RandomNumber(int? minNumber = null, int? maxNumber = null) => Faker.RandomInt(minNumber, maxNumber);
 
 	public string RandomString(string? prefix = null, int? length = null) => Faker.RandomString(prefix, length);
 }
