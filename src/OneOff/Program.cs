@@ -8,7 +8,7 @@ public static class Program
 {
 	private const int WebPort = 14555;
 
-	public static void Main(params string[] args)
+	public static async Task Main(params string[] args)
 	{
 		ConsoleLog.LogCallerInformation = true;
 
@@ -16,9 +16,9 @@ public static class Program
 		{
 			SystemScope.Initialize(new ContainerBuilder(), ScopeOptions.SetLifetimeScope);
 
-			var worker = SystemScope.Container.Resolve<GeneratorWorker>();
+			var worker = SystemScope.Container.Resolve<FIfoThreadWorker>();
 
-			worker.DoWork();
+			await worker.DoWork();
 		}
 		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}
