@@ -81,6 +81,8 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 		waitingForResponses.TryAdd(sessionId, message);
 
+		logger.Debug($"Going to send <{nameof(ToolkitHub.ClientDataBufferMessage)}> | Timeout <{timeout}> | MessageType <{message.MessageType}> | SessionId <{sessionId}> | Data <{message.Data}>");
+
 		await connection.SendAsync(nameof(ToolkitHub.ClientDataBufferMessage), message.MessageType, sessionId, message.Data, dataBuffer);
 
 		return await WaitForResponse(message, timeout, sessionId);
@@ -178,10 +180,17 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 		while (true)
 		{
-			if (responses.TryRemove(sessionId, out var response)) return response;
+			if (responses.TryRemove(sessionId, out var response))
+			{
+				logger.Debug($"Got response for | MessageType <{message.MessageType}> | SessionId <{sessionId}> | ResponseData := {response.Data}");
+
+				return response;
+			}
 
 			if (DateTime.UtcNow - startTime > timeout)
 			{
+				logger.Debug($"!!!! Timing out for | MessageType <{message.MessageType}> | SessionId <{sessionId}>");
+
 				timedOutResponses.TryAdd(sessionId, message.MessageType);
 
 				throw new TimeoutException();
