@@ -41,6 +41,8 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	{
 		this.generator = generator;
 		this.logger = logger;
+		
+		this.logger.Debug("CTOR of ToolkitHubClientConnection");
 	}
 
 	public event ToolkitHubDataBufferMessage? ServerDataBufferMessage;
@@ -148,11 +150,23 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 	private void OnServerResponseMessageReceived(int messageType, string sessionId, string data)
 	{
-		if (timedOutResponses.TryRemove(sessionId, out _)) return;
-
-		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
-
 		logger.Debug($"On ServerMessageReceived | MessageType <{messageType}> | SessionId <{sessionId}> | Data <{data}>");
+
+		if (timedOutResponses.TryRemove(sessionId, out _))
+		{
+			logger.Debug($"SessionId <{sessionId}> has timed out");
+
+			return;
+		}
+
+		if (!waitingForResponses.TryRemove(sessionId, out _))
+		{
+			logger.Debug($"SessionId <{sessionId}> is not in WaitingForResponses");
+
+			return;
+		}
+
+		logger.Debug($"Adding {sessionId} to Responses");
 
 		responses.TryAdd(sessionId, new ToolkitMessage
 									{
