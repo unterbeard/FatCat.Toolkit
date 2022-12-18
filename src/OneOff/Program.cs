@@ -16,9 +16,8 @@ public static class Program
 		{
 			SystemScope.Initialize(new ContainerBuilder(), ScopeOptions.SetLifetimeScope);
 
-			var worker = SystemScope.Container.Resolve<CacheWorker>();
-
-			worker.DoWork();
+			if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase)) ConnectClient();
+			else RunServer();
 		}
 		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}

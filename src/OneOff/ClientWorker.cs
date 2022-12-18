@@ -44,49 +44,7 @@ public class ClientWorker
 
 						ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
 
-						await hubConnection.Send(new ToolkitMessage
-												{
-													Data = "Dude",
-													MessageType = 1459
-												});
-
-						// await SendDataBuffer(hubConnection);
-
-						// await hubConnection.SendNoResponse(new ToolkitMessage
-						// 									{
-						// 										MessageId = 5,
-						// 										Data = $"Some Data {Faker.RandomString()}"
-						// 									});
-
-						// thread.Run(async () =>
-						// 			{
-						// 				await thread.Sleep(3.Seconds());
-						//
-						// 				var secondConnection = await hubFactory.ConnectToClient(hubUrl);
-						//
-						// 				await secondConnection.SendNoResponse(new ToolkitMessage
-						// 													{
-						// 														MessageId = 2,
-						// 														Data = $"Hello World {Faker.RandomString()}"
-						// 													});
-						//
-						// 				await thread.Sleep(3.Seconds());
-						//
-						// 				ConsoleLog.WriteCyan("Going to send a message and wait for a response");
-						//
-						// 				var watch = Stopwatch.StartNew();
-						//
-						// 				var response = await secondConnection.Send(new ToolkitMessage
-						// 															{
-						// 																MessageId = 2 * 1000,
-						// 																Data = $"Go More {Faker.RandomString()}"
-						// 															});
-						//
-						// 				watch.Stop();
-						//
-						// 				ConsoleLog.WriteMagenta($"Response: {JsonConvert.SerializeObject(response)}");
-						// 				ConsoleLog.WriteGreen($"Took <{watch.Elapsed}>");
-						// 			});
+						await SendDataBuffer(hubConnection);
 					});
 	}
 
