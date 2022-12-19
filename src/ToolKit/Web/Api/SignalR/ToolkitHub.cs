@@ -19,7 +19,7 @@ public class ToolkitHub : Hub
 	{
 		await Task.CompletedTask;
 
-		Logger.Debug($"Got DataBuffer Message | MessageType <{messageType}> | SessionId <{sessionId}> | Data <{data}> | Buffer <{dataBuffer.Length}>");
+		Logger.Debug($"Got DataBuffer Message | MessageType <{messageType}> | SessionId <{sessionId}> | Data <{data}> | Buffer <{dataBuffer.Length}> | ConnectionId <{Context.ConnectionId}>");
 
 		var toolkitMessage = new ToolkitMessage
 							{
@@ -30,11 +30,11 @@ public class ToolkitHub : Hub
 
 		var responseMessage = await ToolkitWebApplication.Settings.OnOnClientDataBufferMessage(toolkitMessage, dataBuffer);
 
-		Logger.Debug($"Response for message | <{responseMessage}>");
+		Logger.Debug($"Response for message | <{responseMessage}> | Sending to ConnectionId {Context.ConnectionId}");
 
 		await Clients.Client(Context.ConnectionId).SendAsync(ServerResponseMessage, messageType, sessionId, responseMessage);
 
-		Logger.Debug($"Done sending response for message | <{responseMessage}> | SessionId <{sessionId}>");
+		Logger.Debug($"Done sending response for message | <{responseMessage}> | SessionId <{sessionId}> | ConnectionId {Context.ConnectionId}");
 	}
 
 	public async Task ClientMessage(int messageType, string sessionId, string data)

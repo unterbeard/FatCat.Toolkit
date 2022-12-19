@@ -41,6 +41,8 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	{
 		this.generator = generator;
 		this.logger = logger;
+		
+		this.logger.Debug("CTOR of ToolkitHubClientConnection");
 	}
 
 	public event ToolkitHubDataBufferMessage? ServerDataBufferMessage;
@@ -80,6 +82,8 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		var sessionId = generator.NewId();
 
 		waitingForResponses.TryAdd(sessionId, message);
+
+		logger.Debug($"Going to send <{nameof(ToolkitHub.ClientDataBufferMessage)}> | Timeout <{timeout}> | MessageType <{message.MessageType}> | SessionId <{sessionId}> | Data <{message.Data}>");
 
 		await connection.SendAsync(nameof(ToolkitHub.ClientDataBufferMessage), message.MessageType, sessionId, message.Data, dataBuffer);
 
@@ -146,11 +150,23 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 	private void OnServerResponseMessageReceived(int messageType, string sessionId, string data)
 	{
-		if (timedOutResponses.TryRemove(sessionId, out _)) return;
-
-		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
-
 		logger.Debug($"On ServerMessageReceived | MessageType <{messageType}> | SessionId <{sessionId}> | Data <{data}>");
+
+		if (timedOutResponses.TryRemove(sessionId, out _))
+		{
+			logger.Debug($"SessionId <{sessionId}> has timed out");
+
+			return;
+		}
+
+		if (!waitingForResponses.TryRemove(sessionId, out _))
+		{
+			logger.Debug($"SessionId <{sessionId}> is not in WaitingForResponses");
+
+			return;
+		}
+
+		logger.Debug($"Adding {sessionId} to Responses");
 
 		responses.TryAdd(sessionId, new ToolkitMessage
 									{
@@ -178,10 +194,17 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 		while (true)
 		{
-			if (responses.TryRemove(sessionId, out var response)) return response;
+			if (responses.TryRemove(sessionId, out var response))
+			{
+				logger.Debug($"Got response for | MessageType <{message.MessageType}> | SessionId <{sessionId}> | ResponseData := {response.Data}");
+
+				return response;
+			}
 
 			if (DateTime.UtcNow - startTime > timeout)
 			{
+				logger.Debug($"!!!! Timing out for | MessageType <{message.MessageType}> | SessionId <{sessionId}>");
+
 				timedOutResponses.TryAdd(sessionId, message.MessageType);
 
 				throw new TimeoutException();
