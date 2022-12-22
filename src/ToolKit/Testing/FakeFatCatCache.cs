@@ -45,12 +45,18 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		A.CallTo(() => Cache.InCache(A<string>._))
 		.Returns(true);
+
+		A.CallTo(() => Cache.Get(A<string>._))
+		.Returns(CacheItem);
 	}
 
 	public void SetItemNotInCache()
 	{
 		A.CallTo(() => Cache.InCache(A<string>._))
 		.Returns(false);
+
+		A.CallTo(() => Cache.Get(A<string>._))
+		.Returns(null);
 	}
 
 	public void VerifyAdd(T? expectedItem = null)
