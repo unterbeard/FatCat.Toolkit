@@ -6,6 +6,8 @@ namespace FatCat.Toolkit;
 
 public interface IGenerator
 {
+	byte[] Bytes(int length);
+
 	Guid NewGuid();
 
 	string NewId();
@@ -21,6 +23,8 @@ public interface IGenerator
 
 public class Generator : IGenerator
 {
+	public byte[] Bytes(int length) => Faker.Create<byte[]>(length);
+
 	public Guid NewGuid() => Guid.NewGuid();
 
 	public string NewId() => NewObjectId().ToString();
