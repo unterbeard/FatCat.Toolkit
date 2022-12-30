@@ -73,6 +73,12 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 	public async Task<T> GetFirstOrCreate() => await repository.GetFirstOrCreate();
 
+	public void SetUpItemNotInRepository()
+	{
+		A.CallTo(() => repository.GetById(A<string>._))
+		.Returns(null as T);
+	}
+
 	public async Task<T> Update(T item) => await repository.Update(item);
 
 	public async Task<List<T>> Update(List<T> items) => await repository.Update(items);
