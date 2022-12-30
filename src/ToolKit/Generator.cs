@@ -23,7 +23,14 @@ public interface IGenerator
 
 public class Generator : IGenerator
 {
-	public byte[] Bytes(int length) => Faker.Create<byte[]>(length);
+	public byte[] Bytes(int length)
+	{
+		var bytes = new byte[length];
+
+		for (var i = 0; i < length; i++) bytes[i] = (byte)Faker.RandomInt(0, 255);
+
+		return bytes;
+	}
 
 	public Guid NewGuid() => Guid.NewGuid();
 
