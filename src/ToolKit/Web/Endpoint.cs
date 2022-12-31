@@ -4,7 +4,8 @@ using Newtonsoft.Json;
 
 namespace FatCat.Toolkit.Web;
 
-public abstract class Endpoint : ControllerBase
+[ApiController]
+public abstract class Endpoint : Controller
 {
 	protected string? AuthToken => Request.Headers.TryGetValue("Authorization", out var values) ? values.FirstOrDefault() : string.Empty;
 

@@ -1,10 +1,14 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Enumerations;
+using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.Web.Api.SignalR;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
@@ -16,12 +20,47 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 
 namespace FatCat.Toolkit.Web.Api;
 
 internal class ApplicationStartUp
 {
+	public static JwtBearerEvents GetTokenBearerEvents()
+	{
+		return new JwtBearerEvents
+				{
+					OnTokenValidated = _ => Task.CompletedTask,
+					OnMessageReceived = _ => Task.CompletedTask,
+					OnForbidden = _ => Task.CompletedTask,
+					OnAuthenticationFailed = context =>
+											{
+												if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+												{
+													context
+														.Response
+														.Headers
+														.Add("Token-Expired", "true");
+												}
+												else ConsoleLog.WriteException(context.Exception);
+
+												return Task.CompletedTask;
+											},
+					OnChallenge = context =>
+								{
+									var hasError = context.Error.IsNotNullOrEmpty() || context.ErrorDescription.IsNotNullOrEmpty();
+
+									if (!hasError) return Task.CompletedTask;
+
+									ConsoleLog.WriteRed("Error: {Error}", context.Error);
+									ConsoleLog.WriteRed("ErrorDescription: {ErrorDescription}", context.ErrorDescription);
+
+									return Task.CompletedTask;
+								}
+				};
+	}
+
 	public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 	{
 		app.Use(CaptureMiddlewareExceptions);
@@ -36,7 +75,12 @@ internal class ApplicationStartUp
 
 		app.UseCors("CorsPolicy");
 
+		app.UseAuthentication();
+		app.UseAuthorization();
+
 		app.UseEndpoints(endpoints => endpoints.MapControllers());
+		
+		app.Use(async (context, next) => await next.Invoke());
 
 		SystemScope.Container.LifetimeScope = app.ApplicationServices.GetAutofacRoot();
 
@@ -63,11 +107,46 @@ internal class ApplicationStartUp
 									options.MaximumReceiveMessageSize = int.MaxValue;
 									options.EnableDetailedErrors = true;
 								});
+
+			AddAuthentication(services);
 		}
 		catch (Exception ex)
 		{
 			if (SystemScope.Container.TryResolve<IToolkitLogger>(out var logger)) logger!.Exception(ex);
 		}
+	}
+
+	private void AddAuthentication(IServiceCollection services)
+	{
+		var authenticationBuilder =
+			services
+				.AddAuthentication(options =>
+									{
+										options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+										options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+										options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+									})
+				.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
+
+		authenticationBuilder
+			.AddJwtBearer(options =>
+						{
+							options.RequireHttpsMetadata = false;
+							options.SaveToken = true;
+
+							var toolkitTokenParameters = SystemScope.Container.Resolve<IToolkitTokenParameters>();
+
+							options.TokenValidationParameters = toolkitTokenParameters.Get();
+
+							options.Events = GetTokenBearerEvents();
+						});
+
+		services
+			.AddAuthorization(options =>
+							{
+								// options.AddServerToServerPolicy();
+								// options.AddPermissionPolicies();
+							});
 	}
 
 	private void AddCors(IServiceCollection services)

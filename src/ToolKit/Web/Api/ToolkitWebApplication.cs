@@ -1,9 +1,7 @@
 ﻿using Autofac.AspNetCore.Extensions;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Enumerations;
 using FatCat.Toolkit.Injection;
 using Microsoft.AspNetCore.Hosting;
-using Newtonsoft.Json;
 
 namespace FatCat.Toolkit.Web.Api;
 
