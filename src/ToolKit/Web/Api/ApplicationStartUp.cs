@@ -101,6 +101,8 @@ internal class ApplicationStartUp
 			ConfigureControllers(services);
 			AddCors(services);
 			services.AddHttpClient();
+			
+			AddAuthentication(services);
 
 			services.AddSignalR(options =>
 								{
@@ -108,7 +110,7 @@ internal class ApplicationStartUp
 									options.EnableDetailedErrors = true;
 								});
 
-			AddAuthentication(services);
+			
 		}
 		catch (Exception ex)
 		{
@@ -118,6 +120,8 @@ internal class ApplicationStartUp
 
 	private void AddAuthentication(IServiceCollection services)
 	{
+		ConsoleLog.WriteMagenta("Adding Authentication");
+		
 		var authenticationBuilder =
 			services
 				.AddAuthentication(options =>

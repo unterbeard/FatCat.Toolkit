@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace FatCat.Toolkit.Web;
 
+[Controller]
 [ApiController]
 public abstract class Endpoint : Controller
 {
