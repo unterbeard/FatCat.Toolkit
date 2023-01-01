@@ -1,11 +1,9 @@
 ﻿using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace OneOff;
 
-[Authorize]
 public class TestEndpoint : Endpoint
 {
 	[HttpGet("api/test")]
