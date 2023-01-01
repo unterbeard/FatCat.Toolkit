@@ -1,17 +1,15 @@
 using System.Net;
 using FatCat.Toolkit.Data.Mongo;
 using FatCat.Toolkit.Logging;
-using FatCat.Toolkit.Web;
 using Flurl;
 using Flurl.Http;
 using Flurl.Http.Configuration;
 using Humanizer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using JsonConverter = Newtonsoft.Json.JsonConverter;
 using NullValueHandling = Newtonsoft.Json.NullValueHandling;
 
-namespace FatCat.Toolkit.Communication;
+namespace FatCat.Toolkit.Web;
 
 public interface IWebCaller
 {
@@ -57,7 +55,7 @@ public class WebCaller : IWebCaller
 								var jsonSettings = new JsonSerializerSettings
 													{
 														NullValueHandling = NullValueHandling.Ignore,
-														Converters = new List<JsonConverter>
+														Converters = new List<Newtonsoft.Json.JsonConverter>
 																	{
 																		new StringEnumConverter(),
 																		new ObjectIdConverter()
