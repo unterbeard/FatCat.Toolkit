@@ -25,6 +25,7 @@ public class ToolkitHub : Hub
 							{
 								Data = data,
 								ConnectionId = Context.ConnectionId,
+								User = Context.User,
 								MessageType = messageType
 							};
 
@@ -45,6 +46,7 @@ public class ToolkitHub : Hub
 							{
 								Data = data,
 								ConnectionId = Context.ConnectionId,
+								User = Context.User,
 								MessageType = messageType
 							};
 
@@ -63,6 +65,7 @@ public class ToolkitHub : Hub
 							{
 								Data = data,
 								ConnectionId = Context.ConnectionId,
+								User = Context.User,
 								MessageType = messageType
 							};
 

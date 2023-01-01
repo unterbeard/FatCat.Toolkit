@@ -44,10 +44,10 @@ public class ClientWorker
 						ConsoleLog.Write($"Using Token := {testToken}");
 
 						// Secure Url
-						// var hubUrl = $"https://localhost:{webPort}/api/events?access_token={testToken}";
+						var hubUrl = $"https://localhost:{webPort}/api/events?access_token={testToken}";
 
 						// Open Url
-						var hubUrl = $"https://localhost:{webPort}/api/events";
+						// var hubUrl = $"https://localhost:{webPort}/api/events";
 
 						var result = await hubFactory.TryToConnectToClient(hubUrl);
 
