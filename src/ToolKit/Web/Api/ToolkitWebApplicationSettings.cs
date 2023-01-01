@@ -22,7 +22,7 @@ public class ToolkitWebApplicationSettings : EqualObject
 
 	public CertificationSettings? TlsCertificate { get; set; }
 
-	public CertificationSettings? TokenCertificate { get; set; }
+	public IToolkitTokenParameters? ToolkitTokenParameters { get; set; }
 
 	public event ToolkitHubDataBufferMessage? ClientDataBufferMessage;
 

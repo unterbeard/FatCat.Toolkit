@@ -18,11 +18,7 @@ public class ServerWorker
 														Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
 														Password = "basarab_cert"
 													},
-									TokenCertificate = new CertificationSettings
-														{
-															Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
-															Password = "basarab_cert"
-														},
+									ToolkitTokenParameters = new ToolkitTokenParameters(),
 									Port = webPort,
 									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
 									CorsUri = new List<Uri> { new($"https://localhost:{webPort}") },

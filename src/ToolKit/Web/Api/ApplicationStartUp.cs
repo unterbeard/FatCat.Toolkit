@@ -2,7 +2,6 @@
 using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Enumerations;
-using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Threading;
@@ -22,56 +21,12 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 
 namespace FatCat.Toolkit.Web.Api;
 
-internal static class OAuthExtensions
-{
-	public static void AddPermissionsPolicies(this AuthorizationOptions options)
-	{
-		options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
-		options.AddPolicy("User", policy => policy.RequireClaim("User"));
-	}
-}
-
 internal class ApplicationStartUp
 {
-	public static JwtBearerEvents GetTokenBearerEvents()
-	{
-		return new JwtBearerEvents
-				{
-					OnTokenValidated = _ => Task.CompletedTask,
-					OnMessageReceived = _ => Task.CompletedTask,
-					OnForbidden = _ => Task.CompletedTask,
-					OnAuthenticationFailed = context =>
-											{
-												if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-												{
-													context
-														.Response
-														.Headers
-														.Add("Token-Expired", "true");
-												}
-												else ConsoleLog.WriteException(context.Exception);
-
-												return Task.CompletedTask;
-											},
-					OnChallenge = context =>
-								{
-									var hasError = context.Error.IsNotNullOrEmpty() || context.ErrorDescription.IsNotNullOrEmpty();
-
-									if (!hasError) return Task.CompletedTask;
-
-									ConsoleLog.WriteRed("Error: {Error}", context.Error);
-									ConsoleLog.WriteRed("ErrorDescription: {ErrorDescription}", context.ErrorDescription);
-
-									return Task.CompletedTask;
-								}
-				};
-	}
-
 	public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 	{
 		app.Use(CaptureMiddlewareExceptions);
@@ -134,6 +89,8 @@ internal class ApplicationStartUp
 	{
 		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseAuthentication)) return;
 
+		if (ToolkitWebApplication.Settings.ToolkitTokenParameters == null) throw new NullReferenceException(nameof(ToolkitWebApplication.Settings.ToolkitTokenParameters));
+
 		ConsoleLog.WriteMagenta("Adding Authentication");
 
 		var authenticationBuilder =
@@ -152,11 +109,11 @@ internal class ApplicationStartUp
 							options.RequireHttpsMetadata = false;
 							options.SaveToken = true;
 
-							var toolkitTokenParameters = SystemScope.Container.Resolve<IToolkitTokenParameters>();
+							var toolkitTokenParameters = ToolkitWebApplication.Settings.ToolkitTokenParameters!;
 
 							options.TokenValidationParameters = toolkitTokenParameters.Get();
 
-							options.Events = GetTokenBearerEvents();
+							options.Events = OAuthExtensions.GetTokenBearerEvents();
 						});
 
 		services
