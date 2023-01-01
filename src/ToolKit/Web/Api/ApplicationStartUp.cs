@@ -9,6 +9,7 @@ using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.Web.Api.SignalR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -24,6 +26,15 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 
 namespace FatCat.Toolkit.Web.Api;
+
+internal static class OAuthExtensions
+{
+	public static void AddPermissionsPolicies(this AuthorizationOptions options)
+	{
+		options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
+		options.AddPolicy("User", policy => policy.RequireClaim("User"));
+	}
+}
 
 internal class ApplicationStartUp
 {
@@ -79,7 +90,7 @@ internal class ApplicationStartUp
 		app.UseAuthorization();
 
 		app.UseEndpoints(endpoints => endpoints.MapControllers());
-		
+
 		app.Use(async (context, next) => await next.Invoke());
 
 		SystemScope.Container.LifetimeScope = app.ApplicationServices.GetAutofacRoot();
@@ -101,7 +112,7 @@ internal class ApplicationStartUp
 			ConfigureControllers(services);
 			AddCors(services);
 			services.AddHttpClient();
-			
+
 			AddAuthentication(services);
 
 			services.AddSignalR(options =>
@@ -109,8 +120,6 @@ internal class ApplicationStartUp
 									options.MaximumReceiveMessageSize = int.MaxValue;
 									options.EnableDetailedErrors = true;
 								});
-
-			
 		}
 		catch (Exception ex)
 		{
@@ -121,7 +130,7 @@ internal class ApplicationStartUp
 	private void AddAuthentication(IServiceCollection services)
 	{
 		ConsoleLog.WriteMagenta("Adding Authentication");
-		
+
 		var authenticationBuilder =
 			services
 				.AddAuthentication(options =>
@@ -149,7 +158,7 @@ internal class ApplicationStartUp
 			.AddAuthorization(options =>
 							{
 								// options.AddServerToServerPolicy();
-								// options.AddPermissionPolicies();
+								options.AddPermissionsPolicies();
 							});
 	}
 
@@ -216,7 +225,14 @@ internal class ApplicationStartUp
 
 	private void ConfigureControllers(IServiceCollection services)
 	{
-		var builder = services.AddControllers(config => { })
+		var builder = services.AddControllers(config =>
+											{
+												var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+															.RequireAuthenticatedUser()
+															.Build();
+
+												config.Filters.Add(new AuthorizeFilter(policy));
+											})
 							.AddNewtonsoftJson(build => { build.SerializerSettings.Converters.Add(new StringEnumConverter()); });
 
 		var applicationParts = builder.PartManager.ApplicationParts;
