@@ -71,7 +71,14 @@ public class ToolkitHub : Hub
 
 	public override Task OnConnectedAsync()
 	{
-		try { HubServer.OnClientConnected(Context.ConnectionId); }
+		try
+		{
+			var username = Context!.User?.Identity?.Name;
+
+			Logger.Debug($"Connection made | ConnectionId <{Context!.ConnectionId}> | Username <{username}>");
+
+			HubServer.OnClientConnected(Context!.ConnectionId);
+		}
 		catch (Exception ex) { Logger.Exception(ex); }
 
 		return base.OnConnectedAsync();

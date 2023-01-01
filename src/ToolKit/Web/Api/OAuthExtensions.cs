@@ -19,7 +19,21 @@ internal static class OAuthExtensions
 		return new JwtBearerEvents
 				{
 					OnTokenValidated = _ => Task.CompletedTask,
-					OnMessageReceived = _ => Task.CompletedTask,
+					OnMessageReceived = context =>
+										{
+											var accessToken = context.Request.Query["access_token"];
+
+											// If the request is for our hub...
+											var path = context.HttpContext.Request.Path;
+
+											if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments(ToolkitWebApplication.Settings.SignalRPath))
+											{
+												// Read the token out of the query string
+												context.Token = accessToken;
+											}
+
+											return Task.CompletedTask;
+										},
 					OnForbidden = _ => Task.CompletedTask,
 					OnAuthenticationFailed = context =>
 											{

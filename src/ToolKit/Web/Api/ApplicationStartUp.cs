@@ -209,7 +209,11 @@ internal class ApplicationStartUp
 	{
 		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseSignalR)) return;
 
-		app.UseEndpoints(endpoints => endpoints.MapHub<ToolkitHub>(ToolkitWebApplication.Settings.SignalRPath));
+		app.UseEndpoints(endpoints =>
+						{
+							endpoints.MapHub<ToolkitHub>(ToolkitWebApplication.Settings.SignalRPath)
+									.RequireAuthorization();
+						});
 	}
 
 	private void SetUpStaticFiles(IApplicationBuilder app)

@@ -24,7 +24,9 @@ public class ClientWorker
 	{
 		thread.Run(async () =>
 					{
-						var hubUrl = $"https://localhost:{webPort}/api/events";
+						var testToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjgzNzJFODE4OUYyNEVGN0VFMDk3RUMzODdCNTlGOTczMjY2MzI5QzkiLCJ4NXQiOiJnM0xvR0o4azczN2dsLXc0ZTFuNWN5WmpLY2siLCJ0eXAiOiJKV1QifQ.eyJ1bmlxdWVfbmFtZSI6IkpvaG4gRG9lIiwibmJmIjoxNjcyNjA2NjAyLCJleHAiOjE2NzI2MDc1MTIsImlhdCI6MTY3MjYwNjYxMiwiaXNzIjoiRm9nSGF6ZSIsImF1ZCI6Imh0dHBzOi8vZm9naGF6ZS5jb20vQnJ1bWUifQ.HcbVNn7SuuHE9QaGT8Ai62lrThEuZPQJbXkX9OTFmtO1lvoL83azPo8y2reOTjZvxcinx-IQ2kCoo4-uEU8Hwam88y8cxIPzVDiwwQHj6HLxCyAuZrKI9QoaxDqYLwas9zYE3GQh9-vHbdpF7DTJ6IDd11nsLOuZlZMFcEY1_4oZ7cd3zlMVUba--G2oDvIPdxhQRxMBBJDEXX05ssim4Ux0o6xitYHfdiJJgpbpNiNC0-RvHSCfoM68rGA4xsXMaWsj-9ZgNvUi5nZ8FNISlB6WDcaO736FPHFIaalcNvkCgiBaEcyAr-YGfFr54vDTW7sX5n60qPMB3cv7UBbb8w";
+						
+						var hubUrl = $"https://localhost:{webPort}/api/events?access_token={testToken}";
 
 						var result = await hubFactory.TryToConnectToClient(hubUrl);
 
