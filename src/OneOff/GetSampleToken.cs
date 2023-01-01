@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web;
 using Microsoft.AspNetCore.Authorization;
@@ -31,14 +32,18 @@ public class GetSampleToken : Endpoint
 		return Ok(tokenString);
 	}
 
-	private SecurityTokenDescriptor GetSecurityTokenDescriptorCommon(ClaimsIdentity user) => new()
-																							{
-																								Subject = user,
-																								Expires = DateTime.UtcNow.AddMinutes(15),
-																								Audience = "https://foghaze.com/Brume",
-																								Issuer = "FogHaze",
-																								NotBefore = DateTime.UtcNow.AddSeconds(-10),
+	private SecurityTokenDescriptor GetSecurityTokenDescriptorCommon(ClaimsIdentity user)
+	{
+		var cert = new X509Certificate2(@"C:\DevelopmentCert\DevelopmentCert.pfx", "basarab_cert");
 
-																								// SigningCredentials = new SigningCredentials()
-																							};
+		return new SecurityTokenDescriptor
+				{
+					Subject = user,
+					Expires = DateTime.UtcNow.AddMinutes(15),
+					Audience = "https://foghaze.com/Brume",
+					Issuer = "FogHaze",
+					NotBefore = DateTime.UtcNow.AddSeconds(-10),
+					SigningCredentials = new X509SigningCredentials(cert)
+				};
+	}
 }
