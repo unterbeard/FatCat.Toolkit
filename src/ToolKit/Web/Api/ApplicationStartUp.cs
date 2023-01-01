@@ -211,8 +211,9 @@ internal class ApplicationStartUp
 
 		app.UseEndpoints(endpoints =>
 						{
-							endpoints.MapHub<ToolkitHub>(ToolkitWebApplication.Settings.SignalRPath)
-									.RequireAuthorization();
+							var endpointOption = endpoints.MapHub<ToolkitHub>(ToolkitWebApplication.Settings.SignalRPath);
+
+							if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.UseAuthentication)) endpointOption.RequireAuthorization();
 						});
 	}
 

@@ -12,7 +12,7 @@ public class ServerWorker
 	{
 		var applicationSettings = new ToolkitWebApplicationSettings
 								{
-									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR | WebApplicationOptions.UseAuthentication,
+									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR,
 									TlsCertificate = new CertificationSettings
 													{
 														Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
