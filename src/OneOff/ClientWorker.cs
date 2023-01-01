@@ -2,6 +2,7 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
+using FatCat.Toolkit.Web;
 using FatCat.Toolkit.Web.Api.SignalR;
 using Humanizer;
 using Newtonsoft.Json;
@@ -12,20 +13,36 @@ public class ClientWorker
 {
 	private readonly IToolkitHubClientFactory hubFactory;
 	private readonly IThread thread;
+	private readonly IWebCallerFactory webCallerFactory;
 
 	public ClientWorker(IThread thread,
-						IToolkitHubClientFactory hubFactory)
+						IToolkitHubClientFactory hubFactory,
+						IWebCallerFactory webCallerFactory)
 	{
 		this.thread = thread;
 		this.hubFactory = hubFactory;
+		this.webCallerFactory = webCallerFactory;
 	}
 
 	public void DoWork(int webPort)
 	{
 		thread.Run(async () =>
 					{
-						var testToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjgzNzJFODE4OUYyNEVGN0VFMDk3RUMzODdCNTlGOTczMjY2MzI5QzkiLCJ4NXQiOiJnM0xvR0o4azczN2dsLXc0ZTFuNWN5WmpLY2siLCJ0eXAiOiJKV1QifQ.eyJ1bmlxdWVfbmFtZSI6IkpvaG4gRG9lIiwibmJmIjoxNjcyNjA2NjAyLCJleHAiOjE2NzI2MDc1MTIsImlhdCI6MTY3MjYwNjYxMiwiaXNzIjoiRm9nSGF6ZSIsImF1ZCI6Imh0dHBzOi8vZm9naGF6ZS5jb20vQnJ1bWUifQ.HcbVNn7SuuHE9QaGT8Ai62lrThEuZPQJbXkX9OTFmtO1lvoL83azPo8y2reOTjZvxcinx-IQ2kCoo4-uEU8Hwam88y8cxIPzVDiwwQHj6HLxCyAuZrKI9QoaxDqYLwas9zYE3GQh9-vHbdpF7DTJ6IDd11nsLOuZlZMFcEY1_4oZ7cd3zlMVUba--G2oDvIPdxhQRxMBBJDEXX05ssim4Ux0o6xitYHfdiJJgpbpNiNC0-RvHSCfoM68rGA4xsXMaWsj-9ZgNvUi5nZ8FNISlB6WDcaO736FPHFIaalcNvkCgiBaEcyAr-YGfFr54vDTW7sX5n60qPMB3cv7UBbb8w";
-						
+						var webCaller = webCallerFactory.GetWebCaller(new Uri($"https://localhost:{webPort}/api"));
+
+						var tokenResult = await webCaller.Get("sample/token");
+
+						if (tokenResult.IsUnsuccessful)
+						{
+							ConsoleLog.WriteRed($"Could not get TOKEN this is an error!!!!! | StatusCode := <{tokenResult.StatusCode}>");
+
+							return;
+						}
+
+						var testToken = tokenResult.Content;
+
+						ConsoleLog.Write($"Using Token := {testToken}");
+
 						var hubUrl = $"https://localhost:{webPort}/api/events?access_token={testToken}";
 
 						var result = await hubFactory.TryToConnectToClient(hubUrl);
