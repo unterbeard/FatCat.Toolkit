@@ -86,8 +86,11 @@ internal class ApplicationStartUp
 
 		app.UseCors("CorsPolicy");
 
-		app.UseAuthentication();
-		app.UseAuthorization();
+		if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.UseAuthentication))
+		{
+			app.UseAuthentication();
+			app.UseAuthorization();
+		}
 
 		app.UseEndpoints(endpoints => endpoints.MapControllers());
 
@@ -129,6 +132,8 @@ internal class ApplicationStartUp
 
 	private void AddAuthentication(IServiceCollection services)
 	{
+		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseAuthentication)) return;
+
 		ConsoleLog.WriteMagenta("Adding Authentication");
 
 		var authenticationBuilder =
@@ -227,11 +232,14 @@ internal class ApplicationStartUp
 	{
 		var builder = services.AddControllers(config =>
 											{
-												var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-															.RequireAuthenticatedUser()
-															.Build();
+												if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.UseAuthentication))
+												{
+													var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+																.RequireAuthenticatedUser()
+																.Build();
 
-												config.Filters.Add(new AuthorizeFilter(policy));
+													config.Filters.Add(new AuthorizeFilter(policy));
+												}
 											})
 							.AddNewtonsoftJson(build => { build.SerializerSettings.Converters.Add(new StringEnumConverter()); });
 

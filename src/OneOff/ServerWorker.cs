@@ -12,7 +12,7 @@ public class ServerWorker
 	{
 		var applicationSettings = new ToolkitWebApplicationSettings
 								{
-									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR,
+									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR | WebApplicationOptions.UseAuthentication,
 									CertificationLocation = @"C:\DevelopmentCert\DevelopmentCert.pfx",
 									CertificationPassword = "basarab_cert",
 									Port = webPort,
