@@ -1,6 +1,4 @@
 #nullable enable
-using System.Security.Claims;
-
 namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public class ToolkitMessage
@@ -11,5 +9,5 @@ public class ToolkitMessage
 
 	public int MessageType { get; set; }
 
-	public ClaimsPrincipal? User { get; set; }
+	public ToolkitUser? User { get; set; }
 }
