@@ -1,4 +1,6 @@
 ﻿#nullable enable
+using System.Security.Claims;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
 using Microsoft.AspNetCore.SignalR;
@@ -25,7 +27,7 @@ public class ToolkitHub : Hub
 							{
 								Data = data,
 								ConnectionId = Context.ConnectionId,
-								User = Context.User,
+								User = GetUser(),
 								MessageType = messageType
 							};
 
@@ -46,7 +48,7 @@ public class ToolkitHub : Hub
 							{
 								Data = data,
 								ConnectionId = Context.ConnectionId,
-								User = Context.User,
+								User = GetUser(),
 								MessageType = messageType
 							};
 
@@ -65,7 +67,7 @@ public class ToolkitHub : Hub
 							{
 								Data = data,
 								ConnectionId = Context.ConnectionId,
-								User = Context.User,
+								User = GetUser(),
 								MessageType = messageType
 							};
 
@@ -93,5 +95,31 @@ public class ToolkitHub : Hub
 		catch (Exception ex) { Logger.Exception(ex); }
 
 		return base.OnDisconnectedAsync(exception);
+	}
+
+	private static ToolkitClaim CreateClaim(Claim claim) => new()
+															{
+																Type = claim.Type,
+																Value = claim.Value,
+																Issuer = claim.Issuer,
+																OriginalIssuer = claim.OriginalIssuer,
+															};
+
+	private ToolkitUser? GetUser()
+	{
+		if (Context.User == null) return null;
+
+		var contextUser = Context.User;
+
+		foreach (var userClaim in contextUser.Claims) ConsoleLog.WriteMagenta($"{userClaim.Type} : {userClaim.Value}");
+
+		return new ToolkitUser
+				{
+					Name = Context.User.Identity?.Name,
+					AuthenticationType = Context.User.Identity?.AuthenticationType,
+					IsAuthenticated = Context.User.Identity?.IsAuthenticated ?? false,
+					Claims = contextUser.Claims.Select(CreateClaim)
+										.ToList()
+				};
 	}
 }
