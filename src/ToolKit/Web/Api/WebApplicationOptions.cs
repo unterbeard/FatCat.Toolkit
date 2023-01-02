@@ -6,5 +6,6 @@ public enum WebApplicationOptions
 	None = 0,
 	UseHttps = 1,
 	UseFileSystem = 2,
-	UseSignalR = 4
+	UseSignalR = 4,
+	UseAuthentication = 8,
 }

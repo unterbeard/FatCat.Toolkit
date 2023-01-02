@@ -12,9 +12,13 @@ public class ServerWorker
 	{
 		var applicationSettings = new ToolkitWebApplicationSettings
 								{
-									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR,
-									CertificationLocation = @"C:\DevelopmentCert\DevelopmentCert.pfx",
-									CertificationPassword = "basarab_cert",
+									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR | WebApplicationOptions.UseAuthentication,
+									TlsCertificate = new CertificationSettings
+													{
+														Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
+														Password = "basarab_cert"
+													},
+									ToolkitTokenParameters = new ToolkitTokenParameters(),
 									Port = webPort,
 									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
 									CorsUri = new List<Uri> { new($"https://localhost:{webPort}") },

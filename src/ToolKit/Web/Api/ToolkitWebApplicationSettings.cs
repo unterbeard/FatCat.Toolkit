@@ -6,10 +6,6 @@ namespace FatCat.Toolkit.Web.Api;
 
 public class ToolkitWebApplicationSettings : EqualObject
 {
-	public string? CertificationLocation { get; set; }
-
-	public string? CertificationPassword { get; set; }
-
 	public List<Assembly> ContainerAssemblies { get; set; } = new();
 
 	public List<Uri> CorsUri { get; set; } = new();
@@ -23,6 +19,10 @@ public class ToolkitWebApplicationSettings : EqualObject
 	public string SignalRPath { get; set; } = "/api/events";
 
 	public string? StaticFileLocation { get; set; }
+
+	public CertificationSettings? TlsCertificate { get; set; }
+
+	public IToolkitTokenParameters? ToolkitTokenParameters { get; set; }
 
 	public event ToolkitHubDataBufferMessage? ClientDataBufferMessage;
 

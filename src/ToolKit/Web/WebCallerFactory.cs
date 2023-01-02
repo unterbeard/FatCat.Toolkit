@@ -1,6 +1,6 @@
 using FatCat.Toolkit.Logging;
 
-namespace FatCat.Toolkit.Communication;
+namespace FatCat.Toolkit.Web;
 
 public interface IWebCallerFactory
 {

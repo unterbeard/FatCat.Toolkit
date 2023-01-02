@@ -1,9 +1,7 @@
 ﻿using Autofac.AspNetCore.Extensions;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Enumerations;
 using FatCat.Toolkit.Injection;
 using Microsoft.AspNetCore.Hosting;
-using Newtonsoft.Json;
 
 namespace FatCat.Toolkit.Web.Api;
 
@@ -25,7 +23,7 @@ public static class ToolkitWebApplication
 
 									options.ListenAnyIP(Settings.Port, o =>
 																		{
-																			if (Settings.Options.IsFlagSet(WebApplicationOptions.UseHttps)) o.UseHttps(Settings.CertificationLocation ?? throw new InvalidOperationException(), Settings.CertificationPassword);
+																			if (Settings.Options.IsFlagSet(WebApplicationOptions.UseHttps)) o.UseHttps(Settings.TlsCertificate?.Location ?? throw new InvalidOperationException(), Settings.TlsCertificate.Password);
 																		});
 								})
 					.UseStartup(typeof(ApplicationStartUp))

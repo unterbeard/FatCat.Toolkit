@@ -2,6 +2,7 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
+using FatCat.Toolkit.Web;
 using FatCat.Toolkit.Web.Api.SignalR;
 using Humanizer;
 using Newtonsoft.Json;
@@ -12,19 +13,41 @@ public class ClientWorker
 {
 	private readonly IToolkitHubClientFactory hubFactory;
 	private readonly IThread thread;
+	private readonly IWebCallerFactory webCallerFactory;
 
 	public ClientWorker(IThread thread,
-						IToolkitHubClientFactory hubFactory)
+						IToolkitHubClientFactory hubFactory,
+						IWebCallerFactory webCallerFactory)
 	{
 		this.thread = thread;
 		this.hubFactory = hubFactory;
+		this.webCallerFactory = webCallerFactory;
 	}
 
 	public void DoWork(int webPort)
 	{
 		thread.Run(async () =>
 					{
-						var hubUrl = $"https://localhost:{webPort}/api/events";
+						var webCaller = webCallerFactory.GetWebCaller(new Uri($"https://localhost:{webPort}/api"));
+
+						var tokenResult = await webCaller.Get("sample/token");
+
+						if (tokenResult.IsUnsuccessful)
+						{
+							ConsoleLog.WriteRed($"Could not get TOKEN this is an error!!!!! | StatusCode := <{tokenResult.StatusCode}>");
+
+							return;
+						}
+
+						var testToken = tokenResult.Content;
+
+						ConsoleLog.Write($"Using Token := {testToken}");
+
+						// Secure Url
+						var hubUrl = $"https://localhost:{webPort}/api/events?access_token={testToken}";
+
+						// Open Url
+						// var hubUrl = $"https://localhost:{webPort}/api/events";
 
 						var result = await hubFactory.TryToConnectToClient(hubUrl);
 
