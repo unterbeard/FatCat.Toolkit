@@ -38,6 +38,8 @@ public interface IWebCaller
 	Task<WebResult> Post(string url, TimeSpan timeout);
 
 	Task<WebResult> Post(string url, string data, TimeSpan timeout);
+
+	void UserBearerToken(string token);
 }
 
 public class WebCaller : IWebCaller
@@ -45,6 +47,8 @@ public class WebCaller : IWebCaller
 	public static TimeSpan DefaultTimeout { get; set; } = 30.Seconds();
 
 	private readonly IToolkitLogger logger;
+
+	private string? bearerToken;
 
 	public Uri BaseUri { get; }
 
@@ -80,9 +84,12 @@ public class WebCaller : IWebCaller
 	{
 		try
 		{
-			var response = await CreateRequest(url)
-								.WithTimeout(timeout)
-								.DeleteAsync();
+			var request = CreateRequest(url)
+				.WithTimeout(timeout);
+
+			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
+
+			var response = await request.DeleteAsync();
 
 			return new WebResult(response.ResponseMessage);
 		}
@@ -102,9 +109,12 @@ public class WebCaller : IWebCaller
 	{
 		try
 		{
-			var response = await CreateRequest(url)
-								.WithTimeout(timeout)
-								.GetAsync();
+			var request = CreateRequest(url)
+				.WithTimeout(timeout);
+
+			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
+
+			var response = await request.GetAsync();
 
 			return new WebResult(response.ResponseMessage);
 		}
@@ -130,9 +140,12 @@ public class WebCaller : IWebCaller
 	{
 		try
 		{
-			var response = await CreateRequest(url)
-								.WithTimeout(timeout)
-								.PostJsonAsync(data);
+			var request = CreateRequest(url)
+				.WithTimeout(timeout);
+
+			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
+
+			var response = await request.PostJsonAsync(data);
 
 			return new WebResult(response.ResponseMessage);
 		}
@@ -150,9 +163,12 @@ public class WebCaller : IWebCaller
 	{
 		try
 		{
-			var response = await CreateRequest(url)
-								.WithTimeout(timeout)
-								.PostJsonAsync(data);
+			var request = CreateRequest(url)
+				.WithTimeout(timeout);
+
+			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
+
+			var response = await request.PostJsonAsync(data);
 
 			return new WebResult(response.ResponseMessage);
 		}
@@ -170,9 +186,12 @@ public class WebCaller : IWebCaller
 	{
 		try
 		{
-			var response = await CreateRequest(url)
-								.WithTimeout(timeout)
-								.PostAsync();
+			var request = CreateRequest(url)
+				.WithTimeout(timeout);
+
+			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
+
+			var response = await request.PostAsync();
 
 			return new WebResult(response.ResponseMessage);
 		}
@@ -190,9 +209,12 @@ public class WebCaller : IWebCaller
 	{
 		try
 		{
-			var response = await CreateRequest(url)
-								.WithTimeout(timeout)
-								.PostJsonAsync(data);
+			var request = CreateRequest(url)
+				.WithTimeout(timeout);
+
+			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
+
+			var response = await request.PostJsonAsync(data);
 
 			return new WebResult(response.ResponseMessage);
 		}
@@ -205,6 +227,8 @@ public class WebCaller : IWebCaller
 			throw;
 		}
 	}
+
+	public void UserBearerToken(string token) => bearerToken = token;
 
 	private Url CreateRequest(string pathSegment)
 	{
