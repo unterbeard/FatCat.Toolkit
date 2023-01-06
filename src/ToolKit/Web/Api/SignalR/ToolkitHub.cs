@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System.Security.Claims;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
 using Microsoft.AspNetCore.SignalR;
@@ -110,8 +109,6 @@ public class ToolkitHub : Hub
 		if (Context.User == null) return null;
 
 		var contextUser = Context.User;
-
-		foreach (var userClaim in contextUser.Claims) ConsoleLog.WriteMagenta($"{userClaim.Type} : {userClaim.Value}");
 
 		return new ToolkitUser
 				{
