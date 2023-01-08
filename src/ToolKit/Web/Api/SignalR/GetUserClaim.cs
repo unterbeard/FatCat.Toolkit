@@ -1,6 +1,4 @@
-﻿using FatCat.Toolkit.Console;
-
-namespace FatCat.Toolkit.Web.Api.SignalR;
+﻿namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public interface IGetUserClaim
 {
@@ -15,12 +13,5 @@ public interface IGetUserClaim
 
 public class GetUserClaim : IGetUserClaim
 {
-	public ToolkitClaim? GetClaim(ToolkitUser user, string claimType)
-	{
-		ConsoleLog.Write("Dog");
-		ConsoleLog.Write("Dog");
-		ConsoleLog.Write("Dog");
-
-		return null;
-	}
+	public ToolkitClaim? GetClaim(ToolkitUser user, string claimType) => user.Claims.FirstOrDefault(i => i.Type!.Equals(claimType, StringComparison.OrdinalIgnoreCase));
 }
