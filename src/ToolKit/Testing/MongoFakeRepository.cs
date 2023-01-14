@@ -133,7 +133,7 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 	public void VerifyDidNotGetById()
 	{
 		A.CallTo(() => repository.GetById(A<string>._))
-		.MustHaveHappened();
+		.MustNotHaveHappened();
 	}
 
 	public void VerifyDidNotUpdate()
