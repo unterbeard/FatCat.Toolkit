@@ -18,11 +18,7 @@ public class MongoConnection : IMongoConnection
 {
 	private const string NotSetConnectionString = "NOT_SET";
 
-	private static readonly MongoClientSettings mongoClientSettings = new()
-																	{
-																		MinConnectionPoolSize = 100,
-																		MaxConnectionPoolSize = 1001
-																	};
+	private static readonly MongoClientSettings defaultMongoClientSettings = new();
 
 	private readonly ConcurrentDictionary<string, MongoClient> connections = new();
 
@@ -52,9 +48,7 @@ public class MongoConnection : IMongoConnection
 
 		if (!connections.TryGetValue(connectionString, out var mongoClient))
 		{
-			MongoClientSettings? settings;
-
-			settings = connectionString == NotSetConnectionString ? mongoClientSettings : MongoClientSettings.FromConnectionString(connectionString);
+			var settings = connectionString == NotSetConnectionString ? defaultMongoClientSettings : MongoClientSettings.FromConnectionString(connectionString);
 
 			mongoClient = new MongoClient(settings);
 		}
