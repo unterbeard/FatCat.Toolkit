@@ -48,7 +48,7 @@ public class WebCaller : IWebCaller
 
 	private readonly IToolkitLogger logger;
 
-	private string? bearerToken;
+	private string bearerToken;
 
 	public Uri BaseUri { get; }
 
