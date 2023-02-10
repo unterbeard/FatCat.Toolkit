@@ -8,10 +8,10 @@ public interface IGetUserClaim
 	/// <param name="user">ToolkitUser</param>
 	/// <param name="claimType">name of the claim</param>
 	/// <returns>Claim, null if claim is not found</returns>
-	ToolkitClaim? GetClaim(ToolkitUser user, string claimType);
+	ToolkitClaim GetClaim(ToolkitUser user, string claimType);
 }
 
 public class GetUserClaim : IGetUserClaim
 {
-	public ToolkitClaim? GetClaim(ToolkitUser user, string claimType) => user.Claims.FirstOrDefault(i => i.Type!.Equals(claimType, StringComparison.OrdinalIgnoreCase));
+	public ToolkitClaim GetClaim(ToolkitUser user, string claimType) => user.Claims.FirstOrDefault(i => i.Type!.Equals(claimType, StringComparison.OrdinalIgnoreCase));
 }
