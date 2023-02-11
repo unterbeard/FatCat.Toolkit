@@ -236,9 +236,6 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 		A.CallTo(() => repository.GetAll())
 		.ReturnsLazily(() => Items);
-
-		A.CallTo(() => repository.GetAllByFilter(A<Expression<Func<T, bool>>>._))
-		.ReturnsLazily(() => Items);
 	}
 
 	private void SetUpGetByFilter()
@@ -247,6 +244,9 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 		A.CallTo(() => repository.GetByFilter(FilterCapture))
 		.ReturnsLazily(() => Item);
+
+		A.CallTo(() => repository.GetAllByFilter(FilterCapture))
+		.ReturnsLazily(() => Items);
 	}
 
 	private void SetUpUpdate()
