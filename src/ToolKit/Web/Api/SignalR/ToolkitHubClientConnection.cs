@@ -15,6 +15,8 @@ public interface IToolkitHubClientConnection : IAsyncDisposable
 
 	Task Connect(string hubUrl);
 
+	Task Disconnect();
+
 	Task<ToolkitMessage> Send(ToolkitMessage message, TimeSpan? timeout = null);
 
 	Task<ToolkitMessage> SendDataBuffer(ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null);
@@ -34,14 +36,14 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	private readonly ConcurrentDictionary<string, ToolkitMessage> responses = new();
 	private readonly ConcurrentDictionary<string, int> timedOutResponses = new();
 	private readonly ConcurrentDictionary<string, ToolkitMessage> waitingForResponses = new();
-	private HubConnection connection = null!;
+	private HubConnection connection;
 
 	public ToolkitHubClientConnection(IGenerator generator,
 									IToolkitLogger logger)
 	{
 		this.generator = generator;
 		this.logger = logger;
-		
+
 		this.logger.Debug("CTOR of ToolkitHubClientConnection");
 	}
 
@@ -60,7 +62,16 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		RegisterForServerMessages();
 	}
 
-	public ValueTask DisposeAsync() => connection.DisposeAsync();
+	public async Task Disconnect()
+	{
+		if (connection is not null) await connection.StopAsync();
+	}
+
+	public async ValueTask DisposeAsync()
+	{
+		await Disconnect();
+		await connection.DisposeAsync();
+	}
 
 	public async Task<ToolkitMessage> Send(ToolkitMessage message, TimeSpan? timeout = null)
 	{
