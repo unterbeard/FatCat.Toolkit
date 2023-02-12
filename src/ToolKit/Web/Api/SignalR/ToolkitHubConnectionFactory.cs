@@ -8,6 +8,8 @@ public interface IToolkitHubClientFactory : IAsyncDisposable
 {
 	Task<IToolkitHubClientConnection> ConnectToClient(string hubUrl);
 
+	void RemoveHubFromConnections(string hubUrl);
+
 	Task<ConnectionResult> TryToConnectToClient(string hubUrl);
 }
 
@@ -35,6 +37,8 @@ public class ToolkitHubClientFactory : IToolkitHubClientFactory
 	{
 		foreach (var connection in connections.Values) await connection.DisposeAsync();
 	}
+
+	public void RemoveHubFromConnections(string hubUrl) => connections.TryRemove(hubUrl, out _);
 
 	public async Task<ConnectionResult> TryToConnectToClient(string hubUrl)
 	{
