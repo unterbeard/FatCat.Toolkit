@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.ToolKit", "Tests.Tool
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneOff", "OneOff\OneOff.csproj", "{3BD89CFF-7A9C-4CE9-9870-8F9DC15DAA69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxySpike", "ProxySpike\ProxySpike.csproj", "{EE9E8D43-A853-4941-B983-34B9625500DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{3BD89CFF-7A9C-4CE9-9870-8F9DC15DAA69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BD89CFF-7A9C-4CE9-9870-8F9DC15DAA69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BD89CFF-7A9C-4CE9-9870-8F9DC15DAA69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE9E8D43-A853-4941-B983-34B9625500DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE9E8D43-A853-4941-B983-34B9625500DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE9E8D43-A853-4941-B983-34B9625500DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE9E8D43-A853-4941-B983-34B9625500DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
