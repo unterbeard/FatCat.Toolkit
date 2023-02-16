@@ -12,13 +12,13 @@ public class ServerWorker
 	{
 		var applicationSettings = new ToolkitWebApplicationSettings
 								{
-									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR | WebApplicationOptions.UseAuthentication,
+									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR,
 									TlsCertificate = new CertificationSettings
 													{
 														Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
 														Password = "basarab_cert"
 													},
-									ToolkitTokenParameters = new ToolkitTokenParameters(),
+									ToolkitTokenParameters = new SpikeToolkitParameters(),
 									Port = webPort,
 									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
 									CorsUri = new List<Uri> { new($"https://localhost:{webPort}") },

@@ -1,12 +1,14 @@
 ﻿using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ProxySpike.Workers;
 
+[AllowAnonymous]
 public class TestUpEndpoint : Endpoint
 {
-	[HttpPost("api/Test")]
+	[HttpGet("api/Test")]
 	public WebResult DoTestUp()
 	{
 		ConsoleLog.WriteMagenta("Hit the TestUp Endpoint");

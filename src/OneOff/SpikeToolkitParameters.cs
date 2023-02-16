@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace OneOff;
 
-public class ToolkitTokenParameters : IToolkitTokenParameters
+public class SpikeToolkitParameters : IToolkitTokenParameters
 {
 	public TokenValidationParameters Get()
 	{
