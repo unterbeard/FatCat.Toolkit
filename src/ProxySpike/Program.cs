@@ -2,7 +2,7 @@
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Threading;
-using ProxySpike.Client;
+using ProxySpike.Workers;
 
 namespace ProxySpike;
 
@@ -24,7 +24,7 @@ public static class Program
 
 			thread.Run(async () =>
 						{
-							var worker = SystemScope.Container.Resolve<ClientWorker>();
+							var worker = SystemScope.Container.Resolve<WebServerWorker>();
 
 							await worker.DoWork();
 						});
