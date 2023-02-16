@@ -11,7 +11,7 @@ public class TestUpEndpoint : Endpoint
 	{
 		ConsoleLog.WriteMagenta("Hit the TestUp Endpoint");
 
-		var message = $"You got me {DateTime.UtcNow:hh:mm:ss:fff tt}";
+		var message = $"You got me {DateTime.Now:hh:mm:ss:fff tt}";
 
 		return Ok(message);
 	}
