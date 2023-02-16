@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Enumerations;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Threading;
@@ -21,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace FatCat.Toolkit.Web.Api;
@@ -43,6 +43,8 @@ internal class ApplicationStartUp
 
 		if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.UseAuthentication))
 		{
+			ConsoleLog.WriteMagenta("Adding Authentication?????????????????????");
+
 			app.UseAuthentication();
 			app.UseAuthorization();
 		}

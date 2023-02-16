@@ -1,6 +1,5 @@
 #nullable enable
 using System.Runtime.CompilerServices;
-using FatCat.Toolkit.Enumerations;
 
 namespace FatCat.Toolkit.Console;
 
