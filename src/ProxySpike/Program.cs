@@ -24,16 +24,25 @@ public static class Program
 
 			ConsoleLog.Write("Starting Proxy Spike Program");
 
-			Parser.Default.ParseArguments<ServerOptions>(args)
-				.WithParsed(options =>
-							{
-								thread.Run(async () =>
-											{
-												var worker = SystemScope.Container.Resolve<WebServerWorker>();
+			Parser.Default.ParseArguments<ServerOptions, ProxyOptions>(args)
+				.WithParsed<ProxyOptions>(options =>
+										{
+											thread.Run(async () =>
+														{
+															var worker = SystemScope.Container.Resolve<ProxyWorker>();
 
-												await worker.DoWork(options);
+															await worker.DoWork(options);
+														});
+										})
+				.WithParsed<ServerOptions>(options =>
+											{
+												thread.Run(async () =>
+															{
+																var worker = SystemScope.Container.Resolve<WebServerWorker>();
+
+																await worker.DoWork(options);
+															});
 											});
-							});
 
 			consoleUtilities.WaitForExit();
 		}
