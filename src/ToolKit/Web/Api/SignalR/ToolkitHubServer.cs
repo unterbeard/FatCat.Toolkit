@@ -8,15 +8,19 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public interface IToolkitHubServer
 {
+	event ToolkitHubClientConnected ClientConnected;
+
+	event ToolkitHubClientDisconnected ClientDisconnected;
+
 	void ClientResponseDataBufferMessage(string sessionId, ToolkitMessage toolkitMessage, byte[] dataBuffer);
 
 	void ClientResponseMessage(string sessionId, ToolkitMessage toolkitMessage);
 
 	List<string> GetConnections();
 
-	void OnClientConnected(string connectionId);
+	void OnClientConnected(ToolkitUser toolkitUser, string connectionId);
 
-	void OnClientDisconnected(string connectionId);
+	void OnClientDisconnected(ToolkitUser toolkitUser, string connectionId);
 
 	Task<ToolkitMessage> SendDataBufferToClient(string connectionId, ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null);
 
@@ -46,6 +50,10 @@ public class ToolkitHubServer : IToolkitHubServer
 		this.logger = logger;
 	}
 
+	public event ToolkitHubClientConnected ClientConnected;
+
+	public event ToolkitHubClientDisconnected ClientDisconnected;
+
 	public void ClientResponseDataBufferMessage(string sessionId, ToolkitMessage toolkitMessage, byte[] dataBuffer)
 	{
 		if (timedOutResponses.TryRemove(sessionId, out _)) return;
@@ -68,18 +76,22 @@ public class ToolkitHubServer : IToolkitHubServer
 
 	public List<string> GetConnections() => connections.Keys.ToList();
 
-	public void OnClientConnected(string connectionId)
+	public void OnClientConnected(ToolkitUser toolkitUser, string connectionId)
 	{
 		logger.Debug($"Connected | <{connectionId}>");
 
 		connections.TryAdd(connectionId, connectionId);
+
+		OnClientConnected(toolkitUser);
 	}
 
-	public void OnClientDisconnected(string connectionId)
+	public void OnClientDisconnected(ToolkitUser toolkitUser, string connectionId)
 	{
 		logger.Debug($"Client Disconnected | <{connectionId}>");
 
 		connections.TryRemove(connectionId, out _);
+
+		OnClientDisconnected(toolkitUser);
 	}
 
 	public async Task<ToolkitMessage> SendDataBufferToClient(string connectionId, ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null)
@@ -107,6 +119,10 @@ public class ToolkitHubServer : IToolkitHubServer
 	}
 
 	public async Task SendToClientNoResponse(string connectionId, ToolkitMessage message) => await SendMessageToClient(connectionId, message, generator.NewId());
+
+	private Task OnClientConnected(ToolkitUser user) => ClientConnected?.Invoke(user);
+
+	private Task OnClientDisconnected(ToolkitUser user) => ClientDisconnected?.Invoke(user);
 
 	private async Task SendMessageToClient(string connectionId, ToolkitMessage message, string sessionId) => await hubContext.Clients.Client(connectionId).SendAsync(ToolkitHub.ServerOriginatedMessage, message.MessageType, sessionId, message.Data);
 
