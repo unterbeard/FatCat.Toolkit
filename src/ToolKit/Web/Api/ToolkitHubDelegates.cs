@@ -7,6 +7,6 @@ public delegate Task<string?> ToolkitHubMessage(ToolkitMessage message);
 
 public delegate Task<string?> ToolkitHubDataBufferMessage(ToolkitMessage message, byte[] dataBuffer);
 
-public delegate Task ToolkitHubClientConnected(ToolkitUser user);
+public delegate Task ToolkitHubClientConnected(ToolkitUser user, string connectionId);
 
-public delegate Task ToolkitHubClientDisconnected(ToolkitUser user);
+public delegate Task ToolkitHubClientDisconnected(ToolkitUser user, string connectionId);

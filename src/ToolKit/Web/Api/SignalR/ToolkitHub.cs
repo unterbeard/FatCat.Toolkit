@@ -80,7 +80,11 @@ public class ToolkitHub : Hub
 
 			Logger.Debug($"Connection made | ConnectionId <{Context!.ConnectionId}> | Username <{username}>");
 
-			HubServer.OnClientConnected(ToolkitUser.Create(Context.User), Context!.ConnectionId);
+			var toolkitUser = ToolkitUser.Create(Context.User);
+
+			HubServer.OnClientConnected(toolkitUser, Context.ConnectionId);
+
+			ToolkitWebApplication.Settings.OnClientConnected(toolkitUser, Context.ConnectionId);
 		}
 		catch (Exception ex) { Logger.Exception(ex); }
 
@@ -89,7 +93,14 @@ public class ToolkitHub : Hub
 
 	public override Task OnDisconnectedAsync(Exception? exception)
 	{
-		try { HubServer.OnClientDisconnected(ToolkitUser.Create(Context.User), Context.ConnectionId); }
+		try
+		{
+			var toolkitUser = ToolkitUser.Create(Context.User);
+
+			HubServer.OnClientDisconnected(toolkitUser, Context.ConnectionId);
+
+			ToolkitWebApplication.Settings.OnClientDisconnected(toolkitUser, Context.ConnectionId);
+		}
 		catch (Exception ex) { Logger.Exception(ex); }
 
 		return base.OnDisconnectedAsync(exception);

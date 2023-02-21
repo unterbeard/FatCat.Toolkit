@@ -82,7 +82,7 @@ public class ToolkitHubServer : IToolkitHubServer
 
 		connections.TryAdd(connectionId, connectionId);
 
-		OnClientConnected(toolkitUser);
+		InvokeClientConnected(toolkitUser, connectionId);
 	}
 
 	public void OnClientDisconnected(ToolkitUser toolkitUser, string connectionId)
@@ -91,7 +91,7 @@ public class ToolkitHubServer : IToolkitHubServer
 
 		connections.TryRemove(connectionId, out _);
 
-		OnClientDisconnected(toolkitUser);
+		InvokeClientDisconnected(toolkitUser, connectionId);
 	}
 
 	public async Task<ToolkitMessage> SendDataBufferToClient(string connectionId, ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null)
@@ -120,9 +120,9 @@ public class ToolkitHubServer : IToolkitHubServer
 
 	public async Task SendToClientNoResponse(string connectionId, ToolkitMessage message) => await SendMessageToClient(connectionId, message, generator.NewId());
 
-	private Task OnClientConnected(ToolkitUser user) => ClientConnected?.Invoke(user);
+	private Task InvokeClientConnected(ToolkitUser user, string connectionId) => ClientConnected?.Invoke(user, connectionId);
 
-	private Task OnClientDisconnected(ToolkitUser user) => ClientDisconnected?.Invoke(user);
+	private Task InvokeClientDisconnected(ToolkitUser user, string connectionId) => ClientDisconnected?.Invoke(user, connectionId);
 
 	private async Task SendMessageToClient(string connectionId, ToolkitMessage message, string sessionId) => await hubContext.Clients.Client(connectionId).SendAsync(ToolkitHub.ServerOriginatedMessage, message.MessageType, sessionId, message.Data);
 

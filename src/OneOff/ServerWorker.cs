@@ -2,6 +2,7 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web.Api;
+using FatCat.Toolkit.Web.Api.SignalR;
 using Newtonsoft.Json;
 
 namespace OneOff;
@@ -48,7 +49,24 @@ public class ServerWorker
 												return "ACK";
 											};
 
+		applicationSettings.ClientConnected += OnClientConnected;
+		applicationSettings.ClientDisconnected += OnClientDisconnected;
+
 		ToolkitWebApplication.Run(applicationSettings);
+	}
+
+	private Task OnClientConnected(ToolkitUser user, string connectionId)
+	{
+		ConsoleLog.WriteDarkCyan($"A client has connected: <{user.Name}> | <{connectionId}>");
+
+		return Task.CompletedTask;
+	}
+
+	private Task OnClientDisconnected(ToolkitUser user, string connectionId)
+	{
+		ConsoleLog.WriteDarkYellow($"A client has disconnected: <{user.Name}> | <{connectionId}>");
+
+		return Task.CompletedTask;
 	}
 
 	private void Started() => ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
