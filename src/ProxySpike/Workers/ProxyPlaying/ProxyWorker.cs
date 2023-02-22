@@ -1,7 +1,7 @@
 ﻿using FatCat.Toolkit.Console;
 using ProxySpike.Options;
 
-namespace ProxySpike.Workers;
+namespace ProxySpike.Workers.ProxyPlaying;
 
 public class ProxyWorker : ISpikeWorker<ProxyOptions>
 {

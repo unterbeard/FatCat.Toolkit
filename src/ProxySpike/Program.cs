@@ -5,6 +5,7 @@ using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Threading;
 using ProxySpike.Options;
 using ProxySpike.Workers;
+using ProxySpike.Workers.ProxyPlaying;
 
 namespace ProxySpike;
 
