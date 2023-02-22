@@ -24,9 +24,17 @@ public class ToolkitWebApplicationSettings : EqualObject
 
 	public IToolkitTokenParameters? ToolkitTokenParameters { get; set; }
 
-	public event ToolkitHubDataBufferMessage? ClientDataBufferMessage;
+	public event ToolkitHubClientConnected ClientConnected;
 
-	public event ToolkitHubMessage? ClientMessage;
+	public event ToolkitHubDataBufferMessage ClientDataBufferMessage;
+
+	public event ToolkitHubClientDisconnected ClientDisconnected;
+
+	public event ToolkitHubMessage ClientMessage;
+
+	public Task OnClientConnected(ToolkitUser user, string connectionId) => ClientConnected?.Invoke(user, connectionId);
+
+	public Task OnClientDisconnected(ToolkitUser user, string connectionId) => ClientDisconnected?.Invoke(user, connectionId);
 
 	public Task<string?> OnClientHubMessage(ToolkitMessage message) => ClientMessage?.Invoke(message)!;
 

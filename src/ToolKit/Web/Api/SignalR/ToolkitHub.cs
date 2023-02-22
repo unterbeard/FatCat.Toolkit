@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using System.Security.Claims;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
 using Microsoft.AspNetCore.SignalR;
@@ -81,7 +80,11 @@ public class ToolkitHub : Hub
 
 			Logger.Debug($"Connection made | ConnectionId <{Context!.ConnectionId}> | Username <{username}>");
 
-			HubServer.OnClientConnected(Context!.ConnectionId);
+			var toolkitUser = ToolkitUser.Create(Context.User);
+
+			HubServer.OnClientConnected(toolkitUser, Context.ConnectionId);
+
+			ToolkitWebApplication.Settings.OnClientConnected(toolkitUser, Context.ConnectionId);
 		}
 		catch (Exception ex) { Logger.Exception(ex); }
 
@@ -90,33 +93,18 @@ public class ToolkitHub : Hub
 
 	public override Task OnDisconnectedAsync(Exception? exception)
 	{
-		try { HubServer.OnClientDisconnected(Context.ConnectionId); }
+		try
+		{
+			var toolkitUser = ToolkitUser.Create(Context.User);
+
+			HubServer.OnClientDisconnected(toolkitUser, Context.ConnectionId);
+
+			ToolkitWebApplication.Settings.OnClientDisconnected(toolkitUser, Context.ConnectionId);
+		}
 		catch (Exception ex) { Logger.Exception(ex); }
 
 		return base.OnDisconnectedAsync(exception);
 	}
 
-	private static ToolkitClaim CreateClaim(Claim claim) => new()
-															{
-																Type = claim.Type,
-																Value = claim.Value,
-																Issuer = claim.Issuer,
-																OriginalIssuer = claim.OriginalIssuer,
-															};
-
-	private ToolkitUser? GetUser()
-	{
-		if (Context.User == null) return null;
-
-		var contextUser = Context.User;
-
-		return new ToolkitUser
-				{
-					Name = Context.User.Identity?.Name,
-					AuthenticationType = Context.User.Identity?.AuthenticationType,
-					IsAuthenticated = Context.User.Identity?.IsAuthenticated ?? false,
-					Claims = contextUser.Claims.Select(CreateClaim)
-										.ToList()
-				};
-	}
+	private ToolkitUser GetUser() => Context.User == null ? null : ToolkitUser.Create(Context.User);
 }

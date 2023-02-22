@@ -9,9 +9,9 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public interface IToolkitHubClientConnection : IAsyncDisposable
 {
-	event ToolkitHubDataBufferMessage? ServerDataBufferMessage;
+	event ToolkitHubDataBufferMessage ServerDataBufferMessage;
 
-	event ToolkitHubMessage? ServerMessage;
+	event ToolkitHubMessage ServerMessage;
 
 	Task Connect(string hubUrl);
 
