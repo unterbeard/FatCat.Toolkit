@@ -1,4 +1,5 @@
 ﻿using FatCat.Fakes;
+using FatCat.Toolkit.Console;
 using Yarp.ReverseProxy.Configuration;
 
 namespace ProxySpike.Workers.ProxyPlaying;
@@ -7,6 +8,8 @@ public class ProxyRouteConfig
 {
 	public static RouteConfig[] GetRoutes()
 	{
+		ConsoleLog.WriteDarkGreen("Building Routes for Proxy");
+		
 		return new[]
 				{
 					new RouteConfig
@@ -23,6 +26,8 @@ public static class ProxyClusterConfig
 {
 	public static ClusterConfig[] GetClusters()
 	{
+		ConsoleLog.WriteGreen("Building Clusters for proxy");
+
 		return new[]
 				{
 					new ClusterConfig

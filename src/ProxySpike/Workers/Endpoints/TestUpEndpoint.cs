@@ -2,7 +2,7 @@
 using FatCat.Toolkit.Web;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ProxySpike.Workers;
+namespace ProxySpike.Workers.Endpoints;
 
 public class TestUpEndpoint : Endpoint
 {

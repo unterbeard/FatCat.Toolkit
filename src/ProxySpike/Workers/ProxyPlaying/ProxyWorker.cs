@@ -9,8 +9,10 @@ namespace ProxySpike.Workers.ProxyPlaying;
  *		- Redirect of get, post, and delete
  *		- Redirect of Meta Data to a different endpoint than everything else
  *		- Can do we logic in the redirect to completely replace what NetworkManager is dong?
+ *			-- This cannot replace network manager proxy it is only called with the routing at start up
  *
  *	How to configure in code rather than JSON
+ *		-- Works just fine pretty easy to do
  * 
  * 
  */
