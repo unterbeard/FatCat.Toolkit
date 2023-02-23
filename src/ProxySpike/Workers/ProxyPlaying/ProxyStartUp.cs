@@ -33,9 +33,12 @@ public class ProxyStartUp
 	public void ConfigureServices(IServiceCollection services)
 	{
 		// Add the reverse proxy capability to the server
-		var proxyBuilder = services.AddReverseProxy();
+		// var proxyBuilder = services.AddReverseProxy();
 
 		// Initialize the reverse proxy from the "ReverseProxy" section of configuration
-		proxyBuilder.LoadFromConfig(Configuration.GetSection("ReverseProxy"));
+		// proxyBuilder.LoadFromConfig(Configuration.GetSection("ReverseProxy"));
+
+		services.AddReverseProxy()
+				.LoadFromMemory(ProxyRouteConfig.GetRoutes(), ProxyClusterConfig.GetClusters());
 	}
 }
