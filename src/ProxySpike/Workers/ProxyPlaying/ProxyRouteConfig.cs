@@ -30,8 +30,7 @@ public static class ProxyClusterConfig
 						ClusterId = "cluster1",
 						Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase)
 										{
-											{ "destination1", new DestinationConfig { Address = "https://example.com" } },
-											{ "secondDestination", new DestinationConfig { Address = "https://bing.com" } }
+											{ "destination1", new DestinationConfig { Address = "https://localhost:14555/" } },
 										}
 					}
 				};
