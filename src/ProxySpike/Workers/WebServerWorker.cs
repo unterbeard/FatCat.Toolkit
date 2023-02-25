@@ -2,15 +2,18 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web.Api;
-using FatCat.Toolkit.Web.Api.SignalR;
 using Newtonsoft.Json;
+using ProxySpike.Helpers;
+using ProxySpike.Options;
 
-namespace OneOff;
+namespace ProxySpike.Workers;
 
-public class ServerWorker
+public class WebServerWorker : ISpikeWorker<ServerOptions>
 {
-	public void DoWork(ushort webPort)
+	public Task DoWork(ServerOptions options)
 	{
+		ConsoleLog.WriteCyan($"Web Server Worker on port <{options.WebPort}>");
+
 		var applicationSettings = new ToolkitWebApplicationSettings
 								{
 									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR,
@@ -20,9 +23,9 @@ public class ServerWorker
 														Password = "basarab_cert"
 													},
 									ToolkitTokenParameters = new SpikeToolkitParameters(),
-									Port = webPort,
+									Port = options.WebPort,
 									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
-									CorsUri = new List<Uri> { new($"https://localhost:{webPort}") },
+									CorsUri = new List<Uri> { new($"https://localhost:{options.WebPort}") },
 									OnWebApplicationStarted = Started,
 								};
 
@@ -49,22 +52,7 @@ public class ServerWorker
 												return "ACK";
 											};
 
-		applicationSettings.ClientConnected += OnClientConnected;
-		applicationSettings.ClientDisconnected += OnClientDisconnected;
-
 		ToolkitWebApplication.Run(applicationSettings);
-	}
-
-	private Task OnClientConnected(ToolkitUser user, string connectionId)
-	{
-		ConsoleLog.WriteDarkCyan($"A client has connected: <{user.Name}> | <{connectionId}>");
-
-		return Task.CompletedTask;
-	}
-
-	private Task OnClientDisconnected(ToolkitUser user, string connectionId)
-	{
-		ConsoleLog.WriteDarkYellow($"A client has disconnected: <{user.Name}> | <{connectionId}>");
 
 		return Task.CompletedTask;
 	}
