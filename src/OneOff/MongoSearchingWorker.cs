@@ -1,7 +1,7 @@
 ﻿using FatCat.Fakes;
-using FatCat.Toolkit;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Data.Mongo;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace OneOff;
@@ -19,13 +19,28 @@ public enum SearchFlags
 
 public class TestSearchingObject : MongoObject
 {
+	private SearchFlags searchFlags;
+
 	public string FirstName { get; set; }
+
+	public long FlagsValue => (long)SearchFlags;
 
 	public string LastName { get; set; }
 
 	public int Number { get; set; }
 
-	public SearchFlags SearchFlags { get; set; }
+	public long SearchFlagNumber { get; set; }
+
+	public SearchFlags SearchFlags
+	{
+		get => searchFlags;
+		set
+		{
+			searchFlags = value;
+
+			SearchFlagNumber = (long)searchFlags;
+		}
+	}
 }
 
 public class MongoSearchingWorker : SpikeWorker
@@ -64,10 +79,18 @@ public class MongoSearchingWorker : SpikeWorker
 
 		ConsoleLog.WriteMagenta("Done creating objects");
 
-		var flagsToFind = SearchFlags.FirstName | SearchFlags.LastName;
-		
-		var firstObjects = mongo.Collection.Find(Builders<TestSearchingObject>.Filter.BitsAllSet(i => i.SearchFlags, (long)flagsToFind)).ToList();
-		
-		ConsoleLog.WriteMagenta($"Found {firstObjects.Count} objects with the flags {flagsToFind}");
+		var cursor = await mongo.Collection.FindAsync(i => true);
+
+		var allItems = await cursor.ToListAsync();
+
+		ConsoleLog.WriteCyan($"Found {allItems.Count} objects");
+
+		var flagsToFind = SearchFlags.FirstName | SearchFlags.LastName | SearchFlags.WalkWithLove;
+
+		var filter = Builders<TestSearchingObject>.Filter.BitsAnySet(i => i.SearchFlagNumber, (long)flagsToFind);
+
+		var firstObjects = mongo.Collection.Find(filter).ToList();
+
+		ConsoleLog.WriteMagenta($"Found {firstObjects.Count} objects with the flags {flagsToFind} | <{(long)flagsToFind}>");
 	}
 }
