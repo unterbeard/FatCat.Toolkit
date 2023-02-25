@@ -8,7 +8,7 @@ public static class Program
 {
 	private const int WebPort = 14555;
 
-	public static void Main(params string[] args)
+	public static async Task Main(params string[] args)
 	{
 		ConsoleLog.LogCallerInformation = true;
 
@@ -16,8 +16,12 @@ public static class Program
 		{
 			SystemScope.Initialize(new ContainerBuilder(), ScopeOptions.SetLifetimeScope);
 
-			if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase)) ConnectClient();
-			else RunServer();
+			// if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase)) ConnectClient();
+			// else RunServer();
+
+			var worker = SystemScope.Container.Resolve<MongoSearchingWorker>();
+
+			await worker.DoWork();
 		}
 		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}

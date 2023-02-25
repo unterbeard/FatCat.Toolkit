@@ -27,7 +27,8 @@ public class MongoConnection : IMongoConnection
 	public MongoConnection(List<Assembly> dataAssemblies)
 	{
 		ConventionRegistry.Register(nameof(IgnoreExtraElementsConvention), new ConventionPack { new IgnoreExtraElementsConvention(true) }, _ => true);
-		ConventionRegistry.Register(nameof(EnumRepresentationConvention), new ConventionPack { new EnumRepresentationConvention(BsonType.String) }, _ => true);
+		// Yse if want to represent enums as strings
+		// ConventionRegistry.Register(nameof(EnumRepresentationConvention), new ConventionPack { new EnumRepresentationConvention(BsonType.String) }, _ => true);
 
 		foreach (var assembly in dataAssemblies)
 		{

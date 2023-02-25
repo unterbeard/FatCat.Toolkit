@@ -16,7 +16,7 @@ public interface IDataRepository<T> where T : DataObject
 	Task<List<T>> GetAll();
 
 	Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter);
-
+	
 	Task<T?> GetByFilter(Expression<Func<T, bool>> filter);
 
 	Task<T?> GetFirst();

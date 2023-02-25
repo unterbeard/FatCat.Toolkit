@@ -7,6 +7,8 @@ namespace FatCat.Toolkit.Data.Mongo;
 
 public interface IMongoRepository<T> : IDataRepository<T> where T : MongoObject
 {
+	IMongoCollection<T> Collection { get; }
+
 	string DatabaseName { get; }
 
 	void Connect(string? connectionString = null, string? databaseName = null);
@@ -21,7 +23,7 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 	private readonly IMongoDataConnection mongoDataConnection;
 	private readonly IMongoNames mongoNames;
 
-	public IMongoCollection<T>? Collection { get; set; }
+	public IMongoCollection<T> Collection { get; set; }
 
 	public string DatabaseName { get; set; } = null!;
 
