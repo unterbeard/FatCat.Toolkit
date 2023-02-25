@@ -5,6 +5,7 @@ using FatCat.Fakes;
 using FatCat.Toolkit.Data.Mongo;
 using FluentAssertions;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace FatCat.Toolkit.Testing;
 
@@ -12,11 +13,13 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 {
 	private readonly IMongoRepository<T> repository;
 
+	public IMongoCollection<T> Collection { get; }
+
 	public EasyCapture<T> CreatedCapture { get; } = new();
 
-	public T CreatedItem { get; set; } = null!;
+	public T CreatedItem { get; set; }
 
-	public List<T> CreatedList { get; set; } = null!;
+	public List<T> CreatedList { get; set; }
 
 	public string DatabaseName => repository.DatabaseName;
 
