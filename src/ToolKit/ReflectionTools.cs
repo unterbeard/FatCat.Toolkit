@@ -9,6 +9,8 @@ public interface IReflectionTools
 	TAttribute? FindAttributeOnType<TAttribute>(Type type) where TAttribute : Attribute;
 
 	List<Type> FindTypesImplementing<TTypeImplementing>(List<Assembly> assemblies);
+
+	List<Assembly> GetDomainAssemblies();
 }
 
 public class ReflectionTools : IReflectionTools
@@ -28,4 +30,6 @@ public class ReflectionTools : IReflectionTools
 
 		return foundTypes;
 	}
+
+	public List<Assembly> GetDomainAssemblies() => AppDomain.CurrentDomain.GetAssemblies().ToList();
 }
