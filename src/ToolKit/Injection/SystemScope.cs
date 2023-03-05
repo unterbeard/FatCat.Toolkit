@@ -20,20 +20,9 @@ public interface ISystemScope
 	bool TryResolve<TItem>(out TItem instance) where TItem : class;
 }
 
-[Flags]
-public enum ScopeOptions
-{
-	None = 0,
-	SetLifetimeScope = 1,
-}
-
 public class SystemScope : ISystemScope
 {
-	private static readonly List<Assembly> defaultAssemblies = new()
-																{
-																	typeof(SystemScope).Assembly,
-																	Assembly.GetEntryAssembly()!
-																};
+	private static readonly List<Assembly> defaultAssemblies = new ReflectionTools().GetDomainAssemblies();
 
 	private static readonly Lazy<SystemScope> instance = new(() => new SystemScope());
 
