@@ -1,4 +1,5 @@
 using System.Net;
+using System.Web;
 using FatCat.Toolkit.Data.Mongo;
 using FatCat.Toolkit.Logging;
 using Flurl;
@@ -232,8 +233,18 @@ public class WebCaller : IWebCaller
 
 	private Url CreateRequest(string pathSegment)
 	{
-		var url = new Url(BaseUri);
+		var finalUri = new Uri(BaseUri, pathSegment);
 
-		return url.AppendPathSegment(pathSegment);
+		var queryString = finalUri.Query;
+
+		var queryDictionary = HttpUtility.ParseQueryString(queryString);
+
+		var callingUrl = finalUri.RemoveQuery();
+
+		if (queryDictionary.AllKeys.Length is not 0)
+			foreach (var key in queryDictionary.AllKeys)
+				callingUrl.SetQueryParam(key, queryDictionary[key]);
+
+		return callingUrl;
 	}
 }
