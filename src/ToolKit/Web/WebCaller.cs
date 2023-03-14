@@ -1,6 +1,5 @@
 using System.Net;
 using System.Web;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Data.Mongo;
 using FatCat.Toolkit.Logging;
 using Flurl;
@@ -236,23 +235,20 @@ public class WebCaller : IWebCaller
 
 	private Url CreateRequest(string pathSegment)
 	{
-		ConsoleLog.WriteCyan($"BaseUri := {BaseUri}");
+		var url = pathSegment.StartsWith("/") ? $"{BaseUri}{pathSegment}" : $"{BaseUri}/{pathSegment}";
 
-		var urlToUser = pathSegment.StartsWith("/") ? $"{BaseUri}{pathSegment}" : $"{BaseUri}/{pathSegment}";
+		var requestUri = new Uri(url);
 
-		var finalUri = new Uri(urlToUser);
-
-		ConsoleLog.WriteCyan($"FinalUri := {finalUri}");
-
-		var queryString = finalUri.Query;
+		var queryString = requestUri.Query;
 
 		var queryDictionary = HttpUtility.ParseQueryString(queryString);
 
-		var callingUrl = finalUri.RemoveQuery();
+		var callingUrl = requestUri.RemoveQuery();
 
 		if (queryDictionary.AllKeys.Length is not 0)
-			foreach (var key in queryDictionary.AllKeys)
-				callingUrl.SetQueryParam(key, queryDictionary[key]);
+		{
+			foreach (var key in queryDictionary.AllKeys) { callingUrl.SetQueryParam(key, queryDictionary[key]); }
+		}
 
 		logger.Debug($"Create Request for <{callingUrl}>");
 
