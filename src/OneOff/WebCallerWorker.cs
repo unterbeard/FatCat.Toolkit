@@ -14,9 +14,9 @@ public class WebCallerWorker : SpikeWorker
 	{
 		await Task.Delay(1.Seconds());
 
-		var webCaller = webCallerFactory.GetWebCaller(new Uri("https://localhost:14555"));
+		var webCaller = webCallerFactory.GetWebCaller(new Uri("https://localhost:14555/api"));
 
-		var endingPath = "api/Test/Search?firstname=david&lastname=basarab&count=43";
+		var endingPath = "Test/Search?firstname=david&lastname=basarab&count=43";
 
 		var result = await webCaller.Get(endingPath);
 
