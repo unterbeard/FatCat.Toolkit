@@ -1,4 +1,5 @@
 using System.Net;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Data.Mongo;
 using FatCat.Toolkit.Logging;
 using Flurl;
@@ -109,8 +110,12 @@ public class WebCaller : IWebCaller
 	{
 		try
 		{
+			ConsoleLog.WriteDarkYellow($"Getting from URL {url}");
+
 			var request = CreateRequest(url)
 				.WithTimeout(timeout);
+			
+			ConsoleLog.WriteDarkYellow($"     Final URL : {request.Url}");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -232,6 +237,9 @@ public class WebCaller : IWebCaller
 
 	private Url CreateRequest(string pathSegment)
 	{
+		ConsoleLog.WriteDarkYellow($"         BaseUri      : <{BaseUri}>");
+		ConsoleLog.WriteDarkYellow($"         PathSegment  : <{pathSegment}>");
+
 		var url = new Url(BaseUri);
 
 		return url.AppendPathSegment(pathSegment);

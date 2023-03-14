@@ -2,7 +2,6 @@
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Threading;
-using Humanizer;
 
 namespace OneOff;
 
@@ -22,8 +21,6 @@ public static class Program
 
 			thread.Run(async () =>
 						{
-							await Task.Delay(5.Seconds());
-
 							var worker = SystemScope.Container.Resolve<WebCallerWorker>();
 
 							await worker.DoWork();
