@@ -241,14 +241,13 @@ public class WebCaller : IWebCaller
 
 		var queryString = requestUri.Query;
 
-		var queryDictionary = HttpUtility.ParseQueryString(queryString);
+		var queries = HttpUtility.ParseQueryString(queryString);
 
 		var callingUrl = requestUri.RemoveQuery();
 
-		if (queryDictionary.AllKeys.Length is not 0)
-		{
-			foreach (var key in queryDictionary.AllKeys) { callingUrl.SetQueryParam(key, queryDictionary[key]); }
-		}
+		if (queries.AllKeys.Length is not 0)
+			foreach (var key in queries.AllKeys)
+				callingUrl.SetQueryParam(key, queries[key]);
 
 		logger.Debug($"Create Request for <{callingUrl}>");
 
