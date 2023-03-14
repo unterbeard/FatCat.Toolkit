@@ -1,4 +1,5 @@
 using System.Net;
+using System.Web;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Data.Mongo;
 using FatCat.Toolkit.Logging;
@@ -110,11 +111,9 @@ public class WebCaller : IWebCaller
 	{
 		try
 		{
-			ConsoleLog.WriteDarkYellow($"Getting from URL {url}");
-
 			var request = CreateRequest(url)
 				.WithTimeout(timeout);
-			
+
 			ConsoleLog.WriteDarkYellow($"     Final URL : {request.Url}");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
@@ -242,6 +241,24 @@ public class WebCaller : IWebCaller
 
 		var url = new Url(BaseUri);
 
-		return url.AppendPathSegment(pathSegment);
+		var finalUri = new Uri(BaseUri, pathSegment);
+
+		ConsoleLog.WriteDarkGreen($"Uri {finalUri.Query}");
+
+		var queryString = finalUri.Query;
+
+		var queryDictionary = HttpUtility.ParseQueryString(queryString);
+
+		queryDictionary.AllKeys.ToList().ForEach(key => { ConsoleLog.WriteDarkGreen($"Key {key} Value {queryDictionary[key]}"); });
+
+		ConsoleLog.WriteDarkYellow($"Getting from URL {url}");
+
+		var callingUrl = finalUri.RemoveQuery();
+
+		if (queryDictionary.AllKeys.Length is not 0)
+			foreach (var key in queryDictionary.AllKeys)
+				callingUrl.SetQueryParam(key, queryDictionary[key]);
+
+		return callingUrl;
 	}
 }
