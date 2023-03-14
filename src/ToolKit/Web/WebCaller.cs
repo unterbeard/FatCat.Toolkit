@@ -113,6 +113,8 @@ public class WebCaller : IWebCaller
 			var request = CreateRequest(url)
 				.WithTimeout(timeout);
 
+			logger.Debug($"Getting from Url <{request.Url}>");
+
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
 			var response = await request.GetAsync();
@@ -244,6 +246,8 @@ public class WebCaller : IWebCaller
 		if (queryDictionary.AllKeys.Length is not 0)
 			foreach (var key in queryDictionary.AllKeys)
 				callingUrl.SetQueryParam(key, queryDictionary[key]);
+
+		logger.Debug($"Create Request for <{callingUrl}>");
 
 		return callingUrl;
 	}
