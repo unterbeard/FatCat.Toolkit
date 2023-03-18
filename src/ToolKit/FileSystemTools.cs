@@ -20,6 +20,8 @@ public interface IFileSystemTools
 
 	Task<byte[]> ReadAllBytes(string path);
 
+	Task<List<string>> ReadAllLines(string path);
+
 	Task<string> ReadAllText(string path);
 
 	Task WriteAllBytes(string path, byte[] bytes);
@@ -75,6 +77,15 @@ public class FileSystemTools : IFileSystemTools
 	public bool FileExists(string path) => fileSystem.File.Exists(path);
 
 	public async Task<byte[]> ReadAllBytes(string path) => FileDoesNotExist(path) ? Array.Empty<byte>() : await fileSystem.File.ReadAllBytesAsync(path);
+
+	public async Task<List<string>> ReadAllLines(string path)
+	{
+		if (!fileSystem.File.Exists(path)) return new List<string>();
+
+		var lines = await fileSystem.File.ReadAllLinesAsync(path);
+
+		return lines.ToList();
+	}
 
 	public async Task<string> ReadAllText(string path) => FileDoesNotExist(path) ? string.Empty : await fileSystem.File.ReadAllTextAsync(path);
 
