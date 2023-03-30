@@ -16,9 +16,18 @@ public class DeleteDirectoryTests : FileToolTests
 	[Fact]
 	public void DeleteDirectoryIfFound()
 	{
+		fileTools.DeleteDirectory(directoryPath, false);
+
+		A.CallTo(() => fileSystem.Directory.Delete(directoryPath, false))
+		.MustHaveHappened();
+	}
+
+	[Fact]
+	public void DeleteTheDirectoryRecursivelyIfFound()
+	{
 		fileTools.DeleteDirectory(directoryPath);
 
-		A.CallTo(() => fileSystem.Directory.Delete(directoryPath))
+		A.CallTo(() => fileSystem.Directory.Delete(directoryPath, true))
 		.MustHaveHappened();
 	}
 
