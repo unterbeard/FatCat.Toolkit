@@ -6,7 +6,7 @@ public interface IFileSystemTools
 {
 	Task AppendToFile(string path, string text);
 
-	void DeleteDirectory(string path);
+	void DeleteDirectory(string path, bool recursive = true);
 
 	bool DeleteFile(string path);
 
@@ -42,9 +42,9 @@ public class FileSystemTools : IFileSystemTools
 		await fileSystem.File.AppendAllTextAsync(path, text);
 	}
 
-	public void DeleteDirectory(string path)
+	public void DeleteDirectory(string path, bool recursive = true)
 	{
-		if (DirectoryExists(path)) fileSystem.Directory.Delete(path);
+		if (DirectoryExists(path)) fileSystem.Directory.Delete(path, recursive);
 	}
 
 	public bool DeleteFile(string path)
