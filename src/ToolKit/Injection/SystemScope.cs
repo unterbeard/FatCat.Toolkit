@@ -2,6 +2,7 @@
 using System.Reflection;
 using Autofac;
 using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Extensions;
 
 #pragma warning disable CS8767
 

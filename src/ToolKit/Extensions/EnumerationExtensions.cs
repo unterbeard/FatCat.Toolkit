@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace FatCat.Toolkit;
+namespace FatCat.Toolkit.Extensions;
 
 public static class EnumerationExtensions
 {

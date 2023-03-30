@@ -1,4 +1,5 @@
 ﻿using FatCat.Toolkit;
+using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Web.Api;
 using FluentAssertions;
 using Xunit;

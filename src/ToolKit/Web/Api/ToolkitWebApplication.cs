@@ -1,4 +1,5 @@
 ﻿using Autofac.AspNetCore.Extensions;
+using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Injection;
 using Microsoft.AspNetCore.Hosting;
 
