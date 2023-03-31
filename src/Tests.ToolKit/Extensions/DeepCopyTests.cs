@@ -20,14 +20,16 @@ public class DeepCopyTests
 		copy
 			.Should()
 			.BeEquivalentTo(original);
+
+		copy.SubObject
+			.Should()
+			.BeNull();
 	}
-	
+
 	[Fact]
-	public void CanDeepCopyWithASubSubObject()
+	public void CanDeepCopyAnObject()
 	{
 		var original = Faker.Create<ObjectToCopy>();
-
-		original.SubObject.SubSub = null;
 
 		var copy = original.DeepCopy();
 
@@ -37,9 +39,11 @@ public class DeepCopyTests
 	}
 
 	[Fact]
-	public void CanDeepCopyAnObject()
+	public void CanDeepCopyWithASubSubObject()
 	{
 		var original = Faker.Create<ObjectToCopy>();
+
+		original.SubObject.SubSub = null;
 
 		var copy = original.DeepCopy();
 
