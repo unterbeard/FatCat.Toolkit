@@ -17,6 +17,7 @@ public class JsonOperations : IJsonOperations
 	public static JsonSerializerSettings JsonSettings { get; } = new()
 																{
 																	TypeNameHandling = TypeNameHandling.All,
+																	NullValueHandling = NullValueHandling.Ignore,
 																	Converters = new List<JsonConverter>
 																				{
 																					new StringEnumConverter(),
