@@ -18,6 +18,8 @@ public interface IFileSystemTools
 
 	bool FileExists(string path);
 
+	List<string> GetDirectories(string path);
+
 	Task<byte[]> ReadAllBytes(string path);
 
 	Task<List<string>> ReadAllLines(string path);
@@ -75,6 +77,15 @@ public class FileSystemTools : IFileSystemTools
 	}
 
 	public bool FileExists(string path) => fileSystem.File.Exists(path);
+
+	public List<string> GetDirectories(string path)
+	{
+		if (!DirectoryExists(path)) return new();
+
+		var directories = fileSystem.Directory.GetDirectories(path);
+
+		return directories.ToList();
+	}
 
 	public async Task<byte[]> ReadAllBytes(string path) => FileDoesNotExist(path) ? Array.Empty<byte>() : await fileSystem.File.ReadAllBytesAsync(path);
 
