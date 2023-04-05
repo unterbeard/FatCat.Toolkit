@@ -20,6 +20,8 @@ public interface IFileSystemTools
 
 	List<string> GetDirectories(string path);
 
+	bool MoveDirectory(string sourceDirectory, string destinationDirectory);
+
 	Task<byte[]> ReadAllBytes(string path);
 
 	Task<List<string>> ReadAllLines(string path);
@@ -85,6 +87,15 @@ public class FileSystemTools : IFileSystemTools
 		var directories = fileSystem.Directory.GetDirectories(path);
 
 		return directories.ToList();
+	}
+
+	public bool MoveDirectory(string sourceDirectory, string destinationDirectory)
+	{
+		if (!DirectoryExists(sourceDirectory)) return false;
+
+		fileSystem.Directory.Move(sourceDirectory, destinationDirectory);
+
+		return true;
 	}
 
 	public async Task<byte[]> ReadAllBytes(string path) => FileDoesNotExist(path) ? Array.Empty<byte>() : await fileSystem.File.ReadAllBytesAsync(path);
