@@ -22,6 +22,8 @@ public interface IFileSystemTools
 
 	bool MoveDirectory(string sourceDirectory, string destinationDirectory);
 
+	bool MoveFile(string sourcePath, string sourceDestination);
+
 	Task<byte[]> ReadAllBytes(string path);
 
 	Task<List<string>> ReadAllLines(string path);
@@ -94,6 +96,15 @@ public class FileSystemTools : IFileSystemTools
 		if (!DirectoryExists(sourceDirectory)) return false;
 
 		fileSystem.Directory.Move(sourceDirectory, destinationDirectory);
+
+		return true;
+	}
+
+	public bool MoveFile(string sourcePath, string sourceDestination)
+	{
+		if (!FileExists(sourcePath)) return false;
+
+		fileSystem.File.Move(sourcePath, sourceDestination);
 
 		return true;
 	}
