@@ -1,6 +1,5 @@
 using FatCat.Fakes;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace SampleDocker;
 
@@ -21,10 +20,6 @@ public class WeatherForecastController : ControllerBase
 		"Sweltering",
 		"Scorching"
 	};
-
-	private readonly ILogger<WeatherForecastController> _logger;
-
-	public WeatherForecastController(ILogger<WeatherForecastController> logger) => _logger = logger;
 
 	[HttpGet(Name = "GetWeatherForecast")]
 	public IEnumerable<WeatherForecast> Get()
