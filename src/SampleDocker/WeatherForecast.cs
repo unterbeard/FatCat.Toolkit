@@ -12,6 +12,8 @@ public class WeatherForecast : EqualObject
 
 	public string SecondMetaData { get; set; }
 
+	public string SomeMessage { get; set; }
+
 	public string Summary { get; set; }
 
 	public int TemperatureC { get; set; }

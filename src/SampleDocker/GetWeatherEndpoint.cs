@@ -1,4 +1,5 @@
 using FatCat.Fakes;
+using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Web;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -22,12 +23,19 @@ public class GetWeatherEndpoint : Endpoint
 	};
 
 	private readonly IExampleWorker exampleWorker;
+	private readonly ISystemScope scope;
 
-	public GetWeatherEndpoint(IExampleWorker exampleWorker) => this.exampleWorker = exampleWorker;
+	public GetWeatherEndpoint(IExampleWorker exampleWorker, ISystemScope scope)
+	{
+		this.exampleWorker = exampleWorker;
+		this.scope = scope;
+	}
 
 	[HttpGet("api/weather")]
 	public WebResult GetWeather()
 	{
+		var secondInjectedThing = scope.Resolve<ISecondInjectedThing>();
+
 		var items = Enumerable.Range(1, 5)
 							.Select(index => new WeatherForecast
 											{
@@ -36,6 +44,7 @@ public class GetWeatherEndpoint : Endpoint
 												Summary = Summaries[Random.Shared.Next(Summaries.Length)],
 												MetaData = $"This has been added by me David Basarab - <{Faker.RandomInt()}>",
 												SecondMetaData = $"Just more fake goodness - <{Faker.RandomInt()}>",
+												SomeMessage = $"{exampleWorker.GetMessage()} | <{secondInjectedThing.GetSomeNumber()}>"
 											})
 							.ToArray();
 
