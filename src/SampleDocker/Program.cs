@@ -23,7 +23,7 @@ public static class Program
 																p.AllowAnyOrigin()));
 
 		// Call UseServiceProviderFactory on the Host sub property 
-		builder.Host.UseServiceProviderFactory(new MyAutofacServiceProviderFactory());
+		builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 		// Call ConfigureContainer on the Host sub property 
 		// Register services directly with Autofac here. Don't
