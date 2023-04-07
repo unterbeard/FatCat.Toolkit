@@ -23,7 +23,7 @@ public static class ToolkitWebApplication
 
 									options.ListenAnyIP(Settings.Port, o =>
 																		{
-																			if (Settings.Options.IsFlagSet(WebApplicationOptions.UseHttps)) o.UseHttps(Settings.TlsCertificate?.Location ?? throw new InvalidOperationException(), Settings.TlsCertificate.Password);
+																			// if (Settings.Options.IsFlagSet(WebApplicationOptions.UseHttps)) o.UseHttps(Settings.TlsCertificate?.Location ?? throw new InvalidOperationException(), Settings.TlsCertificate.Password);
 																		});
 								})
 					.UseStartup(typeof(ApplicationStartUp))

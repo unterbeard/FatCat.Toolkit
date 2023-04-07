@@ -1,6 +1,8 @@
+using FatCat.Toolkit;
+
 namespace SampleDocker;
 
-public class WeatherForecast
+public class WeatherForecast : EqualObject
 {
 	public DateTime Date { get; set; }
 
