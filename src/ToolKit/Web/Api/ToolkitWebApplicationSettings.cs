@@ -6,6 +6,8 @@ namespace FatCat.Toolkit.Web.Api;
 
 public class ToolkitWebApplicationSettings : EqualObject
 {
+	public string[] Args { get; set; } = Array.Empty<string>();
+
 	public List<Assembly> ContainerAssemblies { get; set; } = new();
 
 	public List<Uri> CorsUri { get; set; } = new();

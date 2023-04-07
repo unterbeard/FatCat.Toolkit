@@ -1,9 +1,12 @@
 ﻿using System.Reflection;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using FatCat.Toolkit.Injection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+using System.Security.Cryptography.X509Certificates;
+using FatCat.Fakes;
+using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Web.Api;
+using FatCat.Toolkit.Web.Api.SignalR;
+using Humanizer;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace SampleDocker;
 
@@ -11,38 +14,75 @@ public static class Program
 {
 	public static void Main(params string[] args)
 	{
-		var builder = WebApplication.CreateBuilder(args);
+		var applicationSettings = new ToolkitWebApplicationSettings
+								{
+									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR,
+									ToolkitTokenParameters = new SpikeToolkitParameters(),
+									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
+									OnWebApplicationStarted = Started,
+									Args = args
+								};
 
-		// Add services to the container.
-		builder.Services.AddControllers();
+		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
+														{
+															ConsoleLog.WriteMagenta($"Got data buffer message: {JsonConvert.SerializeObject(message)}");
+															ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
 
-		builder.Services.AddEndpointsApiExplorer();
+															await Task.CompletedTask;
 
-		builder.Services.AddCors(options =>
-									options.AddDefaultPolicy(p =>
-																p.AllowAnyOrigin()));
+															var responseMessage = $"BufferResponse {Faker.RandomString()}";
 
-		// Call UseServiceProviderFactory on the Host sub property 
-		builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-		
-		// Call ConfigureContainer on the Host sub property 
-		// Register services directly with Autofac here. Don't
-		// call builder.Populate(), that happens in AutofacServiceProviderFactory.
-		builder.Host.ConfigureContainer<ContainerBuilder>((a, b) => SystemScope.Initialize(b, new List<Assembly> { typeof(Program).Assembly }));
+															ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
 
-		var app = builder.Build();
+															return responseMessage;
+														};
 
-		app.UseHttpsRedirection();
+		applicationSettings.ClientMessage += async message =>
+											{
+												await Task.CompletedTask;
 
-		// app.UseHttpsRedirection();
-		app.UseCors();
+												ConsoleLog.WriteDarkCyan($"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>");
 
-		app.UseAuthorization();
+												return "ACK";
+											};
 
-		app.MapControllers();
+		applicationSettings.ClientConnected += OnClientConnected;
+		applicationSettings.ClientDisconnected += OnClientDisconnected;
 
-		SystemScope.Container.LifetimeScope = app.Services.GetAutofacRoot();
+		ToolkitWebApplication.Run(applicationSettings);
+	}
 
-		app.Run();
+	private static Task OnClientConnected(ToolkitUser user, string connectionId)
+	{
+		ConsoleLog.WriteDarkCyan($"A client has connected: <{user.Name}> | <{connectionId}>");
+
+		return Task.CompletedTask;
+	}
+
+	private static Task OnClientDisconnected(ToolkitUser user, string connectionId)
+	{
+		ConsoleLog.WriteDarkYellow($"A client has disconnected: <{user.Name}> | <{connectionId}>");
+
+		return Task.CompletedTask;
+	}
+
+	private static void Started() => ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+}
+
+public class SpikeToolkitParameters : IToolkitTokenParameters
+{
+	public TokenValidationParameters Get()
+	{
+		ConsoleLog.WriteCyan("Getting token parameters");
+
+		var cert = new X509Certificate2(@"C:\DevelopmentCert\DevelopmentCert.pfx", "basarab_cert");
+
+		return new TokenValidationParameters
+				{
+					IssuerSigningKey = new X509SecurityKey(cert),
+					ValidAudience = "https://foghaze.com/Brume",
+					ValidIssuer = "FogHaze",
+					ClockSkew = 10.Seconds()
+				};
 	}
 }

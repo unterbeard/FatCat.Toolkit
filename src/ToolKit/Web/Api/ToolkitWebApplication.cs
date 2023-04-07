@@ -1,7 +1,8 @@
-﻿using Autofac.AspNetCore.Extensions;
-using FatCat.Toolkit.Extensions;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Injection;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FatCat.Toolkit.Web.Api;
 
@@ -15,20 +16,38 @@ public static class ToolkitWebApplication
 
 		SystemScope.ContainerAssemblies = settings.ContainerAssemblies;
 
-		var host = new WebHostBuilder()
-					.UseAutofac()
-					.UseKestrel(options =>
-								{
-									options.AllowSynchronousIO = false;
+		var builder = WebApplication.CreateBuilder(settings.Args);
 
-									options.ListenAnyIP(Settings.Port, o =>
-																		{
-																			// if (Settings.Options.IsFlagSet(WebApplicationOptions.UseHttps)) o.UseHttps(Settings.TlsCertificate?.Location ?? throw new InvalidOperationException(), Settings.TlsCertificate.Password);
-																		});
-								})
-					.UseStartup(typeof(ApplicationStartUp))
-					.Build();
+		// Add services to the container.
+		builder.Services.AddControllers();
 
-		host.Run();
+		builder.Services.AddEndpointsApiExplorer();
+
+		builder.Services.AddCors(options =>
+									options.AddDefaultPolicy(p =>
+																p.AllowAnyOrigin()));
+
+		// Call UseServiceProviderFactory on the Host sub property 
+		builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+		// Call ConfigureContainer on the Host sub property 
+		// Register services directly with Autofac here. Don't
+		// call builder.Populate(), that happens in AutofacServiceProviderFactory.
+		builder.Host.ConfigureContainer<ContainerBuilder>((a, b) => SystemScope.Initialize(b, Settings.ContainerAssemblies));
+
+		var app = builder.Build();
+
+		app.UseHttpsRedirection();
+
+		// app.UseHttpsRedirection();
+		app.UseCors();
+
+		app.UseAuthorization();
+
+		app.MapControllers();
+
+		SystemScope.Container.LifetimeScope = app.Services.GetAutofacRoot();
+
+		app.Run();
 	}
 }
