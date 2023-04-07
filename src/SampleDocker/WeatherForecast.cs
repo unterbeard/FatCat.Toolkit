@@ -8,7 +8,7 @@ public class WeatherForecast
 
 	public string Name { get; set; }
 
-	public string? Summary { get; set; }
+	public string Summary { get; set; }
 
 	public int TemperatureC { get; set; }
 
