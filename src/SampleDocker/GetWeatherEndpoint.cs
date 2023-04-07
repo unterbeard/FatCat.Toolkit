@@ -21,6 +21,10 @@ public class GetWeatherEndpoint : Endpoint
 		"Scorching"
 	};
 
+	private readonly IExampleWorker exampleWorker;
+
+	public GetWeatherEndpoint(IExampleWorker exampleWorker) => this.exampleWorker = exampleWorker;
+
 	[HttpGet("api/weather")]
 	public WebResult GetWeather()
 	{

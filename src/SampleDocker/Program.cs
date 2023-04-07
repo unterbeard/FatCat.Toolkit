@@ -1,10 +1,6 @@
-﻿using System.Reflection;
-using Autofac.AspNetCore.Extensions;
-using FatCat.Fakes;
-using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Web.Api;
-using Microsoft.AspNetCore.Hosting;
-using Newtonsoft.Json;
+﻿using Autofac.AspNetCore.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SampleDocker;
 
@@ -12,40 +8,28 @@ public static class Program
 {
 	public static void Main(params string[] args)
 	{
-		var applicationSettings = new ToolkitWebApplicationSettings
-								{
-									Options = WebApplicationOptions.UseSignalR,
-									Port = 5000,
-									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
-									CorsUri = new List<Uri> { new($"https://localhost:{5000}") },
-								};
+		var builder = WebApplication.CreateBuilder(args);
 
-		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
-														{
-															ConsoleLog.WriteMagenta($"Got data buffer message: {JsonConvert.SerializeObject(message)}");
-															ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
+		// Add services to the container.
+		builder.Services.AddControllers();
 
-															await Task.CompletedTask;
+		builder.Services.AddEndpointsApiExplorer();
 
-															var responseMessage = $"BufferResponse {Faker.RandomString()}";
+		builder.Services.AddCors(options =>
+									options.AddDefaultPolicy(p =>
+																p.AllowAnyOrigin()));
 
-															ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
+		builder.Services.AddAutofac();
 
-															return responseMessage;
-														};
+		var app = builder.Build();
 
-		applicationSettings.ClientMessage += async message =>
-											{
-												await Task.CompletedTask;
+		// app.UseHttpsRedirection();
+		app.UseCors();
 
-												ConsoleLog.WriteDarkCyan($"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>");
+		app.UseAuthorization();
 
-												return "ACK";
-											};
+		app.MapControllers();
 
-		// applicationSettings.ClientConnected += OnClientConnected;
-		// applicationSettings.ClientDisconnected += OnClientDisconnected;
-
-		ToolkitWebApplication.Run(applicationSettings);
+		app.Run();
 	}
 }
