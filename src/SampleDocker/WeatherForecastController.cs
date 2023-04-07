@@ -30,7 +30,8 @@ public class WeatherForecastController : ControllerBase
 											Date = DateTime.Now.AddDays(index),
 											TemperatureC = Random.Shared.Next(-20, 55),
 											Summary = Summaries[Random.Shared.Next(Summaries.Length)],
-											MetaData = $"This has been added by me David Basarab - <{Faker.RandomInt()}>"
+											MetaData = $"This has been added by me David Basarab - <{Faker.RandomInt()}>",
+											SecondMetaData = $"Just more fake goodness - <{Faker.RandomInt()}>",
 										})
 						.ToArray();
 	}
