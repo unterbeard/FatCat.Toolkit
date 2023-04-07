@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneOff", "OneOff\OneOff.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxySpike", "ProxySpike\ProxySpike.csproj", "{EE9E8D43-A853-4941-B983-34B9625500DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleDocker", "SampleDocker\SampleDocker.csproj", "{69B8BA08-C5C3-4AB4-9FB5-FAE8C3C273CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{EE9E8D43-A853-4941-B983-34B9625500DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE9E8D43-A853-4941-B983-34B9625500DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE9E8D43-A853-4941-B983-34B9625500DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69B8BA08-C5C3-4AB4-9FB5-FAE8C3C273CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69B8BA08-C5C3-4AB4-9FB5-FAE8C3C273CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69B8BA08-C5C3-4AB4-9FB5-FAE8C3C273CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69B8BA08-C5C3-4AB4-9FB5-FAE8C3C273CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
