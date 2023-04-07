@@ -24,13 +24,15 @@ public static class Program
 
 		// Call UseServiceProviderFactory on the Host sub property 
 		builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-
+		
 		// Call ConfigureContainer on the Host sub property 
 		// Register services directly with Autofac here. Don't
 		// call builder.Populate(), that happens in AutofacServiceProviderFactory.
 		builder.Host.ConfigureContainer<ContainerBuilder>((a, b) => SystemScope.Initialize(b, new List<Assembly> { typeof(Program).Assembly }));
 
 		var app = builder.Build();
+
+		app.UseHttpsRedirection();
 
 		// app.UseHttpsRedirection();
 		app.UseCors();
