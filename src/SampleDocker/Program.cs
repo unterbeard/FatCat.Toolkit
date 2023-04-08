@@ -15,11 +15,6 @@ public static class Program
 {
 	public static void Main(params string[] args)
 	{
-		var environmentRepository = new EnvironmentRepository();
-
-		environmentRepository.Set("MongoConnectionString", "mongodb+srv://dbasarab617:TSsKClHCCbWo3iJy@basarabcluster.jlophzn.mongodb.net/");
-		environmentRepository.Set("MongoDatabaseName", "SampleDock");
-		
 		var applicationSettings = new ToolkitWebApplicationSettings
 								{
 									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR,
