@@ -8,7 +8,7 @@ public class WeatherForecast : EqualObject
 
 	public string MetaData { get; set; }
 
-	public string Name { get; set; }
+	public string Name { get; set; } = "This should now show up.  Because I told it too at 8:13 pm";
 
 	public string SecondMetaData { get; set; }
 
