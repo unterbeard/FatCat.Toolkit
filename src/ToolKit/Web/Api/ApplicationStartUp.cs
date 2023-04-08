@@ -10,12 +10,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +37,7 @@ internal class ApplicationStartUp
 
 		app.UseRouting();
 
-		app.UseCors("CorsPolicy");
+		app.UseCors();
 
 		if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.UseAuthentication))
 		{
@@ -57,9 +55,7 @@ internal class ApplicationStartUp
 
 		SetUpSignalR(app);
 
-		var thread = SystemScope.Container.Resolve<IThread>();
-
-		thread.Run(() => ToolkitWebApplication.Settings.OnWebApplicationStarted?.Invoke());
+		
 	}
 
 	public void ConfigureContainer(ContainerBuilder builder) => SystemScope.Initialize(builder, ToolkitWebApplication.Settings.ContainerAssemblies);
@@ -68,10 +64,17 @@ internal class ApplicationStartUp
 	{
 		try
 		{
+			// Add services to the container.
+			services.AddControllers();
+
+			services.AddEndpointsApiExplorer();
+
+			services.AddCors(options =>
+								options.AddDefaultPolicy(p =>
+															p.AllowAnyOrigin()));
+
 			services.AddHttpContextAccessor();
 			ConfigureControllers(services);
-			AddCors(services);
-			services.AddHttpClient();
 
 			AddAuthentication(services);
 
@@ -126,44 +129,6 @@ internal class ApplicationStartUp
 							});
 	}
 
-	private void AddCors(IServiceCollection services)
-	{
-		services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
-
-		services.AddCors(o =>
-						{
-							o.AddPolicy("CorsPolicy", configurePolicy =>
-													{
-														foreach (var corsUri in ToolkitWebApplication.Settings.CorsUri) AddCorsForUri(corsUri, configurePolicy);
-													});
-						});
-	}
-
-	private static void AddCorsForUri(Uri uri, CorsPolicyBuilder builder)
-	{
-		var applicationTools = new ApplicationTools();
-
-		var originTemplate = $"{uri.Scheme}://+:{uri.Port}";
-
-		var localHostCors = originTemplate.Replace("+", "localhost");
-		var machineCors = originTemplate.Replace("+", Environment.MachineName.ToLower());
-		var domainCors = originTemplate.Replace("+", applicationTools.GetHost().ToLower());
-
-		var originsToAdd = new List<string>
-							{
-								localHostCors,
-								machineCors,
-								domainCors
-							};
-
-		builder
-			.WithOrigins(originsToAdd.ToArray())
-			.SetIsOriginAllowed(_ => true)
-			.AllowAnyMethod()
-			.AllowAnyHeader()
-			.AllowCredentials();
-	}
-
 	private async Task CaptureMiddlewareExceptions(HttpContext context, Func<Task> next)
 	{
 		try { await next().ConfigureAwait(false); }
@@ -189,22 +154,22 @@ internal class ApplicationStartUp
 
 	private void ConfigureControllers(IServiceCollection services)
 	{
-		var builder = services.AddControllers(config =>
-											{
-												if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.UseAuthentication))
-												{
-													var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-																.RequireAuthenticatedUser()
-																.Build();
+		services.AddControllers(config =>
+								{
+									if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.UseAuthentication))
+									{
+										var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+													.RequireAuthenticatedUser()
+													.Build();
 
-													config.Filters.Add(new AuthorizeFilter(policy));
-												}
-											})
-							.AddNewtonsoftJson(build => { build.SerializerSettings.Converters.Add(new StringEnumConverter()); });
+										config.Filters.Add(new AuthorizeFilter(policy));
+									}
+								})
+				.AddNewtonsoftJson(build => { build.SerializerSettings.Converters.Add(new StringEnumConverter()); });
 
-		var applicationParts = builder.PartManager.ApplicationParts;
-
-		foreach (var assembly in ToolkitWebApplication.Settings.ContainerAssemblies) applicationParts.Add(new AssemblyPart(assembly));
+		// var applicationParts = builder.PartManager.ApplicationParts;
+		//
+		// foreach (var assembly in ToolkitWebApplication.Settings.ContainerAssemblies) applicationParts.Add(new AssemblyPart(assembly));
 	}
 
 	private void SetUpSignalR(IApplicationBuilder app)

@@ -1,8 +1,11 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.Threading;
+using Humanizer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace FatCat.Toolkit.Web.Api;
 
@@ -18,17 +21,12 @@ public static class ToolkitWebApplication
 
 		var builder = WebApplication.CreateBuilder(settings.Args);
 
-		// Add services to the container.
-		builder.Services.AddControllers();
-
-		builder.Services.AddEndpointsApiExplorer();
-
-		builder.Services.AddCors(options =>
-									options.AddDefaultPolicy(p =>
-																p.AllowAnyOrigin()));
-
 		// Call UseServiceProviderFactory on the Host sub property 
 		builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+		var applicationStartUp = new ApplicationStartUp();
+
+		applicationStartUp.ConfigureServices(builder.Services);
 
 		// Call ConfigureContainer on the Host sub property 
 		// Register services directly with Autofac here. Don't
@@ -37,7 +35,7 @@ public static class ToolkitWebApplication
 
 		var app = builder.Build();
 
-		app.UseHttpsRedirection();
+		applicationStartUp.Configure(app, app.Environment, app.Services.GetRequiredService<ILoggerFactory>());
 
 		// app.UseHttpsRedirection();
 		app.UseCors();
@@ -47,6 +45,15 @@ public static class ToolkitWebApplication
 		app.MapControllers();
 
 		SystemScope.Container.LifetimeScope = app.Services.GetAutofacRoot();
+
+		var thread = SystemScope.Container.Resolve<IThread>();
+
+		thread.Run(async () =>
+					{
+						await thread.Sleep(300.Milliseconds());
+
+						Settings.OnWebApplicationStarted?.Invoke();
+					});
 
 		app.Run();
 	}
