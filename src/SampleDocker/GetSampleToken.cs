@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web;
 using Microsoft.AspNetCore.Authorization;
@@ -34,7 +34,7 @@ public class GetSampleToken : Endpoint
 
 	private SecurityTokenDescriptor GetSecurityTokenDescriptorCommon(ClaimsIdentity user)
 	{
-		var cert = new X509Certificate2(@"C:\DevelopmentCert\DevelopmentCert.pfx", "basarab_cert");
+		var key = new RsaSecurityKey(RSA.Create(2048));
 
 		return new SecurityTokenDescriptor
 				{
@@ -43,7 +43,7 @@ public class GetSampleToken : Endpoint
 					Audience = "https://foghaze.com/Brume",
 					Issuer = "FogHaze",
 					NotBefore = DateTime.UtcNow.AddSeconds(-10),
-					SigningCredentials = new X509SigningCredentials(cert)
+					SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSsaPssSha256)
 				};
 	}
 }
