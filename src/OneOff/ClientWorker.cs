@@ -44,30 +44,30 @@ public class ClientWorker
 						ConsoleLog.Write($"Using Token := {testToken}");
 
 						// Secure Url
-						var hubUrl = $"https://localhost:{webPort}/api/events?access_token={testToken}";
-
-						// Open Url
-						// var hubUrl = $"https://localhost:{webPort}/api/events";
-
-						var result = await hubFactory.TryToConnectToClient(hubUrl);
-
-						if (!result.Connected)
-						{
-							ConsoleLog.WriteRed($"Could not connect too <{hubUrl}>");
-
-							return;
-						}
-
-						var hubConnection = result.Connection;
-
-						hubConnection.ServerMessage += OnServerMessage;
-						hubConnection.ServerDataBufferMessage += OnDataBufferFromServer;
-
-						await thread.Sleep(1.Seconds());
-
-						ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
-
-						await SendDataBuffer(hubConnection);
+						// var hubUrl = $"https://localhost:{webPort}/api/events?access_token={testToken}";
+						//
+						// // Open Url
+						// // var hubUrl = $"https://localhost:{webPort}/api/events";
+						//
+						// var result = await hubFactory.TryToConnectToClient(hubUrl);
+						//
+						// if (!result.Connected)
+						// {
+						// 	ConsoleLog.WriteRed($"Could not connect too <{hubUrl}>");
+						//
+						// 	return;
+						// }
+						//
+						// var hubConnection = result.Connection;
+						//
+						// hubConnection.ServerMessage += OnServerMessage;
+						// hubConnection.ServerDataBufferMessage += OnDataBufferFromServer;
+						//
+						// await thread.Sleep(1.Seconds());
+						//
+						// ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
+						//
+						// await SendDataBuffer(hubConnection);
 					});
 	}
 
