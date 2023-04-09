@@ -2,7 +2,7 @@
 using System.Security.Cryptography.X509Certificates;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Data;
+using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Web.Api;
 using FatCat.Toolkit.Web.Api.SignalR;
 using Humanizer;
@@ -13,9 +13,33 @@ namespace SampleDocker;
 
 public static class Program
 {
-	public static void Main(params string[] args)
+	public static void Main(params string[] args) { StartWebServer(args); }
+
+	private static Task OnClientConnected(ToolkitUser user, string connectionId)
 	{
-		StartWebServer(args);
+		ConsoleLog.WriteDarkCyan($"A client has connected: <{user.Name}> | <{connectionId}>");
+
+		return Task.CompletedTask;
+	}
+
+	private static Task OnClientDisconnected(ToolkitUser user, string connectionId)
+	{
+		ConsoleLog.WriteDarkYellow($"A client has disconnected: <{user.Name}> | <{connectionId}>");
+
+		return Task.CompletedTask;
+	}
+
+	private static void Started()
+	{
+		try
+		{
+			ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+
+			var testingEndpoint = SystemScope.Container.Resolve<GetStorageItemsEndpoint>();
+
+			testingEndpoint.GetStorageItems().Wait();
+		}
+		catch (Exception e) { ConsoleLog.WriteException(e); }
 	}
 
 	private static void StartWebServer(string[] args)
@@ -56,27 +80,6 @@ public static class Program
 		applicationSettings.ClientDisconnected += OnClientDisconnected;
 
 		ToolkitWebApplication.Run(applicationSettings);
-	}
-
-	private static Task OnClientConnected(ToolkitUser user, string connectionId)
-	{
-		ConsoleLog.WriteDarkCyan($"A client has connected: <{user.Name}> | <{connectionId}>");
-
-		return Task.CompletedTask;
-	}
-
-	private static Task OnClientDisconnected(ToolkitUser user, string connectionId)
-	{
-		ConsoleLog.WriteDarkYellow($"A client has disconnected: <{user.Name}> | <{connectionId}>");
-
-		return Task.CompletedTask;
-	}
-
-	private static void Started()
-	{
-		ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
-		
-		
 	}
 }
 
