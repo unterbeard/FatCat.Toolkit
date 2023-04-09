@@ -15,6 +15,11 @@ public static class Program
 {
 	public static void Main(params string[] args)
 	{
+		StartWebServer(args);
+	}
+
+	private static void StartWebServer(string[] args)
+	{
 		var applicationSettings = new ToolkitWebApplicationSettings
 								{
 									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR,
@@ -67,7 +72,12 @@ public static class Program
 		return Task.CompletedTask;
 	}
 
-	private static void Started() => ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+	private static void Started()
+	{
+		ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+		
+		
+	}
 }
 
 public class SpikeToolkitParameters : IToolkitTokenParameters
