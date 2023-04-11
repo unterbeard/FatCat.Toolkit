@@ -1,10 +1,11 @@
-﻿using Azure.Storage.Blobs;
+﻿using Azure.Identity;
+using Azure.Storage.Blobs;
 using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 
 namespace SampleDocker;
 
@@ -19,24 +20,26 @@ public class GetStorageItemsEndpoint : Endpoint
 	[HttpPost("api/store")]
 	public async Task<WebResult> GetStorageItems()
 	{
-		var blobUrl = configuration["BlobUrl"];
+		BlobServiceClient blobServiceClient;
 
-		var blobConnectionString = configuration.GetConnectionString("BlobConnection");
+		var inCloud = configuration["InCloud"].ToBool();
 
-		ConsoleLog.WriteCyan(blobConnectionString);
+		if (inCloud)
+		{
+			var blobUrl = configuration["BlobUrl"];
 
-		var mongoConnectionString = configuration.GetConnectionString("Mongo_Custom");
+			blobServiceClient = new BlobServiceClient(new Uri(blobUrl), new DefaultAzureCredential());
+		}
+		else
+		{
+			var blobConnectionString = configuration.GetConnectionString("BlobConnection");
 
-		var temp = configuration.GetSection("ConnectionStrings");
+			ConsoleLog.WriteCyan(blobConnectionString);
 
-		var kids = temp.GetChildren();
+			// TODO: Replace <storage-account-name> with your actual storage account name
 
-		ConsoleLog.WriteYellow($"{JsonConvert.SerializeObject(kids, Formatting.Indented)}");
-
-		ConsoleLog.WriteMagenta(mongoConnectionString);
-
-		// TODO: Replace <storage-account-name> with your actual storage account name
-		var blobServiceClient = new BlobServiceClient(blobConnectionString);
+			blobServiceClient = new BlobServiceClient(blobConnectionString);
+		}
 
 		//Create a unique name for the container
 
