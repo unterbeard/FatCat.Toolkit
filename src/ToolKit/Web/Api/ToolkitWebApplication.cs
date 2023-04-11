@@ -4,6 +4,7 @@ using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Threading;
 using Humanizer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -23,6 +24,8 @@ public static class ToolkitWebApplication
 
 		// Call UseServiceProviderFactory on the Host sub property 
 		builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+		builder.Configuration.AddEnvironmentVariables("ToolkitKey_");
 
 		var applicationStartUp = new ApplicationStartUp();
 

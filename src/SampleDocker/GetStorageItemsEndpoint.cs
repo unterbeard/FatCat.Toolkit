@@ -3,6 +3,7 @@ using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace SampleDocker;
 
@@ -21,6 +22,16 @@ public class GetStorageItemsEndpoint : Endpoint
 		var blobConnectionString = configuration.GetConnectionString("BlobConnection");
 
 		ConsoleLog.WriteCyan(blobConnectionString);
+
+		var mongoConnectionString = configuration.GetConnectionString("Mongo_Custom");
+
+		var temp = configuration.GetSection("ConnectionStrings");
+
+		var kids = temp.GetChildren();
+
+		ConsoleLog.WriteYellow($"{JsonConvert.SerializeObject(kids, Formatting.Indented)}");
+
+		ConsoleLog.WriteMagenta(mongoConnectionString);
 
 		// TODO: Replace <storage-account-name> with your actual storage account name
 		var blobServiceClient = new BlobServiceClient(blobConnectionString);
