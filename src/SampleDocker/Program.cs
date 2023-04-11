@@ -35,9 +35,9 @@ public static class Program
 		{
 			ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
 
-			var testingEndpoint = SystemScope.Container.Resolve<GetStorageItemsEndpoint>();
-
-			testingEndpoint.GetStorageItems().Wait();
+			// var testingEndpoint = SystemScope.Container.Resolve<GetStorageItemsEndpoint>();
+			//
+			// testingEndpoint.GetStorageItems().Wait();
 		}
 		catch (Exception e) { ConsoleLog.WriteException(e); }
 	}

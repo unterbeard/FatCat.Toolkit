@@ -1,12 +1,14 @@
 ﻿using Azure.Storage.Blobs;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace SampleDocker;
 
+[AllowAnonymous]
 public class GetStorageItemsEndpoint : Endpoint
 {
 	private const string ContainerName = "quickstartblobs-da3c108f-fb28-47cb-8e57-4a2578253c3c";
@@ -81,6 +83,6 @@ public class GetStorageItemsEndpoint : Endpoint
 
 		ConsoleLog.WriteMagenta(downloadedText);
 
-		return Ok();
+		return Ok(downloadedText);
 	}
 }
