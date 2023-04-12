@@ -1,7 +1,12 @@
-﻿using Autofac.AspNetCore.Extensions;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Injection;
-using Microsoft.AspNetCore.Hosting;
+using FatCat.Toolkit.Threading;
+using Humanizer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace FatCat.Toolkit.Web.Api;
 
@@ -9,26 +14,39 @@ public static class ToolkitWebApplication
 {
 	public static ToolkitWebApplicationSettings Settings { get; private set; } = null!;
 
+	public static bool IsOptionSet(WebApplicationOptions option) => Settings.Options.IsFlagSet(option);
+
 	public static void Run(ToolkitWebApplicationSettings settings)
 	{
 		Settings = settings;
 
 		SystemScope.ContainerAssemblies = settings.ContainerAssemblies;
 
-		var host = new WebHostBuilder()
-					.UseAutofac()
-					.UseKestrel(options =>
-								{
-									options.AllowSynchronousIO = false;
+		var builder = WebApplication.CreateBuilder(settings.Args);
 
-									options.ListenAnyIP(Settings.Port, o =>
-																		{
-																			if (Settings.Options.IsFlagSet(WebApplicationOptions.UseHttps)) o.UseHttps(Settings.TlsCertificate?.Location ?? throw new InvalidOperationException(), Settings.TlsCertificate.Password);
-																		});
-								})
-					.UseStartup(typeof(ApplicationStartUp))
-					.Build();
+		builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-		host.Run();
+		var applicationStartUp = new ApplicationStartUp();
+
+		applicationStartUp.ConfigureServices(builder.Services);
+
+		builder.Host.ConfigureContainer<ContainerBuilder>((a, b) => SystemScope.Initialize(b, Settings.ContainerAssemblies));
+
+		var app = builder.Build();
+
+		applicationStartUp.Configure(app, app.Environment, app.Services.GetRequiredService<ILoggerFactory>());
+
+		app.MapControllers();
+
+		var thread = SystemScope.Container.Resolve<IThread>();
+
+		thread.Run(async () =>
+					{
+						await thread.Sleep(300.Milliseconds());
+
+						Settings.OnWebApplicationStarted?.Invoke();
+					});
+
+		app.Run();
 	}
 }

@@ -17,6 +17,9 @@ public class DataModule : Module
 		builder.RegisterGeneric(typeof(MongoRepository<>))
 				.As(typeof(IMongoRepository<>))
 				.OnActivated(MongoRepositoryActivated);
+
+		builder.RegisterType<EnvironmentConnectionInformation>()
+				.As<IMongoConnectionInformation>();
 	}
 
 	private void MongoRepositoryActivated(IActivatedEventArgs<object> args)
@@ -25,10 +28,10 @@ public class DataModule : Module
 
 		var connectMethod = args.Instance.GetType().GetMethod(connectMethodName);
 
-		var environmentRepository = args.Context.Resolve<IEnvironmentRepository>();
+		var connectionInformation = args.Context.Resolve<IMongoConnectionInformation>();
 
-		var connectionString = environmentRepository.Get("MongoConnectionString");
-		var databaseName = environmentRepository.Get("MongoDatabaseName");
+		var connectionString = connectionInformation.GetConnectionString();
+		var databaseName = connectionInformation.GetDatabaseName();
 
 		connectMethod!.Invoke(args.Instance, new object?[] { connectionString, databaseName });
 	}

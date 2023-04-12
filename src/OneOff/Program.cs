@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
-using FatCat.Toolkit.Threading;
 
 namespace OneOff;
 
@@ -17,19 +16,21 @@ public static class Program
 		{
 			SystemScope.Initialize(new ContainerBuilder(), ScopeOptions.SetLifetimeScope);
 
-			var thread = SystemScope.Container.Resolve<IThread>();
+			// var thread = SystemScope.Container.Resolve<IThread>();
+			//
+			// thread.Run(async () =>
+			// 			{
+			// 				var worker = SystemScope.Container.Resolve<WebCallerWorker>();
+			//
+			// 				await worker.DoWork();
+			// 			});
+			//
+			// RunServer();
+			//
+			// // if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase)) ConnectClient();
+			// // else RunServer();
 
-			thread.Run(async () =>
-						{
-							var worker = SystemScope.Container.Resolve<WebCallerWorker>();
-
-							await worker.DoWork();
-						});
-
-			RunServer();
-
-			// if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase)) ConnectClient();
-			// else RunServer();
+			ConnectClient();
 		}
 		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}

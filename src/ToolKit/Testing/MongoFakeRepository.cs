@@ -13,13 +13,13 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 {
 	private readonly IMongoRepository<T> repository;
 
-	public IMongoCollection<T> Collection { get; }
+	public IMongoCollection<T> Collection { get; } = null!;
 
 	public EasyCapture<T> CreatedCapture { get; } = new();
 
-	public T CreatedItem { get; set; }
+	public T CreatedItem { get; set; } = null!;
 
-	public List<T> CreatedList { get; set; }
+	public List<T> CreatedList { get; set; } = null!;
 
 	public string DatabaseName => repository.DatabaseName;
 

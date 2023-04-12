@@ -1,0 +1,29 @@
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+WORKDIR /app
+
+# Copy everything
+COPY . ./
+
+WORKDIR /app/SampleDocker
+
+RUN dotnet restore
+
+# Build and publish a release
+RUN dotnet publish -c Release -o out -v n
+#
+#FROM node:latest
+#
+#WORKDIR /app/UserInterface/haze
+#
+#RUN npm install
+#RUN npm run build
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+
+WORKDIR /app
+
+COPY --from=build-env /app/SampleDocker/out .
+#COPY --from=build-env /app/UserInterface/haze/build userInterface/
+
+ENTRYPOINT ["dotnet", "sample.docker.dll"]
