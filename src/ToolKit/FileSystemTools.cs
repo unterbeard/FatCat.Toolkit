@@ -20,6 +20,8 @@ public interface IFileSystemTools
 
 	List<string> GetDirectories(string path);
 
+	List<string> GetFiles(string directoryPath);
+
 	bool MoveDirectory(string sourceDirectory, string destinationDirectory);
 
 	bool MoveFile(string sourcePath, string sourceDestination);
@@ -89,6 +91,15 @@ public class FileSystemTools : IFileSystemTools
 		var directories = fileSystem.Directory.GetDirectories(path);
 
 		return directories.ToList();
+	}
+
+	public List<string> GetFiles(string directoryPath)
+	{
+		if (!DirectoryExists(directoryPath)) return new();
+
+		var files = fileSystem.Directory.GetFiles(directoryPath);
+
+		return files.ToList();
 	}
 
 	public bool MoveDirectory(string sourceDirectory, string destinationDirectory)
