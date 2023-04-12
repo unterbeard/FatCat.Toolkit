@@ -46,7 +46,7 @@ public static class Program
 	{
 		var applicationSettings = new ToolkitWebApplicationSettings
 								{
-									Options = WebApplicationOptions.UseHttps | WebApplicationOptions.UseSignalR,
+									Options = WebApplicationOptions.CommonOptions | WebApplicationOptions.SignalR,
 									ToolkitTokenParameters = new SpikeToolkitParameters(),
 									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
 									OnWebApplicationStarted = Started,

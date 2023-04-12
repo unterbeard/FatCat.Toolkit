@@ -10,13 +10,9 @@ public class ToolkitWebApplicationSettings : EqualObject
 
 	public List<Assembly> ContainerAssemblies { get; set; } = new();
 
-	public List<Uri> CorsUri { get; set; } = new();
-
 	public Action? OnWebApplicationStarted { get; set; }
 
-	public WebApplicationOptions Options { get; set; }
-
-	public ushort Port { get; set; } = 443;
+	public WebApplicationOptions Options { get; set; } = WebApplicationOptions.Cors | WebApplicationOptions.HttpsRedirection;
 
 	public string SignalRPath { get; set; } = "/api/events";
 

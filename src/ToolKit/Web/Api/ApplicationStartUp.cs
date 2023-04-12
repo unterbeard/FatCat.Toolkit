@@ -4,7 +4,6 @@ using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
-using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.Web.Api.SignalR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,13 +32,9 @@ internal class ApplicationStartUp
 
 		SetUpStaticFiles(app);
 
-		app.UseHttpsRedirection();
-
 		app.UseRouting();
 
-		app.UseCors();
-
-		if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.UseAuthentication))
+		if (ToolkitWebApplication.IsOptionSet(WebApplicationOptions.Authentication))
 		{
 			ConsoleLog.WriteMagenta("Adding Authentication?????????????????????");
 
@@ -55,7 +50,10 @@ internal class ApplicationStartUp
 
 		SetUpSignalR(app);
 
-		
+		if (ToolkitWebApplication.IsOptionSet(WebApplicationOptions.HttpsRedirection)) app.UseHttpsRedirection();
+		if (ToolkitWebApplication.IsOptionSet(WebApplicationOptions.Cors)) app.UseCors();
+
+		app.UseAuthorization();
 	}
 
 	public void ConfigureContainer(ContainerBuilder builder) => SystemScope.Initialize(builder, ToolkitWebApplication.Settings.ContainerAssemblies);
@@ -92,7 +90,7 @@ internal class ApplicationStartUp
 
 	private void AddAuthentication(IServiceCollection services)
 	{
-		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseAuthentication)) return;
+		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.Authentication)) return;
 
 		if (ToolkitWebApplication.Settings.ToolkitTokenParameters == null) throw new NullReferenceException(nameof(ToolkitWebApplication.Settings.ToolkitTokenParameters));
 
@@ -156,7 +154,7 @@ internal class ApplicationStartUp
 	{
 		services.AddControllers(config =>
 								{
-									if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.UseAuthentication))
+									if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.Authentication))
 									{
 										var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
 													.RequireAuthenticatedUser()
@@ -174,19 +172,19 @@ internal class ApplicationStartUp
 
 	private void SetUpSignalR(IApplicationBuilder app)
 	{
-		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseSignalR)) return;
+		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.SignalR)) return;
 
 		app.UseEndpoints(endpoints =>
 						{
 							var endpointOption = endpoints.MapHub<ToolkitHub>(ToolkitWebApplication.Settings.SignalRPath);
 
-							if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.UseAuthentication)) endpointOption.RequireAuthorization();
+							if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.Authentication)) endpointOption.RequireAuthorization();
 						});
 	}
 
 	private void SetUpStaticFiles(IApplicationBuilder app)
 	{
-		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.UseFileSystem)) return;
+		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.FileSystem)) return;
 		if (ToolkitWebApplication.Settings.StaticFileLocation == null) return;
 
 		var physicalFileProvider = new PhysicalFileProvider(ToolkitWebApplication.Settings.StaticFileLocation);

@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Threading;
 using Humanizer;
@@ -12,6 +13,8 @@ namespace FatCat.Toolkit.Web.Api;
 
 public static class ToolkitWebApplication
 {
+	public static bool IsOptionSet(WebApplicationOptions option) => Settings.Options.IsFlagSet(option);
+
 	public static ToolkitWebApplicationSettings Settings { get; private set; } = null!;
 
 	public static void Run(ToolkitWebApplicationSettings settings)
@@ -24,8 +27,6 @@ public static class ToolkitWebApplication
 
 		// Call UseServiceProviderFactory on the Host sub property 
 		builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-
-		builder.Configuration.AddEnvironmentVariables("ToolkitKey_");
 
 		var applicationStartUp = new ApplicationStartUp();
 
@@ -40,14 +41,7 @@ public static class ToolkitWebApplication
 
 		applicationStartUp.Configure(app, app.Environment, app.Services.GetRequiredService<ILoggerFactory>());
 
-		// app.UseHttpsRedirection();
-		app.UseCors();
-
-		app.UseAuthorization();
-
 		app.MapControllers();
-
-		SystemScope.Container.LifetimeScope = app.Services.GetAutofacRoot();
 
 		var thread = SystemScope.Container.Resolve<IThread>();
 
