@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using FakeItEasy;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 
@@ -30,18 +31,18 @@ public static class Program
 			// // if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase)) ConnectClient();
 			// // else RunServer();
 
-			ConnectClient();
+			ConnectClient(args);
 		}
 		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}
 
-	private static void ConnectClient()
+	private static void ConnectClient(string[] args)
 	{
 		var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
 
 		var clientWorker = SystemScope.Container.Resolve<ClientWorker>();
 
-		clientWorker.DoWork(WebPort);
+		clientWorker.DoWork(args);
 
 		consoleUtilities.WaitForExit();
 	}
