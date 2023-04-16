@@ -48,7 +48,11 @@ public static class Program
 								{
 									Options = WebApplicationOptions.CommonOptions | WebApplicationOptions.SignalR,
 									ToolkitTokenParameters = new SpikeToolkitParameters(),
-									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
+									ContainerAssemblies = new List<Assembly>
+														{
+															Assembly.GetExecutingAssembly(),
+															typeof(ToolkitWebApplication).Assembly
+														},
 									OnWebApplicationStarted = Started,
 									Args = args
 								};

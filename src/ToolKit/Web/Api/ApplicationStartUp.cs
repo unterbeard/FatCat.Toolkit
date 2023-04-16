@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
@@ -165,9 +166,16 @@ internal class ApplicationStartUp
 								})
 				.AddNewtonsoftJson(build => { build.SerializerSettings.Converters.Add(new StringEnumConverter()); });
 
-		// var applicationParts = builder.PartManager.ApplicationParts;
-		//
-		// foreach (var assembly in ToolkitWebApplication.Settings.ContainerAssemblies) applicationParts.Add(new AssemblyPart(assembly));
+		services.AddMvc()
+				.ConfigureApplicationPartManager(p =>
+												{
+													foreach (var containerAssembly in ToolkitWebApplication.Settings.ContainerAssemblies)
+													{
+														ConsoleLog.WriteCyan($"Adding Assembly Part <{containerAssembly.FullName}>");
+														
+														p.ApplicationParts.Add(new AssemblyPart(containerAssembly));
+													}
+												});
 	}
 
 	private void SetUpSignalR(IApplicationBuilder app)
