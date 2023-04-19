@@ -46,7 +46,7 @@ public static class Program
 	{
 		var applicationSettings = new ToolkitWebApplicationSettings
 								{
-									Options = WebApplicationOptions.CommonOptions | WebApplicationOptions.SignalR,
+									Options = WebApplicationOptions.CommonOptions | WebApplicationOptions.SignalR | WebApplicationOptions.Authentication,
 									ToolkitTokenParameters = new SpikeToolkitParameters(),
 									ContainerAssemblies = new List<Assembly>
 														{

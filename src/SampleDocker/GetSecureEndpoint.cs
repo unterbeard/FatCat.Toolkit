@@ -17,6 +17,10 @@ public class GetSecureEndpoint : Endpoint
 	[HttpGet("api/Sample/Secure")]
 	public WebResult DoGet()
 	{
+		ConsoleLog.WriteCyan($"ContextAccessor Type <{httpContextAccessor.GetType().FullName}>");
+		ConsoleLog.WriteCyan($"Normal User <{User.Identity.Name}>");
+		ConsoleLog.WriteMagenta($"ContextAccessor User <{httpContextAccessor.HttpContext.User.Identity.Name}>");
+		
 		var toolkitUser = ToolkitUser.Create(httpContextAccessor.HttpContext.User);
 
 		ConsoleLog.WriteCyan($"{JsonConvert.SerializeObject(toolkitUser, Formatting.Indented)}");

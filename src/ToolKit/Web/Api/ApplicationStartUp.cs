@@ -72,7 +72,12 @@ internal class ApplicationStartUp
 								options.AddDefaultPolicy(p =>
 															p.AllowAnyOrigin()));
 
+			ConsoleLog.WriteGreen($"===================== AddHttpContextAccessor  =================");
+			
 			services.AddHttpContextAccessor();
+			
+			ConsoleLog.WriteGreen($"===================== After AddHttpContextAccessor  =================");
+			
 			ConfigureControllers(services);
 
 			AddAuthentication(services);
