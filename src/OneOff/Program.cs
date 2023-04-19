@@ -1,7 +1,10 @@
-﻿using Autofac;
-using FakeItEasy;
+﻿using System.Reflection;
+using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.Threading;
+using Humanizer;
+using OneOffLib;
 
 namespace OneOff;
 
@@ -9,22 +12,30 @@ public static class Program
 {
 	private const int WebPort = 14555;
 
-	public static void Main(params string[] args)
+	public static async Task Main(params string[] args)
 	{
 		ConsoleLog.LogCallerInformation = true;
 
 		try
 		{
-			SystemScope.Initialize(new ContainerBuilder(), ScopeOptions.SetLifetimeScope);
+			SystemScope.Initialize(new ContainerBuilder(),
+									new List<Assembly>
+									{
+										typeof(OneOffModule).Assembly,
+										typeof(Program).Assembly,
+										typeof(ConsoleLog).Assembly
+									},
+									ScopeOptions.SetLifetimeScope);
 
 			// var thread = SystemScope.Container.Resolve<IThread>();
 			//
 			// thread.Run(async () =>
 			// 			{
-			// 				var worker = SystemScope.Container.Resolve<WebCallerWorker>();
+			// 				var worker = SystemScope.Container.Resolve<ModuleLoaderWorker>();
 			//
 			// 				await worker.DoWork();
 			// 			});
+
 			//
 			// RunServer();
 			//
@@ -32,6 +43,8 @@ public static class Program
 			// // else RunServer();
 
 			ConnectClient(args);
+
+			await Task.Delay(500.Milliseconds());
 		}
 		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}
