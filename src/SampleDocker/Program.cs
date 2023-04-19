@@ -93,11 +93,9 @@ public class SpikeToolkitParameters : IToolkitTokenParameters
 	{
 		ConsoleLog.WriteCyan("Getting token parameters");
 
-		var cert = new X509Certificate2(@"C:\DevelopmentCert\DevelopmentCert.pfx", "basarab_cert");
-
 		return new TokenValidationParameters
 				{
-					IssuerSigningKey = new X509SecurityKey(cert),
+					IssuerSigningKey = new RsaSecurityKey(SecureData.Rsa),
 					ValidAudience = "https://foghaze.com/Brume",
 					ValidIssuer = "FogHaze",
 					ClockSkew = 10.Seconds()

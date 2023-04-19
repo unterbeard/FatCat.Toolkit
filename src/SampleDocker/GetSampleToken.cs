@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web;
 using Microsoft.AspNetCore.Authorization;
@@ -34,7 +33,7 @@ public class GetSampleToken : Endpoint
 
 	private SecurityTokenDescriptor GetSecurityTokenDescriptorCommon(ClaimsIdentity user)
 	{
-		var key = new RsaSecurityKey(RSA.Create(2048));
+		var key = new RsaSecurityKey(SecureData.Rsa);
 
 		return new SecurityTokenDescriptor
 				{
