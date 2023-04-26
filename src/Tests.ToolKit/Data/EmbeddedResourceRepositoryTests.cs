@@ -12,6 +12,24 @@ public class EmbeddedResourceRepositoryTests
 	public EmbeddedResourceRepositoryTests() => repository = new EmbeddedResourceRepository();
 
 	[Fact]
+	public void CanGetAManifestStream()
+	{
+		var stream = repository.GetStream(GetType().Assembly, ValidResourceName);
+
+		stream
+			.Should()
+			.NotBeNull();
+
+		var streamReader = new StreamReader(stream);
+
+		var text = streamReader.ReadToEnd();
+
+		text
+			.Should()
+			.Be("Dreams find fulfillment in time");
+	}
+
+	[Fact]
 	public void CanGetEmbeddedResourceText()
 	{
 		var text = repository.GetText(GetType().Assembly, ValidResourceName);
@@ -31,6 +49,18 @@ public class EmbeddedResourceRepositoryTests
 		text
 			.Should()
 			.BeNullOrEmpty();
+	}
+
+	[Fact]
+	public void IfResourceIsNotFoundStreamIsNull()
+	{
+		var resourceName = "Tests.FatCat.Toolkit.Data.ResourceItemToGetThatDoesNotExist.txt";
+
+		var stream = repository.GetStream(GetType().Assembly, resourceName);
+
+		stream
+			.Should()
+			.BeNull();
 	}
 
 	[Fact]
