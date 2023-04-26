@@ -34,4 +34,9 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Data\ResourceItemToGet.txt" />
+      <EmbeddedResource Include="Data\ResourceItemToGet.txt" />
+    </ItemGroup>
+
 </Project>
