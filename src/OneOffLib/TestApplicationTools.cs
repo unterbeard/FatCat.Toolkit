@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Reflection;
 using FatCat.Toolkit;
 
 namespace OneOffLib;
@@ -24,4 +25,6 @@ public class TestApplicationTools : IApplicationTools
 	public IPAddress GetIPAddressObject() => throw new NotImplementedException();
 
 	public List<string> GetIPList() => throw new NotImplementedException();
+
+	public string GetVersionFromAssembly(Assembly assembly) => throw new NotImplementedException();
 }
