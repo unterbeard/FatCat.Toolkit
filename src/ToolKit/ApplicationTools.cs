@@ -1,8 +1,10 @@
 #nullable enable
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Reflection;
 using FatCat.Toolkit.Extensions;
 
 namespace FatCat.Toolkit;
@@ -28,8 +30,11 @@ public interface IApplicationTools
 	IPAddress? GetIPAddressObject();
 
 	List<string> GetIPList();
+
+	string GetVersionFromAssembly(Assembly assembly);
 }
 
+[ExcludeFromCodeCoverage(Justification = "Going directly to dotnet dlls")]
 public class ApplicationTools : IApplicationTools
 {
 	public static bool IsInContainer => Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER").ToBool();
@@ -164,6 +169,13 @@ public class ApplicationTools : IApplicationTools
 		var host = Dns.GetHostEntry(Dns.GetHostName());
 
 		return host.AddressList.Where(ip => ip.AddressFamily is AddressFamily.InterNetwork or AddressFamily.InterNetworkV6).Select(ip => ip.ToString()).ToList();
+	}
+
+	public string GetVersionFromAssembly(Assembly assembly)
+	{
+		var version = FileVersionInfo.GetVersionInfo(assembly.Location);
+
+		return version.FileVersion;
 	}
 
 	private void FindMacAddress()
