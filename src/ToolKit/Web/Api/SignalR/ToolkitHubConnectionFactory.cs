@@ -46,7 +46,12 @@ public class ToolkitHubClientFactory : IToolkitHubClientFactory
 
 		connection = scope.Resolve<IToolkitHubClientConnection>();
 
-		var result = await connection.TryToConnect(hubUrl, onConnectionLost);
+		var result = await connection.TryToConnect(hubUrl, () =>
+															{
+																RemoveHubFromConnections(hubUrl);
+
+																onConnectionLost?.Invoke();
+															});
 
 		if (!result) return new ConnectionResult(false);
 

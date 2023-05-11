@@ -55,32 +55,45 @@ public class ClientWorker
 
 						ConsoleLog.WriteMagenta($"StatusCode := <{response.StatusCode}> | {response.Content}");
 
-						// Secure Url
-						var hubUrl = $"{mainUrl}/events?access_token={testToken}";
-
-						var result = await hubFactory.TryToConnectToClient(hubUrl, () =>
-																					{
-																						ConsoleLog.WriteDarkRed("Connection lost to server");
-																					});
-
-						if (!result.Connected)
-						{
-							ConsoleLog.WriteRed($"Could not connect too <{hubUrl}>");
-
-							return;
-						}
-
-						var hubConnection = result.Connection;
-
-						hubConnection.ServerMessage += OnServerMessage;
-						hubConnection.ServerDataBufferMessage += OnDataBufferFromServer;
-
-						await thread.Sleep(1.Seconds());
-
-						ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
-
-						await SendDataBuffer(hubConnection);
+						await ConnectToHub(mainUrl, testToken);
 					});
+	}
+
+	private async Task ConnectToHub(string mainUrl, string testToken)
+	{
+		// Secure Url
+		var hubUrl = $"{mainUrl}/events?access_token={testToken}";
+		
+		ConsoleLog.WriteYellow($"  Going to connect to hub");
+
+		var result = await hubFactory.TryToConnectToClient(hubUrl, () =>
+																	{
+																		ConsoleLog.WriteDarkRed("Connection lost to server");
+
+																		Task.Delay(10.Seconds()).Wait();
+
+																		ConnectToHub(mainUrl, testToken).Wait();
+																	});
+
+		if (!result.Connected)
+		{
+			ConsoleLog.WriteRed($"Could not connect too <{hubUrl}>");
+
+			return;
+		}
+		
+		ConsoleLog.WriteGreen("Connected to HUB");
+
+		var hubConnection = result.Connection;
+
+		hubConnection.ServerMessage += OnServerMessage;
+		hubConnection.ServerDataBufferMessage += OnDataBufferFromServer;
+
+		await thread.Sleep(1.Seconds());
+
+		ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
+
+		await SendDataBuffer(hubConnection);
 	}
 
 	private static async Task<string> OnDataBufferFromServer(ToolkitMessage message, byte[] dataBuffer)
