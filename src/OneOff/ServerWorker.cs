@@ -9,7 +9,7 @@ namespace OneOff;
 
 public class ServerWorker
 {
-	public void DoWork(ushort webPort)
+	public void DoWork(string[] args)
 	{
 		var applicationSettings = new ToolkitWebApplicationSettings
 								{
@@ -22,6 +22,7 @@ public class ServerWorker
 									ToolkitTokenParameters = new SpikeToolkitParameters(),
 									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
 									OnWebApplicationStarted = Started,
+									Args = args
 								};
 
 		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>

@@ -2,7 +2,6 @@
 using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
-using FatCat.Toolkit.Threading;
 using Humanizer;
 using OneOffLib;
 
@@ -27,22 +26,8 @@ public static class Program
 									},
 									ScopeOptions.SetLifetimeScope);
 
-			// var thread = SystemScope.Container.Resolve<IThread>();
-			//
-			// thread.Run(async () =>
-			// 			{
-			// 				var worker = SystemScope.Container.Resolve<ModuleLoaderWorker>();
-			//
-			// 				await worker.DoWork();
-			// 			});
-
-			//
-			// RunServer();
-			//
-			// // if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase)) ConnectClient();
-			// // else RunServer();
-
-			ConnectClient(args);
+			if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase)) ConnectClient(args);
+			else RunServer(args);
 
 			await Task.Delay(500.Milliseconds());
 		}
@@ -60,5 +45,5 @@ public static class Program
 		consoleUtilities.WaitForExit();
 	}
 
-	private static void RunServer() => new ServerWorker().DoWork(WebPort);
+	private static void RunServer(string[] args) => new ServerWorker().DoWork(args);
 }
