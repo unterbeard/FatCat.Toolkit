@@ -19,6 +19,7 @@ public class ServerWorker
 														Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
 														Password = "basarab_cert"
 													},
+									SignalRPath = "events",
 									ToolkitTokenParameters = new SpikeToolkitParameters(),
 									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
 									OnWebApplicationStarted = Started,
