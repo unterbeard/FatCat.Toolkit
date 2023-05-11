@@ -14,7 +14,7 @@ public interface IToolkitHubClientConnection : IAsyncDisposable
 
 	event ToolkitHubMessage ServerMessage;
 
-	Task Connect(string hubUrl);
+	Task Connect(string hubUrl, Action? onConnectionLost = null);
 
 	Task Disconnect();
 
@@ -26,7 +26,7 @@ public interface IToolkitHubClientConnection : IAsyncDisposable
 
 	Task SendNoResponse(ToolkitMessage message);
 
-	Task<bool> TryToConnect(string hubUrl);
+	Task<bool> TryToConnect(string hubUrl, Action? onConnectionLost = null);
 }
 
 public class ToolkitHubClientConnection : IToolkitHubClientConnection
@@ -52,13 +52,18 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 	public event ToolkitHubMessage? ServerMessage;
 
-	public async Task Connect(string hubUrl)
+	public async Task Connect(string hubUrl, Action? onConnectionLost = null)
 	{
 		connection = new HubConnectionBuilder()
 					.WithUrl(hubUrl)
 					.Build();
 
-		connection.Closed += OnConnectionClosed;
+		connection.Closed += a =>
+							{
+								onConnectionLost?.Invoke();
+
+								return Task.CompletedTask;
+							};
 
 		await connection.StartAsync();
 
@@ -113,11 +118,11 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 	public Task SendNoResponse(ToolkitMessage message) => SendSessionMessage(message.MessageType, message.Data ?? string.Empty, generator.NewId());
 
-	public async Task<bool> TryToConnect(string hubUrl)
+	public async Task<bool> TryToConnect(string hubUrl, Action? onConnectionLost = null)
 	{
 		try
 		{
-			await Connect(hubUrl);
+			await Connect(hubUrl, onConnectionLost);
 
 			return true;
 		}

@@ -10,7 +10,7 @@ public interface IToolkitHubClientFactory : IAsyncDisposable
 
 	void RemoveHubFromConnections(string hubUrl);
 
-	Task<ConnectionResult> TryToConnectToClient(string hubUrl);
+	Task<ConnectionResult> TryToConnectToClient(string hubUrl, Action? onConnectionLost = null);
 }
 
 public class ToolkitHubClientFactory : IToolkitHubClientFactory
@@ -40,13 +40,13 @@ public class ToolkitHubClientFactory : IToolkitHubClientFactory
 
 	public void RemoveHubFromConnections(string hubUrl) => connections.TryRemove(hubUrl, out _);
 
-	public async Task<ConnectionResult> TryToConnectToClient(string hubUrl)
+	public async Task<ConnectionResult> TryToConnectToClient(string hubUrl, Action? onConnectionLost = null)
 	{
 		if (connections.TryGetValue(hubUrl, out var connection)) return new ConnectionResult(true, connection);
 
 		connection = scope.Resolve<IToolkitHubClientConnection>();
 
-		var result = await connection.TryToConnect(hubUrl);
+		var result = await connection.TryToConnect(hubUrl, onConnectionLost);
 
 		if (!result) return new ConnectionResult(false);
 

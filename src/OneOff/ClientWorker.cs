@@ -58,7 +58,10 @@ public class ClientWorker
 						// Secure Url
 						var hubUrl = $"{mainUrl}/events?access_token={testToken}";
 
-						var result = await hubFactory.TryToConnectToClient(hubUrl);
+						var result = await hubFactory.TryToConnectToClient(hubUrl, () =>
+																					{
+																						ConsoleLog.WriteDarkRed("Connection lost to server");
+																					});
 
 						if (!result.Connected)
 						{
