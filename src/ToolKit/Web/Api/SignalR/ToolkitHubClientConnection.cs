@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Logging;
 using Humanizer;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -13,7 +14,7 @@ public interface IToolkitHubClientConnection : IAsyncDisposable
 
 	event ToolkitHubMessage ServerMessage;
 
-	Task Connect(string hubUrl);
+	Task Connect(string hubUrl, Action? onConnectionLost = null);
 
 	Task Disconnect();
 
@@ -25,7 +26,7 @@ public interface IToolkitHubClientConnection : IAsyncDisposable
 
 	Task SendNoResponse(ToolkitMessage message);
 
-	Task<bool> TryToConnect(string hubUrl);
+	Task<bool> TryToConnect(string hubUrl, Action? onConnectionLost = null);
 }
 
 public class ToolkitHubClientConnection : IToolkitHubClientConnection
@@ -51,11 +52,18 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 	public event ToolkitHubMessage? ServerMessage;
 
-	public async Task Connect(string hubUrl)
+	public async Task Connect(string hubUrl, Action? onConnectionLost = null)
 	{
 		connection = new HubConnectionBuilder()
 					.WithUrl(hubUrl)
 					.Build();
+
+		connection.Closed += a =>
+							{
+								onConnectionLost?.Invoke();
+
+								return Task.CompletedTask;
+							};
 
 		await connection.StartAsync();
 
@@ -110,11 +118,11 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 	public Task SendNoResponse(ToolkitMessage message) => SendSessionMessage(message.MessageType, message.Data ?? string.Empty, generator.NewId());
 
-	public async Task<bool> TryToConnect(string hubUrl)
+	public async Task<bool> TryToConnect(string hubUrl, Action? onConnectionLost = null)
 	{
 		try
 		{
-			await Connect(hubUrl);
+			await Connect(hubUrl, onConnectionLost);
 
 			return true;
 		}
@@ -124,6 +132,15 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	private Task<string?> InvokeDataBufferMessage(ToolkitMessage message, byte[] dataBuffer) => ServerDataBufferMessage?.Invoke(message, dataBuffer)!;
 
 	private Task<string?> InvokeServerMessage(ToolkitMessage message) => ServerMessage?.Invoke(message)!;
+
+	private Task OnConnectionClosed(Exception? arg)
+	{
+		ConsoleLog.WriteCyan("Connection LOST");
+
+		if (arg is not null) ConsoleLog.WriteCyan($"    {arg.Message}  | {arg.GetType().FullName}");
+
+		return Task.CompletedTask;
+	}
 
 	private async Task OnServerOriginatedDataBufferMessage(int messageType, string sessionId, string data, byte[] bufferData)
 	{
