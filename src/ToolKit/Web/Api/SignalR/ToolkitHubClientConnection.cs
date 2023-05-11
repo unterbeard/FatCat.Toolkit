@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Logging;
 using Humanizer;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -56,6 +57,8 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		connection = new HubConnectionBuilder()
 					.WithUrl(hubUrl)
 					.Build();
+
+		connection.Closed += OnConnectionClosed;
 
 		await connection.StartAsync();
 
@@ -124,6 +127,15 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 	private Task<string?> InvokeDataBufferMessage(ToolkitMessage message, byte[] dataBuffer) => ServerDataBufferMessage?.Invoke(message, dataBuffer)!;
 
 	private Task<string?> InvokeServerMessage(ToolkitMessage message) => ServerMessage?.Invoke(message)!;
+
+	private Task OnConnectionClosed(Exception? arg)
+	{
+		ConsoleLog.WriteCyan("Connection LOST");
+
+		if (arg is not null) ConsoleLog.WriteCyan($"    {arg.Message}  | {arg.GetType().FullName}");
+
+		return Task.CompletedTask;
+	}
 
 	private async Task OnServerOriginatedDataBufferMessage(int messageType, string sessionId, string data, byte[] bufferData)
 	{
