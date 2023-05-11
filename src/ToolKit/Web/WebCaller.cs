@@ -1,6 +1,5 @@
 using System.Net;
 using System.Web;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Data.Mongo;
 using FatCat.Toolkit.Logging;
 using Flurl;
@@ -236,15 +235,11 @@ public class WebCaller : IWebCaller
 
 	private Url CreateRequest(string pathSegment)
 	{
-		ConsoleLog.WriteGreen($"       <{BaseUri}>");
-
 		var startingBase = BaseUri.ToString();
 
 		if (startingBase.EndsWith("/")) startingBase = startingBase.Remove(startingBase.Length - 1);
 
 		var url = pathSegment.StartsWith("/") ? $"{startingBase}{pathSegment}" : $"{startingBase}/{pathSegment}";
-
-		ConsoleLog.WriteMagenta($"URL to be found <{url}>");
 
 		var requestUri = new Uri(url);
 
@@ -255,8 +250,9 @@ public class WebCaller : IWebCaller
 		var callingUrl = requestUri.RemoveQuery();
 
 		if (queries.AllKeys.Length is not 0)
-			foreach (var key in queries.AllKeys)
-				callingUrl.SetQueryParam(key, queries[key]);
+		{
+			foreach (var key in queries.AllKeys) { callingUrl.SetQueryParam(key, queries[key]); }
+		}
 
 		logger.Debug($"Create Request for <{callingUrl}>");
 
