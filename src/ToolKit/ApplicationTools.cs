@@ -11,23 +11,25 @@ namespace FatCat.Toolkit;
 
 public interface IApplicationTools
 {
-	string? ExecutableName { get; }
+	string ExecutableFullPath { get; }
 
-	string? ExecutingDirectory { get; }
+	string ExecutableName { get; }
+
+	string ExecutingDirectory { get; }
 
 	bool InContainer { get; }
 
-	string? MacAddress { get; }
+	string MacAddress { get; }
 
-	string? MachineName { get; }
+	string MachineName { get; }
 
 	ushort FindNextOpenPort(ushort startingPort);
 
 	string GetHost();
 
-	string? GetIPAddress();
+	string GetIPAddress();
 
-	IPAddress? GetIPAddressObject();
+	IPAddress GetIPAddressObject();
 
 	List<string> GetIPList();
 
@@ -45,13 +47,15 @@ public class ApplicationTools : IApplicationTools
 	private IPAddress? ipAddress;
 	private string? macAddress;
 
-	public string? ExecutableName
+	public string ExecutableFullPath => Path.Join(ExecutingDirectory, GetProcessFileName());
+
+	public string ExecutableName
 	{
 		get
 		{
 			if (executableName!.IsNullOrEmpty())
 			{
-				var fileName = Process.GetCurrentProcess().MainModule?.FileName;
+				var fileName = GetProcessFileName();
 
 				if (fileName!.IsNotNullOrEmpty()) executableName = Path.GetFileNameWithoutExtension(fileName);
 			}
@@ -60,7 +64,7 @@ public class ApplicationTools : IApplicationTools
 		}
 	}
 
-	public string? ExecutingDirectory
+	public string ExecutingDirectory
 	{
 		get
 		{
@@ -77,7 +81,7 @@ public class ApplicationTools : IApplicationTools
 
 	public bool InContainer => IsInContainer;
 
-	public string? MacAddress
+	public string MacAddress
 	{
 		get
 		{
@@ -87,7 +91,7 @@ public class ApplicationTools : IApplicationTools
 		}
 	}
 
-	public string? MachineName => Environment.MachineName;
+	public string MachineName => Environment.MachineName;
 
 	public ushort FindNextOpenPort(ushort startingPort)
 	{
@@ -141,9 +145,9 @@ public class ApplicationTools : IApplicationTools
 		return hostName.ToLower();
 	}
 
-	public string? GetIPAddress() => GetIPAddressObject()?.ToString();
+	public string GetIPAddress() => GetIPAddressObject()?.ToString();
 
-	public IPAddress? GetIPAddressObject()
+	public IPAddress GetIPAddressObject()
 	{
 		if (ipAddress != null) return ipAddress;
 
@@ -189,4 +193,6 @@ public class ApplicationTools : IApplicationTools
 			if (macAddress.IsNotNullOrEmpty()) break;
 		}
 	}
+
+	private static string? GetProcessFileName() => Process.GetCurrentProcess().MainModule?.FileName;
 }

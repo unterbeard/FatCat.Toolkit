@@ -6,6 +6,8 @@ namespace OneOffLib;
 
 public class TestApplicationTools : IApplicationTools
 {
+	public string ExecutableFullPath { get; }
+
 	public string ExecutableName => "This is from the Test Application Tools";
 
 	public string ExecutingDirectory => ExecutableName;
