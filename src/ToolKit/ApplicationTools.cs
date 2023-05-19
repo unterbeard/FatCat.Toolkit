@@ -47,7 +47,7 @@ public class ApplicationTools : IApplicationTools
 	private IPAddress? ipAddress;
 	private string? macAddress;
 
-	public string ExecutableFullPath => Path.Join(ExecutingDirectory, GetProcessFileName());
+	public string ExecutableFullPath => GetProcessFileName();
 
 	public string ExecutableName
 	{
