@@ -118,6 +118,8 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 		return this;
 	}
 
+	public WebResultAssertions BeUnauthorized() => HaveStatusCode(HttpStatusCode.Unauthorized);
+
 	public WebResultAssertions BeUnsuccessful()
 	{
 		Subject
