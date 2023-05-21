@@ -86,6 +86,8 @@ public class WebResult : IActionResult
 
 	public static WebResult Timeout() => new(HttpStatusCode.RequestTimeout);
 
+	public static WebResult Unauthorized() => new(HttpStatusCode.Unauthorized);
+
 	private readonly HttpContent? httpContent;
 
 	private string? content;
