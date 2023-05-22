@@ -31,4 +31,6 @@ public abstract class Endpoint : Controller
 	protected WebResult Ok(string? results = null) => WebResult.Ok(results);
 
 	protected async Task<string> ReadContent() => await Request.ReadContent();
+
+	protected new WebResult Unauthorized() => WebResult.Unauthorized();
 }
