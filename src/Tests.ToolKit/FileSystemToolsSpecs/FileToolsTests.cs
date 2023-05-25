@@ -5,7 +5,7 @@ using FatCat.Toolkit;
 
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
-public abstract class FileToolTests
+public abstract class FileToolsTests
 {
 	protected readonly string directoryPath;
 	protected readonly string filePath;
@@ -15,7 +15,7 @@ public abstract class FileToolTests
 	protected bool directoryExists = true;
 	private bool fileExists = true;
 
-	protected FileToolTests()
+	protected FileToolsTests()
 	{
 		fileSystem = A.Fake<IFileSystem>();
 

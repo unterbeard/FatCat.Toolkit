@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
-public class MoveFileTests : FileToolTests
+public class MoveFileTests : FileToolsTests
 {
 	private const string DestinationFilePath = "destination-file-path";
 	private const string SourceFilePath = "source-file-path";

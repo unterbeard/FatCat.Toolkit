@@ -5,11 +5,11 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
-public class GetFilesTests : FileToolsTests
+public class GetFilesWithMetaDataTests : FileToolsTests
 {
 	private readonly List<string> fileList;
 
-	public GetFilesTests()
+	public GetFilesWithMetaDataTests()
 	{
 		fileList = Faker.Create<List<string>>();
 
@@ -29,18 +29,9 @@ public class GetFilesTests : FileToolsTests
 	}
 
 	[Fact]
-	public void ReturnFilesFromFileSystem()
-	{
-		var files = fileTools.GetFiles(directoryPath);
-
-		files.Should()
-			.BeEquivalentTo(fileList);
-	}
-
-	[Fact]
 	public void VerifyDirectoryExists()
 	{
-		fileTools.GetFiles(directoryPath);
+		fileTools.GetFilesWithMetaData(directoryPath);
 
 		VerifyDirectoryExistsWasCalled();
 	}
@@ -48,7 +39,7 @@ public class GetFilesTests : FileToolsTests
 	[Fact]
 	public void WillGetFiles()
 	{
-		fileTools.GetFiles(directoryPath);
+		fileTools.GetFilesWithMetaData(directoryPath);
 
 		A.CallTo(() => fileSystem.Directory.GetFiles(directoryPath))
 		.MustHaveHappened();

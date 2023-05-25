@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
-public class ReadAllLinesTests : FileToolTests
+public class ReadAllLinesTests : FileToolsTests
 {
 	private readonly List<string> fileLines;
 

@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
-public class DirectoryExistsTests : FileToolTests
+public class DirectoryExistsTests : FileToolsTests
 {
 	[Fact]
 	public void CheckIfDirectoryExistsInFileSystem()

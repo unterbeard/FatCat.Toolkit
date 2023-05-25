@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
-public class DeleteFileTests : FileToolTests
+public class DeleteFileTests : FileToolsTests
 {
 	[Fact]
 	public void CheckIfFileExists()

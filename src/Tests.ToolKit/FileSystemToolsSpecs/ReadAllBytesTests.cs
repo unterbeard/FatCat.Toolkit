@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
-public class ReadAllBytesTests : FileToolTests
+public class ReadAllBytesTests : FileToolsTests
 {
 	private readonly byte[] fileBytes;
 

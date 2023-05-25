@@ -22,6 +22,8 @@ public interface IFileSystemTools
 
 	List<string> GetFiles(string directoryPath);
 
+	List<FileInfo> GetFilesWithMetaData(string directoryPath);
+
 	bool MoveDirectory(string sourceDirectory, string destinationDirectory);
 
 	bool MoveFile(string sourcePath, string sourceDestination);
@@ -100,6 +102,13 @@ public class FileSystemTools : IFileSystemTools
 		var files = fileSystem.Directory.GetFiles(directoryPath);
 
 		return files.ToList();
+	}
+
+	public List<FileInfo> GetFilesWithMetaData(string directoryPath)
+	{
+		var files = GetFiles(directoryPath);
+
+		return new List<FileInfo>();
 	}
 
 	public bool MoveDirectory(string sourceDirectory, string destinationDirectory)

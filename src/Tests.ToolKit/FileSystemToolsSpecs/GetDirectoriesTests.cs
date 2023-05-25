@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
-public class GetDirectoriesTests : FileToolTests
+public class GetDirectoriesTests : FileToolsTests
 {
 	private List<string> directories;
 

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
-public class MoveDirectoryTests : FileToolTests
+public class MoveDirectoryTests : FileToolsTests
 {
 	private readonly string destinationDirectoryPath;
 	private readonly string sourceDirectoryPath;
