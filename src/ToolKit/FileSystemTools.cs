@@ -22,7 +22,7 @@ public interface IFileSystemTools
 
 	List<string> GetFiles(string directoryPath);
 
-	List<FileInfo> GetFilesWithMetaData(string directoryPath);
+	List<IFileInfo> GetFilesWithMetaData(string directoryPath);
 
 	bool MoveDirectory(string sourceDirectory, string destinationDirectory);
 
@@ -104,11 +104,13 @@ public class FileSystemTools : IFileSystemTools
 		return files.ToList();
 	}
 
-	public List<FileInfo> GetFilesWithMetaData(string directoryPath)
+	public List<IFileInfo> GetFilesWithMetaData(string directoryPath)
 	{
 		var files = GetFiles(directoryPath);
 
-		return new List<FileInfo>();
+		return files
+				.Select(f => fileSystem.FileInfo.New(f))
+				.ToList();
 	}
 
 	public bool MoveDirectory(string sourceDirectory, string destinationDirectory)
