@@ -20,6 +20,8 @@ public interface IFileSystemTools
 
 	List<string> GetDirectories(string path);
 
+	IFileInfo GetFileMetaData(string fullPath);
+
 	List<string> GetFiles(string directoryPath);
 
 	List<IFileInfo> GetFilesWithMetaData(string directoryPath);
@@ -95,6 +97,8 @@ public class FileSystemTools : IFileSystemTools
 		return directories.ToList();
 	}
 
+	public IFileInfo GetFileMetaData(string fullPath) => fileSystem.FileInfo.New(fullPath);
+
 	public List<string> GetFiles(string directoryPath)
 	{
 		if (!DirectoryExists(directoryPath)) return new();
@@ -109,7 +113,7 @@ public class FileSystemTools : IFileSystemTools
 		var files = GetFiles(directoryPath);
 
 		return files
-				.Select(f => fileSystem.FileInfo.New(f))
+				.Select(GetFileMetaData)
 				.ToList();
 	}
 
