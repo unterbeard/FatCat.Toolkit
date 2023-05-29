@@ -46,4 +46,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.IO.Abstractions" Version="19.2.29" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Testing\Binders\" />
+    </ItemGroup>
 </Project>
