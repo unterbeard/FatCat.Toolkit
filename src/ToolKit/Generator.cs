@@ -8,6 +8,8 @@ public interface IGenerator
 {
 	byte[] Bytes(int length);
 
+	bool IsValidObjectId(string idToTest);
+
 	Guid NewGuid();
 
 	string NewId();
@@ -31,6 +33,8 @@ public class Generator : IGenerator
 
 		return bytes;
 	}
+
+	public bool IsValidObjectId(string idToTest) => ObjectId.TryParse(idToTest, out _);
 
 	public Guid NewGuid() => Guid.NewGuid();
 
