@@ -1,5 +1,6 @@
 using System.Net;
 using System.Web;
+using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Data.Mongo;
 using FatCat.Toolkit.Logging;
 using Flurl;
@@ -86,7 +87,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout);
+				.WithTimeout(timeout)
+				.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -111,7 +113,10 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout);
+				.WithTimeout(timeout)
+				.AllowHttpStatus("*");
+			
+			ConsoleLog.WriteMagenta($"Getting from url {request.Url}");
 
 			logger.Debug($"Getting from Url <{request.Url}>");
 
@@ -119,10 +124,17 @@ public class WebCaller : IWebCaller
 
 			var response = await request.GetAsync();
 
+			ConsoleLog.WriteDarkYellow($"{response.GetType().FullName}");
+
 			return new WebResult(response.ResponseMessage);
 		}
 		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex) { return ex.StatusCode == null ? WebResult.NotFound() : new WebResult((HttpStatusCode)ex.StatusCode, ex.Message); }
+		catch (FlurlHttpException ex)
+		{
+			ConsoleLog.WriteRed($"Furl HttpException: {ex.Message}");
+			
+			return ex.StatusCode == null ? WebResult.NotFound() : new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+		}
 		catch (Exception ex)
 		{
 			logger.Error($"Exception of type of {ex.GetType().FullName}");
@@ -144,7 +156,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout);
+				.WithTimeout(timeout)
+				.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -167,7 +180,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout);
+				.WithTimeout(timeout)
+				.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -190,7 +204,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout);
+				.WithTimeout(timeout)
+				.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -213,7 +228,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout);
+				.WithTimeout(timeout)
+				.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
