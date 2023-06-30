@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.Web;
 using FatCat.Toolkit.Web.Api;
 using FatCat.Toolkit.Web.Api.SignalR;
 using Newtonsoft.Json;
@@ -69,5 +71,20 @@ public class ServerWorker
 		return Task.CompletedTask;
 	}
 
-	private void Started() => ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+	private void Started()
+	{
+		ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+
+		var factory = SystemScope.Container.Resolve<IWebCallerFactory>();
+
+		var caller = factory.GetWebCaller(new Uri("http://localhost:5000"));
+
+		var response = caller.Get("api/test").Result;
+
+		// var finalResult = new WebResult<TestModel>(response);
+		var finalResult = response;
+
+		if (finalResult.IsSuccessful) ConsoleLog.WriteGreen(finalResult.Content);
+		else ConsoleLog.WriteRed(finalResult.Content);
+	}
 }
