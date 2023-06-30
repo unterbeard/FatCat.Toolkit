@@ -113,7 +113,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout);
+				.WithTimeout(timeout)
+				.AllowHttpStatus("*");
 			
 			ConsoleLog.WriteMagenta($"Getting from url {request.Url}");
 
@@ -155,7 +156,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout);
+				.WithTimeout(timeout)
+				.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -178,7 +180,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout);
+				.WithTimeout(timeout)
+				.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -201,7 +204,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout);
+				.WithTimeout(timeout)
+				.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -224,7 +228,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout);
+				.WithTimeout(timeout)
+				.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
