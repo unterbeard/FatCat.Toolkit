@@ -6,6 +6,7 @@ namespace FatCat.Toolkit.Console;
 
 public static class ConsoleLog
 {
+	private static readonly IConsoleAccess consoleAccess = new ConsoleAccess();
 	private static readonly object lockObj = new();
 
 	public static bool LogCallerInformation { get; set; } = true;
@@ -147,19 +148,7 @@ public static class ConsoleLog
 		WriteRed($"{spaces}StackTrace: {GetPrintableStackTrace(spaces, exception)}", memberName, sourceFilePath, sourceLineNumber);
 	}
 
-	private static void WriteLineWithColor(ConsoleColor color, string message)
-	{
-		lock (lockObj)
-		{
-			var oldColor = System.Console.ForegroundColor;
-
-			System.Console.ForegroundColor = color;
-
-			System.Console.WriteLine(message);
-
-			System.Console.ForegroundColor = oldColor;
-		}
-	}
+	private static void WriteLineWithColor(ConsoleColor color, string message) => consoleAccess.WriteLineWithColor(color, message);
 
 	private enum NewLineLocation
 	{
