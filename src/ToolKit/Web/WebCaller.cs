@@ -116,15 +116,11 @@ public class WebCaller : IWebCaller
 				.WithTimeout(timeout)
 				.AllowHttpStatus("*");
 			
-			ConsoleLog.WriteMagenta($"Getting from url {request.Url}");
-
 			logger.Debug($"Getting from Url <{request.Url}>");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
 			var response = await request.GetAsync();
-
-			ConsoleLog.WriteDarkYellow($"{response.GetType().FullName}");
 
 			return new WebResult(response.ResponseMessage);
 		}

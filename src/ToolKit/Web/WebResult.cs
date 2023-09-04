@@ -1,6 +1,5 @@
 #nullable enable
 using System.Net;
-using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -115,16 +114,11 @@ public class WebResult : IActionResult
 	public WebResult(HttpResponseMessage response)
 	{
 		StatusCode = response.StatusCode;
-		
-		ConsoleLog.WriteBlue($"In Web Response  {response.Content}");
 
 		httpContent = response.Content;
 	}
 
-	public WebResult(SimpleResponse response) : this(response.HttpStatusCode, response.Text)
-	{
-		ConsoleLog.WriteMagenta("In Web Response  SimpleResponse");
-	}
+	public WebResult(SimpleResponse response) : this(response.HttpStatusCode, response.Text) { }
 
 	public WebResult(EqualObject? resultObject) : this(resultObject == null ? HttpStatusCode.NoContent : HttpStatusCode.OK, resultObject!) { }
 
