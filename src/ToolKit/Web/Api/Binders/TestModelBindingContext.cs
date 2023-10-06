@@ -38,17 +38,43 @@ public class TestModelBindingContext : ModelBindingContext
 		set { }
 	}
 
-	public TestModelBindingContext(TestValueProvider testValueProvider) => TestValueProvider = testValueProvider;
+	public TestModelBindingContext(TestValueProvider testValueProvider)
+	{
+		TestValueProvider = testValueProvider;
+	}
 
-	public TestModelBindingContext() => TestValueProvider = new();
+	public TestModelBindingContext()
+	{
+		TestValueProvider = new();
+	}
 
-	public void AddTestValues(string name, string value) => TestValueProvider.AddTestValues(name, value);
+	public void AddTestValues(string name, string value)
+	{
+		TestValueProvider.AddTestValues(name, value);
+	}
 
-	public override NestedScope EnterNestedScope(ModelMetadata modelMetadata, string fieldName, string modelName, object model) => throw new NotImplementedException();
+	public override NestedScope EnterNestedScope(
+		ModelMetadata modelMetadata,
+		string fieldName,
+		string modelName,
+		object model
+	)
+	{
+		throw new NotImplementedException();
+	}
 
-	public override NestedScope EnterNestedScope() => throw new NotImplementedException();
+	public override NestedScope EnterNestedScope()
+	{
+		throw new NotImplementedException();
+	}
 
-	public void RemoveTestValues(string name) => TestValueProvider.RemoveTestValues(name);
+	public void RemoveTestValues(string name)
+	{
+		TestValueProvider.RemoveTestValues(name);
+	}
 
-	protected override void ExitNestedScope() { throw new NotImplementedException(); }
+	protected override void ExitNestedScope()
+	{
+		throw new NotImplementedException();
+	}
 }

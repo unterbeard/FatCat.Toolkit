@@ -9,5 +9,8 @@ public interface ICollectionTools
 
 public class CollectionTools : ICollectionTools
 {
-	public bool AreEqual<T>(IEnumerable<T> first, IEnumerable<T> second) => first.ListsAreEqual(second);
+	public bool AreEqual<T>(IEnumerable<T> first, IEnumerable<T> second)
+	{
+		return first.ListsAreEqual(second);
+	}
 }

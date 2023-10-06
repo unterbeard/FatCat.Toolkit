@@ -29,29 +29,28 @@ public abstract class FileToolsTests
 		SetUpDirectoryExists();
 	}
 
-	protected void SetFileDoesNotExist() => fileExists = false;
+	protected void SetFileDoesNotExist()
+	{
+		fileExists = false;
+	}
 
 	protected void VerifyDirectoryExistsWasCalled()
 	{
-		A.CallTo(() => fileSystem.Directory.Exists(directoryPath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.Directory.Exists(directoryPath)).MustHaveHappened();
 	}
 
 	protected void VerifyFileExistWasCalled()
 	{
-		A.CallTo(() => fileSystem.File.Exists(filePath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.File.Exists(filePath)).MustHaveHappened();
 	}
 
 	private void SetUpDirectoryExists()
 	{
-		A.CallTo(() => fileSystem.Directory.Exists(A<string>._))
-		.ReturnsLazily(() => directoryExists);
+		A.CallTo(() => fileSystem.Directory.Exists(A<string>._)).ReturnsLazily(() => directoryExists);
 	}
 
 	private void SetUpFileExists()
 	{
-		A.CallTo(() => fileSystem.File.Exists(A<string>._))
-		.ReturnsLazily(() => fileExists);
+		A.CallTo(() => fileSystem.File.Exists(A<string>._)).ReturnsLazily(() => fileExists);
 	}
 }

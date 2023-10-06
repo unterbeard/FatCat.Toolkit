@@ -13,8 +13,6 @@ public class GeneratorTests
 
 		var bytes = generator.Bytes(1024);
 
-		bytes.Length
-			.Should()
-			.Be(1024);
+		bytes.Length.Should().Be(1024);
 	}
 }

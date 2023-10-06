@@ -26,8 +26,7 @@ public class EnvironmentConnectionInformationTests
 	{
 		connectionInformation.GetConnectionString();
 
-		A.CallTo(() => environmentRepository.Get("MongoConnectionString"))
-		.MustHaveHappenedOnceExactly();
+		A.CallTo(() => environmentRepository.Get("MongoConnectionString")).MustHaveHappenedOnceExactly();
 	}
 
 	[Fact]
@@ -35,24 +34,19 @@ public class EnvironmentConnectionInformationTests
 	{
 		connectionInformation.GetDatabaseName();
 
-		A.CallTo(() => environmentRepository.Get("MongoDatabaseName"))
-		.MustHaveHappenedOnceExactly();
+		A.CallTo(() => environmentRepository.Get("MongoDatabaseName")).MustHaveHappenedOnceExactly();
 	}
 
 	[Fact]
 	public void ReturnConnectionStringFromRepository()
 	{
-		connectionInformation.GetConnectionString()
-							.Should()
-							.Be(connectionString);
+		connectionInformation.GetConnectionString().Should().Be(connectionString);
 	}
 
 	[Fact]
 	public void ReturnDatabaseNameFromRepository()
 	{
-		connectionInformation.GetDatabaseName()
-							.Should()
-							.Be(dataBaseName);
+		connectionInformation.GetDatabaseName().Should().Be(dataBaseName);
 	}
 
 	private void SetUpEnvironmentRepository()
@@ -67,15 +61,13 @@ public class EnvironmentConnectionInformationTests
 	{
 		connectionString = Faker.RandomString();
 
-		A.CallTo(() => environmentRepository.Get("MongoConnectionString"))
-		.Returns(connectionString);
+		A.CallTo(() => environmentRepository.Get("MongoConnectionString")).Returns(connectionString);
 	}
 
 	private void SetUpGetDatabaseName()
 	{
 		dataBaseName = Faker.RandomString();
 
-		A.CallTo(() => environmentRepository.Get("MongoDatabaseName"))
-		.Returns(dataBaseName);
+		A.CallTo(() => environmentRepository.Get("MongoDatabaseName")).Returns(dataBaseName);
 	}
 }

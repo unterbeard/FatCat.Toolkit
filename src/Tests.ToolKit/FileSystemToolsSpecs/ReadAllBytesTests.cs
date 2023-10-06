@@ -13,8 +13,7 @@ public class ReadAllBytesTests : FileToolsTests
 	{
 		fileBytes = Faker.Create<byte[]>();
 
-		A.CallTo(() => fileSystem.File.ReadAllBytesAsync(A<string>._, default))
-		.Returns(fileBytes);
+		A.CallTo(() => fileSystem.File.ReadAllBytesAsync(A<string>._, default)).Returns(fileBytes);
 	}
 
 	[Fact]
@@ -32,9 +31,7 @@ public class ReadAllBytesTests : FileToolsTests
 
 		var resultingBytes = await fileTools.ReadAllBytes(filePath);
 
-		resultingBytes
-			.Should()
-			.BeEmpty();
+		resultingBytes.Should().BeEmpty();
 	}
 
 	[Fact]
@@ -42,8 +39,7 @@ public class ReadAllBytesTests : FileToolsTests
 	{
 		await fileTools.ReadAllBytes(filePath);
 
-		A.CallTo(() => fileSystem.File.ReadAllBytesAsync(filePath, default))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.File.ReadAllBytesAsync(filePath, default)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -51,8 +47,6 @@ public class ReadAllBytesTests : FileToolsTests
 	{
 		var resultingBytes = await fileTools.ReadAllBytes(filePath);
 
-		resultingBytes
-			.Should()
-			.BeEquivalentTo(fileBytes);
+		resultingBytes.Should().BeEquivalentTo(fileBytes);
 	}
 }

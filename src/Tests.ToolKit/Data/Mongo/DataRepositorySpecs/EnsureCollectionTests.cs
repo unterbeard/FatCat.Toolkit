@@ -11,13 +11,11 @@ public abstract class EnsureCollectionTests : DataRepositoryTests
 	{
 		repository.Collection = null;
 
-		#pragma warning disable xUnit1031
+#pragma warning disable xUnit1031
 		var exceptionAction = () => TestMethod().Wait();
-		#pragma warning restore xUnit1031
+#pragma warning restore xUnit1031
 
-		exceptionAction
-			.Should()
-			.Throw<ConnectionToMongoIsRequired>();
+		exceptionAction.Should().Throw<ConnectionToMongoIsRequired>();
 	}
 
 	protected abstract Task TestMethod();

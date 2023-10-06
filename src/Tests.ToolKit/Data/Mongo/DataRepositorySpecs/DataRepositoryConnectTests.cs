@@ -21,8 +21,11 @@ public class DataRepositoryConnectTests : DataRepositoryTests
 	{
 		repository.Connect(connectionString, parameterDatabaseName);
 
-		A.CallTo(() => mongoDataConnection.GetCollection<TestingMongoObject>(connectionString, parameterDatabaseName))
-		.MustHaveHappened();
+		A.CallTo(
+				() =>
+					mongoDataConnection.GetCollection<TestingMongoObject>(connectionString, parameterDatabaseName)
+			)
+			.MustHaveHappened();
 	}
 
 	[Fact]
@@ -30,8 +33,7 @@ public class DataRepositoryConnectTests : DataRepositoryTests
 	{
 		repository.Connect(connectionString);
 
-		A.CallTo(() => mongoNames.GetDatabaseName<TestingMongoObject>())
-		.MustHaveHappened();
+		A.CallTo(() => mongoNames.GetDatabaseName<TestingMongoObject>()).MustHaveHappened();
 	}
 
 	[Fact]
@@ -39,9 +41,7 @@ public class DataRepositoryConnectTests : DataRepositoryTests
 	{
 		repository.Connect(connectionString);
 
-		repository.DatabaseName
-				.Should()
-				.Be(databaseName);
+		repository.DatabaseName.Should().Be(databaseName);
 	}
 
 	[Fact]
@@ -49,9 +49,7 @@ public class DataRepositoryConnectTests : DataRepositoryTests
 	{
 		repository.Connect(connectionString);
 
-		repository.Collection
-				.Should()
-				.Be(collection);
+		repository.Collection.Should().Be(collection);
 	}
 
 	[Fact]
@@ -59,8 +57,6 @@ public class DataRepositoryConnectTests : DataRepositoryTests
 	{
 		repository.Connect(connectionString, parameterDatabaseName);
 
-		repository.DatabaseName
-				.Should()
-				.Be(parameterDatabaseName);
+		repository.DatabaseName.Should().Be(parameterDatabaseName);
 	}
 }

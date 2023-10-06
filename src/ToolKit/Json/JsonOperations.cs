@@ -14,18 +14,21 @@ public interface IJsonOperations
 
 public class JsonOperations : IJsonOperations
 {
-	public static JsonSerializerSettings JsonSettings { get; } = new()
-																{
-																	TypeNameHandling = TypeNameHandling.All,
-																	NullValueHandling = NullValueHandling.Ignore,
-																	Converters = new List<JsonConverter>
-																				{
-																					new StringEnumConverter(),
-																					new ObjectIdConverter()
-																				}
-																};
+	public static JsonSerializerSettings JsonSettings { get; } =
+		new()
+		{
+			TypeNameHandling = TypeNameHandling.All,
+			NullValueHandling = NullValueHandling.Ignore,
+			Converters = new List<JsonConverter> { new StringEnumConverter(), new ObjectIdConverter() }
+		};
 
-	public T? Deserialize<T>(string json) => JsonConvert.DeserializeObject<T>(json, JsonSettings);
+	public T? Deserialize<T>(string json)
+	{
+		return JsonConvert.DeserializeObject<T>(json, JsonSettings);
+	}
 
-	public string Serialize(EqualObject dataObject) => JsonConvert.SerializeObject(dataObject, JsonSettings);
+	public string Serialize(EqualObject dataObject)
+	{
+		return JsonConvert.SerializeObject(dataObject, JsonSettings);
+	}
 }

@@ -18,15 +18,33 @@ public class TestApplicationTools : IApplicationTools
 
 	public string MachineName => ExecutableName;
 
-	public ushort FindNextOpenPort(ushort startingPort) => throw new NotImplementedException();
+	public ushort FindNextOpenPort(ushort startingPort)
+	{
+		throw new NotImplementedException();
+	}
 
-	public string GetHost() => throw new NotImplementedException();
+	public string GetHost()
+	{
+		throw new NotImplementedException();
+	}
 
-	public string GetIPAddress() => throw new NotImplementedException();
+	public string GetIPAddress()
+	{
+		throw new NotImplementedException();
+	}
 
-	public IPAddress GetIPAddressObject() => throw new NotImplementedException();
+	public IPAddress GetIPAddressObject()
+	{
+		throw new NotImplementedException();
+	}
 
-	public List<string> GetIPList() => throw new NotImplementedException();
+	public List<string> GetIPList()
+	{
+		throw new NotImplementedException();
+	}
 
-	public string GetVersionFromAssembly(Assembly assembly) => throw new NotImplementedException();
+	public string GetVersionFromAssembly(Assembly assembly)
+	{
+		throw new NotImplementedException();
+	}
 }

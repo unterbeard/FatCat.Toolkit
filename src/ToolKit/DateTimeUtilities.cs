@@ -9,7 +9,13 @@ public interface IDateTimeUtilities
 
 public class DateTimeUtilities : IDateTimeUtilities
 {
-	public DateTime LocalNow() => DateTime.Now;
+	public DateTime LocalNow()
+	{
+		return DateTime.Now;
+	}
 
-	public DateTime UtcNow() => DateTime.UtcNow;
+	public DateTime UtcNow()
+	{
+		return DateTime.UtcNow;
+	}
 }

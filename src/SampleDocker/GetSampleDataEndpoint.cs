@@ -12,8 +12,7 @@ public class GetSampleDataEndpoint : Endpoint
 	private readonly IConfiguration configuration;
 	private readonly IMongoRepository<TestDataObject> mongoRepository;
 
-	public GetSampleDataEndpoint(IConfiguration configuration,
-								IMongoRepository<TestDataObject> mongoRepository)
+	public GetSampleDataEndpoint(IConfiguration configuration, IMongoRepository<TestDataObject> mongoRepository)
 	{
 		this.configuration = configuration;
 		this.mongoRepository = mongoRepository;
@@ -23,10 +22,10 @@ public class GetSampleDataEndpoint : Endpoint
 	public async Task<WebResult> GetSampleData()
 	{
 		var response = new SampleResponse
-						{
-							ConfigValue = configuration["PlayingSetting"],
-							SomeMetaData = "Some Meta Data"
-						};
+		{
+			ConfigValue = configuration["PlayingSetting"],
+			SomeMetaData = "Some Meta Data"
+		};
 
 		var testItem = Faker.Create<TestDataObject>();
 

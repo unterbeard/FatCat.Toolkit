@@ -15,8 +15,10 @@ public class UpdateTests : EnsureCollectionTests
 		updateFilterCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 		var updateCapture = new EasyCapture<TestingMongoObject>();
 
-		A.CallTo(() => collection.ReplaceOneAsync(updateFilterCapture, updateCapture, A<ReplaceOptions>._, default))
-		.Returns(new ReplaceOneResult.Acknowledged(1, 1, default));
+		A.CallTo(
+				() => collection.ReplaceOneAsync(updateFilterCapture, updateCapture, A<ReplaceOptions>._, default)
+			)
+			.Returns(new ReplaceOneResult.Acknowledged(1, 1, default));
 	}
 
 	[Fact]
@@ -24,23 +26,30 @@ public class UpdateTests : EnsureCollectionTests
 	{
 		await repository.Update(item);
 
-		A.CallTo(() => collection.ReplaceOneAsync(A<ExpressionFilterDefinition<TestingMongoObject>>._, item, A<ReplaceOptions>._, default))
-		.MustHaveHappened();
+		A.CallTo(
+				() =>
+					collection.ReplaceOneAsync(
+						A<ExpressionFilterDefinition<TestingMongoObject>>._,
+						item,
+						A<ReplaceOptions>._,
+						default
+					)
+			)
+			.MustHaveHappened();
 
 		var filter = updateFilterCapture.Value.Expression.Compile();
 
-		filter(item)
-			.Should()
-			.BeTrue();
+		filter(item).Should().BeTrue();
 	}
 
 	[Fact]
 	public void ReturnUpdatedItem()
 	{
-		repository.Update(item)
-				.Should()
-				.Be(item);
+		repository.Update(item).Should().Be(item);
 	}
 
-	protected override Task TestMethod() => repository.Update(item);
+	protected override Task TestMethod()
+	{
+		return repository.Update(item);
+	}
 }

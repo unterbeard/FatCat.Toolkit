@@ -29,9 +29,18 @@ public class ManualWaitEvent : IManualWaitEvent
 
 	public bool HasBeenTriggered => manualResetEvent.WaitOne(1);
 
-	public void Dispose() => manualResetEvent.Dispose();
+	public void Dispose()
+	{
+		manualResetEvent.Dispose();
+	}
 
-	public void Trigger() => manualResetEvent.Set();
+	public void Trigger()
+	{
+		manualResetEvent.Set();
+	}
 
-	public bool Wait(TimeSpan? timeout) => timeout.HasValue ? manualResetEvent.WaitOne(timeout.Value) : manualResetEvent.WaitOne();
+	public bool Wait(TimeSpan? timeout)
+	{
+		return timeout.HasValue ? manualResetEvent.WaitOne(timeout.Value) : manualResetEvent.WaitOne();
+	}
 }

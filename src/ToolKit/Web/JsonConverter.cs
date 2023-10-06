@@ -15,10 +15,18 @@ public interface IJsonConvert
 
 public class JsonConverter : IJsonConvert
 {
-	private static readonly JsonSerializerSettings jsonSettingsReturnNulls = JsonSerializerSettingsFactory(NullValueHandling.Include);
-	private static readonly JsonSerializerSettings jsonSettingsDoNotReturnNulls = JsonSerializerSettingsFactory(NullValueHandling.Ignore);
+	private static readonly JsonSerializerSettings jsonSettingsReturnNulls = JsonSerializerSettingsFactory(
+		NullValueHandling.Include
+	);
 
-	public T? DeserializeObjectWithTypeHandling<T>(string json) => DeserializeObjectWithTypeHandling<T>(json, Array.Empty<Newtonsoft.Json.JsonConverter>());
+	private static readonly JsonSerializerSettings jsonSettingsDoNotReturnNulls = JsonSerializerSettingsFactory(
+		NullValueHandling.Ignore
+	);
+
+	public T? DeserializeObjectWithTypeHandling<T>(string json)
+	{
+		return DeserializeObjectWithTypeHandling<T>(json, Array.Empty<Newtonsoft.Json.JsonConverter>());
+	}
 
 	public T? DeserializeObjectWithTypeHandling<T>(string json, params Newtonsoft.Json.JsonConverter[] converters)
 	{
@@ -26,9 +34,7 @@ public class JsonConverter : IJsonConvert
 
 		foreach (var converter in converters)
 		{
-			jsonSettingsReturnNulls
-				.Converters
-				.Add(converter);
+			jsonSettingsReturnNulls.Converters.Add(converter);
 		}
 
 		settingsWithTypeHandling.TypeNameHandling = TypeNameHandling.Auto;
@@ -36,13 +42,26 @@ public class JsonConverter : IJsonConvert
 		return JsonConvert.DeserializeObject<T>(json, settingsWithTypeHandling);
 	}
 
-	public string SerializeObject(object value) => SerializeObject(value, Formatting.None, false);
+	public string SerializeObject(object value)
+	{
+		return SerializeObject(value, Formatting.None, false);
+	}
 
-	public string SerializeObject(object value, Formatting formatting, bool includeNullProperties) => JsonConvert.SerializeObject(value, formatting, includeNullProperties ? jsonSettingsReturnNulls : jsonSettingsDoNotReturnNulls);
+	public string SerializeObject(object value, Formatting formatting, bool includeNullProperties)
+	{
+		return JsonConvert.SerializeObject(
+			value,
+			formatting,
+			includeNullProperties ? jsonSettingsReturnNulls : jsonSettingsDoNotReturnNulls
+		);
+	}
 
-	private static JsonSerializerSettings JsonSerializerSettingsFactory(NullValueHandling nullValueHandling) => new()
-																												{
-																													Converters = new List<Newtonsoft.Json.JsonConverter> { new StringEnumConverter() },
-																													NullValueHandling = nullValueHandling
-																												};
+	private static JsonSerializerSettings JsonSerializerSettingsFactory(NullValueHandling nullValueHandling)
+	{
+		return new JsonSerializerSettings
+		{
+			Converters = new List<Newtonsoft.Json.JsonConverter> { new StringEnumConverter() },
+			NullValueHandling = nullValueHandling
+		};
+	}
 }

@@ -22,20 +22,17 @@ public class SaveTests : FileSystemRepositoryTests
 	{
 		await repository.Save(dataToSave);
 
-		A.CallTo(() => jsonHelper.Serialize(dataToSave))
-		.MustHaveHappened();
+		A.CallTo(() => jsonHelper.Serialize(dataToSave)).MustHaveHappened();
 	}
 
 	[Fact]
 	public async Task IfDirectoryDoesNotExistCreate()
 	{
-		A.CallTo(() => fileSystem.Directory.Exists(A<string>._))
-		.Returns(false);
+		A.CallTo(() => fileSystem.Directory.Exists(A<string>._)).Returns(false);
 
 		await repository.Save(dataToSave);
 
-		A.CallTo(() => fileSystem.Directory.CreateDirectory(DataDirectory))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.Directory.CreateDirectory(DataDirectory)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -44,7 +41,7 @@ public class SaveTests : FileSystemRepositoryTests
 		await repository.Save(dataToSave);
 
 		A.CallTo(() => fileSystem.File.WriteAllTextAsync(TestFileDataObjectPath, saveJson, default))
-		.MustHaveHappened();
+			.MustHaveHappened();
 	}
 
 	[Fact]
@@ -52,9 +49,7 @@ public class SaveTests : FileSystemRepositoryTests
 	{
 		await repository.Save(dataToSave);
 
-		repository.Data
-				.Should()
-				.Be(dataToSave);
+		repository.Data.Should().Be(dataToSave);
 	}
 
 	[Fact]
@@ -62,15 +57,13 @@ public class SaveTests : FileSystemRepositoryTests
 	{
 		await repository.Save(dataToSave);
 
-		A.CallTo(() => fileSystem.Directory.Exists(DataDirectory))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.Directory.Exists(DataDirectory)).MustHaveHappened();
 	}
 
 	private void SetUpToJson()
 	{
 		saveJson = Faker.RandomString();
 
-		A.CallTo(() => jsonHelper.Serialize(A<TestFileDataObject>._))
-		.Returns(saveJson);
+		A.CallTo(() => jsonHelper.Serialize(A<TestFileDataObject>._)).Returns(saveJson);
 	}
 }

@@ -4,14 +4,16 @@ using LiteDB;
 
 namespace FatCat.Toolkit.Data.Lite;
 
-public interface ILiteDbRepository<T> : IDisposable, IDataRepository<T> where T : LiteDbObject
+public interface ILiteDbRepository<T> : IDisposable, IDataRepository<T>
+	where T : LiteDbObject
 {
 	T? GetById(int id);
 
 	void SetDatabasePath(string databaseFullPath);
 }
 
-public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, new()
+public class LiteDbRepository<T> : ILiteDbRepository<T>
+	where T : LiteDbObject, new()
 {
 	private readonly ILiteDbConnection connection;
 
@@ -19,7 +21,10 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 
 	public string? DatabasePath { get; set; }
 
-	public LiteDbRepository(ILiteDbConnection connection) => this.connection = connection;
+	public LiteDbRepository(ILiteDbConnection connection)
+	{
+		this.connection = connection;
+	}
 
 	public Task<T> Create(T item)
 	{
@@ -63,12 +68,18 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 
 	public async Task<List<T>> Delete(List<T> items)
 	{
-		foreach (var item in items) await Delete(item);
+		foreach (var item in items)
+		{
+			await Delete(item);
+		}
 
 		return items;
 	}
 
-	public void Dispose() => Disconnect();
+	public void Dispose()
+	{
+		Disconnect();
+	}
 
 	public async Task<List<T>> GetAll()
 	{
@@ -101,7 +112,10 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 		return result.FirstOrDefault();
 	}
 
-	public T? GetById(int id) => GetByFilter(i => i.Id == id).Result;
+	public T? GetById(int id)
+	{
+		return GetByFilter(i => i.Id == id).Result;
+	}
 
 	public async Task<T?> GetFirst()
 	{
@@ -114,12 +128,18 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 	{
 		var item = await GetFirst();
 
-		if (item == null) item = await Create(new T());
+		if (item == null)
+		{
+			item = await Create(new T());
+		}
 
 		return item;
 	}
 
-	public void SetDatabasePath(string databaseFullPath) => DatabasePath = databaseFullPath;
+	public void SetDatabasePath(string databaseFullPath)
+	{
+		DatabasePath = databaseFullPath;
+	}
 
 	public Task<T> Update(T item)
 	{
@@ -134,14 +154,20 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 
 	public async Task<List<T>> Update(List<T> items)
 	{
-		foreach (var item in items) await Update(item);
+		foreach (var item in items)
+		{
+			await Update(item);
+		}
 
 		return items;
 	}
 
 	private void Connect()
 	{
-		if (DatabasePath == null) throw new LiteDbConnectionException();
+		if (DatabasePath == null)
+		{
+			throw new LiteDbConnectionException();
+		}
 
 		connection.Connect(DatabasePath);
 
@@ -155,5 +181,8 @@ public class LiteDbRepository<T> : ILiteDbRepository<T> where T : LiteDbObject, 
 		connection.Dispose();
 	}
 
-	private BsonValue GetIdBsonValue(T item) => new(item.Id);
+	private BsonValue GetIdBsonValue(T item)
+	{
+		return new BsonValue(item.Id);
+	}
 }

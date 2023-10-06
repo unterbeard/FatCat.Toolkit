@@ -14,7 +14,10 @@ public static class ToolkitWebApplication
 {
 	public static ToolkitWebApplicationSettings Settings { get; private set; } = null!;
 
-	public static bool IsOptionSet(WebApplicationOptions option) => Settings.Options.IsFlagSet(option);
+	public static bool IsOptionSet(WebApplicationOptions option)
+	{
+		return Settings.Options.IsFlagSet(option);
+	}
 
 	public static void Run(ToolkitWebApplicationSettings settings)
 	{
@@ -32,7 +35,9 @@ public static class ToolkitWebApplication
 
 		applicationStartUp.ConfigureServices(builder.Services);
 
-		builder.Host.ConfigureContainer<ContainerBuilder>((a, b) => SystemScope.Initialize(b, Settings.ContainerAssemblies));
+		builder.Host.ConfigureContainer<ContainerBuilder>(
+			(a, b) => SystemScope.Initialize(b, Settings.ContainerAssemblies)
+		);
 
 		var app = builder.Build();
 
@@ -43,11 +48,11 @@ public static class ToolkitWebApplication
 		var thread = SystemScope.Container.Resolve<IThread>();
 
 		thread.Run(async () =>
-					{
-						await thread.Sleep(300.Milliseconds());
+		{
+			await thread.Sleep(300.Milliseconds());
 
-						Settings.OnWebApplicationStarted?.Invoke();
-					});
+			Settings.OnWebApplicationStarted?.Invoke();
+		});
 
 		app.Run();
 	}

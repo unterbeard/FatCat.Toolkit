@@ -9,21 +9,29 @@ namespace FatCat.Toolkit.Testing;
 
 public static class WebResultClosedOverAssertions
 {
-	public static WebResultClosedOverAssertions<T> Should<T>(this Task<WebResult<T>> task) where T : class
+	public static WebResultClosedOverAssertions<T> Should<T>(this Task<WebResult<T>> task)
+		where T : class
 	{
 		var result = task.Result;
 
 		return new WebResultClosedOverAssertions<T>(result);
 	}
 
-	public static WebResultClosedOverAssertions<T> Should<T>(this WebResult<T> webResult) where T : class => new(webResult);
+	public static WebResultClosedOverAssertions<T> Should<T>(this WebResult<T> webResult)
+		where T : class
+	{
+		return new WebResultClosedOverAssertions<T>(webResult);
+	}
 }
 
-public class WebResultClosedOverAssertions<T> : ReferenceTypeAssertions<WebResult<T>, WebResultClosedOverAssertions<T>> where T : class
+public class WebResultClosedOverAssertions<T>
+	: ReferenceTypeAssertions<WebResult<T>, WebResultClosedOverAssertions<T>>
+	where T : class
 {
 	protected override string Identifier => "Web Results assertions";
 
-	public WebResultClosedOverAssertions(WebResult<T> result) : base(result) { }
+	public WebResultClosedOverAssertions(WebResult<T> result)
+		: base(result) { }
 
 	public WebResultClosedOverAssertions<T> Be(WebResult<T> expectedResult)
 	{
@@ -34,52 +42,46 @@ public class WebResultClosedOverAssertions<T> : ReferenceTypeAssertions<WebResul
 
 	public WebResultClosedOverAssertions<T> Be(T expectedValue)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.Data
-			.Should()
-			.BeEquivalentTo(expectedValue);
+		Subject.Data.Should().BeEquivalentTo(expectedValue);
 
 		return this;
 	}
 
-	public WebResultClosedOverAssertions<T> BeBadRequest() => HaveStatusCode(HttpStatusCode.BadRequest);
+	public WebResultClosedOverAssertions<T> BeBadRequest()
+	{
+		return HaveStatusCode(HttpStatusCode.BadRequest);
+	}
 
 	public WebResultClosedOverAssertions<T> BeBadRequest(string fieldName, string messageId)
 	{
 		var expectedResult = new WebResult<T>(WebResult.BadRequest(fieldName, messageId));
 
-		return HaveStatusCode(HttpStatusCode.BadRequest)
-			.Be(expectedResult);
+		return HaveStatusCode(HttpStatusCode.BadRequest).Be(expectedResult);
 	}
 
 	public WebResultClosedOverAssertions<T> BeBadRequest(string messageId)
 	{
 		var expectedResult = new WebResult<T>(WebResult.BadRequest(messageId));
 
-		return HaveStatusCode(HttpStatusCode.BadRequest)
-			.Be(expectedResult);
+		return HaveStatusCode(HttpStatusCode.BadRequest).Be(expectedResult);
 	}
 
-	public WebResultClosedOverAssertions<T> BeConflict() => HaveStatusCode(HttpStatusCode.Conflict);
+	public WebResultClosedOverAssertions<T> BeConflict()
+	{
+		return HaveStatusCode(HttpStatusCode.Conflict);
+	}
 
 	public WebResultClosedOverAssertions<T> BeEmptyListOf()
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
 		var list = Subject.Data as List<T>;
 
-		list.Should()
-			.NotBeNull();
+		list.Should().NotBeNull();
 
-		list
-			.Should()
-			.BeEmpty();
+		list.Should().BeEmpty();
 
 		return this;
 	}
@@ -93,53 +95,47 @@ public class WebResultClosedOverAssertions<T> : ReferenceTypeAssertions<WebResul
 
 	public WebResultClosedOverAssertions<T> BeEquivalentTo(T expectedValue)
 	{
-		Subject
-			.Data
-			.Should()
-			.BeEquivalentTo(expectedValue);
+		Subject.Data.Should().BeEquivalentTo(expectedValue);
 
 		return this;
 	}
 
-	public WebResultClosedOverAssertions<T> BeNotAcceptable() => HaveStatusCode(HttpStatusCode.NotAcceptable);
+	public WebResultClosedOverAssertions<T> BeNotAcceptable()
+	{
+		return HaveStatusCode(HttpStatusCode.NotAcceptable);
+	}
 
-	public WebResultClosedOverAssertions<T> BeNotFound() => HaveStatusCode(HttpStatusCode.NotFound);
+	public WebResultClosedOverAssertions<T> BeNotFound()
+	{
+		return HaveStatusCode(HttpStatusCode.NotFound);
+	}
 
-	public WebResultClosedOverAssertions<T> BeOk() => HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent });
+	public WebResultClosedOverAssertions<T> BeOk()
+	{
+		return HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent });
+	}
 
 	public WebResultClosedOverAssertions<T> BeSuccessful()
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.IsSuccessful
-			.Should()
-			.BeTrue(Subject.Content);
+		Subject.IsSuccessful.Should().BeTrue(Subject.Content);
 
 		return this;
 	}
 
 	public WebResultClosedOverAssertions<T> BeUnsuccessful()
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.IsUnsuccessful
-			.Should()
-			.BeTrue(Subject.Content);
+		Subject.IsUnsuccessful.Should().BeTrue(Subject.Content);
 
 		return this;
 	}
 
 	public WebResultClosedOverAssertions<T> For(Action<T> action)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
 		action(Subject.Data!);
 
@@ -148,9 +144,7 @@ public class WebResultClosedOverAssertions<T> : ReferenceTypeAssertions<WebResul
 
 	public WebResultClosedOverAssertions<T> ForList(Action<List<T>> action)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
 		var list = Subject.Data as List<T>;
 
@@ -161,74 +155,83 @@ public class WebResultClosedOverAssertions<T> : ReferenceTypeAssertions<WebResul
 
 	public WebResultClosedOverAssertions<T> HaveContent(string content)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.Content
-			.Should()
-			.Be(content);
+		Subject.Content.Should().Be(content);
 
 		return this;
 	}
 
-	public WebResultClosedOverAssertions<T> HaveContentEquivalentTo(T expectedContent) { return HaveContentEquivalentTo(expectedContent, config => config); }
-
-	public WebResultClosedOverAssertions<T> HaveContentEquivalentTo(T expectedContent, Func<EquivalencyAssertionOptions<T>, EquivalencyAssertionOptions<T>> config)
+	public WebResultClosedOverAssertions<T> HaveContentEquivalentTo(T expectedContent)
 	{
-		Subject
-			.Should()
-			.NotBeNull("WebResult should never be null");
+		return HaveContentEquivalentTo(expectedContent, config => config);
+	}
+
+	public WebResultClosedOverAssertions<T> HaveContentEquivalentTo(
+		T expectedContent,
+		Func<EquivalencyAssertionOptions<T>, EquivalencyAssertionOptions<T>> config
+	)
+	{
+		Subject.Should().NotBeNull("WebResult should never be null");
 
 		Subject
 			.Should()
-			.HaveStatusCode(HttpStatusCode.OK, "you cannot test for content from an unsuccessful status code: {0}", Subject.StatusCode);
+			.HaveStatusCode(
+				HttpStatusCode.OK,
+				"you cannot test for content from an unsuccessful status code: {0}",
+				Subject.StatusCode
+			);
 
 		var actualContent = Subject.Data;
 
-		actualContent
-			.Should()
-			.BeEquivalentTo(expectedContent);
+		actualContent.Should().BeEquivalentTo(expectedContent);
 
 		return this;
 	}
 
 	public WebResultClosedOverAssertions<T> HaveContentTypeOf(string contentType)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.ContentType
-			.Should()
-			.Be(contentType);
+		Subject.ContentType.Should().Be(contentType);
 
 		return this;
 	}
 
-	public WebResultClosedOverAssertions<T> HaveNoContent() => HaveStatusCode(HttpStatusCode.NoContent);
+	public WebResultClosedOverAssertions<T> HaveNoContent()
+	{
+		return HaveStatusCode(HttpStatusCode.NoContent);
+	}
 
-	public WebResultClosedOverAssertions<T> HaveStatusCode(HttpStatusCode statusCode, string? because = null, params object[] becauseArgs) => HaveOneOfStatusCode(new[] { statusCode }, because, becauseArgs);
+	public WebResultClosedOverAssertions<T> HaveStatusCode(
+		HttpStatusCode statusCode,
+		string? because = null,
+		params object[] becauseArgs
+	)
+	{
+		return HaveOneOfStatusCode(new[] { statusCode }, because, becauseArgs);
+	}
 
-	public WebResultClosedOverAssertions<T> WithMessage(string expectedMessage, string? because = null, params object[] becauseArgs)
+	public WebResultClosedOverAssertions<T> WithMessage(
+		string expectedMessage,
+		string? because = null,
+		params object[] becauseArgs
+	)
 	{
 		Subject.Content.Should().MatchEquivalentOf(expectedMessage, because, becauseArgs);
 
 		return this;
 	}
 
-	private WebResultClosedOverAssertions<T> HaveOneOfStatusCode(HttpStatusCode[] acceptableStatusCodes, string? because = null, params object[] becauseArgs)
+	private WebResultClosedOverAssertions<T> HaveOneOfStatusCode(
+		HttpStatusCode[] acceptableStatusCodes,
+		string? because = null,
+		params object[] becauseArgs
+	)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.StatusCode
-			.Should()
-			.BeOneOf(acceptableStatusCodes, because, becauseArgs);
+		Subject.StatusCode.Should().BeOneOf(acceptableStatusCodes, because, becauseArgs);
 
 		return this;
 	}

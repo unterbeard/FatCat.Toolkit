@@ -15,7 +15,10 @@ public class ByteTools : IByteTools
 {
 	public string FromBase64Encoded(byte[] bytes)
 	{
-		if (bytes.IsNullOrEmpty()) return string.Empty;
+		if (bytes.IsNullOrEmpty())
+		{
+			return string.Empty;
+		}
 
 		var base64Text = Convert.ToBase64String(bytes);
 
@@ -26,7 +29,10 @@ public class ByteTools : IByteTools
 
 	public byte[] ToBase64Encoded(string text)
 	{
-		if (text.IsNullOrEmpty()) return Array.Empty<byte>();
+		if (text.IsNullOrEmpty())
+		{
+			return Array.Empty<byte>();
+		}
 
 		var plainTextBytes = Encoding.UTF8.GetBytes(text);
 

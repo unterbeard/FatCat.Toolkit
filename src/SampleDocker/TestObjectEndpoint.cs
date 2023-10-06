@@ -9,7 +9,10 @@ public class TestObjectEndpoint : Endpoint
 {
 	private readonly IMongoRepository<TestDataObject> mongoRepository;
 
-	public TestObjectEndpoint(IMongoRepository<TestDataObject> mongoRepository) => this.mongoRepository = mongoRepository;
+	public TestObjectEndpoint(IMongoRepository<TestDataObject> mongoRepository)
+	{
+		this.mongoRepository = mongoRepository;
+	}
 
 	[HttpGet("api/Test/Data")]
 	public async Task<WebResult> GetTestDataObjects()

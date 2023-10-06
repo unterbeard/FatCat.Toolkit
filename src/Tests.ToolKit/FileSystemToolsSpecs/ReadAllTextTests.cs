@@ -13,8 +13,7 @@ public class ReadAllTextTests : FileToolsTests
 	{
 		fileText = Faker.RandomString();
 
-		A.CallTo(() => fileSystem.File.ReadAllTextAsync(A<string>._, default))
-		.Returns(fileText);
+		A.CallTo(() => fileSystem.File.ReadAllTextAsync(A<string>._, default)).Returns(fileText);
 	}
 
 	[Fact]
@@ -32,9 +31,7 @@ public class ReadAllTextTests : FileToolsTests
 
 		var resultingText = await fileTools.ReadAllText(filePath);
 
-		resultingText
-			.Should()
-			.BeEmpty();
+		resultingText.Should().BeEmpty();
 	}
 
 	[Fact]
@@ -42,8 +39,7 @@ public class ReadAllTextTests : FileToolsTests
 	{
 		await fileTools.ReadAllText(filePath);
 
-		A.CallTo(() => fileSystem.File.ReadAllTextAsync(filePath, default))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.File.ReadAllTextAsync(filePath, default)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -51,8 +47,6 @@ public class ReadAllTextTests : FileToolsTests
 	{
 		var resultingText = await fileTools.ReadAllText(filePath);
 
-		resultingText
-			.Should()
-			.BeEquivalentTo(fileText);
+		resultingText.Should().BeEquivalentTo(fileText);
 	}
 }

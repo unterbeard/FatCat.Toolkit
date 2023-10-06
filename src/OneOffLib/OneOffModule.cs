@@ -7,7 +7,6 @@ public class OneOffModule : Module
 {
 	protected override void Load(ContainerBuilder builder)
 	{
-		builder.RegisterType<TestApplicationTools>()
-				.As<IApplicationTools>();
+		builder.RegisterType<TestApplicationTools>().As<IApplicationTools>();
 	}
 }

@@ -15,8 +15,7 @@ public class CreateTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestObj
 	{
 		createdId = Faker.RandomInt(2, 2500);
 
-		A.CallTo(() => collection.Insert(A<LiteDbTestObject>._))
-		.Returns(new BsonValue(createdId));
+		A.CallTo(() => collection.Insert(A<LiteDbTestObject>._)).Returns(new BsonValue(createdId));
 	}
 
 	[Fact]
@@ -24,8 +23,7 @@ public class CreateTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestObj
 	{
 		await RunTest();
 
-		A.CallTo(() => collection.Insert(testItem))
-		.MustHaveHappened();
+		A.CallTo(() => collection.Insert(testItem)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -37,9 +35,11 @@ public class CreateTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestObj
 
 		var result = await RunTest();
 
-		result.Should()
-			.Be(expectedObject);
+		result.Should().Be(expectedObject);
 	}
 
-	protected override async Task<LiteDbTestObject> RunTest() => await repository.Create(testItem);
+	protected override async Task<LiteDbTestObject> RunTest()
+	{
+		return await repository.Create(testItem);
+	}
 }

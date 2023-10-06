@@ -9,24 +9,23 @@ public class EmbeddedResourceRepositoryTests
 	private const string ValidResourceName = "Tests.FatCat.Toolkit.Data.ResourceItemToGet.txt";
 	private readonly EmbeddedResourceRepository repository;
 
-	public EmbeddedResourceRepositoryTests() => repository = new EmbeddedResourceRepository();
+	public EmbeddedResourceRepositoryTests()
+	{
+		repository = new EmbeddedResourceRepository();
+	}
 
 	[Fact]
 	public void CanGetAManifestStream()
 	{
 		var stream = repository.GetStream(GetType().Assembly, ValidResourceName);
 
-		stream
-			.Should()
-			.NotBeNull();
+		stream.Should().NotBeNull();
 
 		var streamReader = new StreamReader(stream);
 
 		var text = streamReader.ReadToEnd();
 
-		text
-			.Should()
-			.Be("Dreams find fulfillment in time");
+		text.Should().Be("Dreams find fulfillment in time");
 	}
 
 	[Fact]
@@ -34,9 +33,7 @@ public class EmbeddedResourceRepositoryTests
 	{
 		var text = repository.GetText(GetType().Assembly, ValidResourceName);
 
-		text
-			.Should()
-			.Be("Dreams find fulfillment in time");
+		text.Should().Be("Dreams find fulfillment in time");
 	}
 
 	[Fact]
@@ -46,9 +43,7 @@ public class EmbeddedResourceRepositoryTests
 
 		var text = repository.GetText(GetType().Assembly, resourceName);
 
-		text
-			.Should()
-			.BeNullOrEmpty();
+		text.Should().BeNullOrEmpty();
 	}
 
 	[Fact]
@@ -58,9 +53,7 @@ public class EmbeddedResourceRepositoryTests
 
 		var stream = repository.GetStream(GetType().Assembly, resourceName);
 
-		stream
-			.Should()
-			.BeNull();
+		stream.Should().BeNull();
 	}
 
 	[Fact]
@@ -68,13 +61,8 @@ public class EmbeddedResourceRepositoryTests
 	{
 		var resources = repository.GetAllResourceNames(GetType().Assembly);
 
-		resources
-			.Count
-			.Should()
-			.BeGreaterThanOrEqualTo(1);
+		resources.Count.Should().BeGreaterThanOrEqualTo(1);
 
-		resources
-			.Should()
-			.Contain(ValidResourceName);
+		resources.Should().Contain(ValidResourceName);
 	}
 }

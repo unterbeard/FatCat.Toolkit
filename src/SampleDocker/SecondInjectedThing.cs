@@ -9,5 +9,8 @@ public interface ISecondInjectedThing
 
 public class SecondInjectedThing : ISecondInjectedThing
 {
-	public int GetSomeNumber() => Faker.RandomInt();
+	public int GetSomeNumber()
+	{
+		return Faker.RandomInt();
+	}
 }

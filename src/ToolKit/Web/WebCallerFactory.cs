@@ -11,7 +11,13 @@ public class WebCallerFactory : IWebCallerFactory
 {
 	private readonly IToolkitLogger toolkitLogger;
 
-	public WebCallerFactory(IToolkitLogger toolkitLogger) => this.toolkitLogger = toolkitLogger;
+	public WebCallerFactory(IToolkitLogger toolkitLogger)
+	{
+		this.toolkitLogger = toolkitLogger;
+	}
 
-	public IWebCaller GetWebCaller(Uri baseUri) => new WebCaller(baseUri, toolkitLogger);
+	public IWebCaller GetWebCaller(Uri baseUri)
+	{
+		return new WebCaller(baseUri, toolkitLogger);
+	}
 }

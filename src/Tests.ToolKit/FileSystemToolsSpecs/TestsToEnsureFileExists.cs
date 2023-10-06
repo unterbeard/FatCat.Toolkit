@@ -28,8 +28,7 @@ public abstract class TestsToEnsureFileExists : FileToolsTests
 
 		RunMethodToTest();
 
-		A.CallTo(() => fileSystem.File.Create(filePath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.File.Create(filePath)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -37,8 +36,7 @@ public abstract class TestsToEnsureFileExists : FileToolsTests
 	{
 		RunMethodToTest();
 
-		A.CallTo(() => fileSystem.File.Create(A<string>._))
-		.MustNotHaveHappened();
+		A.CallTo(() => fileSystem.File.Create(A<string>._)).MustNotHaveHappened();
 	}
 
 	[Fact]
@@ -48,8 +46,7 @@ public abstract class TestsToEnsureFileExists : FileToolsTests
 
 		RunMethodToTest();
 
-		A.CallTo(() => fileSystem.Directory.CreateDirectory(directoryPath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.Directory.CreateDirectory(directoryPath)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -57,8 +54,7 @@ public abstract class TestsToEnsureFileExists : FileToolsTests
 	{
 		RunMethodToTest();
 
-		A.CallTo(() => fileSystem.Directory.CreateDirectory(A<string>._))
-		.MustNotHaveHappened();
+		A.CallTo(() => fileSystem.Directory.CreateDirectory(A<string>._)).MustNotHaveHappened();
 	}
 
 	protected abstract Task RunMethodToTest();

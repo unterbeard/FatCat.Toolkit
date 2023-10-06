@@ -18,8 +18,7 @@ public class DeleteDirectoryTests : FileToolsTests
 	{
 		fileTools.DeleteDirectory(directoryPath, false);
 
-		A.CallTo(() => fileSystem.Directory.Delete(directoryPath, false))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.Directory.Delete(directoryPath, false)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -27,8 +26,7 @@ public class DeleteDirectoryTests : FileToolsTests
 	{
 		fileTools.DeleteDirectory(directoryPath);
 
-		A.CallTo(() => fileSystem.Directory.Delete(directoryPath, true))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.Directory.Delete(directoryPath, true)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -38,7 +36,6 @@ public class DeleteDirectoryTests : FileToolsTests
 
 		fileTools.DeleteDirectory(directoryPath);
 
-		A.CallTo(() => fileSystem.Directory.Delete(A<string>._))
-		.MustNotHaveHappened();
+		A.CallTo(() => fileSystem.Directory.Delete(A<string>._)).MustNotHaveHappened();
 	}
 }

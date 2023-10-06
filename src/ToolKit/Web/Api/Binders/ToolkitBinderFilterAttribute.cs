@@ -10,9 +10,15 @@ public class ToolkitBinderFilterAttribute : ActionFilterAttribute
 	{
 		foreach (var value in context.ActionArguments.Values)
 		{
-			if (value is not IToolkitBinder binder) continue;
+			if (value is not IToolkitBinder binder)
+			{
+				continue;
+			}
 
-			if (binder.Result.IsUnsuccessful) context.Result = binder.Result;
+			if (binder.Result.IsUnsuccessful)
+			{
+				context.Result = binder.Result;
+			}
 
 			return;
 		}

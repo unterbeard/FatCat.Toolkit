@@ -9,5 +9,8 @@ public interface IExampleWorker
 
 public class ExampleWorker : IExampleWorker
 {
-	public string GetMessage() => $"This is the message | {Faker.RandomInt()}";
+	public string GetMessage()
+	{
+		return $"This is the message | {Faker.RandomInt()}";
+	}
 }

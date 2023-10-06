@@ -9,8 +9,7 @@ public class GetFirstTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestO
 {
 	public GetFirstTests()
 	{
-		A.CallTo(() => collection.FindAll())
-		.Returns(testItemList);
+		A.CallTo(() => collection.FindAll()).Returns(testItemList);
 	}
 
 	[Fact]
@@ -18,30 +17,27 @@ public class GetFirstTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestO
 	{
 		repository.GetFirst();
 
-		A.CallTo(() => collection.FindAll())
-		.MustHaveHappened();
+		A.CallTo(() => collection.FindAll()).MustHaveHappened();
 	}
 
 	[Fact]
 	public async Task IfListIsEmptyReturnNull()
 	{
-		A.CallTo(() => collection.FindAll())
-		.Returns(new List<LiteDbTestObject>());
+		A.CallTo(() => collection.FindAll()).Returns(new List<LiteDbTestObject>());
 
 		var result = await repository.GetFirst();
 
-		result
-			.Should()
-			.BeNull();
+		result.Should().BeNull();
 	}
 
 	[Fact]
 	public void ReturnFirstItemInList()
 	{
-		repository.GetFirst()
-				.Should()
-				.Be(testItemList[0]);
+		repository.GetFirst().Should().Be(testItemList[0]);
 	}
 
-	protected override Task<LiteDbTestObject> RunTest() => repository.GetFirst();
+	protected override Task<LiteDbTestObject> RunTest()
+	{
+		return repository.GetFirst();
+	}
 }

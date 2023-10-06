@@ -19,8 +19,7 @@ public class DeleteFileTests : FileToolsTests
 	{
 		fileTools.DeleteFile(filePath);
 
-		A.CallTo(() => fileSystem.File.Delete(filePath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.File.Delete(filePath)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -30,8 +29,7 @@ public class DeleteFileTests : FileToolsTests
 
 		fileTools.DeleteFile(filePath);
 
-		A.CallTo(() => fileSystem.File.Delete(filePath))
-		.MustNotHaveHappened();
+		A.CallTo(() => fileSystem.File.Delete(filePath)).MustNotHaveHappened();
 	}
 
 	[Fact]
@@ -39,16 +37,12 @@ public class DeleteFileTests : FileToolsTests
 	{
 		SetFileDoesNotExist();
 
-		fileTools.DeleteFile(filePath)
-				.Should()
-				.BeFalse();
+		fileTools.DeleteFile(filePath).Should().BeFalse();
 	}
 
 	[Fact]
 	public void IfTheFileIsDeletedReturnTrue()
 	{
-		fileTools.DeleteFile(filePath)
-				.Should()
-				.BeTrue();
+		fileTools.DeleteFile(filePath).Should().BeTrue();
 	}
 }

@@ -10,22 +10,29 @@ public class ProxyStartUp
 {
 	public IConfiguration Configuration { get; }
 
-	public ProxyStartUp(IConfiguration configuration) =>
-
+	public ProxyStartUp(IConfiguration configuration)
+	{
 		// Default configuration comes from AppSettings.json file in project/output
 		Configuration = configuration;
+	}
 
-	// This method gets called by the runtime. Use this method to configure the HTTP request 
+	// This method gets called by the runtime. Use this method to configure the HTTP request
 	// pipeline that handles requests
 	public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 	{
-		if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+		if (env.IsDevelopment())
+		{
+			app.UseDeveloperExceptionPage();
+		}
 
 		// Enable endpoint routing, required for the reverse proxy
 		app.UseRouting();
 
 		// Register the reverse proxy routes
-		app.UseEndpoints(endpoints => { endpoints.MapReverseProxy(); });
+		app.UseEndpoints(endpoints =>
+		{
+			endpoints.MapReverseProxy();
+		});
 	}
 
 	// This method gets called by the runtime. Use this method to add capabilities to
@@ -38,7 +45,8 @@ public class ProxyStartUp
 		// Initialize the reverse proxy from the "ReverseProxy" section of configuration
 		// proxyBuilder.LoadFromConfig(Configuration.GetSection("ReverseProxy"));
 
-		services.AddReverseProxy()
-				.LoadFromMemory(ProxyRouteConfig.GetRoutes(), ProxyClusterConfig.GetClusters());
+		services
+			.AddReverseProxy()
+			.LoadFromMemory(ProxyRouteConfig.GetRoutes(), ProxyClusterConfig.GetClusters());
 	}
 }

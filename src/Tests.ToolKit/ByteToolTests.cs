@@ -18,8 +18,6 @@ public class ByteToolTests
 
 		var plainText = byteTools.FromBase64Encoded(bytes);
 
-		plainText
-			.Should()
-			.Be(textToChange);
+		plainText.Should().Be(textToChange);
 	}
 }

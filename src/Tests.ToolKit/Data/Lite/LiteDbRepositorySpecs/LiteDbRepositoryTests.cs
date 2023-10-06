@@ -26,7 +26,10 @@ public abstract class LiteDbRepositoryTests
 
 		testItemList = Faker.Create<List<LiteDbTestObject>>();
 
-		foreach (var item in testItemList) item.Id = default;
+		foreach (var item in testItemList)
+		{
+			item.Id = default;
+		}
 	}
 
 	private void SetUpLiteDbConnection()
@@ -35,7 +38,6 @@ public abstract class LiteDbRepositoryTests
 
 		collection = A.Fake<ILiteCollection<LiteDbTestObject>>();
 
-		A.CallTo(() => connection.GetCollection<LiteDbTestObject>())
-		.Returns(collection);
+		A.CallTo(() => connection.GetCollection<LiteDbTestObject>()).Returns(collection);
 	}
 }

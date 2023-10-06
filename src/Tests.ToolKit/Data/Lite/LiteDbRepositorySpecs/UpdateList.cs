@@ -13,18 +13,18 @@ public class UpdateList : ConnectionHandlingLiteDbRepositoryTests<List<LiteDbTes
 
 		foreach (var item in testItemList)
 		{
-			A.CallTo(() => collection.Update(item))
-			.MustHaveHappened();
+			A.CallTo(() => collection.Update(item)).MustHaveHappened();
 		}
 	}
 
 	[Fact]
 	public void ReturnItemUpdateList()
 	{
-		RunTest()
-			.Should()
-			.BeEquivalentTo(testItemList);
+		RunTest().Should().BeEquivalentTo(testItemList);
 	}
 
-	protected override async Task<List<LiteDbTestObject>> RunTest() => await repository.Update(testItemList);
+	protected override async Task<List<LiteDbTestObject>> RunTest()
+	{
+		return await repository.Update(testItemList);
+	}
 }

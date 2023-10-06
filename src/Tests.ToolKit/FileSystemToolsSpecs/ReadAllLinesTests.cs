@@ -13,8 +13,7 @@ public class ReadAllLinesTests : FileToolsTests
 	{
 		fileLines = Faker.Create<List<string>>();
 
-		A.CallTo(() => fileSystem.File.ReadAllLinesAsync(A<string>._, default))
-		.Returns(fileLines.ToArray());
+		A.CallTo(() => fileSystem.File.ReadAllLinesAsync(A<string>._, default)).Returns(fileLines.ToArray());
 	}
 
 	[Fact]
@@ -32,9 +31,7 @@ public class ReadAllLinesTests : FileToolsTests
 
 		var resultList = await fileTools.ReadAllLines(filePath);
 
-		resultList
-			.Should()
-			.BeEmpty();
+		resultList.Should().BeEmpty();
 	}
 
 	[Fact]
@@ -42,8 +39,7 @@ public class ReadAllLinesTests : FileToolsTests
 	{
 		await fileTools.ReadAllLines(filePath);
 
-		A.CallTo(() => fileSystem.File.ReadAllLinesAsync(filePath, default))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.File.ReadAllLinesAsync(filePath, default)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -51,8 +47,6 @@ public class ReadAllLinesTests : FileToolsTests
 	{
 		var resultList = await fileTools.ReadAllLines(filePath);
 
-		resultList
-			.Should()
-			.BeEquivalentTo(fileLines);
+		resultList.Should().BeEquivalentTo(fileLines);
 	}
 }

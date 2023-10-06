@@ -13,8 +13,7 @@ public class GetFilesTests : FileToolsTests
 	{
 		fileList = Faker.Create<List<string>>();
 
-		A.CallTo(() => fileSystem.Directory.GetFiles(directoryPath))
-		.Returns(fileList.ToArray());
+		A.CallTo(() => fileSystem.Directory.GetFiles(directoryPath)).Returns(fileList.ToArray());
 	}
 
 	[Fact]
@@ -24,8 +23,7 @@ public class GetFilesTests : FileToolsTests
 
 		var files = fileTools.GetFiles(directoryPath);
 
-		files.Should()
-			.BeEmpty();
+		files.Should().BeEmpty();
 	}
 
 	[Fact]
@@ -33,8 +31,7 @@ public class GetFilesTests : FileToolsTests
 	{
 		var files = fileTools.GetFiles(directoryPath);
 
-		files.Should()
-			.BeEquivalentTo(fileList);
+		files.Should().BeEquivalentTo(fileList);
 	}
 
 	[Fact]
@@ -50,7 +47,6 @@ public class GetFilesTests : FileToolsTests
 	{
 		fileTools.GetFiles(directoryPath);
 
-		A.CallTo(() => fileSystem.Directory.GetFiles(directoryPath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.Directory.GetFiles(directoryPath)).MustHaveHappened();
 	}
 }

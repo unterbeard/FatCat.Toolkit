@@ -14,27 +14,21 @@ public class MoveFileTests : FileToolsTests
 	{
 		fileTools.MoveFile(SourceFilePath, DestinationFilePath);
 
-		A.CallTo(() => fileSystem.File.Exists(SourceFilePath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.File.Exists(SourceFilePath)).MustHaveHappened();
 	}
 
 	[Fact]
 	public void IfCanMoveFileReturnTrue()
 	{
-		fileTools.MoveFile(SourceFilePath, DestinationFilePath)
-				.Should()
-				.BeTrue();
+		fileTools.MoveFile(SourceFilePath, DestinationFilePath).Should().BeTrue();
 	}
 
 	[Fact]
 	public void IfSourceFileDoesNotExistReturnFalse()
 	{
-		A.CallTo(() => fileSystem.File.Exists(A<string>._))
-		.Returns(false);
+		A.CallTo(() => fileSystem.File.Exists(A<string>._)).Returns(false);
 
-		fileTools.MoveFile(SourceFilePath, DestinationFilePath)
-				.Should()
-				.BeFalse();
+		fileTools.MoveFile(SourceFilePath, DestinationFilePath).Should().BeFalse();
 	}
 
 	[Fact]
@@ -42,7 +36,6 @@ public class MoveFileTests : FileToolsTests
 	{
 		fileTools.MoveFile(SourceFilePath, DestinationFilePath);
 
-		A.CallTo(() => fileSystem.File.Move(SourceFilePath, DestinationFilePath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.File.Move(SourceFilePath, DestinationFilePath)).MustHaveHappened();
 	}
 }

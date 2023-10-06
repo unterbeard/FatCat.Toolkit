@@ -51,13 +51,23 @@ internal class ApplicationStartUp
 
 		SetUpSignalR(app);
 
-		if (ToolkitWebApplication.IsOptionSet(WebApplicationOptions.HttpsRedirection)) app.UseHttpsRedirection();
-		if (ToolkitWebApplication.IsOptionSet(WebApplicationOptions.Cors)) app.UseCors();
+		if (ToolkitWebApplication.IsOptionSet(WebApplicationOptions.HttpsRedirection))
+		{
+			app.UseHttpsRedirection();
+		}
+
+		if (ToolkitWebApplication.IsOptionSet(WebApplicationOptions.Cors))
+		{
+			app.UseCors();
+		}
 
 		app.UseAuthorization();
 	}
 
-	public void ConfigureContainer(ContainerBuilder builder) => SystemScope.Initialize(builder, ToolkitWebApplication.Settings.ContainerAssemblies);
+	public void ConfigureContainer(ContainerBuilder builder)
+	{
+		SystemScope.Initialize(builder, ToolkitWebApplication.Settings.ContainerAssemblies);
+	}
 
 	public virtual void ConfigureServices(IServiceCollection services)
 	{
@@ -68,79 +78,89 @@ internal class ApplicationStartUp
 
 			services.AddEndpointsApiExplorer();
 
-			services.AddCors(options =>
-								options.AddDefaultPolicy(p =>
-															p.AllowAnyOrigin()));
+			services.AddCors(options => options.AddDefaultPolicy(p => p.AllowAnyOrigin()));
 
-			ConsoleLog.WriteGreen($"===================== AddHttpContextAccessor  =================");
-			
+			ConsoleLog.WriteGreen("===================== AddHttpContextAccessor  =================");
+
 			services.AddHttpContextAccessor();
-			
-			ConsoleLog.WriteGreen($"===================== After AddHttpContextAccessor  =================");
-			
+
+			ConsoleLog.WriteGreen("===================== After AddHttpContextAccessor  =================");
+
 			ConfigureControllers(services);
 
 			AddAuthentication(services);
 
 			services.AddSignalR(options =>
-								{
-									options.MaximumReceiveMessageSize = int.MaxValue;
-									options.EnableDetailedErrors = true;
-								});
+			{
+				options.MaximumReceiveMessageSize = int.MaxValue;
+				options.EnableDetailedErrors = true;
+			});
 		}
 		catch (Exception ex)
 		{
-			if (SystemScope.Container.TryResolve<IToolkitLogger>(out var logger)) logger!.Exception(ex);
+			if (SystemScope.Container.TryResolve<IToolkitLogger>(out var logger))
+			{
+				logger!.Exception(ex);
+			}
 		}
 	}
 
 	private void AddAuthentication(IServiceCollection services)
 	{
-		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.Authentication)) return;
+		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.Authentication))
+		{
+			return;
+		}
 
-		if (ToolkitWebApplication.Settings.ToolkitTokenParameters == null) throw new NullReferenceException(nameof(ToolkitWebApplication.Settings.ToolkitTokenParameters));
+		if (ToolkitWebApplication.Settings.ToolkitTokenParameters == null)
+		{
+			throw new NullReferenceException(nameof(ToolkitWebApplication.Settings.ToolkitTokenParameters));
+		}
 
 		ConsoleLog.WriteMagenta("Adding Authentication");
 
-		var authenticationBuilder =
-			services
-				.AddAuthentication(options =>
-									{
-										options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-										options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-										options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-									})
-				.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
+		var authenticationBuilder = services
+			.AddAuthentication(options =>
+			{
+				options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
 
-		authenticationBuilder
-			.AddJwtBearer(options =>
-						{
-							options.RequireHttpsMetadata = false;
-							options.SaveToken = true;
+		authenticationBuilder.AddJwtBearer(options =>
+		{
+			options.RequireHttpsMetadata = false;
+			options.SaveToken = true;
 
-							var toolkitTokenParameters = ToolkitWebApplication.Settings.ToolkitTokenParameters!;
+			var toolkitTokenParameters = ToolkitWebApplication.Settings.ToolkitTokenParameters!;
 
-							options.TokenValidationParameters = toolkitTokenParameters.Get();
+			options.TokenValidationParameters = toolkitTokenParameters.Get();
 
-							options.Events = OAuthExtensions.GetTokenBearerEvents();
-						});
+			options.Events = OAuthExtensions.GetTokenBearerEvents();
+		});
 
-		services
-			.AddAuthorization(options =>
-							{
-								// options.AddServerToServerPolicy();
-								options.AddPermissionsPolicies();
-							});
+		services.AddAuthorization(options =>
+		{
+			// options.AddServerToServerPolicy();
+			options.AddPermissionsPolicies();
+		});
 	}
 
 	private async Task CaptureMiddlewareExceptions(HttpContext context, Func<Task> next)
 	{
-		try { await next().ConfigureAwait(false); }
+		try
+		{
+			await next().ConfigureAwait(false);
+		}
 		catch (TaskCanceledException)
 		{
 			var displayUrl = context.Request.GetDisplayUrl();
 
-			if (SystemScope.Container.TryResolve<IToolkitLogger>(out var logger)) logger!.Information($"Could not complete call to {displayUrl}");
+			if (SystemScope.Container.TryResolve<IToolkitLogger>(out var logger))
+			{
+				logger!.Information($"Could not complete call to {displayUrl}");
+			}
 		}
 		catch (Exception e)
 		{
@@ -158,47 +178,65 @@ internal class ApplicationStartUp
 
 	private void ConfigureControllers(IServiceCollection services)
 	{
-		services.AddControllers(config =>
-								{
-									if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.Authentication))
-									{
-										var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-													.RequireAuthenticatedUser()
-													.Build();
+		services
+			.AddControllers(config =>
+			{
+				if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.Authentication))
+				{
+					var policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+						.RequireAuthenticatedUser()
+						.Build();
 
-										config.Filters.Add(new AuthorizeFilter(policy));
-									}
-								})
-				.AddNewtonsoftJson(build => { build.SerializerSettings.Converters.Add(new StringEnumConverter()); });
+					config.Filters.Add(new AuthorizeFilter(policy));
+				}
+			})
+			.AddNewtonsoftJson(build =>
+			{
+				build.SerializerSettings.Converters.Add(new StringEnumConverter());
+			});
 
-		services.AddMvc()
-				.ConfigureApplicationPartManager(p =>
-												{
-													foreach (var containerAssembly in ToolkitWebApplication.Settings.ContainerAssemblies)
-													{
-														ConsoleLog.WriteCyan($"Adding Assembly Part <{containerAssembly.FullName}>");
-														
-														p.ApplicationParts.Add(new AssemblyPart(containerAssembly));
-													}
-												});
+		services
+			.AddMvc()
+			.ConfigureApplicationPartManager(p =>
+			{
+				foreach (var containerAssembly in ToolkitWebApplication.Settings.ContainerAssemblies)
+				{
+					ConsoleLog.WriteCyan($"Adding Assembly Part <{containerAssembly.FullName}>");
+
+					p.ApplicationParts.Add(new AssemblyPart(containerAssembly));
+				}
+			});
 	}
 
 	private void SetUpSignalR(IApplicationBuilder app)
 	{
-		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.SignalR)) return;
+		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.SignalR))
+		{
+			return;
+		}
 
 		app.UseEndpoints(endpoints =>
-						{
-							var endpointOption = endpoints.MapHub<ToolkitHub>(ToolkitWebApplication.Settings.SignalRPath);
+		{
+			var endpointOption = endpoints.MapHub<ToolkitHub>(ToolkitWebApplication.Settings.SignalRPath);
 
-							if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.Authentication)) endpointOption.RequireAuthorization();
-						});
+			if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.Authentication))
+			{
+				endpointOption.RequireAuthorization();
+			}
+		});
 	}
 
 	private void SetUpStaticFiles(IApplicationBuilder app)
 	{
-		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.FileSystem)) return;
-		if (ToolkitWebApplication.Settings.StaticFileLocation == null) return;
+		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.FileSystem))
+		{
+			return;
+		}
+
+		if (ToolkitWebApplication.Settings.StaticFileLocation == null)
+		{
+			return;
+		}
 
 		var physicalFileProvider = new PhysicalFileProvider(ToolkitWebApplication.Settings.StaticFileLocation);
 		var options = new DefaultFilesOptions { FileProvider = physicalFileProvider };
@@ -211,7 +249,10 @@ internal class ApplicationStartUp
 	{
 		public override void OnActionExecuting(ActionExecutingContext actionContext)
 		{
-			if (actionContext.ModelState.IsValid == false) actionContext.Result = new BadRequestObjectResult(actionContext.ModelState);
+			if (actionContext.ModelState.IsValid == false)
+			{
+				actionContext.Result = new BadRequestObjectResult(actionContext.ModelState);
+			}
 		}
 	}
 }

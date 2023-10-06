@@ -8,8 +8,7 @@ public class GetAllTests : ConnectionHandlingLiteDbRepositoryTests<List<LiteDbTe
 {
 	public GetAllTests()
 	{
-		A.CallTo(() => collection.FindAll())
-		.Returns(testItemList);
+		A.CallTo(() => collection.FindAll()).Returns(testItemList);
 	}
 
 	[Fact]
@@ -17,17 +16,17 @@ public class GetAllTests : ConnectionHandlingLiteDbRepositoryTests<List<LiteDbTe
 	{
 		await RunTest();
 
-		A.CallTo(() => collection.FindAll())
-		.MustHaveHappened();
+		A.CallTo(() => collection.FindAll()).MustHaveHappened();
 	}
 
 	[Fact]
 	public void ReturnListFromCollection()
 	{
-		RunTest()
-			.Should()
-			.BeEquivalentTo(testItemList);
+		RunTest().Should().BeEquivalentTo(testItemList);
 	}
 
-	protected override async Task<List<LiteDbTestObject>> RunTest() => await repository.GetAll();
+	protected override async Task<List<LiteDbTestObject>> RunTest()
+	{
+		return await repository.GetAll();
+	}
 }

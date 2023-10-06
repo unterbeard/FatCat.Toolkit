@@ -5,7 +5,8 @@ using MongoDB.Driver;
 
 namespace FatCat.Toolkit.Data.Mongo;
 
-public interface IMongoRepository<T> : IDataRepository<T> where T : MongoObject
+public interface IMongoRepository<T> : IDataRepository<T>
+	where T : MongoObject
 {
 	IMongoCollection<T> Collection { get; }
 
@@ -18,7 +19,8 @@ public interface IMongoRepository<T> : IDataRepository<T> where T : MongoObject
 	Task<T?> GetById(ObjectId id);
 }
 
-public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new()
+public class MongoRepository<T> : IMongoRepository<T>
+	where T : MongoObject, new()
 {
 	private readonly IMongoDataConnection mongoDataConnection;
 	private readonly IMongoNames mongoNames;
@@ -27,8 +29,7 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public string DatabaseName { get; set; } = null!;
 
-	public MongoRepository(IMongoDataConnection mongoDataConnection,
-							IMongoNames mongoNames)
+	public MongoRepository(IMongoDataConnection mongoDataConnection, IMongoNames mongoNames)
 	{
 		this.mongoDataConnection = mongoDataConnection;
 		this.mongoNames = mongoNames;
@@ -51,7 +52,10 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public async Task<List<T>> Create(List<T> items)
 	{
-		foreach (var item in items) await Create(item);
+		foreach (var item in items)
+		{
+			await Create(item);
+		}
 
 		return items;
 	}
@@ -67,7 +71,10 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public async Task<List<T>> Delete(List<T> items)
 	{
-		foreach (var item in items) await Delete(item);
+		foreach (var item in items)
+		{
+			await Delete(item);
+		}
 
 		return items;
 	}
@@ -97,11 +104,20 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 		return list.FirstOrDefault();
 	}
 
-	public async Task<T?> GetById(string id) => await GetByFilter(i => i.Id == new ObjectId(id));
+	public async Task<T?> GetById(string id)
+	{
+		return await GetByFilter(i => i.Id == new ObjectId(id));
+	}
 
-	public async Task<T?> GetById(ObjectId id) => await GetByFilter(i => i.Id == id);
+	public async Task<T?> GetById(ObjectId id)
+	{
+		return await GetByFilter(i => i.Id == id);
+	}
 
-	public async Task<T?> GetFirst() => await GetByFilter(i => true);
+	public async Task<T?> GetFirst()
+	{
+		return await GetByFilter(i => true);
+	}
 
 	public async Task<T> GetFirstOrCreate()
 	{
@@ -128,13 +144,19 @@ public class MongoRepository<T> : IMongoRepository<T> where T : MongoObject, new
 
 	public async Task<List<T>> Update(List<T> items)
 	{
-		foreach (var item in items) await Update(item);
+		foreach (var item in items)
+		{
+			await Update(item);
+		}
 
 		return items;
 	}
 
 	private void EnsureCollection()
 	{
-		if (Collection == null) throw new ConnectionToMongoIsRequired();
+		if (Collection == null)
+		{
+			throw new ConnectionToMongoIsRequired();
+		}
 	}
 }

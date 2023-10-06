@@ -25,6 +25,8 @@ public class TestGetWithQueryStringsEndpoint : Endpoint
 		ConsoleLog.WriteMagenta("Got Query Request");
 		ConsoleLog.WriteMagenta(JsonConvert.SerializeObject(request, Formatting.Indented));
 
-		return Ok($"Got {request.Count} of {request.FirstName} {request.LastName} | <{DateTime.Now:h:mm:ss tt zz}>");
+		return Ok(
+			$"Got {request.Count} of {request.FirstName} {request.LastName} | <{DateTime.Now:h:mm:ss tt zz}>"
+		);
 	}
 }

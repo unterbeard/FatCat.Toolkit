@@ -7,7 +7,6 @@ public class SampleDockerModule : Module
 {
 	protected override void Load(ContainerBuilder builder)
 	{
-		builder.RegisterType<SampleConnectionInformation>()
-				.As<IMongoConnectionInformation>();
+		builder.RegisterType<SampleConnectionInformation>().As<IMongoConnectionInformation>();
 	}
 }

@@ -15,45 +15,50 @@ public class WebServerWorker : ISpikeWorker<ServerOptions>
 		ConsoleLog.WriteCyan($"Web Server Worker on port <{options.WebPort}>");
 
 		var applicationSettings = new ToolkitWebApplicationSettings
-								{
-									Options = WebApplicationOptions.Https | WebApplicationOptions.SignalR,
-									TlsCertificate = new CertificationSettings
-													{
-														Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
-														Password = "basarab_cert"
-													},
-									ToolkitTokenParameters = new SpikeToolkitParameters(),
-									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
-									OnWebApplicationStarted = Started,
-								};
+		{
+			Options = WebApplicationOptions.Https | WebApplicationOptions.SignalR,
+			TlsCertificate = new CertificationSettings
+			{
+				Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
+				Password = "basarab_cert"
+			},
+			ToolkitTokenParameters = new SpikeToolkitParameters(),
+			ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
+			OnWebApplicationStarted = Started,
+		};
 
 		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
-														{
-															ConsoleLog.WriteMagenta($"Got data buffer message: {JsonConvert.SerializeObject(message)}");
-															ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
+		{
+			ConsoleLog.WriteMagenta($"Got data buffer message: {JsonConvert.SerializeObject(message)}");
+			ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
 
-															await Task.CompletedTask;
+			await Task.CompletedTask;
 
-															var responseMessage = $"BufferResponse {Faker.RandomString()}";
+			var responseMessage = $"BufferResponse {Faker.RandomString()}";
 
-															ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
+			ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
 
-															return responseMessage;
-														};
+			return responseMessage;
+		};
 
 		applicationSettings.ClientMessage += async message =>
-											{
-												await Task.CompletedTask;
+		{
+			await Task.CompletedTask;
 
-												ConsoleLog.WriteDarkCyan($"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>");
+			ConsoleLog.WriteDarkCyan(
+				$"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>"
+			);
 
-												return "ACK";
-											};
+			return "ACK";
+		};
 
 		ToolkitWebApplication.Run(applicationSettings);
 
 		return Task.CompletedTask;
 	}
 
-	private void Started() => ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+	private void Started()
+	{
+		ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+	}
 }

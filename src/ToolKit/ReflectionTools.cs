@@ -6,7 +6,8 @@ namespace FatCat.Toolkit;
 
 public interface IReflectionTools
 {
-	TAttribute? FindAttributeOnType<TAttribute>(Type type) where TAttribute : Attribute;
+	TAttribute? FindAttributeOnType<TAttribute>(Type type)
+		where TAttribute : Attribute;
 
 	List<Type> FindTypesImplementing<TTypeImplementing>(List<Assembly> assemblies);
 
@@ -15,7 +16,11 @@ public interface IReflectionTools
 
 public class ReflectionTools : IReflectionTools
 {
-	public TAttribute? FindAttributeOnType<TAttribute>(Type type) where TAttribute : Attribute => type.GetCustomAttribute<TAttribute>();
+	public TAttribute? FindAttributeOnType<TAttribute>(Type type)
+		where TAttribute : Attribute
+	{
+		return type.GetCustomAttribute<TAttribute>();
+	}
 
 	public List<Type> FindTypesImplementing<TTypeImplementing>(List<Assembly> assemblies)
 	{
@@ -31,5 +36,8 @@ public class ReflectionTools : IReflectionTools
 		return foundTypes;
 	}
 
-	public List<Assembly> GetDomainAssemblies() => AppDomain.CurrentDomain.GetAssemblies().ToList();
+	public List<Assembly> GetDomainAssemblies()
+	{
+		return AppDomain.CurrentDomain.GetAssemblies().ToList();
+	}
 }

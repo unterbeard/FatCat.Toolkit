@@ -7,7 +7,8 @@ public interface ILiteDbConnection : IDisposable
 {
 	void Connect(string databasePath);
 
-	ILiteCollection<T> GetCollection<T>() where T : LiteDbObject;
+	ILiteCollection<T> GetCollection<T>()
+		where T : LiteDbObject;
 }
 
 public class LiteDbConnection : ILiteDbConnection
@@ -16,11 +17,17 @@ public class LiteDbConnection : ILiteDbConnection
 
 	private LiteDatabase? database;
 
-	public LiteDbConnection(IDataNames dataNames) => this.dataNames = dataNames;
+	public LiteDbConnection(IDataNames dataNames)
+	{
+		this.dataNames = dataNames;
+	}
 
 	public void Connect(string databasePath)
 	{
-		if (database != null) return;
+		if (database != null)
+		{
+			return;
+		}
 
 		database = new LiteDatabase(databasePath);
 	}
@@ -34,9 +41,13 @@ public class LiteDbConnection : ILiteDbConnection
 		database = null;
 	}
 
-	public ILiteCollection<T> GetCollection<T>() where T : LiteDbObject
+	public ILiteCollection<T> GetCollection<T>()
+		where T : LiteDbObject
 	{
-		if (database == null) throw new LiteDbConnectionException();
+		if (database == null)
+		{
+			throw new LiteDbConnectionException();
+		}
 
 		var collectionName = dataNames.GetCollectionName<T>();
 

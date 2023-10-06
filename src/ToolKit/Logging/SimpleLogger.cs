@@ -11,33 +11,55 @@ public interface ISimpleLogger
 {
 	void SetLogLevel(LogLevel logLevel);
 
-	void Write(LogLevel logLevel, string message, [CallerMemberName] string memberName = "",
-				[CallerFilePath] string sourceFilePath = "",
-				[CallerLineNumber] int sourceLineNumber = 0);
+	void Write(
+		LogLevel logLevel,
+		string message,
+		[CallerMemberName] string memberName = "",
+		[CallerFilePath] string sourceFilePath = "",
+		[CallerLineNumber] int sourceLineNumber = 0
+	);
 
-	void WriteDebug(string message, [CallerMemberName] string memberName = "",
-					[CallerFilePath] string sourceFilePath = "",
-					[CallerLineNumber] int sourceLineNumber = 0);
+	void WriteDebug(
+		string message,
+		[CallerMemberName] string memberName = "",
+		[CallerFilePath] string sourceFilePath = "",
+		[CallerLineNumber] int sourceLineNumber = 0
+	);
 
-	void WriteError(string message, [CallerMemberName] string memberName = "",
-					[CallerFilePath] string sourceFilePath = "",
-					[CallerLineNumber] int sourceLineNumber = 0);
+	void WriteError(
+		string message,
+		[CallerMemberName] string memberName = "",
+		[CallerFilePath] string sourceFilePath = "",
+		[CallerLineNumber] int sourceLineNumber = 0
+	);
 
-	void WriteFatal(string message, [CallerMemberName] string memberName = "",
-					[CallerFilePath] string sourceFilePath = "",
-					[CallerLineNumber] int sourceLineNumber = 0);
+	void WriteFatal(
+		string message,
+		[CallerMemberName] string memberName = "",
+		[CallerFilePath] string sourceFilePath = "",
+		[CallerLineNumber] int sourceLineNumber = 0
+	);
 
-	void WriteInformation(string message, [CallerMemberName] string memberName = "",
-						[CallerFilePath] string sourceFilePath = "",
-						[CallerLineNumber] int sourceLineNumber = 0);
+	void WriteInformation(
+		string message,
+		[CallerMemberName] string memberName = "",
+		[CallerFilePath] string sourceFilePath = "",
+		[CallerLineNumber] int sourceLineNumber = 0
+	);
 
-	void WriteVerbose(string message, [CallerMemberName] string memberName = "",
-					[CallerFilePath] string sourceFilePath = "",
-					[CallerLineNumber] int sourceLineNumber = 0);
+	void WriteVerbose(
+		string message,
+		[CallerMemberName] string memberName = "",
+		[CallerFilePath] string sourceFilePath = "",
+		[CallerLineNumber] int sourceLineNumber = 0
+	);
 
-	void WriteWarning(string message, [CallerMemberName] string memberName = "",
-					[CallerFilePath] string sourceFilePath = "",
-					[CallerLineNumber] int sourceLineNumber = 0);
+	void WriteWarning(
+		string message,
+		[CallerMemberName] string memberName = "",
+		[CallerFilePath] string sourceFilePath = "",
+		[CallerLineNumber] int sourceLineNumber = 0
+	);
 }
 
 public class SimpleLogger : ISimpleLogger
@@ -47,19 +69,28 @@ public class SimpleLogger : ISimpleLogger
 
 	private LogLevel logLevel = LogLevel.Information;
 
-	public SimpleLogger(IApplicationTools applicationTools,
-						string? logName = null)
+	public SimpleLogger(IApplicationTools applicationTools, string? logName = null)
 	{
 		this.applicationTools = applicationTools;
 
 		this.logName = logName ?? this.applicationTools.ExecutableName;
 	}
 
-	public void SetLogLevel(LogLevel logLevel) => this.logLevel = logLevel;
-
-	public void Write(LogLevel logLevel, string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0)
+	public void SetLogLevel(LogLevel logLevel)
 	{
-		var fullMessage = $"{DateTime.Now} | {logLevel} | {Path.GetFileName(sourceFilePath)} @ {sourceLineNumber} {memberName} | {message}";
+		this.logLevel = logLevel;
+	}
+
+	public void Write(
+		LogLevel logLevel,
+		string message,
+		string memberName = "",
+		string sourceFilePath = "",
+		int sourceLineNumber = 0
+	)
+	{
+		var fullMessage =
+			$"{DateTime.Now} | {logLevel} | {Path.GetFileName(sourceFilePath)} @ {sourceLineNumber} {memberName} | {message}";
 
 		var logFileFullPath = Path.Join(applicationTools.ExecutingDirectory, $"{logName}.log");
 
@@ -77,15 +108,63 @@ public class SimpleLogger : ISimpleLogger
 		streamWriter.WriteLine(fullMessage);
 	}
 
-	public void WriteDebug(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Debug, message, memberName, sourceFilePath, sourceLineNumber);
+	public void WriteDebug(
+		string message,
+		string memberName = "",
+		string sourceFilePath = "",
+		int sourceLineNumber = 0
+	)
+	{
+		Write(LogLevel.Debug, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 
-	public void WriteError(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Error, message, memberName, sourceFilePath, sourceLineNumber);
+	public void WriteError(
+		string message,
+		string memberName = "",
+		string sourceFilePath = "",
+		int sourceLineNumber = 0
+	)
+	{
+		Write(LogLevel.Error, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 
-	public void WriteFatal(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Fatal, message, memberName, sourceFilePath, sourceLineNumber);
+	public void WriteFatal(
+		string message,
+		string memberName = "",
+		string sourceFilePath = "",
+		int sourceLineNumber = 0
+	)
+	{
+		Write(LogLevel.Fatal, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 
-	public void WriteInformation(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Information, message, memberName, sourceFilePath, sourceLineNumber);
+	public void WriteInformation(
+		string message,
+		string memberName = "",
+		string sourceFilePath = "",
+		int sourceLineNumber = 0
+	)
+	{
+		Write(LogLevel.Information, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 
-	public void WriteVerbose(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Verbose, message, memberName, sourceFilePath, sourceLineNumber);
+	public void WriteVerbose(
+		string message,
+		string memberName = "",
+		string sourceFilePath = "",
+		int sourceLineNumber = 0
+	)
+	{
+		Write(LogLevel.Verbose, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 
-	public void WriteWarning(string message, string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0) => Write(LogLevel.Warning, message, memberName, sourceFilePath, sourceLineNumber);
+	public void WriteWarning(
+		string message,
+		string memberName = "",
+		string sourceFilePath = "",
+		int sourceLineNumber = 0
+	)
+	{
+		Write(LogLevel.Warning, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 }

@@ -17,21 +17,32 @@ public static class Program
 
 		try
 		{
-			SystemScope.Initialize(new ContainerBuilder(),
-									new List<Assembly>
-									{
-										typeof(OneOffModule).Assembly,
-										typeof(Program).Assembly,
-										typeof(ConsoleLog).Assembly
-									},
-									ScopeOptions.SetLifetimeScope);
+			SystemScope.Initialize(
+				new ContainerBuilder(),
+				new List<Assembly>
+				{
+					typeof(OneOffModule).Assembly,
+					typeof(Program).Assembly,
+					typeof(ConsoleLog).Assembly
+				},
+				ScopeOptions.SetLifetimeScope
+			);
 
-			if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase)) ConnectClient(args);
-			else RunServer(args);
+			if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase))
+			{
+				ConnectClient(args);
+			}
+			else
+			{
+				RunServer(args);
+			}
 
 			await Task.Delay(500.Milliseconds());
 		}
-		catch (Exception ex) { ConsoleLog.WriteException(ex); }
+		catch (Exception ex)
+		{
+			ConsoleLog.WriteException(ex);
+		}
 	}
 
 	private static void ConnectClient(string[] args)
@@ -45,5 +56,8 @@ public static class Program
 		consoleUtilities.WaitForExit();
 	}
 
-	private static void RunServer(string[] args) => new ServerWorker().DoWork(args);
+	private static void RunServer(string[] args)
+	{
+		new ServerWorker().DoWork(args);
+	}
 }
