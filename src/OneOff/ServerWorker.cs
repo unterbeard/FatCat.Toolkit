@@ -79,7 +79,8 @@ public class ServerWorker
 
 		var caller = factory.GetWebCaller(new Uri("https://localhost:14555"));
 
-		var response = caller.Get("api/test/Search/Multi?statuses=Available&statuses=CheckedOut").Result;
+		var response = caller.Get("api/test/Search/Multi?firstname=david&lastname=basarab&count=43").Result;
+		// var response = caller.Get("api/test/Search/Multi?statuses=Available&statuses=CheckedOut").Result;
 
 		// var finalResult = new WebResult<TestModel>(response);
 		var finalResult = response;
