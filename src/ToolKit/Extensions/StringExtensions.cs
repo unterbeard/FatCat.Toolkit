@@ -154,11 +154,7 @@ public static class StringExtensions
 
 		var lowerValue = value.ToLower();
 
-		return lowerValue == "t"
-			|| lowerValue == "1"
-			|| lowerValue == "y"
-			|| lowerValue == "true"
-			|| lowerValue == "yes";
+		return lowerValue is "t" or "1" or "y" or "true" or "yes";
 	}
 
 	public static byte ToByte(this string value, byte? defaultValue = null)
