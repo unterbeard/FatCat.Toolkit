@@ -57,6 +57,17 @@ public class ServerWorker
 		ToolkitWebApplication.Run(applicationSettings);
 	}
 
+	private static void MakeWebRequest(IWebCaller caller, string url)
+	{
+		var response = caller.Get(url).Result;
+
+		// var finalResult = new WebResult<TestModel>(response);
+		var finalResult = response;
+
+		if (finalResult.IsSuccessful) ConsoleLog.WriteGreen(finalResult.Content);
+		else ConsoleLog.WriteRed($"Web Reqeust status code: <{finalResult.StatusCode}> | <{finalResult.Content}>");
+	}
+
 	private Task OnClientConnected(ToolkitUser user, string connectionId)
 	{
 		ConsoleLog.WriteDarkCyan($"A client has connected: <{user.Name}> | <{connectionId}>");
@@ -80,18 +91,7 @@ public class ServerWorker
 		var caller = factory.GetWebCaller(new Uri("https://localhost:14555"));
 
 		// var response = caller.Get("api/test/Search/firstname=david&lastname=basarab&count=43").Result;
+		MakeWebRequest(caller, "api/test/Search?firstname=david&lastname=basarab&count=43");
 		MakeWebRequest(caller, "api/test/Search/Multi?statuses=Available&statuses=CheckedOut");
-		MakeWebRequest(caller, "api/test/Search/firstname=david&lastname=basarab&count=43");
-	}
-
-	private static void MakeWebRequest(IWebCaller caller, string url)
-	{
-		var response = caller.Get(url).Result;
-
-		// var finalResult = new WebResult<TestModel>(response);
-		var finalResult = response;
-
-		if (finalResult.IsSuccessful) ConsoleLog.WriteGreen(finalResult.Content);
-		else ConsoleLog.WriteRed(finalResult.Content);
 	}
 }
