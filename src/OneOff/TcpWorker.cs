@@ -2,14 +2,15 @@
 using System.Text;
 using FatCat.Toolkit.Communication;
 using FatCat.Toolkit.Console;
+using Humanizer;
 
 namespace OneOff;
 
 public class TcpWorker : SpikeWorker
 {
 	private const int TcpPort = 47899;
-	private readonly ITcpServer tcpServer;
 	private readonly ISimpleTcpSender tcpSender;
+	private readonly ITcpServer tcpServer;
 
 	public TcpWorker(ITcpServer tcpServer, ISimpleTcpSender tcpSender)
 	{
@@ -33,7 +34,14 @@ public class TcpWorker : SpikeWorker
 		{
 			var endPoint = new IPEndPoint(IPAddress.Loopback, TcpPort);
 
-			await tcpSender.Send(endPoint, "Hello World", Encoding.UTF8);
+			for (var i = 0; i < 850000; i++)
+			{
+				var message = $"{i:X} This is a	message | {DateTime.Now:T}";
+
+				await tcpSender.Send(endPoint, message, Encoding.UTF8);
+
+				await Task.Delay(10.Milliseconds());
+			}
 		}
 	}
 
