@@ -59,6 +59,8 @@ public class ServerWorker
 
 	private static void MakeWebRequest(IWebCaller caller, string url)
 	{
+		ConsoleLog.WriteDarkCyan($"Making web request to url <{url}>");
+		
 		var response = caller.Get(url).Result;
 
 		// var finalResult = new WebResult<TestModel>(response);

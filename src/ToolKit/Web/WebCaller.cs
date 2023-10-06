@@ -263,7 +263,27 @@ public class WebCaller : IWebCaller
 
 		if (queries.AllKeys.Length is not 0)
 		{
-			foreach (var key in queries.AllKeys) { callingUrl.SetQueryParam(key, queries[key]); }
+			foreach (var key in queries.AllKeys)
+			{
+				var queryValue = queries[key];
+
+				if (queryValue.Contains(","))
+				{
+					var values = queryValue.Split(',');
+
+					foreach (var value in values)
+					{
+						ConsoleLog.WriteDarkMagenta($"Adding Query Param <{key}> with value <{value}>");
+						
+						// callingUrl.SetQueryParam(key, value);	
+						callingUrl.QueryParams.Add(key, value);
+					}
+				}
+				else
+				{
+					callingUrl.SetQueryParam(key, queryValue);	
+				}
+			}
 		}
 
 		logger.Debug($"Create Request for <{callingUrl}>");
