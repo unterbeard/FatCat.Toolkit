@@ -17,10 +17,10 @@ public class ServerWorker
 								{
 									Options = WebApplicationOptions.Https | WebApplicationOptions.SignalR,
 									TlsCertificate = new CertificationSettings
-													{
-														Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
-														Password = "basarab_cert"
-													},
+														{
+															Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
+															Password = "basarab_cert"
+														},
 									SignalRPath = "events",
 									ToolkitTokenParameters = new SpikeToolkitParameters(),
 									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
@@ -77,9 +77,9 @@ public class ServerWorker
 
 		var factory = SystemScope.Container.Resolve<IWebCallerFactory>();
 
-		var caller = factory.GetWebCaller(new Uri("http://localhost:5000"));
+		var caller = factory.GetWebCaller(new Uri("https://localhost:14555"));
 
-		var response = caller.Get("api/test").Result;
+		var response = caller.Get("api/test/Search/Multi?statuses=Available&statuses=CheckedOut").Result;
 
 		// var finalResult = new WebResult<TestModel>(response);
 		var finalResult = response;

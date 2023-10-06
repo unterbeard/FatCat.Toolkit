@@ -267,6 +267,7 @@ public class WebCaller : IWebCaller
 		}
 
 		logger.Debug($"Create Request for <{callingUrl}>");
+		ConsoleLog.WriteYellow($"Create Request for <{callingUrl}>");
 
 		return callingUrl;
 	}
