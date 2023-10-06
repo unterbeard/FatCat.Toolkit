@@ -39,7 +39,9 @@ public abstract class ConnectionHandlingLiteDbRepositoryTests<T> : LiteDbReposit
 	{
 		repository.DatabasePath = null;
 
+		#pragma warning disable xUnit1031
 		var testAction = () => RunTest().Wait();
+		#pragma warning restore xUnit1031
 
 		testAction
 			.Should()

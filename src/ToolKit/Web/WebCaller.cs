@@ -59,14 +59,14 @@ public class WebCaller : IWebCaller
 		FlurlHttp.Configure(settings =>
 							{
 								var jsonSettings = new JsonSerializerSettings
-													{
-														NullValueHandling = NullValueHandling.Ignore,
-														Converters = new List<Newtonsoft.Json.JsonConverter>
+												{
+													NullValueHandling = NullValueHandling.Ignore,
+													Converters = new List<Newtonsoft.Json.JsonConverter>
 																	{
 																		new StringEnumConverter(),
 																		new ObjectIdConverter()
 																	}
-													};
+												};
 
 								settings.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings);
 								settings.Timeout = DefaultTimeout;
@@ -87,8 +87,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout)
-				.AllowHttpStatus("*");
+						.WithTimeout(timeout)
+						.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -113,9 +113,9 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout)
-				.AllowHttpStatus("*");
-			
+						.WithTimeout(timeout)
+						.AllowHttpStatus("*");
+
 			logger.Debug($"Getting from Url <{request.Url}>");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
@@ -128,7 +128,7 @@ public class WebCaller : IWebCaller
 		catch (FlurlHttpException ex)
 		{
 			ConsoleLog.WriteRed($"Furl HttpException: {ex.Message}");
-			
+
 			return ex.StatusCode == null ? WebResult.NotFound() : new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
 		}
 		catch (Exception ex)
@@ -152,8 +152,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout)
-				.AllowHttpStatus("*");
+						.WithTimeout(timeout)
+						.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -176,8 +176,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout)
-				.AllowHttpStatus("*");
+						.WithTimeout(timeout)
+						.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -200,8 +200,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout)
-				.AllowHttpStatus("*");
+						.WithTimeout(timeout)
+						.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -224,8 +224,8 @@ public class WebCaller : IWebCaller
 		try
 		{
 			var request = CreateRequest(url)
-				.WithTimeout(timeout)
-				.AllowHttpStatus("*");
+						.WithTimeout(timeout)
+						.AllowHttpStatus("*");
 
 			if (bearerToken is not null) request.WithOAuthBearerToken(bearerToken);
 
@@ -271,23 +271,13 @@ public class WebCaller : IWebCaller
 				{
 					var values = queryValue.Split(',');
 
-					foreach (var value in values)
-					{
-						ConsoleLog.WriteDarkMagenta($"Adding Query Param <{key}> with value <{value}>");
-						
-						// callingUrl.SetQueryParam(key, value);	
-						callingUrl.QueryParams.Add(key, value);
-					}
+					foreach (var value in values) { callingUrl.QueryParams.Add(key, value); }
 				}
-				else
-				{
-					callingUrl.SetQueryParam(key, queryValue);	
-				}
+				else callingUrl.SetQueryParam(key, queryValue);
 			}
 		}
 
 		logger.Debug($"Create Request for <{callingUrl}>");
-		ConsoleLog.WriteYellow($"Create Request for <{callingUrl}>");
 
 		return callingUrl;
 	}
