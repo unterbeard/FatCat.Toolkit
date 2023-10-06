@@ -8,7 +8,7 @@
         <AssemblyName>FatCat.Toolkit</AssemblyName>
         <DebugType>full</DebugType>
         <LangVersion>latest</LangVersion>
-    <VersionPrefix>1.0.158</VersionPrefix>
+        <VersionPrefix>1.0.158</VersionPrefix>
         <Authors>David Basarab</Authors>
         <PackageTags>tools</PackageTags>
         <PackageProjectUrl>https://github.com/DavidBasarab/FatCat.Toolkit</PackageProjectUrl>
@@ -28,25 +28,25 @@
         <NoWarn>CS8002,CS1700;IL2121;CS8618;IL2121;CS8603</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="7.1.0" />
-        <PackageReference Include="Autofac.AspNetCore.Extensions" Version="2.0.15" />
-        <PackageReference Include="FakeItEasy" Version="7.4.0" />
-        <PackageReference Include="fasterflect" Version="3.0.0" />
-        <PackageReference Include="FatCat.Fakes" Version="1.0.22" />
-        <PackageReference Include="FluentAssertions" Version="6.12.0" />
-        <PackageReference Include="Flurl.Http" Version="3.2.4" />
-        <PackageReference Include="Humanizer.Core" Version="2.14.1" />
-        <PackageReference Include="LiteDB" Version="5.0.17" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.11" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.11" />
-        <PackageReference Include="MongoDB.Driver" Version="2.21.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="System.IO.Abstractions" Version="19.2.69" />
+        <PackageReference Include="Autofac" Version="7.1.0"/>
+        <PackageReference Include="Autofac.AspNetCore.Extensions" Version="2.0.15"/>
+        <PackageReference Include="FakeItEasy" Version="7.4.0"/>
+        <PackageReference Include="fasterflect" Version="3.0.0"/>
+        <PackageReference Include="FatCat.Fakes" Version="1.0.22"/>
+        <PackageReference Include="FluentAssertions" Version="6.12.0"/>
+        <PackageReference Include="Flurl.Http" Version="3.2.4"/>
+        <PackageReference Include="Humanizer.Core" Version="2.14.1"/>
+        <PackageReference Include="LiteDB" Version="5.0.17"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.11"/>
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.11"/>
+        <PackageReference Include="MongoDB.Driver" Version="2.21.0"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="System.IO.Abstractions" Version="19.2.69"/>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Testing\Binders\" />
+        <Folder Include="Testing\Binders\"/>
     </ItemGroup>
 </Project>

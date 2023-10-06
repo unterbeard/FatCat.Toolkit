@@ -23,5 +23,8 @@ public class CreateItemListTests : EnsureCollectionTests
 		repository.Create(itemList).Should().BeEquivalentTo(itemList);
 	}
 
-	protected override async Task TestMethod() => await repository.Create(itemList);
+	protected override async Task TestMethod()
+	{
+		await repository.Create(itemList);
+	}
 }

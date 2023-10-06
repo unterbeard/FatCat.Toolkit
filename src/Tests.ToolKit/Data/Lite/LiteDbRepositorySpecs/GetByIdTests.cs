@@ -41,5 +41,8 @@ public class GetByIdTests : FilterLiteDbRepositoryTests<LiteDbTestObject>
 		RunTest().Should().Be(testItem);
 	}
 
-	protected override Task<LiteDbTestObject> RunTest() => Task.FromResult(repository.GetById(numberToFind));
+	protected override Task<LiteDbTestObject> RunTest()
+	{
+		return Task.FromResult(repository.GetById(numberToFind));
+	}
 }

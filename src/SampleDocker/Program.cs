@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Web.Api;
 using FatCat.Toolkit.Web.Api.SignalR;
 using Humanizer;

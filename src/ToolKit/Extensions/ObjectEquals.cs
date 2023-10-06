@@ -13,11 +13,19 @@ internal static class ObjectEquals
 	public static bool AreEqual(object? value1, object? value2)
 	{
 		if (IsOneNull(value1, value2))
+		{
 			return BothAreNull(value1, value2);
+		}
+
 		if (ReferenceEquals(value1, value2))
+		{
 			return true;
+		}
+
 		if (value1!.GetType() != value2!.GetType())
+		{
 			return false;
+		}
 
 		var propertyInfos = value1.GetType().GetProperties();
 
@@ -26,10 +34,14 @@ internal static class ObjectEquals
 		foreach (var propertyInfo in propertyInfos)
 		{
 			if (result == false)
+			{
 				break;
+			}
 
 			if (ExcludeFromCompare(propertyInfo))
+			{
 				continue;
+			}
 
 			object? compare1 = null;
 			object? compare2 = null;
@@ -45,10 +57,14 @@ internal static class ObjectEquals
 			}
 
 			if (BothAreNull(compare1, compare2))
+			{
 				continue;
+			}
 
 			if (OneValueNull(compare2, compare1))
+			{
 				return false;
+			}
 
 			if (compare1 is string)
 			{
@@ -103,7 +119,9 @@ internal static class ObjectEquals
 	public static bool EqualsOperator(object? rightHandSide, object? leftHandSide)
 	{
 		if (BothAreNull(rightHandSide, leftHandSide))
+		{
 			return true;
+		}
 
 		return !IsOneNull(rightHandSide, leftHandSide) && rightHandSide!.Equals(leftHandSide);
 	}
@@ -111,7 +129,9 @@ internal static class ObjectEquals
 	public static int GenerateHashCode(object? value)
 	{
 		if (value == null)
+		{
 			return 0;
+		}
 
 		var hash = new StringBuilder();
 
@@ -122,14 +142,22 @@ internal static class ObjectEquals
 			var currentValue = propertyInfo.GetValue(value, null);
 
 			if (currentValue == null)
+			{
 				continue;
+			}
 
 			if (ImplementsIEnumerable(currentValue.GetType()))
+			{
 				hash.Append(GenericHashBuilder((IEnumerable)currentValue));
+			}
 			else if (currentValue is DateTime dateValue)
+			{
 				hash.Append(dateValue.ToString(DateFormat));
+			}
 			else
+			{
 				hash.Append(currentValue);
+			}
 		}
 
 		return hash.ToString().GetHashCode();
@@ -138,7 +166,9 @@ internal static class ObjectEquals
 	private static bool AreDictionariesTheSame(IDictionary dictionary1, IDictionary dictionary2)
 	{
 		if (dictionary1.Count != dictionary2.Count)
+		{
 			return false;
+		}
 
 		var result = true;
 
@@ -152,7 +182,9 @@ internal static class ObjectEquals
 				result = currentValue1!.Equals(currentValue2);
 
 				if (!result)
+				{
 					break;
+				}
 			}
 			else
 			{
@@ -165,8 +197,10 @@ internal static class ObjectEquals
 		return result;
 	}
 
-	private static bool BothAreNull(object? rhs, object? lhs) =>
-		ReferenceEquals(rhs, null) && ReferenceEquals(lhs, null);
+	private static bool BothAreNull(object? rhs, object? lhs)
+	{
+		return ReferenceEquals(rhs, null) && ReferenceEquals(lhs, null);
+	}
 
 	private static bool CompareDictionaries(PropertyInfo propertyInfo, object? compare1, object? compare2)
 	{
@@ -188,13 +222,17 @@ internal static class ObjectEquals
 		var compare1Dict = compare1 as IDictionary;
 
 		foreach (var currentKey in compare1Dict!.Keys)
+		{
 			dictionary1.Add(currentKey, compare1Dict[currentKey]);
+		}
 
 		return dictionary1;
 	}
 
-	private static bool ExcludeFromCompare(PropertyInfo propertyInfo) =>
-		propertyInfo.GetCustomAttributes(typeof(CompareExclude), false).Any();
+	private static bool ExcludeFromCompare(PropertyInfo propertyInfo)
+	{
+		return propertyInfo.GetCustomAttributes(typeof(CompareExclude), false).Any();
+	}
 
 	private static string GenericHashBuilder(IEnumerable list)
 	{
@@ -203,7 +241,9 @@ internal static class ObjectEquals
 		foreach (var item in list)
 		{
 			if (item != null)
+			{
 				hashBuilder.Append(item.GetHashCode());
+			}
 		}
 
 		return hashBuilder.ToString();
@@ -221,9 +261,13 @@ internal static class ObjectEquals
 			.Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
 	}
 
-	private static bool IsOneNull(object? rhs, object? lhs) =>
-		ReferenceEquals(rhs, null) || ReferenceEquals(lhs, null);
+	private static bool IsOneNull(object? rhs, object? lhs)
+	{
+		return ReferenceEquals(rhs, null) || ReferenceEquals(lhs, null);
+	}
 
-	private static bool OneValueNull(object? compare2, object? compare1) =>
-		!BothAreNull(compare1, compare2) && IsOneNull(compare1, compare2);
+	private static bool OneValueNull(object? compare2, object? compare1)
+	{
+		return !BothAreNull(compare1, compare2) && IsOneNull(compare1, compare2);
+	}
 }

@@ -52,15 +52,22 @@ internal class ApplicationStartUp
 		SetUpSignalR(app);
 
 		if (ToolkitWebApplication.IsOptionSet(WebApplicationOptions.HttpsRedirection))
+		{
 			app.UseHttpsRedirection();
+		}
+
 		if (ToolkitWebApplication.IsOptionSet(WebApplicationOptions.Cors))
+		{
 			app.UseCors();
+		}
 
 		app.UseAuthorization();
 	}
 
-	public void ConfigureContainer(ContainerBuilder builder) =>
+	public void ConfigureContainer(ContainerBuilder builder)
+	{
 		SystemScope.Initialize(builder, ToolkitWebApplication.Settings.ContainerAssemblies);
+	}
 
 	public virtual void ConfigureServices(IServiceCollection services)
 	{
@@ -73,11 +80,11 @@ internal class ApplicationStartUp
 
 			services.AddCors(options => options.AddDefaultPolicy(p => p.AllowAnyOrigin()));
 
-			ConsoleLog.WriteGreen($"===================== AddHttpContextAccessor  =================");
+			ConsoleLog.WriteGreen("===================== AddHttpContextAccessor  =================");
 
 			services.AddHttpContextAccessor();
 
-			ConsoleLog.WriteGreen($"===================== After AddHttpContextAccessor  =================");
+			ConsoleLog.WriteGreen("===================== After AddHttpContextAccessor  =================");
 
 			ConfigureControllers(services);
 
@@ -92,17 +99,23 @@ internal class ApplicationStartUp
 		catch (Exception ex)
 		{
 			if (SystemScope.Container.TryResolve<IToolkitLogger>(out var logger))
+			{
 				logger!.Exception(ex);
+			}
 		}
 	}
 
 	private void AddAuthentication(IServiceCollection services)
 	{
 		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.Authentication))
+		{
 			return;
+		}
 
 		if (ToolkitWebApplication.Settings.ToolkitTokenParameters == null)
+		{
 			throw new NullReferenceException(nameof(ToolkitWebApplication.Settings.ToolkitTokenParameters));
+		}
 
 		ConsoleLog.WriteMagenta("Adding Authentication");
 
@@ -145,7 +158,9 @@ internal class ApplicationStartUp
 			var displayUrl = context.Request.GetDisplayUrl();
 
 			if (SystemScope.Container.TryResolve<IToolkitLogger>(out var logger))
+			{
 				logger!.Information($"Could not complete call to {displayUrl}");
+			}
 		}
 		catch (Exception e)
 		{
@@ -196,23 +211,32 @@ internal class ApplicationStartUp
 	private void SetUpSignalR(IApplicationBuilder app)
 	{
 		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.SignalR))
+		{
 			return;
+		}
 
 		app.UseEndpoints(endpoints =>
 		{
 			var endpointOption = endpoints.MapHub<ToolkitHub>(ToolkitWebApplication.Settings.SignalRPath);
 
 			if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.Authentication))
+			{
 				endpointOption.RequireAuthorization();
+			}
 		});
 	}
 
 	private void SetUpStaticFiles(IApplicationBuilder app)
 	{
 		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.FileSystem))
+		{
 			return;
+		}
+
 		if (ToolkitWebApplication.Settings.StaticFileLocation == null)
+		{
 			return;
+		}
 
 		var physicalFileProvider = new PhysicalFileProvider(ToolkitWebApplication.Settings.StaticFileLocation);
 		var options = new DefaultFilesOptions { FileProvider = physicalFileProvider };
@@ -226,7 +250,9 @@ internal class ApplicationStartUp
 		public override void OnActionExecuting(ActionExecutingContext actionContext)
 		{
 			if (actionContext.ModelState.IsValid == false)
+			{
 				actionContext.Result = new BadRequestObjectResult(actionContext.ModelState);
+			}
 		}
 	}
 }

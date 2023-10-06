@@ -27,5 +27,8 @@ public class EasyCapture<T>
 
 	public IReadOnlyList<T> Values => values.AsReadOnly();
 
-	private void CaptureValue(T value) => values.Add(value);
+	private void CaptureValue(T value)
+	{
+		values.Add(value);
+	}
 }

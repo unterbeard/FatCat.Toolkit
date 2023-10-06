@@ -58,7 +58,9 @@ public class ApplicationTools : IApplicationTools
 				var fileName = GetProcessFileName();
 
 				if (fileName!.IsNotNullOrEmpty())
+				{
 					executableName = Path.GetFileNameWithoutExtension(fileName);
+				}
 			}
 
 			return executableName;
@@ -74,7 +76,9 @@ public class ApplicationTools : IApplicationTools
 				var fileName = Process.GetCurrentProcess().MainModule?.FileName;
 
 				if (fileName!.IsNotNullOrEmpty())
+				{
 					executingDirectory = Path.GetDirectoryName(fileName);
+				}
 			}
 
 			return executingDirectory;
@@ -88,7 +92,9 @@ public class ApplicationTools : IApplicationTools
 		get
 		{
 			if (macAddress!.IsNullOrEmpty())
+			{
 				FindMacAddress();
+			}
 
 			return macAddress;
 		}
@@ -126,7 +132,9 @@ public class ApplicationTools : IApplicationTools
 		for (var portToCheck = startingPort; portToCheck < ushort.MaxValue; portToCheck++)
 		{
 			if (!usedPorts.Contains(portToCheck))
+			{
 				return portToCheck;
+			}
 		}
 
 		return 0;
@@ -142,18 +150,25 @@ public class ApplicationTools : IApplicationTools
 			domainName = "." + domainName;
 
 			if (!hostName.EndsWith(domainName))
+			{
 				hostName += domainName;
+			}
 		}
 
 		return hostName.ToLower();
 	}
 
-	public string GetIPAddress() => GetIPAddressObject()?.ToString();
+	public string GetIPAddress()
+	{
+		return GetIPAddressObject()?.ToString();
+	}
 
 	public IPAddress GetIPAddressObject()
 	{
 		if (ipAddress != null)
+		{
 			return ipAddress;
+		}
 
 		ipAddress = IPAddress.Parse("127.0.0.1");
 
@@ -198,9 +213,14 @@ public class ApplicationTools : IApplicationTools
 			macAddress = adapter.GetPhysicalAddress().ToString();
 
 			if (macAddress.IsNotNullOrEmpty())
+			{
 				break;
+			}
 		}
 	}
 
-	private static string? GetProcessFileName() => Process.GetCurrentProcess().MainModule?.FileName;
+	private static string? GetProcessFileName()
+	{
+		return Process.GetCurrentProcess().MainModule?.FileName;
+	}
 }

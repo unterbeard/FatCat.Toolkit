@@ -22,7 +22,13 @@ public class JsonOperations : IJsonOperations
 			Converters = new List<JsonConverter> { new StringEnumConverter(), new ObjectIdConverter() }
 		};
 
-	public T? Deserialize<T>(string json) => JsonConvert.DeserializeObject<T>(json, JsonSettings);
+	public T? Deserialize<T>(string json)
+	{
+		return JsonConvert.DeserializeObject<T>(json, JsonSettings);
+	}
 
-	public string Serialize(EqualObject dataObject) => JsonConvert.SerializeObject(dataObject, JsonSettings);
+	public string Serialize(EqualObject dataObject)
+	{
+		return JsonConvert.SerializeObject(dataObject, JsonSettings);
+	}
 }

@@ -3,7 +3,7 @@
 namespace FatCat.Toolkit.Web.Api;
 
 /// <summary>
-/// Used to get TokenParameters for the Api
+///  Used to get TokenParameters for the Api
 /// </summary>
 public interface IToolkitTokenParameters
 {

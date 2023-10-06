@@ -27,10 +27,15 @@ public class TcpServer : ITcpServer
 
 	public event TcpMessageReceived? OnMessageReceived;
 
-	public void Dispose() => listener?.Stop();
+	public void Dispose()
+	{
+		listener?.Stop();
+	}
 
-	public void Start(IPAddress ipAddress, ushort port, int receiveBufferSize = 1024) =>
+	public void Start(IPAddress ipAddress, ushort port, int receiveBufferSize = 1024)
+	{
 		Start(ipAddress, port, Encoding.UTF8, receiveBufferSize);
+	}
 
 	public void Start(IPAddress ipAddress, ushort port, Encoding encoding, int receiveBufferSize = 1024)
 	{
@@ -44,9 +49,15 @@ public class TcpServer : ITcpServer
 		listener.BeginAcceptTcpClient(OnTcpClientConnected, listener);
 	}
 
-	public void Stop() => Dispose();
+	public void Stop()
+	{
+		Dispose();
+	}
 
-	protected virtual void InvokeMessageReceived(string message) => OnMessageReceived?.Invoke(message);
+	protected virtual void InvokeMessageReceived(string message)
+	{
+		OnMessageReceived?.Invoke(message);
+	}
 
 	private void OnTcpClientConnected(IAsyncResult ar)
 	{

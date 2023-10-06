@@ -25,15 +25,15 @@ public class GetUserClaimTests
 	}
 
 	[Fact]
-	public void ReturnClaimRegardlessOfCase()
-	{
-		getUserClaim.GetClaim(user, claimToFind.Type.ToUpper()).Should().Be(claimToFind);
-	}
-
-	[Fact]
 	public void ReturnClaimBasedOnType()
 	{
 		getUserClaim.GetClaim(user, claimToFind.Type).Should().Be(claimToFind);
+	}
+
+	[Fact]
+	public void ReturnClaimRegardlessOfCase()
+	{
+		getUserClaim.GetClaim(user, claimToFind.Type.ToUpper()).Should().Be(claimToFind);
 	}
 
 	private void SetUpData()

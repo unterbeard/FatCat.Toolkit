@@ -20,7 +20,9 @@ public class GetAllByFilterTests : EnsureCollectionTests
 		filterItems = Faker.Create<List<TestingMongoObject>>(3);
 
 		foreach (var filterItem in filterItems)
+		{
 			filterItem.Number = filterNumber;
+		}
 
 		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
@@ -64,5 +66,8 @@ public class GetAllByFilterTests : EnsureCollectionTests
 		repository.GetAllByFilter(i => i.Number == filterNumber).Should().BeEquivalentTo(filterItems);
 	}
 
-	protected override Task TestMethod() => repository.GetAllByFilter(i => i.Number == filterNumber);
+	protected override Task TestMethod()
+	{
+		return repository.GetAllByFilter(i => i.Number == filterNumber);
+	}
 }

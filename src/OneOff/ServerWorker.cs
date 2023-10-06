@@ -69,9 +69,13 @@ public class ServerWorker
 		var finalResult = response;
 
 		if (finalResult.IsSuccessful)
+		{
 			ConsoleLog.WriteGreen(finalResult.Content);
+		}
 		else
+		{
 			ConsoleLog.WriteRed($"Web Reqeust status code: <{finalResult.StatusCode}> | <{finalResult.Content}>");
+		}
 	}
 
 	private Task OnClientConnected(ToolkitUser user, string connectionId)

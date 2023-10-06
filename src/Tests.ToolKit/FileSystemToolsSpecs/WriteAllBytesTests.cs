@@ -20,5 +20,8 @@ public class WriteAllBytesTests : TestsToEnsureFileExists
 		A.CallTo(() => fileSystem.File.WriteAllBytesAsync(filePath, bytesToCreate, default)).MustHaveHappened();
 	}
 
-	protected override async Task RunMethodToTest() => await fileTools.WriteAllBytes(filePath, bytesToCreate);
+	protected override async Task RunMethodToTest()
+	{
+		await fileTools.WriteAllBytes(filePath, bytesToCreate);
+	}
 }

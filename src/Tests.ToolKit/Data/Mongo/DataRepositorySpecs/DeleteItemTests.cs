@@ -34,5 +34,8 @@ public class DeleteItemTests : EnsureCollectionTests
 		repository.Delete(item).Should().BeEquivalentTo(item);
 	}
 
-	protected override Task TestMethod() => repository.Delete(item);
+	protected override Task TestMethod()
+	{
+		return repository.Delete(item);
+	}
 }

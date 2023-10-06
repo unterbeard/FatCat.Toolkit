@@ -23,5 +23,8 @@ public class UpdateList : ConnectionHandlingLiteDbRepositoryTests<List<LiteDbTes
 		RunTest().Should().BeEquivalentTo(testItemList);
 	}
 
-	protected override async Task<List<LiteDbTestObject>> RunTest() => await repository.Update(testItemList);
+	protected override async Task<List<LiteDbTestObject>> RunTest()
+	{
+		return await repository.Update(testItemList);
+	}
 }

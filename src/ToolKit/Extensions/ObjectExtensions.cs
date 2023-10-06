@@ -10,7 +10,9 @@ public static class ObjectExtensions
 		where T : class
 	{
 		if (objectToCopy == null)
+		{
 			return null;
+		}
 
 		var json = JsonConvert.SerializeObject(objectToCopy, JsonOperations.JsonSettings);
 

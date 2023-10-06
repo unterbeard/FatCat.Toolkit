@@ -28,8 +28,13 @@ public class RegistryRepository : IRegistryRepository
 		key.SetValue(keyName, value);
 	}
 
-	private static string GetSubKeyName(string applicationName) => $@"SOFTWARE\{applicationName}";
+	private static string GetSubKeyName(string applicationName)
+	{
+		return $@"SOFTWARE\{applicationName}";
+	}
 
-	private static RegistryKey? OpenSubKey(string applicationName) =>
-		Registry.LocalMachine.OpenSubKey(GetSubKeyName(applicationName));
+	private static RegistryKey? OpenSubKey(string applicationName)
+	{
+		return Registry.LocalMachine.OpenSubKey(GetSubKeyName(applicationName));
+	}
 }

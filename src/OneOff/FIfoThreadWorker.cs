@@ -8,7 +8,10 @@ public class FIfoThreadWorker
 {
 	private readonly IFifoThreadQueue queue;
 
-	public FIfoThreadWorker(IFifoThreadQueue queue) => this.queue = queue;
+	public FIfoThreadWorker(IFifoThreadQueue queue)
+	{
+		this.queue = queue;
+	}
 
 	public async Task DoWork()
 	{

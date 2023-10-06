@@ -40,5 +40,8 @@ public class DeleteListTests : ConnectionHandlingLiteDbRepositoryTests<List<Lite
 		resultList.Should().BeEquivalentTo(testItemList);
 	}
 
-	protected override async Task<List<LiteDbTestObject>> RunTest() => await repository.Delete(testItemList);
+	protected override async Task<List<LiteDbTestObject>> RunTest()
+	{
+		return await repository.Delete(testItemList);
+	}
 }

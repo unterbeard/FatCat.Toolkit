@@ -15,13 +15,25 @@ public class FakeThread : IThread
 		SetUnRunFuncOnCall();
 	}
 
-	public void Run(Action action) => thread.Run(action);
+	public void Run(Action action)
+	{
+		thread.Run(action);
+	}
 
-	public void Run(Func<Task> action) => thread.Run(action);
+	public void Run(Func<Task> action)
+	{
+		thread.Run(action);
+	}
 
-	public Task Sleep(TimeSpan sleepTime) => thread.Sleep(sleepTime);
+	public Task Sleep(TimeSpan sleepTime)
+	{
+		return thread.Sleep(sleepTime);
+	}
 
-	public Task Sleep(TimeSpan sleepTime, CancellationToken token) => thread.Sleep(sleepTime, token);
+	public Task Sleep(TimeSpan sleepTime, CancellationToken token)
+	{
+		return thread.Sleep(sleepTime, token);
+	}
 
 	public void VerifyRunAction()
 	{

@@ -82,7 +82,10 @@ public class CollectionExtensionsTests
 
 	private class ComparableTestItem : TestItem, IComparable<ComparableTestItem>
 	{
-		public int CompareTo(ComparableTestItem other) => Number.CompareTo(other.Number);
+		public int CompareTo(ComparableTestItem other)
+		{
+			return Number.CompareTo(other.Number);
+		}
 	}
 
 	private class TestItem : EqualObject

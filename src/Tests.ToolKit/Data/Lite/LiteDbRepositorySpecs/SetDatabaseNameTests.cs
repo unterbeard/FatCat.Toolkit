@@ -5,7 +5,10 @@ namespace Tests.FatCat.Toolkit.Data.Lite.LiteDbRepositorySpecs;
 
 public class SetDatabaseNameTests : LiteDbRepositoryTests
 {
-	public SetDatabaseNameTests() => repository.DatabasePath = null;
+	public SetDatabaseNameTests()
+	{
+		repository.DatabasePath = null;
+	}
 
 	[Fact]
 	public void RetainTheDatabaseName()

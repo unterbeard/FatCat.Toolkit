@@ -29,7 +29,9 @@ public class ClientWorker
 			var mainUrl = "https://localhost:14555";
 
 			if (args.Length > 1)
+			{
 				mainUrl = args[1];
+			}
 
 			ConsoleLog.WriteCyan($"Using Url := <{mainUrl}>");
 
@@ -65,7 +67,7 @@ public class ClientWorker
 		// Secure Url
 		var hubUrl = $"{mainUrl}/events?access_token={testToken}";
 
-		ConsoleLog.WriteYellow($"  Going to connect to hub");
+		ConsoleLog.WriteYellow("  Going to connect to hub");
 
 		var result = await hubFactory.TryToConnectToClient(
 			hubUrl,
@@ -140,6 +142,7 @@ public class ClientWorker
 		watch.Stop();
 
 		ConsoleLog.WriteYellow($"Send DataBuffer Message Took <{watch.Elapsed}>");
+
 		ConsoleLog.WriteCyan(
 			$"Response from server was {JsonConvert.SerializeObject(response, Formatting.Indented)}"
 		);

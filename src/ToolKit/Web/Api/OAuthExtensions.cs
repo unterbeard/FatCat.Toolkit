@@ -45,7 +45,9 @@ internal static class OAuthExtensions
 					context.Response.Headers.Add("Token-Expired", "true");
 				}
 				else
+				{
 					ConsoleLog.WriteException(context.Exception);
+				}
 
 				return Task.CompletedTask;
 			},
@@ -54,7 +56,9 @@ internal static class OAuthExtensions
 				var hasError = context.Error.IsNotNullOrEmpty() || context.ErrorDescription.IsNotNullOrEmpty();
 
 				if (!hasError)
+				{
 					return Task.CompletedTask;
+				}
 
 				ConsoleLog.WriteRed("Error: {Error}", context.Error);
 				ConsoleLog.WriteRed("ErrorDescription: {ErrorDescription}", context.ErrorDescription);

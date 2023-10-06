@@ -50,7 +50,9 @@ public class FifoThreadQueue : IFifoThreadQueue
 	public void Dispose()
 	{
 		if (disposed)
+		{
 			return;
+		}
 
 		disposed = true;
 
@@ -88,7 +90,9 @@ public class FifoThreadQueue : IFifoThreadQueue
 	public void Next()
 	{
 		if (queue.Count == 1)
+		{
 			return;
+		}
 
 		// Just dequeue the next action no reason that will skip to next if there is any
 		Dequeue();

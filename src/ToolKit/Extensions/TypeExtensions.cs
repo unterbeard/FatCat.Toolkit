@@ -6,7 +6,9 @@ public static class TypeExtensions
 	public static bool Implements(this Type? type, Type? interfaceType)
 	{
 		if (type == null || interfaceType == null || type == interfaceType)
+		{
 			return false;
+		}
 
 		return (
 				interfaceType.IsGenericTypeDefinition

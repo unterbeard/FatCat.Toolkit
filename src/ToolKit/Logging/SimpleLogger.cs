@@ -76,7 +76,10 @@ public class SimpleLogger : ISimpleLogger
 		this.logName = logName ?? this.applicationTools.ExecutableName;
 	}
 
-	public void SetLogLevel(LogLevel logLevel) => this.logLevel = logLevel;
+	public void SetLogLevel(LogLevel logLevel)
+	{
+		this.logLevel = logLevel;
+	}
 
 	public void Write(
 		LogLevel logLevel,
@@ -110,40 +113,58 @@ public class SimpleLogger : ISimpleLogger
 		string memberName = "",
 		string sourceFilePath = "",
 		int sourceLineNumber = 0
-	) => Write(LogLevel.Debug, message, memberName, sourceFilePath, sourceLineNumber);
+	)
+	{
+		Write(LogLevel.Debug, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 
 	public void WriteError(
 		string message,
 		string memberName = "",
 		string sourceFilePath = "",
 		int sourceLineNumber = 0
-	) => Write(LogLevel.Error, message, memberName, sourceFilePath, sourceLineNumber);
+	)
+	{
+		Write(LogLevel.Error, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 
 	public void WriteFatal(
 		string message,
 		string memberName = "",
 		string sourceFilePath = "",
 		int sourceLineNumber = 0
-	) => Write(LogLevel.Fatal, message, memberName, sourceFilePath, sourceLineNumber);
+	)
+	{
+		Write(LogLevel.Fatal, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 
 	public void WriteInformation(
 		string message,
 		string memberName = "",
 		string sourceFilePath = "",
 		int sourceLineNumber = 0
-	) => Write(LogLevel.Information, message, memberName, sourceFilePath, sourceLineNumber);
+	)
+	{
+		Write(LogLevel.Information, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 
 	public void WriteVerbose(
 		string message,
 		string memberName = "",
 		string sourceFilePath = "",
 		int sourceLineNumber = 0
-	) => Write(LogLevel.Verbose, message, memberName, sourceFilePath, sourceLineNumber);
+	)
+	{
+		Write(LogLevel.Verbose, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 
 	public void WriteWarning(
 		string message,
 		string memberName = "",
 		string sourceFilePath = "",
 		int sourceLineNumber = 0
-	) => Write(LogLevel.Warning, message, memberName, sourceFilePath, sourceLineNumber);
+	)
+	{
+		Write(LogLevel.Warning, message, memberName, sourceFilePath, sourceLineNumber);
+	}
 }

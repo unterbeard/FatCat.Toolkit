@@ -38,15 +38,18 @@ public static class TestExtensions
 	/// <typeparam name="T">The type of return value.</typeparam>
 	/// <param name="configuration">The call configuration to extend.</param>
 	/// <param name="values">The values to return in sequence.</param>
-	public static void ReturnsNextFromSequence<T>(
-		this IReturnValueConfiguration<T> configuration,
-		List<T> values
-	) => configuration.ReturnsNextFromSequence(values.ToArray());
+	public static void ReturnsNextFromSequence<T>(this IReturnValueConfiguration<T> configuration, List<T> values)
+	{
+		configuration.ReturnsNextFromSequence(values.ToArray());
+	}
 
 	public static void ReturnsNextFromSequence<T>(
 		this IReturnValueConfiguration<Task<T>> configuration,
 		List<T> values
-	) => configuration.ReturnsNextFromSequence(values.ToArray());
+	)
+	{
+		configuration.ReturnsNextFromSequence(values.ToArray());
+	}
 
 	public static void RunThreadAction(this IThread thread)
 	{
@@ -67,11 +70,13 @@ public static class TestExtensions
 			});
 	}
 
-	public static UnorderedCallAssertion ShouldMatch<T>(
-		this IAssertConfiguration configuration,
-		Action<T> matcher
-	) => configuration.MustHaveHappened(1, Times.OrMore);
+	public static UnorderedCallAssertion ShouldMatch<T>(this IAssertConfiguration configuration, Action<T> matcher)
+	{
+		return configuration.MustHaveHappened(1, Times.OrMore);
+	}
 
-	private static T Matches<T>(this IArgumentConstraintManager<T> manager, Func<T, bool> predicate) =>
-		manager.Matches(predicate, x => x.Write("Test Matches fails"));
+	private static T Matches<T>(this IArgumentConstraintManager<T> manager, Func<T, bool> predicate)
+	{
+		return manager.Matches(predicate, x => x.Write("Test Matches fails"));
+	}
 }

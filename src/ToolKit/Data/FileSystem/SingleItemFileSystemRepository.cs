@@ -42,14 +42,22 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 		this.jsonOperations = jsonOperations;
 	}
 
-	public bool Exists() => fileSystem.File.Exists(DataPath);
+	public bool Exists()
+	{
+		return fileSystem.File.Exists(DataPath);
+	}
 
 	public async Task<T> Get()
 	{
 		if (Data != null)
+		{
 			return Data;
+		}
+
 		if (DataDirectoryDoesNotExist || DataFileNotFound)
+		{
 			return new T();
+		}
 
 		var json = await fileSystem.File.ReadAllTextAsync(DataPath);
 
@@ -65,7 +73,9 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 		var json = jsonOperations.Serialize(Data);
 
 		if (DataDirectoryDoesNotExist)
+		{
 			fileSystem.Directory.CreateDirectory(DataDirectory);
+		}
 
 		await fileSystem.File.WriteAllTextAsync(DataPath, json);
 	}

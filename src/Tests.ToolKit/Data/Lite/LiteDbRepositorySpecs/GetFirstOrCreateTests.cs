@@ -46,5 +46,8 @@ public class GetFirstOrCreateTests : ConnectionHandlingLiteDbRepositoryTests<Lit
 		RunTest().Should().Be(testItem);
 	}
 
-	protected override Task<LiteDbTestObject> RunTest() => repository.GetFirstOrCreate();
+	protected override Task<LiteDbTestObject> RunTest()
+	{
+		return repository.GetFirstOrCreate();
+	}
 }

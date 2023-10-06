@@ -27,7 +27,9 @@ public abstract class LiteDbRepositoryTests
 		testItemList = Faker.Create<List<LiteDbTestObject>>();
 
 		foreach (var item in testItemList)
+		{
 			item.Id = default;
+		}
 	}
 
 	private void SetUpLiteDbConnection()

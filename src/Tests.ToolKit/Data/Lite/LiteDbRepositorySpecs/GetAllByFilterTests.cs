@@ -21,6 +21,8 @@ public class GetAllByFilterTests : FilterLiteDbRepositoryTests<List<LiteDbTestOb
 		RunTest().Should().BeEquivalentTo(testItemList);
 	}
 
-	protected override Task<List<LiteDbTestObject>> RunTest() =>
-		repository.GetAllByFilter(i => i.SomeNumber == numberToFind);
+	protected override Task<List<LiteDbTestObject>> RunTest()
+	{
+		return repository.GetAllByFilter(i => i.SomeNumber == numberToFind);
+	}
 }

@@ -10,7 +10,10 @@ public class TestingAsyncCursor<T> : IAsyncCursor<T>
 
 	public IEnumerable<T> Current => items;
 
-	public TestingAsyncCursor(List<T> items) => this.items = items;
+	public TestingAsyncCursor(List<T> items)
+	{
+		this.items = items;
+	}
 
 	public void Dispose() { }
 
@@ -18,7 +21,9 @@ public class TestingAsyncCursor<T> : IAsyncCursor<T>
 	{
 		// Only need to call move once, after that return false
 		if (movedCalled)
+		{
 			return false;
+		}
 
 		movedCalled = true;
 

@@ -9,8 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\OneOffLib\OneOffLib.csproj" />
-        <ProjectReference Include="..\ToolKit\ToolKit.csproj" />
+        <ProjectReference Include="..\OneOffLib\OneOffLib.csproj"/>
+        <ProjectReference Include="..\ToolKit\ToolKit.csproj"/>
     </ItemGroup>
 
 </Project>

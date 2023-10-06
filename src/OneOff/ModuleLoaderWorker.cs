@@ -7,7 +7,10 @@ public class ModuleLoaderWorker : SpikeWorker
 {
 	private readonly IApplicationTools applicationTools;
 
-	public ModuleLoaderWorker(IApplicationTools applicationTools) => this.applicationTools = applicationTools;
+	public ModuleLoaderWorker(IApplicationTools applicationTools)
+	{
+		this.applicationTools = applicationTools;
+	}
 
 	public override async Task DoWork()
 	{

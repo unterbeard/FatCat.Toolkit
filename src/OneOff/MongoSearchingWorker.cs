@@ -1,7 +1,6 @@
 ﻿using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Data.Mongo;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace OneOff;
@@ -47,7 +46,10 @@ public class MongoSearchingWorker : SpikeWorker
 {
 	private readonly IMongoRepository<TestSearchingObject> mongo;
 
-	public MongoSearchingWorker(IMongoRepository<TestSearchingObject> mongo) => this.mongo = mongo;
+	public MongoSearchingWorker(IMongoRepository<TestSearchingObject> mongo)
+	{
+		this.mongo = mongo;
+	}
 
 	public override async Task DoWork()
 	{

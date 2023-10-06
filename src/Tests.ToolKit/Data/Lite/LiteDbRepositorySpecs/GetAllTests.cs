@@ -25,5 +25,8 @@ public class GetAllTests : ConnectionHandlingLiteDbRepositoryTests<List<LiteDbTe
 		RunTest().Should().BeEquivalentTo(testItemList);
 	}
 
-	protected override async Task<List<LiteDbTestObject>> RunTest() => await repository.GetAll();
+	protected override async Task<List<LiteDbTestObject>> RunTest()
+	{
+		return await repository.GetAll();
+	}
 }

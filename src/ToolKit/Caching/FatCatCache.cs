@@ -18,11 +18,17 @@ public interface IFatCatCache<T>
 
 	bool InCache(string cacheId);
 
-	public bool InCache(T cacheItem) => InCache(cacheItem.CacheId);
+	public bool InCache(T cacheItem)
+	{
+		return InCache(cacheItem.CacheId);
+	}
 
 	void Remove(string cacheId);
 
-	public void Remove(T cacheItem) => Remove(cacheItem.CacheId);
+	public void Remove(T cacheItem)
+	{
+		Remove(cacheItem.CacheId);
+	}
 }
 
 public class FatCatCache<T> : IFatCatCache<T>
@@ -37,7 +43,9 @@ public class FatCatCache<T> : IFatCatCache<T>
 		RemoveExpiredItems();
 
 		if (!timeoutEnabled && timeout != null)
+		{
 			timeoutEnabled = true;
+		}
 
 		cache.AddOrUpdate(
 			cacheItem.CacheId,
@@ -49,10 +57,15 @@ public class FatCatCache<T> : IFatCatCache<T>
 	public void Add(List<T> cacheItems, TimeSpan? timeout = null)
 	{
 		foreach (var item in cacheItems)
+		{
 			Add(item);
+		}
 	}
 
-	public void Clear() => cache.Clear();
+	public void Clear()
+	{
+		cache.Clear();
+	}
 
 	public T? Get(string cacheId)
 	{
@@ -87,13 +100,19 @@ public class FatCatCache<T> : IFatCatCache<T>
 	private void RemoveExpiredItems()
 	{
 		if (!timeoutEnabled || cache.IsEmpty)
+		{
 			return;
+		}
 
 		foreach (var value in cache.Values.Where(i => i.HasExpired()))
+		{
 			cache.Remove(value.Item.CacheId, out _);
+		}
 
 		if (cache.IsEmpty)
+		{
 			timeoutEnabled = false;
+		}
 	}
 
 	private class CacheEntry<TType>
@@ -115,7 +134,9 @@ public class FatCatCache<T> : IFatCatCache<T>
 		public bool HasExpired()
 		{
 			if (Timeout == null)
+			{
 				return false;
+			}
 
 			var timeSinceEntry = DateTime.UtcNow - EntryTime;
 

@@ -26,19 +26,40 @@ public class FakeFatCatCache<T> : IFatCatCache<T>
 		A.CallTo(() => Cache.GetAll()).ReturnsLazily(() => CacheList);
 	}
 
-	public void Add(T cacheItem, TimeSpan? timeout = null) => Cache.Add(cacheItem);
+	public void Add(T cacheItem, TimeSpan? timeout = null)
+	{
+		Cache.Add(cacheItem);
+	}
 
-	public void Add(List<T> cacheItems, TimeSpan? timeout = null) => Cache.Add(cacheItems);
+	public void Add(List<T> cacheItems, TimeSpan? timeout = null)
+	{
+		Cache.Add(cacheItems);
+	}
 
-	public void Clear() => Cache.Clear();
+	public void Clear()
+	{
+		Cache.Clear();
+	}
 
-	public T? Get(string cacheId) => Cache.Get(cacheId);
+	public T? Get(string cacheId)
+	{
+		return Cache.Get(cacheId);
+	}
 
-	public IList<T> GetAll() => Cache.GetAll();
+	public IList<T> GetAll()
+	{
+		return Cache.GetAll();
+	}
 
-	public bool InCache(string cacheId) => Cache.InCache(cacheId);
+	public bool InCache(string cacheId)
+	{
+		return Cache.InCache(cacheId);
+	}
 
-	public void Remove(string cacheId) => Cache.Remove(cacheId);
+	public void Remove(string cacheId)
+	{
+		Cache.Remove(cacheId);
+	}
 
 	public void SetItemInCache()
 	{

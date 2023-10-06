@@ -21,11 +21,13 @@ public class SimpleResponse : EqualObject
 
 	public string? Text { get; set; }
 
-	public WebResult ToResult() =>
-		new()
+	public WebResult ToResult()
+	{
+		return new WebResult
 		{
 			Content = Text,
 			ContentType = ContentType!,
 			StatusCode = HttpStatusCode
 		};
+	}
 }

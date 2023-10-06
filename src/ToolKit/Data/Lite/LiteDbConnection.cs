@@ -17,12 +17,17 @@ public class LiteDbConnection : ILiteDbConnection
 
 	private LiteDatabase? database;
 
-	public LiteDbConnection(IDataNames dataNames) => this.dataNames = dataNames;
+	public LiteDbConnection(IDataNames dataNames)
+	{
+		this.dataNames = dataNames;
+	}
 
 	public void Connect(string databasePath)
 	{
 		if (database != null)
+		{
 			return;
+		}
 
 		database = new LiteDatabase(databasePath);
 	}
@@ -40,7 +45,9 @@ public class LiteDbConnection : ILiteDbConnection
 		where T : LiteDbObject
 	{
 		if (database == null)
+		{
 			throw new LiteDbConnectionException();
+		}
 
 		var collectionName = dataNames.GetCollectionName<T>();
 

@@ -58,5 +58,8 @@ public class GetSingleItemByFilter : EnsureCollectionTests
 		repository.GetByFilter(i => i!.Number == filterNumber).Should().Be(filterItem);
 	}
 
-	protected override Task TestMethod() => repository.GetByFilter(i => i!.Number == filterNumber);
+	protected override Task TestMethod()
+	{
+		return repository.GetByFilter(i => i!.Number == filterNumber);
+	}
 }

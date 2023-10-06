@@ -13,6 +13,8 @@ public interface IGetUserClaim
 
 public class GetUserClaim : IGetUserClaim
 {
-	public ToolkitClaim GetClaim(ToolkitUser user, string claimType) =>
-		user.Claims.FirstOrDefault(i => i.Type!.Equals(claimType, StringComparison.OrdinalIgnoreCase));
+	public ToolkitClaim GetClaim(ToolkitUser user, string claimType)
+	{
+		return user.Claims.FirstOrDefault(i => i.Type!.Equals(claimType, StringComparison.OrdinalIgnoreCase));
+	}
 }

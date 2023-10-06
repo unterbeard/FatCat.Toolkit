@@ -5,7 +5,10 @@ namespace FatCat.Toolkit.Testing;
 
 public static class TaskTestExtensions
 {
-	public static TaskTestAssertions<T> Should<T>(this Task<T> task) => new(task);
+	public static TaskTestAssertions<T> Should<T>(this Task<T> task)
+	{
+		return new TaskTestAssertions<T>(task);
+	}
 }
 
 public class TaskTestAssertions<T> : ReferenceTypeAssertions<Task<T>, TaskTestAssertions<T>>

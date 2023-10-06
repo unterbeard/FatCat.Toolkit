@@ -7,7 +7,9 @@ public class ToolkitUser : EqualObject
 	public static ToolkitUser Create(ClaimsPrincipal contextUser)
 	{
 		if (contextUser == null)
+		{
 			return new ToolkitUser();
+		}
 
 		return new()
 		{

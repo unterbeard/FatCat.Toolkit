@@ -38,5 +38,8 @@ public class CreateTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestObj
 		result.Should().Be(expectedObject);
 	}
 
-	protected override async Task<LiteDbTestObject> RunTest() => await repository.Create(testItem);
+	protected override async Task<LiteDbTestObject> RunTest()
+	{
+		return await repository.Create(testItem);
+	}
 }

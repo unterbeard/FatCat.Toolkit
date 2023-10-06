@@ -82,7 +82,10 @@ public class GetFirstOrCreateTests : EnsureCollectionTests
 		repository.GetFirstOrCreate().Should().Be(insertCapture.Value);
 	}
 
-	protected override Task TestMethod() => repository.GetFirstOrCreate();
+	protected override Task TestMethod()
+	{
+		return repository.GetFirstOrCreate();
+	}
 
 	private void SetUpInsertCapture()
 	{

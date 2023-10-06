@@ -34,6 +34,8 @@ public class GetByFilterTests : FilterLiteDbRepositoryTests<LiteDbTestObject>
 		RunTest().Should().Be(testItem);
 	}
 
-	protected override Task<LiteDbTestObject> RunTest() =>
-		repository.GetByFilter(i => i.SomeNumber == numberToFind);
+	protected override Task<LiteDbTestObject> RunTest()
+	{
+		return repository.GetByFilter(i => i.SomeNumber == numberToFind);
+	}
 }

@@ -20,7 +20,9 @@ public class CreateListTests : ConnectionHandlingLiteDbRepositoryTests<List<Lite
 		createdIds = new List<int>();
 
 		for (var i = 0; i < itemsToCreate.Count; i++)
+		{
 			createdIds.Add(Faker.RandomInt(34, 443));
+		}
 
 		var bsonList = createdIds.Select(i => new BsonValue(i)).ToList();
 
@@ -44,12 +46,17 @@ public class CreateListTests : ConnectionHandlingLiteDbRepositoryTests<List<Lite
 		var expectedResultList = itemsToCreate.DeepCopy();
 
 		for (var i = 0; i < expectedResultList.Count; i++)
+		{
 			expectedResultList[i].Id = createdIds[i];
+		}
 
 		var resultList = await RunTest();
 
 		resultList.Should().BeEquivalentTo(expectedResultList);
 	}
 
-	protected override async Task<List<LiteDbTestObject>> RunTest() => await repository.Create(itemsToCreate);
+	protected override async Task<List<LiteDbTestObject>> RunTest()
+	{
+		return await repository.Create(itemsToCreate);
+	}
 }

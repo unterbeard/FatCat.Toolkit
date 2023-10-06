@@ -9,5 +9,8 @@ public interface IByteUtilities
 
 public class ByteUtilities : IByteUtilities
 {
-	public string ToReadableString(byte[] bytes) => bytes.ToReadableString();
+	public string ToReadableString(byte[] bytes)
+	{
+		return bytes.ToReadableString();
+	}
 }

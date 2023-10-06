@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using Fasterflect;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
@@ -31,6 +30,7 @@ public class MongoConnection : IMongoConnection
 			new ConventionPack { new IgnoreExtraElementsConvention(true) },
 			_ => true
 		);
+
 		// Yse if want to represent enums as strings
 		// ConventionRegistry.Register(nameof(EnumRepresentationConvention), new ConventionPack { new EnumRepresentationConvention(BsonType.String) }, _ => true);
 
@@ -39,10 +39,14 @@ public class MongoConnection : IMongoConnection
 			foreach (var mongoObjectType in assembly.TypesImplementing<MongoObject>())
 			{
 				if (mongoObjectType.IsGenericTypeDefinition)
+				{
 					continue;
+				}
 
 				if (!BsonClassMap.IsClassMapRegistered(mongoObjectType))
+				{
 					BsonClassMap.LookupClassMap(mongoObjectType);
+				}
 			}
 		}
 	}
@@ -50,10 +54,14 @@ public class MongoConnection : IMongoConnection
 	public IMongoDatabase GetDatabase(string databaseName, string? connectionString)
 	{
 		if (databases.TryGetValue(databaseName, out var database))
+		{
 			return database;
+		}
 
 		if (connectionString == null)
+		{
 			connectionString = NotSetConnectionString;
+		}
 
 		if (!connections.TryGetValue(connectionString, out var mongoClient))
 		{

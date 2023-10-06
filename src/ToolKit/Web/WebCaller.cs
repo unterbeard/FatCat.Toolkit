@@ -83,7 +83,10 @@ public class WebCaller : IWebCaller
 		BaseUri = uri;
 	}
 
-	public async Task<WebResult> Delete(string url) => await Delete(url, DefaultTimeout);
+	public async Task<WebResult> Delete(string url)
+	{
+		return await Delete(url, DefaultTimeout);
+	}
 
 	public async Task<WebResult> Delete(string url, TimeSpan timeout)
 	{
@@ -92,7 +95,9 @@ public class WebCaller : IWebCaller
 			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
 
 			if (bearerToken is not null)
+			{
 				request.WithOAuthBearerToken(bearerToken);
+			}
 
 			var response = await request.DeleteAsync();
 
@@ -116,7 +121,10 @@ public class WebCaller : IWebCaller
 		}
 	}
 
-	public Task<WebResult> Get(string url) => Get(url, DefaultTimeout);
+	public Task<WebResult> Get(string url)
+	{
+		return Get(url, DefaultTimeout);
+	}
 
 	public async Task<WebResult> Get(string url, TimeSpan timeout)
 	{
@@ -127,7 +135,9 @@ public class WebCaller : IWebCaller
 			logger.Debug($"Getting from Url <{request.Url}>");
 
 			if (bearerToken is not null)
+			{
 				request.WithOAuthBearerToken(bearerToken);
+			}
 
 			var response = await request.GetAsync();
 
@@ -154,14 +164,26 @@ public class WebCaller : IWebCaller
 	}
 
 	public Task<WebResult> Post<T>(string url, T data)
-		where T : EqualObject => Post(url, data, DefaultTimeout);
+		where T : EqualObject
+	{
+		return Post(url, data, DefaultTimeout);
+	}
 
 	public Task<WebResult> Post<T>(string url, List<T> data)
-		where T : EqualObject => Post(url, data, DefaultTimeout);
+		where T : EqualObject
+	{
+		return Post(url, data, DefaultTimeout);
+	}
 
-	public Task<WebResult> Post(string url) => Post(url, DefaultTimeout);
+	public Task<WebResult> Post(string url)
+	{
+		return Post(url, DefaultTimeout);
+	}
 
-	public Task<WebResult> Post(string url, string data) => Post(url, data, DefaultTimeout);
+	public Task<WebResult> Post(string url, string data)
+	{
+		return Post(url, data, DefaultTimeout);
+	}
 
 	public async Task<WebResult> Post<T>(string url, T data, TimeSpan timeout)
 		where T : EqualObject
@@ -171,7 +193,9 @@ public class WebCaller : IWebCaller
 			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
 
 			if (bearerToken is not null)
+			{
 				request.WithOAuthBearerToken(bearerToken);
+			}
 
 			var response = await request.PostJsonAsync(data);
 
@@ -203,7 +227,9 @@ public class WebCaller : IWebCaller
 			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
 
 			if (bearerToken is not null)
+			{
 				request.WithOAuthBearerToken(bearerToken);
+			}
 
 			var response = await request.PostJsonAsync(data);
 
@@ -234,7 +260,9 @@ public class WebCaller : IWebCaller
 			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
 
 			if (bearerToken is not null)
+			{
 				request.WithOAuthBearerToken(bearerToken);
+			}
 
 			var response = await request.PostAsync();
 
@@ -265,7 +293,9 @@ public class WebCaller : IWebCaller
 			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
 
 			if (bearerToken is not null)
+			{
 				request.WithOAuthBearerToken(bearerToken);
+			}
 
 			var response = await request.PostJsonAsync(data);
 
@@ -289,14 +319,19 @@ public class WebCaller : IWebCaller
 		}
 	}
 
-	public void UserBearerToken(string token) => bearerToken = token;
+	public void UserBearerToken(string token)
+	{
+		bearerToken = token;
+	}
 
 	private Url CreateRequest(string pathSegment)
 	{
 		var startingBase = BaseUri.ToString();
 
 		if (startingBase.EndsWith("/"))
+		{
 			startingBase = startingBase.Remove(startingBase.Length - 1);
+		}
 
 		var url = pathSegment.StartsWith("/") ? $"{startingBase}{pathSegment}" : $"{startingBase}/{pathSegment}";
 
@@ -324,7 +359,9 @@ public class WebCaller : IWebCaller
 					}
 				}
 				else
+				{
 					callingUrl.SetQueryParam(key, queryValue);
+				}
 			}
 		}
 

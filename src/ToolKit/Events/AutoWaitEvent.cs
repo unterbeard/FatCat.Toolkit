@@ -25,10 +25,18 @@ public class AutoWaitEvent : IAutoWaitEvent
 {
 	private readonly AutoResetEvent autoResetEvent = new(false);
 
-	public void Dispose() => autoResetEvent.Dispose();
+	public void Dispose()
+	{
+		autoResetEvent.Dispose();
+	}
 
-	public void Trigger() => autoResetEvent.Set();
+	public void Trigger()
+	{
+		autoResetEvent.Set();
+	}
 
-	public bool Wait(TimeSpan? timeout) =>
-		timeout.HasValue ? autoResetEvent.WaitOne(timeout.Value) : autoResetEvent.WaitOne();
+	public bool Wait(TimeSpan? timeout)
+	{
+		return timeout.HasValue ? autoResetEvent.WaitOne(timeout.Value) : autoResetEvent.WaitOne();
+	}
 }

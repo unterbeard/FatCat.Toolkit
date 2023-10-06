@@ -21,12 +21,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ToolKit\ToolKit.csproj" />
+        <ProjectReference Include="..\ToolKit\ToolKit.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Azure.Identity" Version="1.10.1" />
-      <PackageReference Include="Azure.Storage.Blobs" Version="12.18.0" />
+        <PackageReference Include="Azure.Identity" Version="1.10.1"/>
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.18.0"/>
     </ItemGroup>
 
 </Project>

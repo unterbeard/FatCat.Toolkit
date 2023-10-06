@@ -29,9 +29,13 @@ public static class Program
 			);
 
 			if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase))
+			{
 				ConnectClient(args);
+			}
 			else
+			{
 				RunServer(args);
+			}
 
 			await Task.Delay(500.Milliseconds());
 		}
@@ -52,5 +56,8 @@ public static class Program
 		consoleUtilities.WaitForExit();
 	}
 
-	private static void RunServer(string[] args) => new ServerWorker().DoWork(args);
+	private static void RunServer(string[] args)
+	{
+		new ServerWorker().DoWork(args);
+	}
 }

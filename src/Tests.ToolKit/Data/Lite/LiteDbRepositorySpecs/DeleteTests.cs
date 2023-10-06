@@ -33,5 +33,8 @@ public class DeleteTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestObj
 		RunTest().Should().Be(testItem);
 	}
 
-	protected override async Task<LiteDbTestObject> RunTest() => await repository.Delete(testItem);
+	protected override async Task<LiteDbTestObject> RunTest()
+	{
+		return await repository.Delete(testItem);
+	}
 }

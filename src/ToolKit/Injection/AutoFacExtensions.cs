@@ -18,7 +18,9 @@ public static class AutoFacExtensions
 		where TScanningActivatorData : ScanningActivatorData
 	{
 		if (registration == null)
+		{
 			throw new ArgumentNullException(nameof(registration));
+		}
 
 		return registration.Where(TypeHasPublicConstructor);
 	}

@@ -48,5 +48,8 @@ public class GetFirstTests : EnsureCollectionTests
 		repository.GetFirst().Should().Be(firstItem);
 	}
 
-	protected override Task TestMethod() => repository.GetFirst();
+	protected override Task TestMethod()
+	{
+		return repository.GetFirst();
+	}
 }

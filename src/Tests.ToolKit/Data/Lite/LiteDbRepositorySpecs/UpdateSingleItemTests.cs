@@ -20,5 +20,8 @@ public class UpdateSingleItemTests : ConnectionHandlingLiteDbRepositoryTests<Lit
 		RunTest().Should().Be(testItem);
 	}
 
-	protected override async Task<LiteDbTestObject> RunTest() => await repository.Update(testItem);
+	protected override async Task<LiteDbTestObject> RunTest()
+	{
+		return await repository.Update(testItem);
+	}
 }

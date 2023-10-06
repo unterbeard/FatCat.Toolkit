@@ -8,7 +8,10 @@ public class AppendToFileTests : TestsToEnsureFileExists
 {
 	private readonly string textToAppend;
 
-	public AppendToFileTests() => textToAppend = Faker.RandomString();
+	public AppendToFileTests()
+	{
+		textToAppend = Faker.RandomString();
+	}
 
 	[Fact]
 	public async Task UseFileSystemToAppendText()
@@ -18,5 +21,8 @@ public class AppendToFileTests : TestsToEnsureFileExists
 		A.CallTo(() => fileSystem.File.AppendAllTextAsync(filePath, textToAppend, default)).MustHaveHappened();
 	}
 
-	protected override async Task RunMethodToTest() => await fileTools.AppendToFile(filePath, textToAppend);
+	protected override async Task RunMethodToTest()
+	{
+		await fileTools.AppendToFile(filePath, textToAppend);
+	}
 }

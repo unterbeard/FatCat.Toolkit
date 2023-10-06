@@ -11,7 +11,10 @@ namespace FatCat.Toolkit.Testing;
 
 public static class EndpointTestExtensions
 {
-	public static EndpointAssertions Should(this Endpoint controller) => new(controller);
+	public static EndpointAssertions Should(this Endpoint controller)
+	{
+		return new EndpointAssertions(controller);
+	}
 }
 
 public class EndpointAssertions : ReferenceTypeAssertions<Endpoint, EndpointAssertions>
@@ -21,16 +24,25 @@ public class EndpointAssertions : ReferenceTypeAssertions<Endpoint, EndpointAsse
 	protected override string Identifier => "Fog Endpoint";
 
 	public EndpointAssertions(Endpoint endpoint)
-		: base(endpoint) => this.endpoint = endpoint;
+		: base(endpoint)
+	{
+		this.endpoint = endpoint;
+	}
 
-	public AndConstraint<EndpointAssertions> BeDelete(string methodName, string template = null!) =>
-		HaveHttpAttribute<HttpDeleteAttribute>(methodName, template);
+	public AndConstraint<EndpointAssertions> BeDelete(string methodName, string template = null!)
+	{
+		return HaveHttpAttribute<HttpDeleteAttribute>(methodName, template);
+	}
 
-	public AndConstraint<EndpointAssertions> BeGet(string methodName, string template = null!) =>
-		HaveHttpAttribute<HttpGetAttribute>(methodName, template);
+	public AndConstraint<EndpointAssertions> BeGet(string methodName, string template = null!)
+	{
+		return HaveHttpAttribute<HttpGetAttribute>(methodName, template);
+	}
 
-	public AndConstraint<EndpointAssertions> BePost(string methodName, string template = null!) =>
-		HaveHttpAttribute<HttpPostAttribute>(methodName, template);
+	public AndConstraint<EndpointAssertions> BePost(string methodName, string template = null!)
+	{
+		return HaveHttpAttribute<HttpPostAttribute>(methodName, template);
+	}
 
 	public AndConstraint<EndpointAssertions> HaveHttpAttribute<THttpAttribute>(
 		string methodName,
@@ -43,12 +55,16 @@ public class EndpointAssertions : ReferenceTypeAssertions<Endpoint, EndpointAsse
 		attributes.Should().NotBeNull($"did not find Http attribute {typeof(THttpAttribute).Name}");
 
 		if (attributes == null)
+		{
 			return new AndConstraint<EndpointAssertions>(this);
+		}
 
 		attributes.Count.Should().BeGreaterThan(0, $"did not find Http attribute {typeof(THttpAttribute).Name}");
 
 		if (!expectedTemplate.IsNotNullOrEmpty())
+		{
 			return new AndConstraint<EndpointAssertions>(this);
+		}
 
 		var templates = attributes.Select(i => i.Template).ToList();
 		var hasExpectedTemplate = templates.Contains(expectedTemplate);

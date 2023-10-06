@@ -29,7 +29,10 @@ public abstract class FileToolsTests
 		SetUpDirectoryExists();
 	}
 
-	protected void SetFileDoesNotExist() => fileExists = false;
+	protected void SetFileDoesNotExist()
+	{
+		fileExists = false;
+	}
 
 	protected void VerifyDirectoryExistsWasCalled()
 	{

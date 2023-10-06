@@ -125,5 +125,8 @@ public class ToolkitHub : Hub
 		return base.OnDisconnectedAsync(exception);
 	}
 
-	private ToolkitUser GetUser() => Context.User == null ? null : ToolkitUser.Create(Context.User);
+	private ToolkitUser GetUser()
+	{
+		return Context.User == null ? null : ToolkitUser.Create(Context.User);
+	}
 }

@@ -48,5 +48,8 @@ public class UpdateTests : EnsureCollectionTests
 		repository.Update(item).Should().Be(item);
 	}
 
-	protected override Task TestMethod() => repository.Update(item);
+	protected override Task TestMethod()
+	{
+		return repository.Update(item);
+	}
 }

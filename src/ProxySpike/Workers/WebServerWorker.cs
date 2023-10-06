@@ -57,5 +57,8 @@ public class WebServerWorker : ISpikeWorker<ServerOptions>
 		return Task.CompletedTask;
 	}
 
-	private void Started() => ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+	private void Started()
+	{
+		ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+	}
 }

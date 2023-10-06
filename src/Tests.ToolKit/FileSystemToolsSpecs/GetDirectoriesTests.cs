@@ -9,7 +9,10 @@ public class GetDirectoriesTests : FileToolsTests
 {
 	private List<string> directories;
 
-	public GetDirectoriesTests() => SetUpGetDirectories();
+	public GetDirectoriesTests()
+	{
+		SetUpGetDirectories();
+	}
 
 	[Fact]
 	public void GetDirectoriesFromFileSystem()

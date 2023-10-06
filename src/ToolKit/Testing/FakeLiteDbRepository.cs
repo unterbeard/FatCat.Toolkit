@@ -47,34 +47,75 @@ public class FakeLiteDbRepository<T> : ILiteDbRepository<T>
 		SetUpGetByFilter();
 	}
 
-	public async Task<T> Create(T item) => await repository.Create(item);
+	public async Task<T> Create(T item)
+	{
+		return await repository.Create(item);
+	}
 
-	public async Task<List<T>> Create(List<T> items) => await repository.Create(items);
+	public async Task<List<T>> Create(List<T> items)
+	{
+		return await repository.Create(items);
+	}
 
-	public async Task<T> Delete(T item) => await repository.Delete(item);
+	public async Task<T> Delete(T item)
+	{
+		return await repository.Delete(item);
+	}
 
-	public async Task<List<T>> Delete(List<T> items) => await repository.Delete(items);
+	public async Task<List<T>> Delete(List<T> items)
+	{
+		return await repository.Delete(items);
+	}
 
-	public void Dispose() => repository.Dispose();
+	public void Dispose()
+	{
+		repository.Dispose();
+	}
 
-	public async Task<List<T>> GetAll() => await repository.GetAll();
+	public async Task<List<T>> GetAll()
+	{
+		return await repository.GetAll();
+	}
 
-	public async Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter) =>
-		await repository.GetAllByFilter(filter);
+	public async Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter)
+	{
+		return await repository.GetAllByFilter(filter);
+	}
 
-	public async Task<T?> GetByFilter(Expression<Func<T, bool>> filter) => await repository.GetByFilter(filter);
+	public async Task<T?> GetByFilter(Expression<Func<T, bool>> filter)
+	{
+		return await repository.GetByFilter(filter);
+	}
 
-	public T? GetById(int id) => repository.GetById(id);
+	public T? GetById(int id)
+	{
+		return repository.GetById(id);
+	}
 
-	public async Task<T?> GetFirst() => await repository.GetFirst();
+	public async Task<T?> GetFirst()
+	{
+		return await repository.GetFirst();
+	}
 
-	public async Task<T> GetFirstOrCreate() => await repository.GetFirstOrCreate();
+	public async Task<T> GetFirstOrCreate()
+	{
+		return await repository.GetFirstOrCreate();
+	}
 
-	public void SetDatabasePath(string databaseFullPath) => repository.SetDatabasePath(databaseFullPath);
+	public void SetDatabasePath(string databaseFullPath)
+	{
+		repository.SetDatabasePath(databaseFullPath);
+	}
 
-	public async Task<T> Update(T item) => await repository.Update(item);
+	public async Task<T> Update(T item)
+	{
+		return await repository.Update(item);
+	}
 
-	public async Task<List<T>> Update(List<T> items) => await repository.Update(items);
+	public async Task<List<T>> Update(List<T> items)
+	{
+		return await repository.Update(items);
+	}
 
 	public void VerifyConnect(string expectedDatabasePath)
 	{
