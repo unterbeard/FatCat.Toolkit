@@ -11,8 +11,12 @@ public static class Program
 {
 	private const int WebPort = 14555;
 
+	public static string[] Args { get; set; }
+
 	public static async Task Main(params string[] args)
 	{
+		Args = args;
+
 		ConsoleLog.LogCallerInformation = true;
 
 		try

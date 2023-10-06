@@ -1,52 +1,66 @@
 #nullable enable
+using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using FatCat.Toolkit.Console;
 
 namespace FatCat.Toolkit.Communication;
 
-public delegate void TcpMessageReceived(string message);
+public delegate void TcpMessageReceived(byte[] data);
 
 public interface ITcpServer : IDisposable
 {
-	event TcpMessageReceived? OnMessageReceived;
+	event TcpMessageReceived OnMessageReceived;
 
-	void Start(IPAddress ipAddress, ushort port, int receiveBufferSize = 1024);
+	void Start(ushort port, int receiveBufferSize = 1024);
 
-	void Start(IPAddress ipAddress, ushort port, Encoding encoding, int receiveBufferSize = 1024);
+	void Start(ushort port, Encoding encoding, int receiveBufferSize = 1024);
 
 	void Stop();
 }
 
 public class TcpServer : ITcpServer
 {
+	private readonly IGenerator generator;
 	private int bufferSize;
-	private Encoding? encoding;
-	private TcpListener? listener;
+	private CancellationTokenSource cancelSource;
+	private CancellationToken cancelToken;
+	private Encoding encoding;
+	private TcpListener listener;
+	private ushort port;
+	private Socket server;
 
-	public event TcpMessageReceived? OnMessageReceived;
+	internal ConcurrentDictionary<string, ClientConnection> Connections { get; set; } = new();
 
-	public void Dispose()
+	public TcpServer(IGenerator generator)
 	{
-		listener?.Stop();
+		this.generator = generator;
 	}
 
-	public void Start(IPAddress ipAddress, ushort port, int receiveBufferSize = 1024)
+	public event TcpMessageReceived OnMessageReceived;
+
+	public void Dispose() { }
+
+	public virtual void OnOnMessageReceived(byte[] data)
 	{
-		Start(ipAddress, port, Encoding.UTF8, receiveBufferSize);
+		OnMessageReceived?.Invoke(data);
 	}
 
-	public void Start(IPAddress ipAddress, ushort port, Encoding encoding, int receiveBufferSize = 1024)
+	public void Start(ushort port, int receiveBufferSize = 1024)
 	{
+		Start(port, Encoding.Unicode, receiveBufferSize);
+	}
+
+	public void Start(ushort port, Encoding encoding, int receiveBufferSize = 1024)
+	{
+		cancelSource = new CancellationTokenSource();
+		cancelToken = cancelSource.Token;
+
+		this.port = port;
 		bufferSize = receiveBufferSize;
 		this.encoding = encoding;
 
-		listener = new TcpListener(ipAddress, port);
-
-		listener.Start();
-
-		listener.BeginAcceptTcpClient(OnTcpClientConnected, listener);
+		Task.Factory.StartNew(ServerThread, TaskCreationOptions.LongRunning);
 	}
 
 	public void Stop()
@@ -54,54 +68,36 @@ public class TcpServer : ITcpServer
 		Dispose();
 	}
 
-	protected virtual void InvokeMessageReceived(string message)
+	private async Task ServerThread()
 	{
-		OnMessageReceived?.Invoke(message);
+		await Task.CompletedTask;
+
+		listener = new TcpListener(IPAddress.Any, port) { Server = { NoDelay = true } };
+		server = listener.Server;
+
+		SetUpKeepAlive();
+
+		listener.Start();
+
+		while (!cancelToken.IsCancellationRequested)
+		{
+			var client = await listener.AcceptTcpClientAsync(cancelToken);
+
+			var clientId = generator.NewId();
+
+			var clientConnection = new ClientConnection(this, client, clientId, bufferSize, cancelToken);
+
+			Connections.TryAdd(clientId, clientConnection);
+
+			clientConnection.Start();
+		}
 	}
 
-	private void OnTcpClientConnected(IAsyncResult ar)
+	private void SetUpKeepAlive()
 	{
-		try
-		{
-			var syncListener = ar.AsyncState as TcpListener;
-
-			var client = listener?.EndAcceptTcpClient(ar);
-
-			syncListener?.BeginAcceptTcpClient(OnTcpClientConnected, syncListener);
-
-			var buffer = new byte[bufferSize];
-
-			var stream = client?.GetStream();
-
-			var fullMessage = new StringBuilder();
-
-			if (stream is { CanRead: true })
-			{
-				int dataRead;
-
-				do
-				{
-					dataRead = stream.Read(buffer, 0, buffer.Length);
-
-					if (dataRead != 0)
-					{
-						var encodingToUse = encoding ?? Encoding.UTF8;
-
-						var data = encodingToUse.GetString(buffer, 0, dataRead);
-
-						fullMessage.Append(data);
-					}
-				} while (dataRead != 0);
-			}
-
-			stream?.Close();
-			client?.Close();
-
-			InvokeMessageReceived(fullMessage.ToString());
-		}
-		catch (Exception ex)
-		{
-			ConsoleLog.WriteException(ex);
-		}
+		server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+		server.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 900);
+		server.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 300);
+		server.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 15);
 	}
 }
