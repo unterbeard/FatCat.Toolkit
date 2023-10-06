@@ -33,7 +33,7 @@ internal class ClientConnection
 
 	private async Task ReceivingThread()
 	{
-		await Task.CompletedTask;
+		ConsoleLog.WriteMagenta($"Client Connected RemoveEndpoint <{client.Client.RemoteEndPoint}>");
 
 		var stream = client.GetStream();
 		var buffer = new byte[bufferSize];
@@ -50,6 +50,10 @@ internal class ClientConnection
 				var bytesReceived = new byte[bytesCount];
 
 				Array.Copy(buffer, bytesReceived, bytesCount);
+
+				ConsoleLog.WriteMagenta(
+					$"Message Received From <{client.Client.RemoteEndPoint}> | Total Bytes <{bytesCount}>"
+				);
 
 				server.OnOnMessageReceived(bytesReceived);
 			}

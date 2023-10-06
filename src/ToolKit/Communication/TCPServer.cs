@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using FatCat.Toolkit.Console;
 
 namespace FatCat.Toolkit.Communication;
 
@@ -78,6 +79,8 @@ public class TcpServer : ITcpServer
 		SetUpKeepAlive();
 
 		listener.Start();
+
+		ConsoleLog.WriteMagenta($"Server listening on {port}");
 
 		while (!cancelToken.IsCancellationRequested)
 		{
