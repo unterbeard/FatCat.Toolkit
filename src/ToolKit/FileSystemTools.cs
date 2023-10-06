@@ -56,12 +56,14 @@ public class FileSystemTools : IFileSystemTools
 
 	public void DeleteDirectory(string path, bool recursive = true)
 	{
-		if (DirectoryExists(path)) fileSystem.Directory.Delete(path, recursive);
+		if (DirectoryExists(path))
+			fileSystem.Directory.Delete(path, recursive);
 	}
 
 	public bool DeleteFile(string path)
 	{
-		if (!FileExists(path)) return false;
+		if (!FileExists(path))
+			return false;
 
 		fileSystem.File.Delete(path);
 
@@ -72,7 +74,8 @@ public class FileSystemTools : IFileSystemTools
 
 	public void EnsureDirectory(string path)
 	{
-		if (DirectoryExists(path)) return;
+		if (DirectoryExists(path))
+			return;
 
 		fileSystem.Directory.CreateDirectory(path);
 	}
@@ -81,7 +84,8 @@ public class FileSystemTools : IFileSystemTools
 	{
 		EnsureDirectory(Path.GetDirectoryName(path)!);
 
-		if (FileExists(path)) return;
+		if (FileExists(path))
+			return;
 
 		using var _ = fileSystem.File.Create(path);
 	}
@@ -90,7 +94,8 @@ public class FileSystemTools : IFileSystemTools
 
 	public List<string> GetDirectories(string path)
 	{
-		if (!DirectoryExists(path)) return new();
+		if (!DirectoryExists(path))
+			return new();
 
 		var directories = fileSystem.Directory.GetDirectories(path);
 
@@ -101,7 +106,8 @@ public class FileSystemTools : IFileSystemTools
 
 	public List<string> GetFiles(string directoryPath)
 	{
-		if (!DirectoryExists(directoryPath)) return new();
+		if (!DirectoryExists(directoryPath))
+			return new();
 
 		var files = fileSystem.Directory.GetFiles(directoryPath);
 
@@ -112,14 +118,13 @@ public class FileSystemTools : IFileSystemTools
 	{
 		var files = GetFiles(directoryPath);
 
-		return files
-				.Select(GetFileMetaData)
-				.ToList();
+		return files.Select(GetFileMetaData).ToList();
 	}
 
 	public bool MoveDirectory(string sourceDirectory, string destinationDirectory)
 	{
-		if (!DirectoryExists(sourceDirectory)) return false;
+		if (!DirectoryExists(sourceDirectory))
+			return false;
 
 		fileSystem.Directory.Move(sourceDirectory, destinationDirectory);
 
@@ -128,25 +133,29 @@ public class FileSystemTools : IFileSystemTools
 
 	public bool MoveFile(string sourcePath, string sourceDestination)
 	{
-		if (!FileExists(sourcePath)) return false;
+		if (!FileExists(sourcePath))
+			return false;
 
 		fileSystem.File.Move(sourcePath, sourceDestination);
 
 		return true;
 	}
 
-	public async Task<byte[]> ReadAllBytes(string path) => FileDoesNotExist(path) ? Array.Empty<byte>() : await fileSystem.File.ReadAllBytesAsync(path);
+	public async Task<byte[]> ReadAllBytes(string path) =>
+		FileDoesNotExist(path) ? Array.Empty<byte>() : await fileSystem.File.ReadAllBytesAsync(path);
 
 	public async Task<List<string>> ReadAllLines(string path)
 	{
-		if (!fileSystem.File.Exists(path)) return new List<string>();
+		if (!fileSystem.File.Exists(path))
+			return new List<string>();
 
 		var lines = await fileSystem.File.ReadAllLinesAsync(path);
 
 		return lines.ToList();
 	}
 
-	public async Task<string> ReadAllText(string path) => FileDoesNotExist(path) ? string.Empty : await fileSystem.File.ReadAllTextAsync(path);
+	public async Task<string> ReadAllText(string path) =>
+		FileDoesNotExist(path) ? string.Empty : await fileSystem.File.ReadAllTextAsync(path);
 
 	public async Task WriteAllBytes(string path, byte[] bytes)
 	{

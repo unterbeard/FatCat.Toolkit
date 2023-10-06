@@ -3,7 +3,8 @@ using System.Linq.Expressions;
 
 namespace FatCat.Toolkit.Data;
 
-public interface IDataRepository<T> where T : DataObject
+public interface IDataRepository<T>
+	where T : DataObject
 {
 	Task<T> Create(T item);
 
@@ -16,7 +17,7 @@ public interface IDataRepository<T> where T : DataObject
 	Task<List<T>> GetAll();
 
 	Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter);
-	
+
 	Task<T?> GetByFilter(Expression<Func<T, bool>> filter);
 
 	Task<T?> GetFirst();

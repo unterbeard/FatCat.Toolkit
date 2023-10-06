@@ -12,8 +12,7 @@ public class ExistsTests : FileSystemRepositoryTests
 	{
 		repository.Exists();
 
-		A.CallTo(() => fileSystem.File.Exists(TestFileDataObjectPath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.File.Exists(TestFileDataObjectPath)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -21,9 +20,7 @@ public class ExistsTests : FileSystemRepositoryTests
 	{
 		SetUpFileExists(false);
 
-		repository.Exists()
-				.Should()
-				.BeFalse();
+		repository.Exists().Should().BeFalse();
 	}
 
 	[Fact]
@@ -31,14 +28,11 @@ public class ExistsTests : FileSystemRepositoryTests
 	{
 		SetUpFileExists(true);
 
-		repository.Exists()
-				.Should()
-				.BeTrue();
+		repository.Exists().Should().BeTrue();
 	}
 
 	private void SetUpFileExists(bool value)
 	{
-		A.CallTo(() => fileSystem.File.Exists(A<string>._))
-		.Returns(value);
+		A.CallTo(() => fileSystem.File.Exists(A<string>._)).Returns(value);
 	}
 }

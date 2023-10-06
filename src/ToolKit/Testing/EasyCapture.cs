@@ -6,13 +6,15 @@ public class EasyCapture<T>
 {
 	public static implicit operator T(EasyCapture<T> capture)
 	{
-		A<T>.That.Matches(i =>
-						{
-							capture.CaptureValue(i);
+		A<T>.That.Matches(
+			i =>
+			{
+				capture.CaptureValue(i);
 
-							return true;
-						},
-						$"Captured parameter {typeof(T).FullName}");
+				return true;
+			},
+			$"Captured parameter {typeof(T).FullName}"
+		);
 
 		return default!;
 	}

@@ -18,16 +18,12 @@ public class DirectoryExistsTests : FileToolsTests
 	{
 		directoryExists = false;
 
-		fileTools.DirectoryExists(directoryPath)
-				.Should()
-				.BeFalse();
+		fileTools.DirectoryExists(directoryPath).Should().BeFalse();
 	}
 
 	[Fact]
 	public void TrueIfDirectoryIsFound()
 	{
-		fileTools.DirectoryExists(directoryPath)
-				.Should()
-				.BeTrue();
+		fileTools.DirectoryExists(directoryPath).Should().BeTrue();
 	}
 }

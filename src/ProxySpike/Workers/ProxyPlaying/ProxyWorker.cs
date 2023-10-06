@@ -15,8 +15,8 @@ namespace ProxySpike.Workers.ProxyPlaying;
  *
  *	How to configure in code rather than JSON
  *		-- Works just fine pretty easy to do
- * 
- * 
+ *
+ *
  */
 
 public class ProxyWorker : ISpikeWorker<ProxyOptions>

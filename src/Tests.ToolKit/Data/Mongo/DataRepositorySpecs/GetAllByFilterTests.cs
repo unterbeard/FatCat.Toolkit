@@ -19,12 +19,13 @@ public class GetAllByFilterTests : EnsureCollectionTests
 
 		filterItems = Faker.Create<List<TestingMongoObject>>(3);
 
-		foreach (var filterItem in filterItems) filterItem.Number = filterNumber;
+		foreach (var filterItem in filterItems)
+			filterItem.Number = filterNumber;
 
 		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
 		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture, default, default))
-		.Returns(new TestingAsyncCursor<TestingMongoObject>(filterItems));
+			.Returns(new TestingAsyncCursor<TestingMongoObject>(filterItems));
 	}
 
 	[Fact]
@@ -32,36 +33,35 @@ public class GetAllByFilterTests : EnsureCollectionTests
 	{
 		await repository.GetAllByFilter(i => i.Number == filterNumber);
 
-		A.CallTo(() => collection.FindAsync<TestingMongoObject>(A<ExpressionFilterDefinition<TestingMongoObject>>._, default, default))
-		.MustHaveHappened();
+		A.CallTo(
+				() =>
+					collection.FindAsync<TestingMongoObject>(
+						A<ExpressionFilterDefinition<TestingMongoObject>>._,
+						default,
+						default
+					)
+			)
+			.MustHaveHappened();
 
-		expressionCapture.Value
-						.Should()
-						.NotBeNull();
+		expressionCapture.Value.Should().NotBeNull();
 
 		var filter = expressionCapture.Value.Expression.Compile();
 
 		foreach (var currentItem in itemList)
 		{
-			filter(currentItem)
-				.Should()
-				.BeFalse();
+			filter(currentItem).Should().BeFalse();
 		}
 
 		foreach (var currentFilterItem in filterItems)
 		{
-			filter(currentFilterItem)
-				.Should()
-				.BeTrue();
+			filter(currentFilterItem).Should().BeTrue();
 		}
 	}
 
 	[Fact]
 	public void ReturnFilteredList()
 	{
-		repository.GetAllByFilter(i => i.Number == filterNumber)
-				.Should()
-				.BeEquivalentTo(filterItems);
+		repository.GetAllByFilter(i => i.Number == filterNumber).Should().BeEquivalentTo(filterItems);
 	}
 
 	protected override Task TestMethod() => repository.GetAllByFilter(i => i.Number == filterNumber);

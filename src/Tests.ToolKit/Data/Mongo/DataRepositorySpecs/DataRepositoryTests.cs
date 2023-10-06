@@ -23,8 +23,10 @@ public abstract class DataRepositoryTests
 		item = Faker.Create<TestingMongoObject>();
 		itemList = Faker.Create<List<TestingMongoObject>>(4);
 
-		repository = new MongoRepository<TestingMongoObject>(mongoDataConnection,
-															mongoNames) { Collection = collection };
+		repository = new MongoRepository<TestingMongoObject>(mongoDataConnection, mongoNames)
+		{
+			Collection = collection
+		};
 	}
 
 	private void SetUpDataConnection()
@@ -34,7 +36,7 @@ public abstract class DataRepositoryTests
 		collection = A.Fake<IMongoCollection<TestingMongoObject>>();
 
 		A.CallTo(() => mongoDataConnection.GetCollection<TestingMongoObject>(A<string>._, A<string>._))
-		.Returns(collection);
+			.Returns(collection);
 	}
 
 	private void SetUpDataNames()
@@ -43,7 +45,6 @@ public abstract class DataRepositoryTests
 
 		databaseName = Faker.RandomString();
 
-		A.CallTo(() => mongoNames.GetDatabaseName<TestingMongoObject>())
-		.Returns(databaseName);
+		A.CallTo(() => mongoNames.GetDatabaseName<TestingMongoObject>()).Returns(databaseName);
 	}
 }

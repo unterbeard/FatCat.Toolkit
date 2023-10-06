@@ -15,9 +15,7 @@ public class ClientWorker
 	private readonly IThread thread;
 	private readonly IWebCallerFactory webCallerFactory;
 
-	public ClientWorker(IThread thread,
-						IToolkitHubClientFactory hubFactory,
-						IWebCallerFactory webCallerFactory)
+	public ClientWorker(IThread thread, IToolkitHubClientFactory hubFactory, IWebCallerFactory webCallerFactory)
 	{
 		this.thread = thread;
 		this.hubFactory = hubFactory;
@@ -27,53 +25,59 @@ public class ClientWorker
 	public void DoWork(string[] args)
 	{
 		thread.Run(async () =>
-					{
-						var mainUrl = "https://localhost:14555";
+		{
+			var mainUrl = "https://localhost:14555";
 
-						if (args.Length > 1) mainUrl = args[1];
+			if (args.Length > 1)
+				mainUrl = args[1];
 
-						ConsoleLog.WriteCyan($"Using Url := <{mainUrl}>");
+			ConsoleLog.WriteCyan($"Using Url := <{mainUrl}>");
 
-						var webCaller = webCallerFactory.GetWebCaller(new Uri(mainUrl));
+			var webCaller = webCallerFactory.GetWebCaller(new Uri(mainUrl));
 
-						var tokenResult = await webCaller.Get("api/sample/token");
+			var tokenResult = await webCaller.Get("api/sample/token");
 
-						if (tokenResult.IsUnsuccessful)
-						{
-							ConsoleLog.WriteRed($"Could not get TOKEN this is an error!!!!! | StatusCode := <{tokenResult.StatusCode}>");
+			if (tokenResult.IsUnsuccessful)
+			{
+				ConsoleLog.WriteRed(
+					$"Could not get TOKEN this is an error!!!!! | StatusCode := <{tokenResult.StatusCode}>"
+				);
 
-							return;
-						}
+				return;
+			}
 
-						var testToken = tokenResult.Content;
+			var testToken = tokenResult.Content;
 
-						ConsoleLog.Write($"Using Token := {testToken}");
+			ConsoleLog.Write($"Using Token := {testToken}");
 
-						webCaller.UserBearerToken(testToken);
+			webCaller.UserBearerToken(testToken);
 
-						var response = await webCaller.Get("Sample/Secure");
+			var response = await webCaller.Get("Sample/Secure");
 
-						ConsoleLog.WriteMagenta($"StatusCode := <{response.StatusCode}> | {response.Content}");
+			ConsoleLog.WriteMagenta($"StatusCode := <{response.StatusCode}> | {response.Content}");
 
-						await ConnectToHub(mainUrl, testToken);
-					});
+			await ConnectToHub(mainUrl, testToken);
+		});
 	}
 
 	private async Task ConnectToHub(string mainUrl, string testToken)
 	{
 		// Secure Url
 		var hubUrl = $"{mainUrl}/events?access_token={testToken}";
-		
+
 		ConsoleLog.WriteYellow($"  Going to connect to hub");
 
-		var result = await hubFactory.TryToConnectToClient(hubUrl, () =>
-																	{
-																		ConsoleLog.WriteDarkRed("Connection lost to server");
+		var result = await hubFactory.TryToConnectToClient(
+			hubUrl,
+			() =>
+			{
+				ConsoleLog.WriteDarkRed("Connection lost to server");
 
-																		Task.Delay(10.Seconds()).Wait();
+				Task.Delay(10.Seconds()).Wait();
 
-																		ConnectToHub(mainUrl, testToken).Wait();
-																	});
+				ConnectToHub(mainUrl, testToken).Wait();
+			}
+		);
 
 		if (!result.Connected)
 		{
@@ -81,7 +85,7 @@ public class ClientWorker
 
 			return;
 		}
-		
+
 		ConsoleLog.WriteGreen("Connected to HUB");
 
 		var hubConnection = result.Connection;
@@ -128,15 +132,16 @@ public class ClientWorker
 
 		var watch = Stopwatch.StartNew();
 
-		var response = await hubConnection.SendDataBuffer(new ToolkitMessage
-														{
-															Data = "Junk",
-															MessageType = 123
-														}, dataBuffer);
+		var response = await hubConnection.SendDataBuffer(
+			new ToolkitMessage { Data = "Junk", MessageType = 123 },
+			dataBuffer
+		);
 
 		watch.Stop();
 
 		ConsoleLog.WriteYellow($"Send DataBuffer Message Took <{watch.Elapsed}>");
-		ConsoleLog.WriteCyan($"Response from server was {JsonConvert.SerializeObject(response, Formatting.Indented)}");
+		ConsoleLog.WriteCyan(
+			$"Response from server was {JsonConvert.SerializeObject(response, Formatting.Indented)}"
+		);
 	}
 }

@@ -9,11 +9,9 @@ public class GetFirstOrCreateTests : ConnectionHandlingLiteDbRepositoryTests<Lit
 {
 	public GetFirstOrCreateTests()
 	{
-		A.CallTo(() => collection.FindAll())
-		.Returns(new[] { testItem });
+		A.CallTo(() => collection.FindAll()).Returns(new[] { testItem });
 
-		A.CallTo(() => collection.Insert(A<LiteDbTestObject>._))
-		.Returns(new BsonValue(1));
+		A.CallTo(() => collection.Insert(A<LiteDbTestObject>._)).Returns(new BsonValue(1));
 	}
 
 	[Fact]
@@ -21,8 +19,7 @@ public class GetFirstOrCreateTests : ConnectionHandlingLiteDbRepositoryTests<Lit
 	{
 		await RunTest();
 
-		A.CallTo(() => collection.FindAll())
-		.MustHaveHappened();
+		A.CallTo(() => collection.FindAll()).MustHaveHappened();
 	}
 
 	[Fact]
@@ -30,28 +27,23 @@ public class GetFirstOrCreateTests : ConnectionHandlingLiteDbRepositoryTests<Lit
 	{
 		await RunTest();
 
-		A.CallTo(() => collection.Insert(A<LiteDbTestObject>._))
-		.MustNotHaveHappened();
+		A.CallTo(() => collection.Insert(A<LiteDbTestObject>._)).MustNotHaveHappened();
 	}
 
 	[Fact]
 	public async Task IfItemIsNotFoundThenCreateDefault()
 	{
-		A.CallTo(() => collection.FindAll())
-		.Returns(new List<LiteDbTestObject>());
+		A.CallTo(() => collection.FindAll()).Returns(new List<LiteDbTestObject>());
 
 		await RunTest();
 
-		A.CallTo(() => collection.Insert(A<LiteDbTestObject>._))
-		.MustHaveHappened();
+		A.CallTo(() => collection.Insert(A<LiteDbTestObject>._)).MustHaveHappened();
 	}
 
 	[Fact]
 	public void ReturnTheItem()
 	{
-		RunTest()
-			.Should()
-			.Be(testItem);
+		RunTest().Should().Be(testItem);
 	}
 
 	protected override Task<LiteDbTestObject> RunTest() => repository.GetFirstOrCreate();

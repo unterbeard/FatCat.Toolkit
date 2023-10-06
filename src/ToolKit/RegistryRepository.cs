@@ -30,5 +30,6 @@ public class RegistryRepository : IRegistryRepository
 
 	private static string GetSubKeyName(string applicationName) => $@"SOFTWARE\{applicationName}";
 
-	private static RegistryKey? OpenSubKey(string applicationName) => Registry.LocalMachine.OpenSubKey(GetSubKeyName(applicationName));
+	private static RegistryKey? OpenSubKey(string applicationName) =>
+		Registry.LocalMachine.OpenSubKey(GetSubKeyName(applicationName));
 }

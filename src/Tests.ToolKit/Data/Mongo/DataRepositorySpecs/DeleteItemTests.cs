@@ -14,28 +14,24 @@ public class DeleteItemTests : EnsureCollectionTests
 		var filterCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
 		A.CallTo(() => collection.DeleteOneAsync(filterCapture, default))
-		.Returns(new DeleteResult.Acknowledged(1));
+			.Returns(new DeleteResult.Acknowledged(1));
 
 		await repository.Delete(item);
 
 		A.CallTo(() => collection.DeleteOneAsync(A<ExpressionFilterDefinition<TestingMongoObject>>._, default))
-		.MustHaveHappened();
+			.MustHaveHappened();
 
 		filterCapture.Value.Should().NotBeNull();
 
 		var filter = filterCapture.Value.Expression.Compile();
 
-		filter(item)
-			.Should()
-			.BeTrue();
+		filter(item).Should().BeTrue();
 	}
 
 	[Fact]
 	public void ReturnDeletedItem()
 	{
-		repository.Delete(item)
-				.Should()
-				.BeEquivalentTo(item);
+		repository.Delete(item).Should().BeEquivalentTo(item);
 	}
 
 	protected override Task TestMethod() => repository.Delete(item);

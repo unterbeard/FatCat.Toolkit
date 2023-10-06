@@ -4,7 +4,8 @@ using FatCat.Toolkit.Json;
 
 namespace FatCat.Toolkit.Data.FileSystem;
 
-public interface ISingleItemFileSystemRepository<T> where T : FileSystemDataObject, new()
+public interface ISingleItemFileSystemRepository<T>
+	where T : FileSystemDataObject, new()
 {
 	bool Exists();
 
@@ -13,7 +14,8 @@ public interface ISingleItemFileSystemRepository<T> where T : FileSystemDataObje
 	Task Save(T item);
 }
 
-public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository<T> where T : FileSystemDataObject, new()
+public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository<T>
+	where T : FileSystemDataObject, new()
 {
 	private readonly IApplicationTools applicationTools;
 	private readonly IFileSystem fileSystem;
@@ -29,9 +31,11 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 
 	private string DataPath => Path.Join(DataDirectory, $"{typeof(T).Name}.data");
 
-	public SingleItemFileSystemRepository(IFileSystem fileSystem,
-										IApplicationTools applicationTools,
-										IJsonOperations jsonOperations)
+	public SingleItemFileSystemRepository(
+		IFileSystem fileSystem,
+		IApplicationTools applicationTools,
+		IJsonOperations jsonOperations
+	)
 	{
 		this.fileSystem = fileSystem;
 		this.applicationTools = applicationTools;
@@ -42,8 +46,10 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 
 	public async Task<T> Get()
 	{
-		if (Data != null) return Data;
-		if (DataDirectoryDoesNotExist || DataFileNotFound) return new T();
+		if (Data != null)
+			return Data;
+		if (DataDirectoryDoesNotExist || DataFileNotFound)
+			return new T();
 
 		var json = await fileSystem.File.ReadAllTextAsync(DataPath);
 
@@ -58,7 +64,8 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 
 		var json = jsonOperations.Serialize(Data);
 
-		if (DataDirectoryDoesNotExist) fileSystem.Directory.CreateDirectory(DataDirectory);
+		if (DataDirectoryDoesNotExist)
+			fileSystem.Directory.CreateDirectory(DataDirectory);
 
 		await fileSystem.File.WriteAllTextAsync(DataPath, json);
 	}

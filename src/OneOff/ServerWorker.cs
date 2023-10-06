@@ -14,42 +14,44 @@ public class ServerWorker
 	public void DoWork(string[] args)
 	{
 		var applicationSettings = new ToolkitWebApplicationSettings
-								{
-									Options = WebApplicationOptions.Https | WebApplicationOptions.SignalR,
-									TlsCertificate = new CertificationSettings
-														{
-															Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
-															Password = "basarab_cert"
-														},
-									SignalRPath = "events",
-									ToolkitTokenParameters = new SpikeToolkitParameters(),
-									ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
-									OnWebApplicationStarted = Started,
-									Args = args
-								};
+		{
+			Options = WebApplicationOptions.Https | WebApplicationOptions.SignalR,
+			TlsCertificate = new CertificationSettings
+			{
+				Location = @"C:\DevelopmentCert\DevelopmentCert.pfx",
+				Password = "basarab_cert"
+			},
+			SignalRPath = "events",
+			ToolkitTokenParameters = new SpikeToolkitParameters(),
+			ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
+			OnWebApplicationStarted = Started,
+			Args = args
+		};
 
 		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
-														{
-															ConsoleLog.WriteMagenta($"Got data buffer message: {JsonConvert.SerializeObject(message)}");
-															ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
+		{
+			ConsoleLog.WriteMagenta($"Got data buffer message: {JsonConvert.SerializeObject(message)}");
+			ConsoleLog.WriteMagenta($"Data buffer length: {buffer.Length}");
 
-															await Task.CompletedTask;
+			await Task.CompletedTask;
 
-															var responseMessage = $"BufferResponse {Faker.RandomString()}";
+			var responseMessage = $"BufferResponse {Faker.RandomString()}";
 
-															ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
+			ConsoleLog.WriteGreen($"Client Response for data buffer: <{responseMessage}>");
 
-															return responseMessage;
-														};
+			return responseMessage;
+		};
 
 		applicationSettings.ClientMessage += async message =>
-											{
-												await Task.CompletedTask;
+		{
+			await Task.CompletedTask;
 
-												ConsoleLog.WriteDarkCyan($"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>");
+			ConsoleLog.WriteDarkCyan(
+				$"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>"
+			);
 
-												return "ACK";
-											};
+			return "ACK";
+		};
 
 		applicationSettings.ClientConnected += OnClientConnected;
 		applicationSettings.ClientDisconnected += OnClientDisconnected;
@@ -60,14 +62,16 @@ public class ServerWorker
 	private static void MakeWebRequest(IWebCaller caller, string url)
 	{
 		ConsoleLog.WriteDarkCyan($"Making web request to url <{url}>");
-		
+
 		var response = caller.Get(url).Result;
 
 		// var finalResult = new WebResult<TestModel>(response);
 		var finalResult = response;
 
-		if (finalResult.IsSuccessful) ConsoleLog.WriteGreen(finalResult.Content);
-		else ConsoleLog.WriteRed($"Web Reqeust status code: <{finalResult.StatusCode}> | <{finalResult.Content}>");
+		if (finalResult.IsSuccessful)
+			ConsoleLog.WriteGreen(finalResult.Content);
+		else
+			ConsoleLog.WriteRed($"Web Reqeust status code: <{finalResult.StatusCode}> | <{finalResult.Content}>");
 	}
 
 	private Task OnClientConnected(ToolkitUser user, string connectionId)

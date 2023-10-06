@@ -5,7 +5,8 @@ using FatCat.Toolkit.Caching;
 
 namespace FatCat.Toolkit.Testing;
 
-public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
+public class FakeFatCatCache<T> : IFatCatCache<T>
+	where T : class, ICacheItem
 {
 	public IFatCatCache<T> Cache { get; }
 
@@ -18,13 +19,11 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 		Cache = A.Fake<IFatCatCache<T>>();
 		CacheItem = Faker.Create<T>();
 
-		A.CallTo(() => Cache.Get(A<string>._))
-		.ReturnsLazily(() => CacheItem);
+		A.CallTo(() => Cache.Get(A<string>._)).ReturnsLazily(() => CacheItem);
 
 		CacheList = Faker.Create<List<T>>();
 
-		A.CallTo(() => Cache.GetAll())
-		.ReturnsLazily(() => CacheList);
+		A.CallTo(() => Cache.GetAll()).ReturnsLazily(() => CacheList);
 	}
 
 	public void Add(T cacheItem, TimeSpan? timeout = null) => Cache.Add(cacheItem);
@@ -43,33 +42,27 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 
 	public void SetItemInCache()
 	{
-		A.CallTo(() => Cache.InCache(A<string>._))
-		.Returns(true);
+		A.CallTo(() => Cache.InCache(A<string>._)).Returns(true);
 
-		A.CallTo(() => Cache.Get(A<string>._))
-		.Returns(CacheItem);
+		A.CallTo(() => Cache.Get(A<string>._)).Returns(CacheItem);
 	}
 
 	public void SetItemNotInCache()
 	{
-		A.CallTo(() => Cache.InCache(A<string>._))
-		.Returns(false);
+		A.CallTo(() => Cache.InCache(A<string>._)).Returns(false);
 
-		A.CallTo(() => Cache.Get(A<string>._))
-		.Returns(null);
+		A.CallTo(() => Cache.Get(A<string>._)).Returns(null);
 	}
 
 	public void VerifyAdd(T? expectedItem = null)
 	{
 		if (expectedItem == null)
 		{
-			A.CallTo(() => Cache.Add(A<T>._, default))
-			.MustHaveHappened();
+			A.CallTo(() => Cache.Add(A<T>._, default)).MustHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItem, default))
-			.MustHaveHappened();
+			A.CallTo(() => Cache.Add(expectedItem, default)).MustHaveHappened();
 		}
 	}
 
@@ -77,33 +70,28 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedItems == null)
 		{
-			A.CallTo(() => Cache.Add(A<List<T>>._, default))
-			.MustHaveHappened();
+			A.CallTo(() => Cache.Add(A<List<T>>._, default)).MustHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItems, default))
-			.MustHaveHappened();
+			A.CallTo(() => Cache.Add(expectedItems, default)).MustHaveHappened();
 		}
 	}
 
 	public void VerifyClear()
 	{
-		A.CallTo(() => Cache.Clear())
-		.MustHaveHappened();
+		A.CallTo(() => Cache.Clear()).MustHaveHappened();
 	}
 
 	public void VerifyDidNotAdd(T? expectedItem = null)
 	{
 		if (expectedItem == null)
 		{
-			A.CallTo(() => Cache.Add(A<T>._, default))
-			.MustNotHaveHappened();
+			A.CallTo(() => Cache.Add(A<T>._, default)).MustNotHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItem, default))
-			.MustNotHaveHappened();
+			A.CallTo(() => Cache.Add(expectedItem, default)).MustNotHaveHappened();
 		}
 	}
 
@@ -111,53 +99,45 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedItems == null)
 		{
-			A.CallTo(() => Cache.Add(A<List<T>>._, default))
-			.MustNotHaveHappened();
+			A.CallTo(() => Cache.Add(A<List<T>>._, default)).MustNotHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Add(expectedItems, default))
-			.MustNotHaveHappened();
+			A.CallTo(() => Cache.Add(expectedItems, default)).MustNotHaveHappened();
 		}
 	}
 
 	public void VerifyDidNotClear()
 	{
-		A.CallTo(() => Cache.Clear())
-		.MustNotHaveHappened();
+		A.CallTo(() => Cache.Clear()).MustNotHaveHappened();
 	}
 
 	public void VerifyDidNotGet(string? expectedCacheId)
 	{
 		if (expectedCacheId == null)
 		{
-			A.CallTo(() => Cache.Get(A<string>._))
-			.MustNotHaveHappened();
+			A.CallTo(() => Cache.Get(A<string>._)).MustNotHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Get(expectedCacheId))
-			.MustNotHaveHappened();
+			A.CallTo(() => Cache.Get(expectedCacheId)).MustNotHaveHappened();
 		}
 	}
 
 	public void VerifyDidNotGetAll()
 	{
-		A.CallTo(() => Cache.GetAll())
-		.MustNotHaveHappened();
+		A.CallTo(() => Cache.GetAll()).MustNotHaveHappened();
 	}
 
 	public void VerifyDidNotInCache(string? expectedId = null)
 	{
 		if (expectedId == null)
 		{
-			A.CallTo(() => Cache.InCache(A<string>._))
-			.MustNotHaveHappened();
+			A.CallTo(() => Cache.InCache(A<string>._)).MustNotHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.InCache(expectedId))
-			.MustNotHaveHappened();
+			A.CallTo(() => Cache.InCache(expectedId)).MustNotHaveHappened();
 		}
 	}
 
@@ -165,13 +145,11 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedId == null)
 		{
-			A.CallTo(() => Cache.Remove(A<string>._))
-			.MustNotHaveHappened();
+			A.CallTo(() => Cache.Remove(A<string>._)).MustNotHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Remove(expectedId))
-			.MustNotHaveHappened();
+			A.CallTo(() => Cache.Remove(expectedId)).MustNotHaveHappened();
 		}
 	}
 
@@ -179,33 +157,28 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedCacheId == null)
 		{
-			A.CallTo(() => Cache.Get(A<string>._))
-			.MustHaveHappened();
+			A.CallTo(() => Cache.Get(A<string>._)).MustHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Get(expectedCacheId))
-			.MustHaveHappened();
+			A.CallTo(() => Cache.Get(expectedCacheId)).MustHaveHappened();
 		}
 	}
 
 	public void VerifyGetAll()
 	{
-		A.CallTo(() => Cache.GetAll())
-		.MustHaveHappened();
+		A.CallTo(() => Cache.GetAll()).MustHaveHappened();
 	}
 
 	public void VerifyInCache(string? expectedId = null)
 	{
 		if (expectedId == null)
 		{
-			A.CallTo(() => Cache.InCache(A<string>._))
-			.MustHaveHappened();
+			A.CallTo(() => Cache.InCache(A<string>._)).MustHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.InCache(expectedId))
-			.MustHaveHappened();
+			A.CallTo(() => Cache.InCache(expectedId)).MustHaveHappened();
 		}
 	}
 
@@ -213,13 +186,11 @@ public class FakeFatCatCache<T> : IFatCatCache<T> where T : class, ICacheItem
 	{
 		if (expectedId == null)
 		{
-			A.CallTo(() => Cache.Remove(A<string>._))
-			.MustHaveHappened();
+			A.CallTo(() => Cache.Remove(A<string>._)).MustHaveHappened();
 		}
 		else
 		{
-			A.CallTo(() => Cache.Remove(expectedId))
-			.MustHaveHappened();
+			A.CallTo(() => Cache.Remove(expectedId)).MustHaveHappened();
 		}
 	}
 }

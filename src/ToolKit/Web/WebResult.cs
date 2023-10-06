@@ -7,7 +7,8 @@ using Newtonsoft.Json;
 
 namespace FatCat.Toolkit.Web;
 
-public class WebResult<T> : IActionResult where T : class
+public class WebResult<T> : IActionResult
+	where T : class
 {
 	public static WebResult<T> BadRequest(string message) => new(WebResult.BadRequest(message));
 
@@ -39,18 +40,21 @@ public class WebResult<T> : IActionResult where T : class
 
 	public async Task ExecuteResultAsync(ActionContext context) => await BaseResult.ExecuteResultAsync(context);
 
-	public override string ToString() => $"WebResult | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {BaseResult.Content}";
+	public override string ToString() =>
+		$"WebResult | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {BaseResult.Content}";
 }
 
 public class WebResult : IActionResult
 {
-	public static WebResult BadRequest(ModelStateDictionary modelState) => new(HttpStatusCode.BadRequest, modelState);
+	public static WebResult BadRequest(ModelStateDictionary modelState) =>
+		new(HttpStatusCode.BadRequest, modelState);
 
 	public static WebResult BadRequest(string fieldName, string? messageId)
 	{
 		var modelState = new ModelStateDictionary();
 
-		if (messageId.IsNotNullOrEmpty()) modelState.AddModelError(fieldName, messageId!);
+		if (messageId.IsNotNullOrEmpty())
+			modelState.AddModelError(fieldName, messageId!);
 
 		return BadRequest(modelState);
 	}
@@ -74,15 +78,18 @@ public class WebResult : IActionResult
 
 	public static WebResult NotImplemented(string? content = null) => new(HttpStatusCode.NotImplemented, content);
 
-	public static WebResult Ok(string? content = null) => new(content!.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content!);
+	public static WebResult Ok(string? content = null) =>
+		new(content!.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content!);
 
-	public static WebResult Ok(EqualObject? returnObject) => new(returnObject == null ? HttpStatusCode.NoContent : HttpStatusCode.OK, returnObject!);
+	public static WebResult Ok(EqualObject? returnObject) =>
+		new(returnObject == null ? HttpStatusCode.NoContent : HttpStatusCode.OK, returnObject!);
 
 	public static WebResult Ok(IEnumerable<EqualObject> returnList) => new(returnList);
 
 	public static WebResult Ok(List<EqualObject> returnList) => new(returnList);
 
-	public static WebResult PreconditionFailed(string? content = null) => new(HttpStatusCode.PreconditionFailed, content);
+	public static WebResult PreconditionFailed(string? content = null) =>
+		new(HttpStatusCode.PreconditionFailed, content);
 
 	public static WebResult Timeout() => new(HttpStatusCode.RequestTimeout);
 
@@ -118,31 +125,38 @@ public class WebResult : IActionResult
 		httpContent = response.Content;
 	}
 
-	public WebResult(SimpleResponse response) : this(response.HttpStatusCode, response.Text) { }
+	public WebResult(SimpleResponse response)
+		: this(response.HttpStatusCode, response.Text) { }
 
-	public WebResult(EqualObject? resultObject) : this(resultObject == null ? HttpStatusCode.NoContent : HttpStatusCode.OK, resultObject!) { }
+	public WebResult(EqualObject? resultObject)
+		: this(resultObject == null ? HttpStatusCode.NoContent : HttpStatusCode.OK, resultObject!) { }
 
 	/// <summary>
 	///  If you call this with an empty string or null for content, it will return a 204.
 	/// </summary>
-	public WebResult(string? content = null) : this(content!.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content) { }
+	public WebResult(string? content = null)
+		: this(content!.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content) { }
 
-	public WebResult(HttpStatusCode statusCode, EqualObject resultObject) : this(statusCode, Json.Serialize(resultObject)) { }
+	public WebResult(HttpStatusCode statusCode, EqualObject resultObject)
+		: this(statusCode, Json.Serialize(resultObject)) { }
 
-	public WebResult(HttpStatusCode statusCode, IEnumerable<EqualObject> returnList) : this(statusCode, Json.Serialize(returnList)) { }
+	public WebResult(HttpStatusCode statusCode, IEnumerable<EqualObject> returnList)
+		: this(statusCode, Json.Serialize(returnList)) { }
 
-	public WebResult(IEnumerable<EqualObject> returnList) : this(HttpStatusCode.OK, Json.Serialize(returnList)) { }
+	public WebResult(IEnumerable<EqualObject> returnList)
+		: this(HttpStatusCode.OK, Json.Serialize(returnList)) { }
 
-	public WebResult(HttpStatusCode statusCode, ModelStateDictionary modelState) : this(statusCode, Json.Serialize(new SerializableError(modelState))) { }
+	public WebResult(HttpStatusCode statusCode, ModelStateDictionary modelState)
+		: this(statusCode, Json.Serialize(new SerializableError(modelState))) { }
 
-	public WebResult(HttpStatusCode statusCode,
-					string? content)
+	public WebResult(HttpStatusCode statusCode, string? content)
 	{
 		Content = content;
 		StatusCode = statusCode;
 	}
 
-	public WebResult(HttpStatusCode statusCode) => StatusCode = statusCode == HttpStatusCode.OK ? HttpStatusCode.NoContent : statusCode;
+	public WebResult(HttpStatusCode statusCode) =>
+		StatusCode = statusCode == HttpStatusCode.OK ? HttpStatusCode.NoContent : statusCode;
 
 	public WebResult() { }
 
@@ -151,11 +165,11 @@ public class WebResult : IActionResult
 	public async Task ExecuteResultAsync(ActionContext context)
 	{
 		var result = new ContentResult
-					{
-						Content = Content,
-						StatusCode = (int?)StatusCode,
-						ContentType = ContentType
-					};
+		{
+			Content = Content,
+			StatusCode = (int?)StatusCode,
+			ContentType = ContentType
+		};
 
 		await result.ExecuteResultAsync(context);
 	}

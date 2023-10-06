@@ -29,14 +29,19 @@ public class GetFirstOrCreateTests : EnsureCollectionTests
 	{
 		await repository.GetFirstOrCreate();
 
-		A.CallTo(() => collection.FindAsync<TestingMongoObject>(A<ExpressionFilterDefinition<TestingMongoObject>>._!, default, default))
-		.MustHaveHappened();
+		A.CallTo(
+				() =>
+					collection.FindAsync<TestingMongoObject>(
+						A<ExpressionFilterDefinition<TestingMongoObject>>._!,
+						default,
+						default
+					)
+			)
+			.MustHaveHappened();
 
 		var filter = expressionCapture.Value.Expression.Compile();
 
-		filter(Faker.Create<TestingMongoObject>())
-			.Should()
-			.BeTrue();
+		filter(Faker.Create<TestingMongoObject>()).Should().BeTrue();
 	}
 
 	[Fact]
@@ -44,12 +49,9 @@ public class GetFirstOrCreateTests : EnsureCollectionTests
 	{
 		SetUpToReturnItem();
 
-		repository.GetFirstOrCreate()
-				.Should()
-				.Be(firstItem);
+		repository.GetFirstOrCreate().Should().Be(firstItem);
 
-		A.CallTo(() => collection.InsertOneAsync(A<TestingMongoObject>._, default, default))
-		.MustNotHaveHappened();
+		A.CallTo(() => collection.InsertOneAsync(A<TestingMongoObject>._, default, default)).MustNotHaveHappened();
 	}
 
 	[Fact]
@@ -59,27 +61,17 @@ public class GetFirstOrCreateTests : EnsureCollectionTests
 
 		await repository.GetFirstOrCreate();
 
-		A.CallTo(() => collection.InsertOneAsync(A<TestingMongoObject>._, default, default))
-		.MustHaveHappened();
+		A.CallTo(() => collection.InsertOneAsync(A<TestingMongoObject>._, default, default)).MustHaveHappened();
 
 		var insertedItem = insertCapture.Value;
 
-		insertedItem
-			.Should()
-			.NotBeNull();
+		insertedItem.Should().NotBeNull();
 
-		insertedItem
-			.Id
-			.Should()
-			.NotBeNull();
+		insertedItem.Id.Should().NotBeNull();
 
-		insertedItem.Name
-					.Should()
-					.BeNullOrEmpty();
+		insertedItem.Name.Should().BeNullOrEmpty();
 
-		insertedItem.SomeDate
-					.Should()
-					.Be(default);
+		insertedItem.SomeDate.Should().Be(default);
 	}
 
 	[Fact]
@@ -87,9 +79,7 @@ public class GetFirstOrCreateTests : EnsureCollectionTests
 	{
 		SetUpToNotReturnAnItem();
 
-		repository.GetFirstOrCreate()
-				.Should()
-				.Be(insertCapture.Value);
+		repository.GetFirstOrCreate().Should().Be(insertCapture.Value);
 	}
 
 	protected override Task TestMethod() => repository.GetFirstOrCreate();
@@ -98,19 +88,18 @@ public class GetFirstOrCreateTests : EnsureCollectionTests
 	{
 		insertCapture = new EasyCapture<TestingMongoObject>();
 
-		A.CallTo(() => collection.InsertOneAsync(insertCapture, default, default))
-		.Returns(Task.CompletedTask);
+		A.CallTo(() => collection.InsertOneAsync(insertCapture, default, default)).Returns(Task.CompletedTask);
 	}
 
 	private void SetUpToNotReturnAnItem()
 	{
 		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture, default, default))
-		.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject>()));
+			.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject>()));
 	}
 
 	private void SetUpToReturnItem()
 	{
 		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture, default, default))
-		.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { firstItem }));
+			.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { firstItem }));
 	}
 }

@@ -29,7 +29,8 @@ public class TcpServer : ITcpServer
 
 	public void Dispose() => listener?.Stop();
 
-	public void Start(IPAddress ipAddress, ushort port, int receiveBufferSize = 1024) => Start(ipAddress, port, Encoding.UTF8, receiveBufferSize);
+	public void Start(IPAddress ipAddress, ushort port, int receiveBufferSize = 1024) =>
+		Start(ipAddress, port, Encoding.UTF8, receiveBufferSize);
 
 	public void Start(IPAddress ipAddress, ushort port, Encoding encoding, int receiveBufferSize = 1024)
 	{
@@ -87,6 +88,9 @@ public class TcpServer : ITcpServer
 
 			InvokeMessageReceived(fullMessage.ToString());
 		}
-		catch (Exception ex) { ConsoleLog.WriteException(ex); }
+		catch (Exception ex)
+		{
+			ConsoleLog.WriteException(ex);
+		}
 	}
 }

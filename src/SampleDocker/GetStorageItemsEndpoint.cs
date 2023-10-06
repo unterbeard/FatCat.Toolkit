@@ -46,12 +46,15 @@ public class GetStorageItemsEndpoint : Endpoint
 		// Create the container and return a container client object
 		var items = blobServiceClient.GetBlobContainers();
 
-		foreach (var item in items) ConsoleLog.WriteCyan($"{item.Name}");
+		foreach (var item in items)
+			ConsoleLog.WriteCyan($"{item.Name}");
 
 		BlobContainerClient containerClient;
 
-		if (items.All(i => i.Name != ContainerName)) containerClient = await blobServiceClient.CreateBlobContainerAsync(ContainerName);
-		else containerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
+		if (items.All(i => i.Name != ContainerName))
+			containerClient = await blobServiceClient.CreateBlobContainerAsync(ContainerName);
+		else
+			containerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
 
 		// Create a local file in the ./data/ directory for uploading and downloading
 		var localPath = "data";
@@ -59,7 +62,8 @@ public class GetStorageItemsEndpoint : Endpoint
 		var fileName = "quickstart_Dude.txt";
 		var localFilePath = Path.Combine(localPath, fileName);
 
-		if (System.IO.File.Exists(localFilePath)) System.IO.File.Delete(localFilePath);
+		if (System.IO.File.Exists(localFilePath))
+			System.IO.File.Delete(localFilePath);
 
 		// Write text to the file
 		await System.IO.File.WriteAllTextAsync(localFilePath, $"Hello, World! | <{DateTime.Now:hh:mm:ss}>");
@@ -73,7 +77,7 @@ public class GetStorageItemsEndpoint : Endpoint
 		await blobClient.UploadAsync(localFilePath, true);
 
 		// Download the blob to a local file
-		// Append the string "DOWNLOADED" before the .txt extension 
+		// Append the string "DOWNLOADED" before the .txt extension
 		// so you can compare the files in the data directory
 		var downloadFilePath = localFilePath.Replace(".txt", "DOWNLOADED.txt");
 

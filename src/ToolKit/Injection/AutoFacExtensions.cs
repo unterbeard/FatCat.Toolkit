@@ -10,10 +10,15 @@ public static class AutoFacExtensions
 {
 	private static readonly ConcurrentDictionary<Type, ConstructorInfo[]> defaultPublicConstructorsCache = new();
 
-	public static IRegistrationBuilder<TLimit, TScanningActivatorData, TRegistrationStyle> HasPublicConstructor<TLimit, TScanningActivatorData, TRegistrationStyle>(this IRegistrationBuilder<TLimit, TScanningActivatorData, TRegistrationStyle> registration)
+	public static IRegistrationBuilder<TLimit, TScanningActivatorData, TRegistrationStyle> HasPublicConstructor<
+		TLimit,
+		TScanningActivatorData,
+		TRegistrationStyle
+	>(this IRegistrationBuilder<TLimit, TScanningActivatorData, TRegistrationStyle> registration)
 		where TScanningActivatorData : ScanningActivatorData
 	{
-		if (registration == null) throw new ArgumentNullException(nameof(registration));
+		if (registration == null)
+			throw new ArgumentNullException(nameof(registration));
 
 		return registration.Where(TypeHasPublicConstructor);
 	}
@@ -25,14 +30,20 @@ public static class AutoFacExtensions
 	/// <param name="builder">Container builder.</param>
 	/// <param name="delegate">The delegate to register.</param>
 	/// <returns>Registration builder allowing the registration to be configured.</returns>
-	public static IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T>(this ContainerBuilder builder, Func<ISystemScope, T> @delegate) where T : notnull
+	public static IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> Register<T>(
+		this ContainerBuilder builder,
+		Func<ISystemScope, T> @delegate
+	)
+		where T : notnull
 	{
-		return builder.Register((IComponentContext ctx) =>
-								{
-									var haiScope = ctx.Resolve<ISystemScope>();
+		return builder.Register(
+			(IComponentContext ctx) =>
+			{
+				var haiScope = ctx.Resolve<ISystemScope>();
 
-									return @delegate(haiScope);
-								});
+				return @delegate(haiScope);
+			}
+		);
 	}
 
 	private static bool TypeHasPublicConstructor(Type type)

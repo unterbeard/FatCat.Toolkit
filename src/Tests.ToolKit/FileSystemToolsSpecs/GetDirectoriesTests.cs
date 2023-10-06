@@ -16,8 +16,7 @@ public class GetDirectoriesTests : FileToolsTests
 	{
 		fileTools.GetDirectories(directoryPath);
 
-		A.CallTo(() => fileSystem.Directory.GetDirectories(directoryPath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.Directory.GetDirectories(directoryPath)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -25,17 +24,13 @@ public class GetDirectoriesTests : FileToolsTests
 	{
 		directoryExists = false;
 
-		fileTools.GetDirectories(directoryPath)
-				.Should()
-				.BeEmpty();
+		fileTools.GetDirectories(directoryPath).Should().BeEmpty();
 	}
 
 	[Fact]
 	public void ReturnDirectories()
 	{
-		fileTools.GetDirectories(directoryPath)
-				.Should()
-				.BeEquivalentTo(directories);
+		fileTools.GetDirectories(directoryPath).Should().BeEquivalentTo(directories);
 	}
 
 	[Fact]
@@ -50,7 +45,6 @@ public class GetDirectoriesTests : FileToolsTests
 	{
 		directories = Faker.Create<List<string>>();
 
-		A.CallTo(() => fileSystem.Directory.GetDirectories(A<string>._))
-		.Returns(directories.ToArray());
+		A.CallTo(() => fileSystem.Directory.GetDirectories(A<string>._)).Returns(directories.ToArray());
 	}
 }

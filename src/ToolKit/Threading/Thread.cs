@@ -22,19 +22,31 @@ public class Thread : IThread
 	public void Run(Func<Task> action)
 	{
 		Task.Run(async () =>
-				{
-					try { await action(); }
-					catch (Exception ex) { HandleException(ex); }
-				});
+		{
+			try
+			{
+				await action();
+			}
+			catch (Exception ex)
+			{
+				HandleException(ex);
+			}
+		});
 	}
 
 	public void Run(Action action)
 	{
 		Task.Run(() =>
-				{
-					try { action(); }
-					catch (Exception ex) { HandleException(ex); }
-				});
+		{
+			try
+			{
+				action();
+			}
+			catch (Exception ex)
+			{
+				HandleException(ex);
+			}
+		});
 	}
 
 	public Task Sleep(TimeSpan sleepTime) => Task.Delay(sleepTime);

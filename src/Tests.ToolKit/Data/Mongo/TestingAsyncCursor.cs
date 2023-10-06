@@ -17,7 +17,8 @@ public class TestingAsyncCursor<T> : IAsyncCursor<T>
 	public bool MoveNext(CancellationToken cancellationToken = new())
 	{
 		// Only need to call move once, after that return false
-		if (movedCalled) return false;
+		if (movedCalled)
+			return false;
 
 		movedCalled = true;
 

@@ -9,7 +9,8 @@ using MongoDB.Driver;
 
 namespace FatCat.Toolkit.Testing;
 
-public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
+public class MongoFakeRepository<T> : IMongoRepository<T>
+	where T : MongoObject
 {
 	private readonly IMongoRepository<T> repository;
 
@@ -52,7 +53,8 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 		SetUpGetByFilter();
 	}
 
-	public void Connect(string? connectionString = null, string? databaseName = null) => repository.Connect(connectionString, databaseName);
+	public void Connect(string? connectionString = null, string? databaseName = null) =>
+		repository.Connect(connectionString, databaseName);
 
 	public async Task<T> Create(T item) => await repository.Create(item);
 
@@ -64,7 +66,8 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 	public async Task<List<T>> GetAll() => await repository.GetAll();
 
-	public async Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter) => await repository.GetAllByFilter(filter);
+	public async Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter) =>
+		await repository.GetAllByFilter(filter);
 
 	public async Task<T?> GetByFilter(Expression<Func<T, bool>> filter) => await repository.GetByFilter(filter);
 
@@ -78,8 +81,7 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 	public void SetUpItemNotInRepository()
 	{
-		A.CallTo(() => repository.GetById(A<string>._))
-		.Returns(null as T);
+		A.CallTo(() => repository.GetById(A<string>._)).Returns(null as T);
 	}
 
 	public async Task<T> Update(T item) => await repository.Update(item);
@@ -88,117 +90,92 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 
 	public void VerifyCreate(T expectedItem)
 	{
-		A.CallTo(() => repository.Create(A<T>._))
-		.MustHaveHappened();
+		A.CallTo(() => repository.Create(A<T>._)).MustHaveHappened();
 
-		CreatedCapture.Value
-					.Should()
-					.Be(expectedItem);
+		CreatedCapture.Value.Should().Be(expectedItem);
 	}
 
 	public void VerifyCreate()
 	{
-		A.CallTo(() => repository.Create(A<T>._))
-		.MustHaveHappened();
+		A.CallTo(() => repository.Create(A<T>._)).MustHaveHappened();
 	}
 
 	public void VerifyDelete()
 	{
-		A.CallTo(() => repository.Delete(A<T>._))
-		.MustHaveHappened();
+		A.CallTo(() => repository.Delete(A<T>._)).MustHaveHappened();
 	}
 
 	public void VerifyDelete(T expectedItem)
 	{
-		A.CallTo(() => repository.Delete(expectedItem))
-		.MustHaveHappened();
+		A.CallTo(() => repository.Delete(expectedItem)).MustHaveHappened();
 	}
 
 	public void VerifyDidNotCreate()
 	{
-		A.CallTo(() => repository.Create(A<T>._))
-		.MustNotHaveHappened();
+		A.CallTo(() => repository.Create(A<T>._)).MustNotHaveHappened();
 	}
 
 	public void VerifyDidNotGetAll()
 	{
-		A.CallTo(() => repository.GetAll())
-		.MustNotHaveHappened();
+		A.CallTo(() => repository.GetAll()).MustNotHaveHappened();
 	}
 
 	public void VerifyDidNotGetByFilter()
 	{
-		FilterCapture.Value
-					.Should()
-					.BeNull();
+		FilterCapture.Value.Should().BeNull();
 	}
 
 	public void VerifyDidNotGetById()
 	{
-		A.CallTo(() => repository.GetById(A<string>._))
-		.MustNotHaveHappened();
+		A.CallTo(() => repository.GetById(A<string>._)).MustNotHaveHappened();
 	}
 
 	public void VerifyDidNotUpdate()
 	{
-		A.CallTo(() => repository.Update(A<T>._))
-		.MustNotHaveHappened();
+		A.CallTo(() => repository.Update(A<T>._)).MustNotHaveHappened();
 	}
 
 	public void VerifyGetAll()
 	{
-		A.CallTo(() => repository.GetAll())
-		.MustHaveHappened();
+		A.CallTo(() => repository.GetAll()).MustHaveHappened();
 	}
 
 	public void VerifyGetByFilterByItemFalse(T item)
 	{
-		FilterCapture.Value
-					.Should()
-					.NotBeNull();
+		FilterCapture.Value.Should().NotBeNull();
 
 		var compliedExpression = FilterCapture.Value.Compile();
 
-		compliedExpression(item)
-			.Should()
-			.BeFalse();
+		compliedExpression(item).Should().BeFalse();
 	}
 
 	public void VerifyGetByFilterByItemTrue(T item)
 	{
-		FilterCapture.Value
-					.Should()
-					.NotBeNull();
+		FilterCapture.Value.Should().NotBeNull();
 
 		var compliedExpression = FilterCapture.Value.Compile();
 
-		compliedExpression(item)
-			.Should()
-			.BeTrue();
+		compliedExpression(item).Should().BeTrue();
 	}
 
 	public void VerifyGetById()
 	{
-		A.CallTo(() => repository.GetById(ItemId))
-		.MustHaveHappened();
+		A.CallTo(() => repository.GetById(ItemId)).MustHaveHappened();
 	}
 
 	public void VerifyGetFirst()
 	{
-		A.CallTo(() => repository.GetFirst())
-		.MustHaveHappened();
+		A.CallTo(() => repository.GetFirst()).MustHaveHappened();
 	}
 
 	public void VerifyNotGetFirst()
 	{
-		A.CallTo(() => repository.GetFirst())
-		.MustNotHaveHappened();
+		A.CallTo(() => repository.GetFirst()).MustNotHaveHappened();
 	}
 
 	public void VerifyUpdate(T expectedData)
 	{
-		A.CallTo(() => repository.Update(expectedData))
-		.MustHaveHappened();
+		A.CallTo(() => repository.Update(expectedData)).MustHaveHappened();
 	}
 
 	private void SetUpCreate()
@@ -206,11 +183,9 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 		CreatedItem = Faker.Create<T>();
 		CreatedList = Faker.Create<List<T>>();
 
-		A.CallTo(() => repository.Create(CreatedCapture))
-		.ReturnsLazily(() => CreatedItem);
+		A.CallTo(() => repository.Create(CreatedCapture)).ReturnsLazily(() => CreatedItem);
 
-		A.CallTo(() => repository.Create(A<List<T>>._))
-		.ReturnsLazily(() => CreatedList);
+		A.CallTo(() => repository.Create(A<List<T>>._)).ReturnsLazily(() => CreatedList);
 	}
 
 	private void SetUpDelete()
@@ -218,11 +193,9 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 		DeletedItem = Faker.Create<T>();
 		DeletedList = Faker.Create<List<T>>();
 
-		A.CallTo(() => repository.Delete(A<T>._))
-		.ReturnsLazily(() => DeletedItem);
+		A.CallTo(() => repository.Delete(A<T>._)).ReturnsLazily(() => DeletedItem);
 
-		A.CallTo(() => repository.Delete(A<List<T>>._))
-		.ReturnsLazily(() => DeletedList);
+		A.CallTo(() => repository.Delete(A<List<T>>._)).ReturnsLazily(() => DeletedList);
 	}
 
 	private void SetUpGet()
@@ -231,25 +204,20 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 		Items = Faker.Create<List<T>>();
 		Item = Faker.Create<T>();
 
-		A.CallTo(() => repository.GetById(A<string>._))
-		.ReturnsLazily(() => Item);
+		A.CallTo(() => repository.GetById(A<string>._)).ReturnsLazily(() => Item);
 
-		A.CallTo(() => repository.GetFirst())
-		.ReturnsLazily(() => Item);
+		A.CallTo(() => repository.GetFirst()).ReturnsLazily(() => Item);
 
-		A.CallTo(() => repository.GetAll())
-		.ReturnsLazily(() => Items);
+		A.CallTo(() => repository.GetAll()).ReturnsLazily(() => Items);
 	}
 
 	private void SetUpGetByFilter()
 	{
 		FilterCapture = new EasyCapture<Expression<Func<T, bool>>>();
 
-		A.CallTo(() => repository.GetByFilter(FilterCapture))
-		.ReturnsLazily(() => Item);
+		A.CallTo(() => repository.GetByFilter(FilterCapture)).ReturnsLazily(() => Item);
 
-		A.CallTo(() => repository.GetAllByFilter(FilterCapture))
-		.ReturnsLazily(() => Items);
+		A.CallTo(() => repository.GetAllByFilter(FilterCapture)).ReturnsLazily(() => Items);
 	}
 
 	private void SetUpUpdate()
@@ -257,10 +225,8 @@ public class MongoFakeRepository<T> : IMongoRepository<T> where T : MongoObject
 		UpdatedItem = Faker.Create<T>();
 		UpdatedList = Faker.Create<List<T>>();
 
-		A.CallTo(() => repository.Update(UpdatedCapture))
-		.ReturnsLazily(() => UpdatedItem);
+		A.CallTo(() => repository.Update(UpdatedCapture)).ReturnsLazily(() => UpdatedItem);
 
-		A.CallTo(() => repository.Update(A<List<T>>._))
-		.ReturnsLazily(() => UpdatedList);
+		A.CallTo(() => repository.Update(A<List<T>>._)).ReturnsLazily(() => UpdatedList);
 	}
 }

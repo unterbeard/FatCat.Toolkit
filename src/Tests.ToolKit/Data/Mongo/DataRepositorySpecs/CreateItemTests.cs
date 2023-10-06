@@ -12,8 +12,7 @@ public class CreateItemTests : EnsureCollectionTests
 	{
 		await TestMethod();
 
-		A.CallTo(() => collection.InsertOneAsync(item, default, default))
-		.MustHaveHappened();
+		A.CallTo(() => collection.InsertOneAsync(item, default, default)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -21,22 +20,17 @@ public class CreateItemTests : EnsureCollectionTests
 	{
 		var easyCapture = new EasyCapture<TestingMongoObject>();
 
-		A.CallTo(() => collection.InsertOneAsync(easyCapture, default, default))
-		.Returns(Task.CompletedTask);
+		A.CallTo(() => collection.InsertOneAsync(easyCapture, default, default)).Returns(Task.CompletedTask);
 
 		await TestMethod();
 
-		easyCapture.Value
-					.Should()
-					.BeEquivalentTo(item);
+		easyCapture.Value.Should().BeEquivalentTo(item);
 	}
 
 	[Fact]
 	public void ReturnItem()
 	{
-		repository.Create(item)
-				.Should()
-				.Be(item);
+		repository.Create(item).Should().Be(item);
 	}
 
 	protected override Task TestMethod() => repository.Create(item);

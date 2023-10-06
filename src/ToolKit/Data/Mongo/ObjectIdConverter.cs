@@ -10,9 +10,15 @@ public class ObjectIdConverter : JsonConverter
 
 	public override bool CanConvert(Type objectType) => objectType == typeof(ObjectId);
 
-	public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+	public override object ReadJson(
+		JsonReader reader,
+		Type objectType,
+		object? existingValue,
+		JsonSerializer serializer
+	)
 	{
-		if (reader.Value == null) return new ObjectId();
+		if (reader.Value == null)
+			return new ObjectId();
 
 		var objectIdString = reader.Value.ToString();
 

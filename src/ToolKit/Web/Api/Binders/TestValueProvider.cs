@@ -12,7 +12,8 @@ public class TestValueProvider : IValueProvider
 
 	public ValueProviderResult GetValue(string key)
 	{
-		if (values.TryGetValue(key, out var value)) return new ValueProviderResult(value);
+		if (values.TryGetValue(key, out var value))
+			return new ValueProviderResult(value);
 
 		return ValueProviderResult.None;
 	}

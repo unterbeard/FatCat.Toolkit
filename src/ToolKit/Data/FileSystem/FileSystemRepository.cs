@@ -3,7 +3,8 @@ using System.Linq.Expressions;
 
 namespace FatCat.Toolkit.Data.FileSystem;
 
-public interface IFileSystemRepository<T> where T : FileSystemDataObject
+public interface IFileSystemRepository<T>
+	where T : FileSystemDataObject
 {
 	Task<T> Create(T item);
 
@@ -35,7 +36,8 @@ public interface IFileSystemRepository<T> where T : FileSystemDataObject
 ///  How do you handle a delete?
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class FileSystemRepository<T> : IFileSystemRepository<T> where T : FileSystemDataObject
+public class FileSystemRepository<T> : IFileSystemRepository<T>
+	where T : FileSystemDataObject
 {
 	public Task<T> Create(T item) => throw new NotImplementedException();
 

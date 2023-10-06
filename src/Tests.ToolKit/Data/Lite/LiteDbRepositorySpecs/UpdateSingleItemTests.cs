@@ -11,16 +11,13 @@ public class UpdateSingleItemTests : ConnectionHandlingLiteDbRepositoryTests<Lit
 	{
 		await RunTest();
 
-		A.CallTo(() => collection.Update(testItem))
-		.MustHaveHappened();
+		A.CallTo(() => collection.Update(testItem)).MustHaveHappened();
 	}
 
 	[Fact]
 	public void ReturnTheUpdatedItem()
 	{
-		RunTest()
-			.Should()
-			.Be(testItem);
+		RunTest().Should().Be(testItem);
 	}
 
 	protected override async Task<LiteDbTestObject> RunTest() => await repository.Update(testItem);

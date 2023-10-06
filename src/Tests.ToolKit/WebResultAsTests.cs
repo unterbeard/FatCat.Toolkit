@@ -16,9 +16,7 @@ public class WebResultAsTests
 
 		var result = WebResult.Ok(item);
 
-		result.To<TestingModel>()
-			.Should()
-			.BeEquivalentTo(item);
+		result.To<TestingModel>().Should().BeEquivalentTo(item);
 	}
 
 	[Fact]
@@ -28,9 +26,7 @@ public class WebResultAsTests
 
 		var result = WebResult.Ok(itemList);
 
-		result.To<List<TestItem>>()
-			.Should()
-			.BeEquivalentTo(itemList);
+		result.To<List<TestItem>>().Should().BeEquivalentTo(itemList);
 	}
 
 	[Fact]
@@ -40,9 +36,7 @@ public class WebResultAsTests
 
 		var result = WebResult.Ok(testItem);
 
-		result.To<TestItem>()
-			.Should()
-			.BeEquivalentTo(testItem);
+		result.To<TestItem>().Should().BeEquivalentTo(testItem);
 	}
 
 	[Fact]
@@ -54,9 +48,7 @@ public class WebResultAsTests
 
 		var result = endpoint.DoSomeWork();
 
-		result.To<TestingModel>()
-			.Should()
-			.BeEquivalentTo(item);
+		result.To<TestingModel>().Should().BeEquivalentTo(item);
 	}
 
 	[Fact]
@@ -68,9 +60,7 @@ public class WebResultAsTests
 
 		var result = WebResult.Ok(json);
 
-		result.To<TestingModel>()
-			.Should()
-			.BeEquivalentTo(item);
+		result.To<TestingModel>().Should().BeEquivalentTo(item);
 	}
 
 	private class TestItem : EqualObject

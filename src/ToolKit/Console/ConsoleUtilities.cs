@@ -35,7 +35,8 @@ public class ConsoleUtilities : IConsoleUtilities
 
 	private void OnCancel(object? sender, ConsoleCancelEventArgs? e)
 	{
-		if (e != null) e.Cancel = true;
+		if (e != null)
+			e.Cancel = true;
 
 		stopEvent.Trigger();
 	}

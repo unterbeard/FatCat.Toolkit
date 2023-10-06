@@ -7,11 +7,13 @@ namespace FatCat.Toolkit.Web;
 [Controller]
 public abstract class Endpoint : Controller
 {
-	protected string? AuthToken => Request.Headers.TryGetValue("Authorization", out var values) ? values.FirstOrDefault() : string.Empty;
+	protected string? AuthToken =>
+		Request.Headers.TryGetValue("Authorization", out var values) ? values.FirstOrDefault() : string.Empty;
 
 	protected WebResult BadRequest(string? message = null) => WebResult.BadRequest(message);
 
-	protected WebResult BadRequest(string fieldName, string? messageId) => WebResult.BadRequest(fieldName, messageId);
+	protected WebResult BadRequest(string fieldName, string? messageId) =>
+		WebResult.BadRequest(fieldName, messageId);
 
 	protected WebResult NotAcceptable(string? message = null) => WebResult.NotAcceptable(message);
 
@@ -21,9 +23,11 @@ public abstract class Endpoint : Controller
 
 	protected WebResult Ok(EqualObject model) => Ok(JsonConvert.SerializeObject(model));
 
-	protected WebResult Ok<T>(List<T> list) where T : EqualObject => Ok(JsonConvert.SerializeObject(list));
+	protected WebResult Ok<T>(List<T> list)
+		where T : EqualObject => Ok(JsonConvert.SerializeObject(list));
 
-	protected WebResult Ok<T>(IEnumerable<T> list) where T : EqualObject => Ok(JsonConvert.SerializeObject(list));
+	protected WebResult Ok<T>(IEnumerable<T> list)
+		where T : EqualObject => Ok(JsonConvert.SerializeObject(list));
 
 	/// <summary>
 	///  If you call this with an empty string or null for content, it will return a 204.

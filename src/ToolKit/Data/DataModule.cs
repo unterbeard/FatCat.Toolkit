@@ -10,16 +10,17 @@ public class DataModule : Module
 {
 	protected override void Load(ContainerBuilder builder)
 	{
-		builder.RegisterInstance(new MongoConnection(SystemScope.ContainerAssemblies.ToList()))
-				.As<IMongoConnection>()
-				.SingleInstance();
+		builder
+			.RegisterInstance(new MongoConnection(SystemScope.ContainerAssemblies.ToList()))
+			.As<IMongoConnection>()
+			.SingleInstance();
 
-		builder.RegisterGeneric(typeof(MongoRepository<>))
-				.As(typeof(IMongoRepository<>))
-				.OnActivated(MongoRepositoryActivated);
+		builder
+			.RegisterGeneric(typeof(MongoRepository<>))
+			.As(typeof(IMongoRepository<>))
+			.OnActivated(MongoRepositoryActivated);
 
-		builder.RegisterType<EnvironmentConnectionInformation>()
-				.As<IMongoConnectionInformation>();
+		builder.RegisterType<EnvironmentConnectionInformation>().As<IMongoConnectionInformation>();
 	}
 
 	private void MongoRepositoryActivated(IActivatedEventArgs<object> args)

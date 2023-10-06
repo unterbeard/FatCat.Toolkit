@@ -15,8 +15,10 @@ public class UpdateListTests : EnsureCollectionTests
 		updateFilterCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 		var updateCapture = new EasyCapture<TestingMongoObject>();
 
-		A.CallTo(() => collection.ReplaceOneAsync(updateFilterCapture, updateCapture, A<ReplaceOptions>._, default))
-		.Returns(new ReplaceOneResult.Acknowledged(1, 1, default));
+		A.CallTo(
+				() => collection.ReplaceOneAsync(updateFilterCapture, updateCapture, A<ReplaceOptions>._, default)
+			)
+			.Returns(new ReplaceOneResult.Acknowledged(1, 1, default));
 	}
 
 	[Fact]
@@ -26,26 +28,30 @@ public class UpdateListTests : EnsureCollectionTests
 
 		foreach (var currentItem in itemList)
 		{
-			A.CallTo(() => collection.ReplaceOneAsync(A<ExpressionFilterDefinition<TestingMongoObject>>._, currentItem, A<ReplaceOptions>._, default))
-			.MustHaveHappened();
+			A.CallTo(
+					() =>
+						collection.ReplaceOneAsync(
+							A<ExpressionFilterDefinition<TestingMongoObject>>._,
+							currentItem,
+							A<ReplaceOptions>._,
+							default
+						)
+				)
+				.MustHaveHappened();
 		}
 
 		var filter = updateFilterCapture.Values.FirstOrDefault()!.Expression.Compile();
 
 		foreach (var currentItem in itemList)
 		{
-			filter(currentItem)
-				.Should()
-				.BeTrue();
+			filter(currentItem).Should().BeTrue();
 		}
 	}
 
 	[Fact]
 	public void ReturnUpdatedItem()
 	{
-		repository.Update(itemList)
-				.Should()
-				.Be(itemList);
+		repository.Update(itemList).Should().Be(itemList);
 	}
 
 	protected override Task TestMethod() => repository.Update(itemList);

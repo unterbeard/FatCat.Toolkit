@@ -23,7 +23,8 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 {
 	protected override string Identifier => "Web Results assertions";
 
-	public WebResultAssertions(WebResult result) : base(result) { }
+	public WebResultAssertions(WebResult result)
+		: base(result) { }
 
 	public WebResultAssertions Be(WebResult expectedResult)
 	{
@@ -34,14 +35,9 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 
 	public WebResultAssertions Be<T>(T expectedValue)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.To<T>()
-			.Should()
-			.BeEquivalentTo(expectedValue);
+		Subject.To<T>().Should().BeEquivalentTo(expectedValue);
 
 		return this;
 	}
@@ -52,31 +48,25 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 	{
 		var expectedResult = WebResult.BadRequest(fieldName, messageId);
 
-		return HaveStatusCode(HttpStatusCode.BadRequest)
-			.Be(expectedResult);
+		return HaveStatusCode(HttpStatusCode.BadRequest).Be(expectedResult);
 	}
 
 	public WebResultAssertions BeBadRequest(string messageId)
 	{
 		var expectedResult = WebResult.BadRequest(messageId);
 
-		return HaveStatusCode(HttpStatusCode.BadRequest)
-			.Be(expectedResult);
+		return HaveStatusCode(HttpStatusCode.BadRequest).Be(expectedResult);
 	}
 
 	public WebResultAssertions BeConflict() => HaveStatusCode(HttpStatusCode.Conflict);
 
 	public WebResultAssertions BeEmptyListOf<T>()
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
 		var list = Subject.To<List<T>>();
 
-		list
-			.Should()
-			.BeEmpty();
+		list.Should().BeEmpty();
 
 		return this;
 	}
@@ -90,10 +80,7 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 
 	public WebResultAssertions BeEquivalentTo<T>(T expectedValue)
 	{
-		Subject
-			.To<T>()
-			.Should()
-			.BeEquivalentTo(expectedValue);
+		Subject.To<T>().Should().BeEquivalentTo(expectedValue);
 
 		return this;
 	}
@@ -102,18 +89,14 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 
 	public WebResultAssertions BeNotFound() => HaveStatusCode(HttpStatusCode.NotFound);
 
-	public WebResultAssertions BeOk() => HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent });
+	public WebResultAssertions BeOk() =>
+		HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent });
 
 	public WebResultAssertions BeSuccessful()
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.IsSuccessful
-			.Should()
-			.BeTrue(Subject.Content);
+		Subject.IsSuccessful.Should().BeTrue(Subject.Content);
 
 		return this;
 	}
@@ -122,23 +105,16 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 
 	public WebResultAssertions BeUnsuccessful()
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.IsUnsuccessful
-			.Should()
-			.BeTrue(Subject.Content);
+		Subject.IsUnsuccessful.Should().BeTrue(Subject.Content);
 
 		return this;
 	}
 
 	public WebResultAssertions For<T>(Action<T> action)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
 		action(Subject.To<T>()!);
 
@@ -147,9 +123,7 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 
 	public WebResultAssertions ForList<T>(Action<List<T>> action)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
 		action(Subject.To<List<T>>()!);
 
@@ -158,74 +132,77 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 
 	public WebResultAssertions HaveContent(string content)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.Content
-			.Should()
-			.Be(content);
+		Subject.Content.Should().Be(content);
 
 		return this;
 	}
 
-	public WebResultAssertions HaveContentEquivalentTo<TContentType>(TContentType expectedContent) { return HaveContentEquivalentTo(expectedContent, config => config); }
-
-	public WebResultAssertions HaveContentEquivalentTo<TContentType>(TContentType expectedContent, Func<EquivalencyAssertionOptions<TContentType>, EquivalencyAssertionOptions<TContentType>> config)
+	public WebResultAssertions HaveContentEquivalentTo<TContentType>(TContentType expectedContent)
 	{
-		Subject
-			.Should()
-			.NotBeNull("WebResult should never be null");
+		return HaveContentEquivalentTo(expectedContent, config => config);
+	}
+
+	public WebResultAssertions HaveContentEquivalentTo<TContentType>(
+		TContentType expectedContent,
+		Func<EquivalencyAssertionOptions<TContentType>, EquivalencyAssertionOptions<TContentType>> config
+	)
+	{
+		Subject.Should().NotBeNull("WebResult should never be null");
 
 		Subject
 			.Should()
-			.HaveStatusCode(HttpStatusCode.OK, "you cannot test for content from an unsuccessful status code: {0}", Subject.StatusCode);
+			.HaveStatusCode(
+				HttpStatusCode.OK,
+				"you cannot test for content from an unsuccessful status code: {0}",
+				Subject.StatusCode
+			);
 
 		var actualContent = Subject.To<TContentType>();
 
-		actualContent
-			.Should()
-			.BeEquivalentTo(expectedContent);
+		actualContent.Should().BeEquivalentTo(expectedContent);
 
 		return this;
 	}
 
 	public WebResultAssertions HaveContentTypeOf(string contentType)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.ContentType
-			.Should()
-			.Be(contentType);
+		Subject.ContentType.Should().Be(contentType);
 
 		return this;
 	}
 
 	public WebResultAssertions HaveNoContent() => HaveStatusCode(HttpStatusCode.NoContent);
 
-	public WebResultAssertions HaveStatusCode(HttpStatusCode statusCode, string? because = null, params object[] becauseArgs) => HaveOneOfStatusCode(new[] { statusCode }, because, becauseArgs);
+	public WebResultAssertions HaveStatusCode(
+		HttpStatusCode statusCode,
+		string? because = null,
+		params object[] becauseArgs
+	) => HaveOneOfStatusCode(new[] { statusCode }, because, becauseArgs);
 
-	public WebResultAssertions WithMessage(string expectedMessage, string? because = null, params object[] becauseArgs)
+	public WebResultAssertions WithMessage(
+		string expectedMessage,
+		string? because = null,
+		params object[] becauseArgs
+	)
 	{
 		Subject.Content.Should().MatchEquivalentOf(expectedMessage, because, becauseArgs);
 
 		return this;
 	}
 
-	private WebResultAssertions HaveOneOfStatusCode(HttpStatusCode[] acceptableStatusCodes, string? because = null, params object[] becauseArgs)
+	private WebResultAssertions HaveOneOfStatusCode(
+		HttpStatusCode[] acceptableStatusCodes,
+		string? because = null,
+		params object[] becauseArgs
+	)
 	{
-		Subject
-			.Should()
-			.NotBeNull();
+		Subject.Should().NotBeNull();
 
-		Subject
-			.StatusCode
-			.Should()
-			.BeOneOf(acceptableStatusCodes, because, becauseArgs);
+		Subject.StatusCode.Should().BeOneOf(acceptableStatusCodes, because, becauseArgs);
 
 		return this;
 	}

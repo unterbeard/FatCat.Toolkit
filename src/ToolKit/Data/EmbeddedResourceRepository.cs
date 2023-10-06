@@ -26,7 +26,8 @@ public class EmbeddedResourceRepository : IEmbeddedResourceRepository
 	{
 		var manifestStream = GetStream(assembly, resourceName);
 
-		if (manifestStream is null) return null;
+		if (manifestStream is null)
+			return null;
 
 		var streamReader = new StreamReader(manifestStream);
 

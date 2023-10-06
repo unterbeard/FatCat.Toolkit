@@ -23,7 +23,7 @@ public class GetByIdTests : EnsureCollectionTests
 		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
 		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture!, default, default))
-		.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { filterItem }));
+			.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { filterItem }));
 	}
 
 	[Fact]
@@ -31,33 +31,32 @@ public class GetByIdTests : EnsureCollectionTests
 	{
 		await repository.GetById(id.ToString());
 
-		A.CallTo(() => collection.FindAsync<TestingMongoObject>(A<ExpressionFilterDefinition<TestingMongoObject>>._!, default, default))
-		.MustHaveHappened();
+		A.CallTo(
+				() =>
+					collection.FindAsync<TestingMongoObject>(
+						A<ExpressionFilterDefinition<TestingMongoObject>>._!,
+						default,
+						default
+					)
+			)
+			.MustHaveHappened();
 
-		expressionCapture.Value
-						.Should()
-						.NotBeNull();
+		expressionCapture.Value.Should().NotBeNull();
 
 		var filter = expressionCapture.Value.Expression.Compile();
 
 		foreach (var currentItem in itemList)
 		{
-			filter(currentItem!)
-				.Should()
-				.BeFalse();
+			filter(currentItem!).Should().BeFalse();
 		}
 
-		filter(filterItem!)
-			.Should()
-			.BeTrue();
+		filter(filterItem!).Should().BeTrue();
 	}
 
 	[Fact]
 	public void ReturnFilterItem()
 	{
-		repository.GetById(id.ToString())
-				.Should()
-				.Be(filterItem);
+		repository.GetById(id.ToString()).Should().Be(filterItem);
 	}
 
 	protected override Task TestMethod() => repository.GetById(id.ToString());

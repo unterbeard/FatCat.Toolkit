@@ -12,8 +12,7 @@ public abstract class ConnectionHandlingLiteDbRepositoryTests<T> : LiteDbReposit
 	{
 		RunTest();
 
-		A.CallTo(() => connection.Connect(databasePath))
-		.MustHaveHappened();
+		A.CallTo(() => connection.Connect(databasePath)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -21,8 +20,7 @@ public abstract class ConnectionHandlingLiteDbRepositoryTests<T> : LiteDbReposit
 	{
 		RunTest();
 
-		A.CallTo(() => connection.Dispose())
-		.MustHaveHappened();
+		A.CallTo(() => connection.Dispose()).MustHaveHappened();
 	}
 
 	[Fact]
@@ -30,8 +28,7 @@ public abstract class ConnectionHandlingLiteDbRepositoryTests<T> : LiteDbReposit
 	{
 		RunTest();
 
-		A.CallTo(() => connection.GetCollection<LiteDbTestObject>())
-		.MustHaveHappened();
+		A.CallTo(() => connection.GetCollection<LiteDbTestObject>()).MustHaveHappened();
 	}
 
 	[Fact]
@@ -39,13 +36,11 @@ public abstract class ConnectionHandlingLiteDbRepositoryTests<T> : LiteDbReposit
 	{
 		repository.DatabasePath = null;
 
-		#pragma warning disable xUnit1031
+#pragma warning disable xUnit1031
 		var testAction = () => RunTest().Wait();
-		#pragma warning restore xUnit1031
+#pragma warning restore xUnit1031
 
-		testAction
-			.Should()
-			.Throw<LiteDbConnectionException>();
+		testAction.Should().Throw<LiteDbConnectionException>();
 	}
 
 	protected abstract Task<T> RunTest();

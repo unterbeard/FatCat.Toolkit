@@ -14,8 +14,7 @@ public class GetTests : FileSystemRepositoryTests
 	{
 		await repository.Get();
 
-		A.CallTo(() => fileSystem.Directory.Exists(DataDirectory))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.Directory.Exists(DataDirectory)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -23,8 +22,7 @@ public class GetTests : FileSystemRepositoryTests
 	{
 		await repository.Get();
 
-		A.CallTo(() => fileSystem.File.Exists(TestFileDataObjectPath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.File.Exists(TestFileDataObjectPath)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -32,8 +30,7 @@ public class GetTests : FileSystemRepositoryTests
 	{
 		await repository.Get();
 
-		A.CallTo(() => jsonHelper.Deserialize<TestFileDataObject>(dataJson))
-		.MustHaveHappened();
+		A.CallTo(() => jsonHelper.Deserialize<TestFileDataObject>(dataJson)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -41,8 +38,7 @@ public class GetTests : FileSystemRepositoryTests
 	{
 		await repository.Get();
 
-		A.CallTo(() => applicationTools.ExecutingDirectory)
-		.MustHaveHappened();
+		A.CallTo(() => applicationTools.ExecutingDirectory).MustHaveHappened();
 	}
 
 	[Fact]
@@ -50,15 +46,13 @@ public class GetTests : FileSystemRepositoryTests
 	{
 		await repository.Get();
 
-		A.CallTo(() => fileSystem.File.ReadAllTextAsync(TestFileDataObjectPath, default))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.File.ReadAllTextAsync(TestFileDataObjectPath, default)).MustHaveHappened();
 	}
 
 	[Fact]
 	public async Task IfDataDirectoryDoesNotExistReturnNewObject()
 	{
-		A.CallTo(() => fileSystem.Directory.Exists(DataDirectory))
-		.Returns(false);
+		A.CallTo(() => fileSystem.Directory.Exists(DataDirectory)).Returns(false);
 
 		await RunDataFileNotFoundTest();
 	}
@@ -66,8 +60,7 @@ public class GetTests : FileSystemRepositoryTests
 	[Fact]
 	public async Task IfFileDoesNotExistReturnNewObject()
 	{
-		A.CallTo(() => fileSystem.File.Exists(A<string>._))
-		.Returns(false);
+		A.CallTo(() => fileSystem.File.Exists(A<string>._)).Returns(false);
 
 		await RunDataFileNotFoundTest();
 	}
@@ -81,9 +74,7 @@ public class GetTests : FileSystemRepositoryTests
 
 		var result = await repository.Get();
 
-		result
-			.Should()
-			.Be(prePopulatedData);
+		result.Should().Be(prePopulatedData);
 
 		VerifyNoCallsToFileSystemMade();
 	}
@@ -93,8 +84,7 @@ public class GetTests : FileSystemRepositoryTests
 	{
 		var result = await repository.Get();
 
-		result.Should()
-			.Be(testObject);
+		result.Should().Be(testObject);
 	}
 
 	[Fact]
@@ -102,40 +92,31 @@ public class GetTests : FileSystemRepositoryTests
 	{
 		await repository.Get();
 
-		repository.Data
-				.Should()
-				.NotBeNull();
+		repository.Data.Should().NotBeNull();
 
-		repository.Data
-				.Should()
-				.Be(testObject);
+		repository.Data.Should().Be(testObject);
 	}
 
 	private async Task RunDataFileNotFoundTest()
 	{
 		var result = await repository.Get();
 
-		result.Should()
-			.Be(new TestFileDataObject());
+		result.Should().Be(new TestFileDataObject());
 
 		VerifyNoCallsToFileSystemMade();
 	}
 
 	private void SetUpFileExists()
 	{
-		A.CallTo(() => fileSystem.Directory.Exists(A<string>._))
-		.Returns(true);
+		A.CallTo(() => fileSystem.Directory.Exists(A<string>._)).Returns(true);
 
-		A.CallTo(() => fileSystem.File.Exists(A<string>._))
-		.Returns(true);
+		A.CallTo(() => fileSystem.File.Exists(A<string>._)).Returns(true);
 	}
 
 	private void VerifyNoCallsToFileSystemMade()
 	{
-		A.CallTo(() => jsonHelper.Deserialize<TestFileDataObject>(A<string>._))
-		.MustNotHaveHappened();
+		A.CallTo(() => jsonHelper.Deserialize<TestFileDataObject>(A<string>._)).MustNotHaveHappened();
 
-		A.CallTo(() => fileSystem.File.ReadAllTextAsync(A<string>._, default))
-		.MustNotHaveHappened();
+		A.CallTo(() => fileSystem.File.ReadAllTextAsync(A<string>._, default)).MustNotHaveHappened();
 	}
 }

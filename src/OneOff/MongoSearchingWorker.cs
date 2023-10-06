@@ -58,22 +58,22 @@ public class MongoSearchingWorker : SpikeWorker
 		ConsoleLog.WriteBlue("Going to do some work on searching the Mongo Databases");
 
 		var firstObject = new TestSearchingObject
-						{
-							Number = 1,
-							FirstName = Faker.RandomString(),
-							LastName = Faker.RandomString(),
-							SearchFlags = SearchFlags.FirstName | SearchFlags.LastName
-						};
+		{
+			Number = 1,
+			FirstName = Faker.RandomString(),
+			LastName = Faker.RandomString(),
+			SearchFlags = SearchFlags.FirstName | SearchFlags.LastName
+		};
 
 		await mongo.Create(firstObject);
 
 		var secondObject = new TestSearchingObject
-							{
-								Number = 2,
-								FirstName = Faker.RandomString(),
-								LastName = Faker.RandomString(),
-								SearchFlags = SearchFlags.WalkWithLove
-							};
+		{
+			Number = 2,
+			FirstName = Faker.RandomString(),
+			LastName = Faker.RandomString(),
+			SearchFlags = SearchFlags.WalkWithLove
+		};
 
 		await mongo.Create(secondObject);
 
@@ -91,6 +91,8 @@ public class MongoSearchingWorker : SpikeWorker
 
 		var firstObjects = mongo.Collection.Find(filter).ToList();
 
-		ConsoleLog.WriteMagenta($"Found {firstObjects.Count} objects with the flags {flagsToFind} | <{(long)flagsToFind}>");
+		ConsoleLog.WriteMagenta(
+			$"Found {firstObjects.Count} objects with the flags {flagsToFind} | <{(long)flagsToFind}>"
+		);
 	}
 }

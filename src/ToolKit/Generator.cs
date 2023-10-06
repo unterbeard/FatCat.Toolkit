@@ -29,7 +29,8 @@ public class Generator : IGenerator
 	{
 		var bytes = new byte[length];
 
-		for (var i = 0; i < length; i++) bytes[i] = (byte)Faker.RandomInt(0, 255);
+		for (var i = 0; i < length; i++)
+			bytes[i] = (byte)Faker.RandomInt(0, 255);
 
 		return bytes;
 	}

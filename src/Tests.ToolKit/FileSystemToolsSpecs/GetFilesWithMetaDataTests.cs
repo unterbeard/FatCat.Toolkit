@@ -16,8 +16,7 @@ public class GetFilesWithMetaDataTests : FileToolsTests
 	{
 		fileList = Faker.Create<List<string>>();
 
-		A.CallTo(() => fileSystem.Directory.GetFiles(directoryPath))
-		.Returns(fileList.ToArray());
+		A.CallTo(() => fileSystem.Directory.GetFiles(directoryPath)).Returns(fileList.ToArray());
 
 		SetUpFileInfos();
 	}
@@ -29,8 +28,7 @@ public class GetFilesWithMetaDataTests : FileToolsTests
 
 		foreach (var file in fileList)
 		{
-			A.CallTo(() => fileSystem.FileInfo.New(file))
-			.MustHaveHappened();
+			A.CallTo(() => fileSystem.FileInfo.New(file)).MustHaveHappened();
 		}
 	}
 
@@ -41,8 +39,7 @@ public class GetFilesWithMetaDataTests : FileToolsTests
 
 		var files = fileTools.GetFiles(directoryPath);
 
-		files.Should()
-			.BeEmpty();
+		files.Should().BeEmpty();
 	}
 
 	[Fact]
@@ -50,8 +47,7 @@ public class GetFilesWithMetaDataTests : FileToolsTests
 	{
 		var files = fileTools.GetFilesWithMetaData(directoryPath);
 
-		files.Should()
-			.BeEquivalentTo(fileInfos);
+		files.Should().BeEquivalentTo(fileInfos);
 	}
 
 	[Fact]
@@ -67,22 +63,18 @@ public class GetFilesWithMetaDataTests : FileToolsTests
 	{
 		fileTools.GetFilesWithMetaData(directoryPath);
 
-		A.CallTo(() => fileSystem.Directory.GetFiles(directoryPath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.Directory.GetFiles(directoryPath)).MustHaveHappened();
 	}
 
 	private static IFileInfo CreateNewIFileInfo(int index, string file)
 	{
 		var fileInfo = A.Fake<IFileInfo>();
 
-		A.CallTo(() => fileInfo.Length)
-		.Returns(100 + index);
+		A.CallTo(() => fileInfo.Length).Returns(100 + index);
 
-		A.CallTo(() => fileInfo.FullName)
-		.Returns(file);
+		A.CallTo(() => fileInfo.FullName).Returns(file);
 
-		A.CallTo(() => fileInfo.Name)
-		.Returns(Faker.RandomString());
+		A.CallTo(() => fileInfo.Name).Returns(Faker.RandomString());
 
 		return fileInfo;
 	}
@@ -100,7 +92,6 @@ public class GetFilesWithMetaDataTests : FileToolsTests
 			fileInfos.Add(fileInfo);
 		}
 
-		A.CallTo(() => fileSystem.FileInfo.New(A<string>._))
-		.ReturnsNextFromSequence(fileInfos);
+		A.CallTo(() => fileSystem.FileInfo.New(A<string>._)).ReturnsNextFromSequence(fileInfos);
 	}
 }

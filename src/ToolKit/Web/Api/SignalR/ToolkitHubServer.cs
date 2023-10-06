@@ -22,7 +22,12 @@ public interface IToolkitHubServer
 
 	void OnClientDisconnected(ToolkitUser toolkitUser, string connectionId);
 
-	Task<ToolkitMessage> SendDataBufferToClient(string connectionId, ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null);
+	Task<ToolkitMessage> SendDataBufferToClient(
+		string connectionId,
+		ToolkitMessage message,
+		byte[] dataBuffer,
+		TimeSpan? timeout = null
+	);
 
 	Task SendToAllClients(ToolkitMessage message);
 
@@ -41,9 +46,7 @@ public class ToolkitHubServer : IToolkitHubServer
 	private readonly ConcurrentDictionary<string, int> timedOutResponses = new();
 	private readonly ConcurrentDictionary<string, ToolkitMessage> waitingForResponses = new();
 
-	public ToolkitHubServer(IHubContext<ToolkitHub> hubContext,
-							IGenerator generator,
-							IToolkitLogger logger)
+	public ToolkitHubServer(IHubContext<ToolkitHub> hubContext, IGenerator generator, IToolkitLogger logger)
 	{
 		this.hubContext = hubContext;
 		this.generator = generator;
@@ -56,20 +59,28 @@ public class ToolkitHubServer : IToolkitHubServer
 
 	public void ClientResponseDataBufferMessage(string sessionId, ToolkitMessage toolkitMessage, byte[] dataBuffer)
 	{
-		if (timedOutResponses.TryRemove(sessionId, out _)) return;
-		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
+		if (timedOutResponses.TryRemove(sessionId, out _))
+			return;
+		if (!waitingForResponses.TryRemove(sessionId, out _))
+			return;
 
-		logger.Debug($"Got a client response for data buffer!!!!!!! | SessionId {sessionId} | {JsonConvert.SerializeObject(toolkitMessage)}");
+		logger.Debug(
+			$"Got a client response for data buffer!!!!!!! | SessionId {sessionId} | {JsonConvert.SerializeObject(toolkitMessage)}"
+		);
 
 		responses.TryAdd(sessionId, toolkitMessage);
 	}
 
 	public void ClientResponseMessage(string sessionId, ToolkitMessage toolkitMessage)
 	{
-		if (timedOutResponses.TryRemove(sessionId, out _)) return;
-		if (!waitingForResponses.TryRemove(sessionId, out _)) return;
+		if (timedOutResponses.TryRemove(sessionId, out _))
+			return;
+		if (!waitingForResponses.TryRemove(sessionId, out _))
+			return;
 
-		logger.Debug($"Got a client response!!!!!!! | SessionId {sessionId} | {JsonConvert.SerializeObject(toolkitMessage)}");
+		logger.Debug(
+			$"Got a client response!!!!!!! | SessionId {sessionId} | {JsonConvert.SerializeObject(toolkitMessage)}"
+		);
 
 		responses.TryAdd(sessionId, toolkitMessage);
 	}
@@ -94,20 +105,37 @@ public class ToolkitHubServer : IToolkitHubServer
 		InvokeClientDisconnected(toolkitUser, connectionId);
 	}
 
-	public async Task<ToolkitMessage> SendDataBufferToClient(string connectionId, ToolkitMessage message, byte[] dataBuffer, TimeSpan? timeout = null)
+	public async Task<ToolkitMessage> SendDataBufferToClient(
+		string connectionId,
+		ToolkitMessage message,
+		byte[] dataBuffer,
+		TimeSpan? timeout = null
+	)
 	{
 		var sessionId = generator.NewId();
 
 		waitingForResponses.TryAdd(sessionId, message);
 
-		await hubContext.Clients.Client(connectionId).SendAsync(ToolkitHub.ServerDataBufferMessage, message.MessageType, sessionId, message.Data, dataBuffer);
+		await hubContext.Clients
+			.Client(connectionId)
+			.SendAsync(
+				ToolkitHub.ServerDataBufferMessage,
+				message.MessageType,
+				sessionId,
+				message.Data,
+				dataBuffer
+			);
 
 		return await WaitForClientResponse(message, timeout, sessionId);
 	}
 
 	public Task SendToAllClients(ToolkitMessage message) => throw new NotImplementedException();
 
-	public async Task<ToolkitMessage> SendToClient(string connectionId, ToolkitMessage message, TimeSpan? timeout = null)
+	public async Task<ToolkitMessage> SendToClient(
+		string connectionId,
+		ToolkitMessage message,
+		TimeSpan? timeout = null
+	)
 	{
 		var sessionId = generator.NewId();
 
@@ -118,15 +146,25 @@ public class ToolkitHubServer : IToolkitHubServer
 		return await WaitForClientResponse(message, timeout, sessionId);
 	}
 
-	public async Task SendToClientNoResponse(string connectionId, ToolkitMessage message) => await SendMessageToClient(connectionId, message, generator.NewId());
+	public async Task SendToClientNoResponse(string connectionId, ToolkitMessage message) =>
+		await SendMessageToClient(connectionId, message, generator.NewId());
 
-	private Task InvokeClientConnected(ToolkitUser user, string connectionId) => ClientConnected?.Invoke(user, connectionId);
+	private Task InvokeClientConnected(ToolkitUser user, string connectionId) =>
+		ClientConnected?.Invoke(user, connectionId);
 
-	private Task InvokeClientDisconnected(ToolkitUser user, string connectionId) => ClientDisconnected?.Invoke(user, connectionId);
+	private Task InvokeClientDisconnected(ToolkitUser user, string connectionId) =>
+		ClientDisconnected?.Invoke(user, connectionId);
 
-	private async Task SendMessageToClient(string connectionId, ToolkitMessage message, string sessionId) => await hubContext.Clients.Client(connectionId).SendAsync(ToolkitHub.ServerOriginatedMessage, message.MessageType, sessionId, message.Data);
+	private async Task SendMessageToClient(string connectionId, ToolkitMessage message, string sessionId) =>
+		await hubContext.Clients
+			.Client(connectionId)
+			.SendAsync(ToolkitHub.ServerOriginatedMessage, message.MessageType, sessionId, message.Data);
 
-	private async Task<ToolkitMessage> WaitForClientResponse(ToolkitMessage message, TimeSpan? timeout, string sessionId)
+	private async Task<ToolkitMessage> WaitForClientResponse(
+		ToolkitMessage message,
+		TimeSpan? timeout,
+		string sessionId
+	)
 	{
 		timeout ??= 30.Seconds();
 
@@ -134,7 +172,8 @@ public class ToolkitHubServer : IToolkitHubServer
 
 		while (true)
 		{
-			if (responses.TryRemove(sessionId, out var response)) return response;
+			if (responses.TryRemove(sessionId, out var response))
+				return response;
 
 			if (DateTime.UtcNow - startTime > timeout)
 			{

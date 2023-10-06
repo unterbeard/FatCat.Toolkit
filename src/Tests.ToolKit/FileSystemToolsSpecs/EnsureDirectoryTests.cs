@@ -20,8 +20,7 @@ public class EnsureDirectoryTests : FileToolsTests
 
 		fileTools.EnsureDirectory(directoryPath);
 
-		A.CallTo(() => fileSystem.Directory.CreateDirectory(directoryPath))
-		.MustHaveHappened();
+		A.CallTo(() => fileSystem.Directory.CreateDirectory(directoryPath)).MustHaveHappened();
 	}
 
 	[Fact]
@@ -29,7 +28,6 @@ public class EnsureDirectoryTests : FileToolsTests
 	{
 		fileTools.EnsureDirectory(directoryPath);
 
-		A.CallTo(() => fileSystem.Directory.CreateDirectory(A<string>._))
-		.MustNotHaveHappened();
+		A.CallTo(() => fileSystem.Directory.CreateDirectory(A<string>._)).MustNotHaveHappened();
 	}
 }

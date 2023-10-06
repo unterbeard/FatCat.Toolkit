@@ -12,8 +12,6 @@ public class SetDatabaseNameTests : LiteDbRepositoryTests
 	{
 		repository.SetDatabasePath(databasePath);
 
-		repository.DatabasePath
-				.Should()
-				.Be(databasePath);
+		repository.DatabasePath.Should().Be(databasePath);
 	}
 }

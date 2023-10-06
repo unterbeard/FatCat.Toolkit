@@ -17,13 +17,9 @@ public class DeepCopyTests
 
 		var copy = original.DeepCopy();
 
-		copy
-			.Should()
-			.BeEquivalentTo(original);
+		copy.Should().BeEquivalentTo(original);
 
-		copy.SubObject
-			.Should()
-			.BeNull();
+		copy.SubObject.Should().BeNull();
 	}
 
 	[Fact]
@@ -33,9 +29,7 @@ public class DeepCopyTests
 
 		var copy = original.DeepCopy();
 
-		copy
-			.Should()
-			.BeEquivalentTo(original);
+		copy.Should().BeEquivalentTo(original);
 	}
 
 	[Fact]
@@ -47,9 +41,7 @@ public class DeepCopyTests
 
 		var copy = original.DeepCopy();
 
-		copy
-			.Should()
-			.BeEquivalentTo(original);
+		copy.Should().BeEquivalentTo(original);
 	}
 
 	public class ObjectToCopy : EqualObject

@@ -11,9 +11,11 @@ internal static class ContentConverter
 
 	public static T? ConvertTo<T>(this WebResult result)
 	{
-		if (result.Content.IsNullOrEmpty()) return ToDefaultValue<T>();
+		if (result.Content.IsNullOrEmpty())
+			return ToDefaultValue<T>();
 
-		if (TypeSetters.ContainsKey(typeof(T))) return (T)TypeSetters[typeof(T)](result.Content!);
+		if (TypeSetters.ContainsKey(typeof(T)))
+			return (T)TypeSetters[typeof(T)](result.Content!);
 
 		return JsonConvert.DeserializeObject<T>(result.Content!);
 	}

@@ -14,8 +14,7 @@ public class DeleteTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestObj
 	{
 		deleteCapture = new EasyCapture<BsonValue>();
 
-		A.CallTo(() => collection.Delete(deleteCapture))
-		.Returns(true);
+		A.CallTo(() => collection.Delete(deleteCapture)).Returns(true);
 	}
 
 	[Fact]
@@ -23,20 +22,15 @@ public class DeleteTests : ConnectionHandlingLiteDbRepositoryTests<LiteDbTestObj
 	{
 		await RunTest();
 
-		A.CallTo(() => collection.Delete(A<BsonValue>._))
-		.MustHaveHappened();
+		A.CallTo(() => collection.Delete(A<BsonValue>._)).MustHaveHappened();
 
-		deleteCapture.Value.AsInt32
-					.Should()
-					.Be(testItem.Id);
+		deleteCapture.Value.AsInt32.Should().Be(testItem.Id);
 	}
 
 	[Fact]
 	public void ReturnDeletedItem()
 	{
-		RunTest()
-			.Should()
-			.Be(testItem);
+		RunTest().Should().Be(testItem);
 	}
 
 	protected override async Task<LiteDbTestObject> RunTest() => await repository.Delete(testItem);

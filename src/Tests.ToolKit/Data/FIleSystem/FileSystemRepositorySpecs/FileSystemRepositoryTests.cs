@@ -28,17 +28,18 @@ public abstract class FileSystemRepositoryTests
 		SetUpApplicationTools();
 		SetUpJsonHelper();
 
-		repository = new SingleItemFileSystemRepository<TestFileDataObject>(fileSystem,
-																			applicationTools,
-																			jsonHelper);
+		repository = new SingleItemFileSystemRepository<TestFileDataObject>(
+			fileSystem,
+			applicationTools,
+			jsonHelper
+		);
 	}
 
 	private void SetUpApplicationTools()
 	{
 		applicationTools = A.Fake<IApplicationTools>();
 
-		A.CallTo(() => applicationTools.ExecutingDirectory)
-		.Returns(ExecutingDirectory);
+		A.CallTo(() => applicationTools.ExecutingDirectory).Returns(ExecutingDirectory);
 	}
 
 	private void SetUpFileSystem()
@@ -47,8 +48,7 @@ public abstract class FileSystemRepositoryTests
 
 		dataJson = Faker.RandomString();
 
-		A.CallTo(() => fileSystem.File.ReadAllTextAsync(A<string>._, default))
-		.Returns(dataJson);
+		A.CallTo(() => fileSystem.File.ReadAllTextAsync(A<string>._, default)).Returns(dataJson);
 	}
 
 	private void SetUpJsonHelper()
@@ -57,7 +57,6 @@ public abstract class FileSystemRepositoryTests
 
 		testObject = Faker.Create<TestFileDataObject>();
 
-		A.CallTo(() => jsonHelper.Deserialize<TestFileDataObject>(A<string>._))
-		.Returns(testObject);
+		A.CallTo(() => jsonHelper.Deserialize<TestFileDataObject>(A<string>._)).Returns(testObject);
 	}
 }

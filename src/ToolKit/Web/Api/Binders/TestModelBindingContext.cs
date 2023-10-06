@@ -44,11 +44,19 @@ public class TestModelBindingContext : ModelBindingContext
 
 	public void AddTestValues(string name, string value) => TestValueProvider.AddTestValues(name, value);
 
-	public override NestedScope EnterNestedScope(ModelMetadata modelMetadata, string fieldName, string modelName, object model) => throw new NotImplementedException();
+	public override NestedScope EnterNestedScope(
+		ModelMetadata modelMetadata,
+		string fieldName,
+		string modelName,
+		object model
+	) => throw new NotImplementedException();
 
 	public override NestedScope EnterNestedScope() => throw new NotImplementedException();
 
 	public void RemoveTestValues(string name) => TestValueProvider.RemoveTestValues(name);
 
-	protected override void ExitNestedScope() { throw new NotImplementedException(); }
+	protected override void ExitNestedScope()
+	{
+		throw new NotImplementedException();
+	}
 }

@@ -14,20 +14,15 @@ public class GetByIdTests : FilterLiteDbRepositoryTests<LiteDbTestObject>
 	{
 		await RunTest();
 
-		A.CallTo(() => collection.Find(filterCapture, A<int>._, A<int>._))
-		.MustHaveHappened();
+		A.CallTo(() => collection.Find(filterCapture, A<int>._, A<int>._)).MustHaveHappened();
 
 		var expression = filterCapture.Value.Compile();
 
 		var filterItem = new LiteDbTestObject { Id = numberToFind };
 
-		expression(filterItem)
-			.Should()
-			.BeTrue();
+		expression(filterItem).Should().BeTrue();
 
-		expression(new LiteDbTestObject { Id = numberToFind - 1 })
-			.Should()
-			.BeFalse();
+		expression(new LiteDbTestObject { Id = numberToFind - 1 }).Should().BeFalse();
 	}
 
 	[Fact]
@@ -37,16 +32,13 @@ public class GetByIdTests : FilterLiteDbRepositoryTests<LiteDbTestObject>
 
 		var result = await RunTest();
 
-		result.Should()
-			.BeNull();
+		result.Should().BeNull();
 	}
 
 	[Fact]
 	public void ReturnItemFromCollection()
 	{
-		RunTest()
-			.Should()
-			.Be(testItem);
+		RunTest().Should().Be(testItem);
 	}
 
 	protected override Task<LiteDbTestObject> RunTest() => Task.FromResult(repository.GetById(numberToFind));

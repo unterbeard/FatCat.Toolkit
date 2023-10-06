@@ -17,9 +17,7 @@ public class EqualObjectTests
 
 		var result = firstObject == secondObject;
 
-		result
-			.Should()
-			.BeFalse();
+		result.Should().BeFalse();
 	}
 
 	[Fact]
@@ -31,8 +29,7 @@ public class EqualObjectTests
 
 		var result = firstObject.Equals(secondObject);
 
-		result.Should()
-			.BeFalse();
+		result.Should().BeFalse();
 	}
 
 	[Fact]
@@ -42,9 +39,7 @@ public class EqualObjectTests
 
 		var result = firstObject == secondObject;
 
-		result
-			.Should()
-			.BeTrue();
+		result.Should().BeTrue();
 	}
 
 	[Fact]
@@ -54,8 +49,7 @@ public class EqualObjectTests
 
 		var result = firstObject.Equals(secondObject);
 
-		result.Should()
-			.BeTrue();
+		result.Should().BeTrue();
 	}
 
 	private static (TestObject, TestObject) GetObjects()
@@ -63,15 +57,15 @@ public class EqualObjectTests
 		var firstObject = Faker.Create<TestObject>();
 
 		var secondObject = new TestObject
-							{
-								Length = firstObject.Length,
-								CreatedDate = firstObject.CreatedDate,
-								FirstName = firstObject.FirstName,
-								LastName = firstObject.LastName,
-								TheNumber = firstObject.TheNumber,
-								On = firstObject.On,
-								SomeId = firstObject.SomeId
-							};
+		{
+			Length = firstObject.Length,
+			CreatedDate = firstObject.CreatedDate,
+			FirstName = firstObject.FirstName,
+			LastName = firstObject.LastName,
+			TheNumber = firstObject.TheNumber,
+			On = firstObject.On,
+			SomeId = firstObject.SomeId
+		};
 
 		return (firstObject, secondObject);
 	}

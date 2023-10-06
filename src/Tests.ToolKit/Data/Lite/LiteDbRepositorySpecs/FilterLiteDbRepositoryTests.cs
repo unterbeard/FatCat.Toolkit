@@ -19,31 +19,24 @@ public abstract class FilterLiteDbRepositoryTests<T> : ConnectionHandlingLiteDbR
 
 		filterCapture = new EasyCapture<Expression<Func<LiteDbTestObject, bool>>>();
 
-		A.CallTo(() => collection.Find(filterCapture, A<int>._, A<int>._))
-		.Returns(ItemsToReturn);
+		A.CallTo(() => collection.Find(filterCapture, A<int>._, A<int>._)).Returns(ItemsToReturn);
 	}
 
 	protected void SetUpFindWithEmptyCollection()
 	{
-		A.CallTo(() => collection.Find(filterCapture, A<int>._, A<int>._))
-		.Returns(new List<LiteDbTestObject>());
+		A.CallTo(() => collection.Find(filterCapture, A<int>._, A<int>._)).Returns(new List<LiteDbTestObject>());
 	}
 
 	protected void VerifyFilterCallOnCollectionMade()
 	{
-		A.CallTo(() => collection.Find(filterCapture, A<int>._, A<int>._))
-		.MustHaveHappened();
+		A.CallTo(() => collection.Find(filterCapture, A<int>._, A<int>._)).MustHaveHappened();
 
 		var expression = filterCapture.Value.Compile();
 
 		var filterItem = new LiteDbTestObject { SomeNumber = numberToFind };
 
-		expression(filterItem)
-			.Should()
-			.BeTrue();
+		expression(filterItem).Should().BeTrue();
 
-		expression(new LiteDbTestObject { SomeNumber = numberToFind - 1 })
-			.Should()
-			.BeFalse();
+		expression(new LiteDbTestObject { SomeNumber = numberToFind - 1 }).Should().BeFalse();
 	}
 }
