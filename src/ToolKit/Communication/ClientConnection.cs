@@ -5,14 +5,14 @@ namespace FatCat.Toolkit.Communication;
 
 internal class ClientConnection
 {
-	private readonly TcpServer server;
+	private readonly FatFatTcpServer server;
 	private readonly TcpClient client;
 	private readonly string clientId;
 	private readonly int bufferSize;
 	private readonly CancellationToken cancellationToken;
 
 	public ClientConnection(
-		TcpServer server,
+		FatFatTcpServer server,
 		TcpClient client,
 		string clientId,
 		int bufferSize,

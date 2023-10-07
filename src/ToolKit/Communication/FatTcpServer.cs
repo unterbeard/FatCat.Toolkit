@@ -1,4 +1,3 @@
-#nullable enable
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
@@ -9,7 +8,7 @@ namespace FatCat.Toolkit.Communication;
 
 public delegate void TcpMessageReceived(byte[] data);
 
-public interface ITcpServer : IDisposable
+public interface IFatTcpServer : IDisposable
 {
 	event TcpMessageReceived OnMessageReceived;
 
@@ -20,7 +19,7 @@ public interface ITcpServer : IDisposable
 	void Stop();
 }
 
-public class TcpServer : ITcpServer
+public class FatFatTcpServer : IFatTcpServer
 {
 	private readonly IGenerator generator;
 	private int bufferSize;
@@ -31,12 +30,9 @@ public class TcpServer : ITcpServer
 	private ushort port;
 	private Socket server;
 
-	internal ConcurrentDictionary<string, ClientConnection> Connections { get; set; } = new();
+	private ConcurrentDictionary<string, ClientConnection> Connections { get; } = new();
 
-	public TcpServer(IGenerator generator)
-	{
-		this.generator = generator;
-	}
+	public FatFatTcpServer(IGenerator generator) => this.generator = generator;
 
 	public event TcpMessageReceived OnMessageReceived;
 

@@ -10,11 +10,11 @@ public class TcpWorker : SpikeWorker
 {
 	private const int TcpPort = 47899;
 	private readonly ISimpleTcpSender tcpSender;
-	private readonly ITcpServer tcpServer;
+	private readonly IFatTcpServer fatTcpServer;
 
-	public TcpWorker(ITcpServer tcpServer, ISimpleTcpSender tcpSender)
+	public TcpWorker(IFatTcpServer fatTcpServer, ISimpleTcpSender tcpSender)
 	{
-		this.tcpServer = tcpServer;
+		this.fatTcpServer = fatTcpServer;
 		this.tcpSender = tcpSender;
 	}
 
@@ -26,9 +26,9 @@ public class TcpWorker : SpikeWorker
 
 		if (Program.Args.Any())
 		{
-			tcpServer.OnMessageReceived += OnClientMessage;
+			fatTcpServer.OnMessageReceived += OnClientMessage;
 
-			tcpServer.Start(TcpPort, Encoding.UTF8);
+			fatTcpServer.Start(TcpPort, Encoding.UTF8);
 		}
 		else
 		{
