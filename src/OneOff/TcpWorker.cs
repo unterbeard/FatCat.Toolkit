@@ -26,7 +26,7 @@ public class TcpWorker : SpikeWorker
 
 		if (Program.Args.Any())
 		{
-			fatTcpServer.OnMessageReceived += OnClientMessage;
+			fatTcpServer.TcpMessageReceivedEvent += TcpClientMessage;
 
 			fatTcpServer.Start(TcpPort, Encoding.UTF8);
 		}
@@ -45,7 +45,7 @@ public class TcpWorker : SpikeWorker
 		}
 	}
 
-	private void OnClientMessage(byte[] data)
+	private void TcpClientMessage(byte[] data)
 	{
 		var message = Encoding.UTF8.GetString(data);
 

@@ -10,7 +10,7 @@ public delegate void TcpMessageReceived(byte[] data);
 
 public interface IFatTcpServer : IDisposable
 {
-	event TcpMessageReceived OnMessageReceived;
+	event TcpMessageReceived TcpMessageReceivedEvent;
 
 	void Start(ushort port, int receiveBufferSize = 1024);
 
@@ -34,13 +34,13 @@ public class FatFatTcpServer : IFatTcpServer
 
 	public FatFatTcpServer(IGenerator generator) => this.generator = generator;
 
-	public event TcpMessageReceived OnMessageReceived;
+	public event TcpMessageReceived TcpMessageReceivedEvent;
 
 	public void Dispose() { }
 
-	public virtual void OnOnMessageReceived(byte[] data)
+	public virtual void OnMessageReceived(byte[] data)
 	{
-		OnMessageReceived?.Invoke(data);
+		TcpMessageReceivedEvent?.Invoke(data);
 	}
 
 	public void Start(ushort port, int receiveBufferSize = 1024)

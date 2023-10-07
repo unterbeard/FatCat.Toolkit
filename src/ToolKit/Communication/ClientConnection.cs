@@ -55,7 +55,7 @@ internal class ClientConnection
 				// 	$"Message Received From <{client.Client.RemoteEndPoint}> | Total Bytes <{bytesCount}>"
 				// );
 
-				server.OnOnMessageReceived(bytesReceived);
+				server.OnMessageReceived(bytesReceived);
 			}
 		}
 		catch (IOException)
