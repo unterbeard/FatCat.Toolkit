@@ -33,7 +33,7 @@ public class TcpWorker : SpikeWorker
 		{
 			await fatTcpClient.Connect("127.0.0.1", TcpPort);
 
-			for (var i = 0; i < 850000; i++)
+			for (var i = 0; i < 8500000; i++)
 			{
 				var message = $"{i:X} This is a	message | {DateTime.Now:T}";
 
