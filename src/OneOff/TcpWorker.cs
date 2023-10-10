@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Text;
+﻿using System.Text;
 using FatCat.Toolkit.Communication;
 using FatCat.Toolkit.Console;
 using Humanizer;
@@ -9,20 +8,20 @@ namespace OneOff;
 public class TcpWorker : SpikeWorker
 {
 	private const int TcpPort = 47899;
-	private readonly ISimpleTcpSender tcpSender;
+	private readonly IFatTcpClient fatTcpClient;
 	private readonly IFatTcpServer fatTcpServer;
+	private readonly ISimpleTcpSender tcpSender;
 
-	public TcpWorker(IFatTcpServer fatTcpServer, ISimpleTcpSender tcpSender)
+	public TcpWorker(IFatTcpServer fatTcpServer, ISimpleTcpSender tcpSender, IFatTcpClient fatTcpClient)
 	{
 		this.fatTcpServer = fatTcpServer;
 		this.tcpSender = tcpSender;
+		this.fatTcpClient = fatTcpClient;
 	}
 
 	public override async Task DoWork()
 	{
 		ConsoleLog.Write("Going to play with TCP Stuff");
-
-		await Task.CompletedTask;
 
 		if (Program.Args.Any())
 		{
@@ -32,15 +31,17 @@ public class TcpWorker : SpikeWorker
 		}
 		else
 		{
-			var endPoint = new IPEndPoint(IPAddress.Loopback, TcpPort);
+			await fatTcpClient.Connect("127.0.0.1", TcpPort);
 
 			for (var i = 0; i < 850000; i++)
 			{
 				var message = $"{i:X} This is a	message | {DateTime.Now:T}";
 
-				await tcpSender.Send(endPoint, message, Encoding.UTF8);
+				var bytes = Encoding.UTF8.GetBytes(message);
 
-				await Task.Delay(10.Milliseconds());
+				await fatTcpClient.Send(bytes);
+
+				await Task.Delay(1.Milliseconds());
 			}
 		}
 	}
