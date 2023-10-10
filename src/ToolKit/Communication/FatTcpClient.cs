@@ -66,6 +66,8 @@ public class FatTcpClient : IFatTcpClient
 
 		try
 		{
+			connected = false;
+
 			socket?.Shutdown(SocketShutdown.Both);
 			socket?.Close();
 		}
@@ -92,6 +94,10 @@ public class FatTcpClient : IFatTcpClient
 		try
 		{
 			await socket.SendAsync(bytes, cancelToken);
+		}
+		catch (SocketException)
+		{
+			Disconnect();
 		}
 		catch (Exception e)
 		{
