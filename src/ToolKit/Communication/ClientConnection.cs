@@ -58,13 +58,9 @@ internal class ClientConnection
 				server.OnMessageReceived(bytesReceived);
 			}
 		}
-		catch (IOException)
-		{
-			ConsoleLog.WriteCyan("IOException");
-		}
-		catch (Exception e)
-		{
-			ConsoleLog.WriteException(e);
+		catch (IOException) { }
+		catch
+		{ // ignored
 		}
 	}
 }

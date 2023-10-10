@@ -1,11 +1,18 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using FatCat.Toolkit.Console;
+using Humanizer;
 
 namespace FatCat.Toolkit.Communication;
 
 public interface IFatTcpClient
 {
+	bool Connected { get; }
+
+	bool Reconnect { get; set; }
+
+	TimeSpan ReconnectDelay { get; set; }
+
 	event TcpMessageReceived TcpMessageReceivedEvent;
 
 	Task Connect(string host, ushort port, int bufferSize = 1024, CancellationToken cancellationToken = default);
@@ -22,12 +29,17 @@ public class FatTcpClient : IFatTcpClient
 	private CancellationTokenSource cancelSource;
 	private CancellationToken cancelToken;
 
-	private bool connected;
 	private string host;
 	private IPEndPoint ipEndpoint;
 	private ushort port;
 	private IPAddress serverIp;
 	private Socket socket;
+
+	public bool Connected { get; private set; }
+
+	public bool Reconnect { get; set; } = false;
+
+	public TimeSpan ReconnectDelay { get; set; } = 2.Seconds();
 
 	public event TcpMessageReceived TcpMessageReceivedEvent;
 
@@ -46,12 +58,7 @@ public class FatTcpClient : IFatTcpClient
 		serverIp = IPAddress.Parse(host);
 		ipEndpoint = new IPEndPoint(serverIp, this.port);
 
-		CreateSocket();
-		VerifyCancelToken();
-
-		await socket.ConnectAsync(ipEndpoint, cancelToken);
-
-		connected = true;
+		await MakeConnection();
 	}
 
 	public void Disconnect()
@@ -64,9 +71,14 @@ public class FatTcpClient : IFatTcpClient
 		{ // ignored
 		}
 
+		ShutdownSocket();
+	}
+
+	private void ShutdownSocket()
+	{
 		try
 		{
-			connected = false;
+			Connected = false;
 
 			socket?.Shutdown(SocketShutdown.Both);
 			socket?.Close();
@@ -86,7 +98,7 @@ public class FatTcpClient : IFatTcpClient
 
 	public async Task Send(byte[] bytes)
 	{
-		if (!connected || socket is null)
+		if (!Connected || socket is null)
 		{
 			return;
 		}
@@ -97,7 +109,9 @@ public class FatTcpClient : IFatTcpClient
 		}
 		catch (SocketException)
 		{
-			Disconnect();
+			ShutdownSocket();
+
+			await TryReconnect();
 		}
 		catch (Exception e)
 		{
@@ -126,6 +140,29 @@ public class FatTcpClient : IFatTcpClient
 		socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 5);
 	}
 
+	private async Task MakeConnection()
+	{
+		try
+		{
+			ConsoleLog.WriteYellow($"Attempting to connect to <{host}:{port}>");
+
+			CreateSocket();
+			VerifyCancelToken();
+
+			await socket.ConnectAsync(ipEndpoint, cancelToken);
+
+			Connected = true;
+
+			ConsoleLog.WriteGreen($"Connection succeed for <{host}:{port}>");
+		}
+		catch (SocketException)
+		{
+			ConsoleLog.WriteRed($"Connection failed to <{host}:{port}>");
+
+			await TryReconnect();
+		}
+	}
+
 	private async Task ReceiveThread()
 	{
 		buffer = new byte[bufferSize];
@@ -149,6 +186,20 @@ public class FatTcpClient : IFatTcpClient
 		catch (Exception e)
 		{
 			ConsoleLog.WriteException(e);
+		}
+	}
+
+	private async Task TryReconnect()
+	{
+		ConsoleLog.WriteGray($"Reconnect <{Reconnect}>");
+
+		if (Reconnect)
+		{
+			ConsoleLog.WriteYellow($"Going to try to reconnect to <{host}:{port}>");
+
+			await Task.Delay(ReconnectDelay, cancelToken);
+
+			await MakeConnection();
 		}
 	}
 

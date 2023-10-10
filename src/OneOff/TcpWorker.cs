@@ -31,6 +31,8 @@ public class TcpWorker : SpikeWorker
 		}
 		else
 		{
+			fatTcpClient.Reconnect = true;
+
 			await fatTcpClient.Connect("127.0.0.1", TcpPort);
 
 			for (var i = 0; i < 8500000; i++)
