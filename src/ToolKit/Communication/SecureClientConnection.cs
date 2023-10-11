@@ -5,6 +5,27 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace FatCat.Toolkit.Communication;
 
+internal static class CertificateHelper
+{
+	public static bool CertValidation(
+		X509Certificate remoteCertificate,
+		X509Certificate localCertificate,
+		SslPolicyErrors sslPolicyErrors
+	)
+	{
+		switch (sslPolicyErrors)
+		{
+			case SslPolicyErrors.None:
+			case SslPolicyErrors.RemoteCertificateChainErrors:
+				return true;
+			default:
+
+				// Valid if keys are the same
+				return remoteCertificate.GetPublicKeyString() == localCertificate.GetPublicKeyString();
+		}
+	}
+}
+
 internal class SecureClientConnection : ClientConnection
 {
 	private readonly X509Certificate certificate;
@@ -38,15 +59,6 @@ internal class SecureClientConnection : ClientConnection
 		SslPolicyErrors sslPolicyErrors
 	)
 	{
-		switch (sslPolicyErrors)
-		{
-			case SslPolicyErrors.None:
-			case SslPolicyErrors.RemoteCertificateChainErrors:
-				return true;
-			default:
-
-				// Valid if keys are the same
-				return remoteCertificate.GetPublicKeyString() == certificate.GetPublicKeyString();
-		}
+		return CertificateHelper.CertValidation(remoteCertificate, certificate, sslPolicyErrors);
 	}
 }

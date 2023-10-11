@@ -1,28 +1,11 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Sockets;
 using FatCat.Toolkit.Console;
 using Humanizer;
 
 namespace FatCat.Toolkit.Communication;
 
-public interface IFatTcpClient
-{
-	bool Connected { get; }
-
-	bool Reconnect { get; set; }
-
-	TimeSpan ReconnectDelay { get; set; }
-
-	event TcpMessageReceived TcpMessageReceivedEvent;
-
-	Task Connect(string host, ushort port, int bufferSize = 1024, CancellationToken cancellationToken = default);
-
-	void Disconnect();
-
-	Task Send(byte[] bytes);
-}
-
-public class FatTcpClient : IFatTcpClient
+public abstract class FatTcpClient
 {
 	private byte[] buffer;
 	private int bufferSize;
@@ -32,8 +15,8 @@ public class FatTcpClient : IFatTcpClient
 	private IPEndPoint ipEndpoint;
 	private ushort port;
 	private IPAddress serverIp;
-	private TcpClient tcpClient;
-	private NetworkStream stream;
+	private Stream stream;
+	protected TcpClient tcpClient;
 
 	public bool Connected { get; private set; }
 
@@ -99,6 +82,8 @@ public class FatTcpClient : IFatTcpClient
 		}
 	}
 
+	protected abstract Stream GetStream();
+
 	protected virtual void OnOnMessageReceived(byte[] data)
 	{
 		TcpMessageReceivedEvent?.Invoke(data);
@@ -112,7 +97,7 @@ public class FatTcpClient : IFatTcpClient
 
 		await tcpClient.ConnectAsync(host, port, cancelToken);
 
-		stream = tcpClient.GetStream();
+		stream = GetStream();
 
 		ConsoleLog.Write("After ConnectAsync");
 
