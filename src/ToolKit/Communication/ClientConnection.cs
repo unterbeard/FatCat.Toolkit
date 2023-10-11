@@ -1,17 +1,18 @@
-﻿using System.Net.Sockets;
-using FatCat.Toolkit.Console;
+using System.Net.Sockets;
 
 namespace FatCat.Toolkit.Communication;
 
-internal class ClientConnection
+internal abstract class ClientConnection
 {
-	private readonly FatFatTcpServer server;
-	private readonly TcpClient client;
-	private readonly string clientId;
-	private readonly int bufferSize;
-	private readonly CancellationToken cancellationToken;
+	protected readonly int bufferSize;
+	protected readonly CancellationToken cancellationToken;
+	protected readonly TcpClient client;
+	protected readonly string clientId;
+	protected readonly FatFatTcpServer server;
 
-	public ClientConnection(
+	private bool IsNotCanceled => !cancellationToken.IsCancellationRequested;
+
+	protected ClientConnection(
 		FatFatTcpServer server,
 		TcpClient client,
 		string clientId,
@@ -31,29 +32,27 @@ internal class ClientConnection
 		Task.Factory.StartNew(ReceivingThread, TaskCreationOptions.LongRunning);
 	}
 
+	protected abstract Stream GetStream();
+
 	private async Task ReceivingThread()
 	{
-		// ConsoleLog.WriteMagenta($"Client Connected RemoveEndpoint <{client.Client.RemoteEndPoint}>");
-
-		var stream = client.GetStream();
+		var stream = GetStream();
 		var buffer = new byte[bufferSize];
 
 		try
 		{
-			var bytesCount = 0;
-
-			while (
-				!cancellationToken.IsCancellationRequested
-				&& (bytesCount = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) != 0
-			)
+			while (IsNotCanceled)
 			{
+				var bytesCount = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
+
+				if (bytesCount == 0)
+				{
+					continue;
+				}
+
 				var bytesReceived = new byte[bytesCount];
 
 				Array.Copy(buffer, bytesReceived, bytesCount);
-
-				// ConsoleLog.WriteMagenta(
-				// 	$"Message Received From <{client.Client.RemoteEndPoint}> | Total Bytes <{bytesCount}>"
-				// );
 
 				server.OnMessageReceived(bytesReceived);
 			}

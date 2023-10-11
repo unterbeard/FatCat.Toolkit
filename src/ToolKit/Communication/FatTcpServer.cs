@@ -30,9 +30,12 @@ public class FatFatTcpServer : IFatTcpServer
 	private ushort port;
 	private Socket server;
 
-	private ConcurrentDictionary<string, ClientConnection> Connections { get; } = new();
+	private ConcurrentDictionary<string, OpenClientConnection> Connections { get; } = new();
 
-	public FatFatTcpServer(IGenerator generator) => this.generator = generator;
+	public FatFatTcpServer(IGenerator generator)
+	{
+		this.generator = generator;
+	}
 
 	public event TcpMessageReceived TcpMessageReceivedEvent;
 
@@ -84,7 +87,7 @@ public class FatFatTcpServer : IFatTcpServer
 
 			var clientId = generator.NewId();
 
-			var clientConnection = new ClientConnection(this, client, clientId, bufferSize, cancelToken);
+			var clientConnection = new OpenClientConnection(this, client, clientId, bufferSize, cancelToken);
 
 			Connections.TryAdd(clientId, clientConnection);
 
