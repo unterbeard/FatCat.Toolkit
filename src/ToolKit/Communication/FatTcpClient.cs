@@ -28,12 +28,12 @@ public class FatTcpClient : IFatTcpClient
 	private int bufferSize;
 	private CancellationTokenSource cancelSource;
 	private CancellationToken cancelToken;
-
 	private string host;
 	private IPEndPoint ipEndpoint;
 	private ushort port;
 	private IPAddress serverIp;
-	private Socket socket;
+	private TcpClient tcpClient;
+	private NetworkStream stream;
 
 	public bool Connected { get; private set; }
 
@@ -74,38 +74,16 @@ public class FatTcpClient : IFatTcpClient
 		ShutdownSocket();
 	}
 
-	private void ShutdownSocket()
-	{
-		try
-		{
-			Connected = false;
-
-			socket?.Shutdown(SocketShutdown.Both);
-			socket?.Close();
-		}
-		catch
-		{ // ignored
-		}
-
-		try
-		{
-			socket?.Dispose();
-		}
-		catch
-		{ // ignored
-		}
-	}
-
 	public async Task Send(byte[] bytes)
 	{
-		if (!Connected || socket is null)
+		if (!Connected || tcpClient is null || stream is null)
 		{
 			return;
 		}
 
 		try
 		{
-			await socket.SendAsync(bytes, cancelToken);
+			await stream.WriteAsync(bytes, cancelToken);
 		}
 		catch (SocketException)
 		{
@@ -113,9 +91,11 @@ public class FatTcpClient : IFatTcpClient
 
 			await TryReconnect();
 		}
-		catch (Exception e)
+		catch (IOException)
 		{
-			ConsoleLog.WriteException(e);
+			ShutdownSocket();
+
+			await TryReconnect();
 		}
 	}
 
@@ -124,20 +104,30 @@ public class FatTcpClient : IFatTcpClient
 		TcpMessageReceivedEvent?.Invoke(data);
 	}
 
-	private void CreateSocket()
+	private async Task CreateSocket()
 	{
-		socket = new Socket(serverIp.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+		ConsoleLog.Write("Create TCP Client");
 
-		socket.NoDelay = true;
-		socket.ReceiveBufferSize = bufferSize;
-		socket.ReceiveTimeout = 0;
-		socket.SendBufferSize = bufferSize;
-		socket.SendTimeout = 0;
+		tcpClient = new TcpClient();
 
-		socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-		socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 900);
-		socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 300);
-		socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 5);
+		await tcpClient.ConnectAsync(host, port, cancelToken);
+
+		stream = tcpClient.GetStream();
+
+		ConsoleLog.Write("After ConnectAsync");
+
+		tcpClient.Client.NoDelay = true;
+		tcpClient.Client.ReceiveBufferSize = bufferSize;
+		tcpClient.Client.ReceiveTimeout = 0;
+		tcpClient.Client.SendBufferSize = bufferSize;
+		tcpClient.Client.SendTimeout = 0;
+
+		tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+		tcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 900);
+		tcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 300);
+		tcpClient.Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 5);
+
+		ConsoleLog.Write("After setting all socket options");
 	}
 
 	private async Task MakeConnection()
@@ -146,14 +136,18 @@ public class FatTcpClient : IFatTcpClient
 		{
 			ConsoleLog.WriteYellow($"Attempting to connect to <{host}:{port}>");
 
-			CreateSocket();
+			await CreateSocket();
 			VerifyCancelToken();
-
-			await socket.ConnectAsync(ipEndpoint, cancelToken);
 
 			Connected = true;
 
 			ConsoleLog.WriteGreen($"Connection succeed for <{host}:{port}>");
+		}
+		catch (IOException)
+		{
+			ConsoleLog.WriteRed($"Connection failed to <{host}:{port}>");
+
+			await TryReconnect();
 		}
 		catch (SocketException)
 		{
@@ -171,7 +165,7 @@ public class FatTcpClient : IFatTcpClient
 		{
 			while (!cancelToken.IsCancellationRequested)
 			{
-				var bytesCount = await socket.ReceiveAsync(buffer, cancelToken);
+				var bytesCount = await stream.ReadAsync(buffer, cancelToken);
 
 				if (bytesCount > 0)
 				{
@@ -186,6 +180,27 @@ public class FatTcpClient : IFatTcpClient
 		catch (Exception e)
 		{
 			ConsoleLog.WriteException(e);
+		}
+	}
+
+	private void ShutdownSocket()
+	{
+		try
+		{
+			Connected = false;
+
+			stream?.Close();
+		}
+		catch
+		{ // ignored
+		}
+
+		try
+		{
+			tcpClient.Dispose();
+		}
+		catch
+		{ // ignored
 		}
 	}
 
