@@ -6,33 +6,20 @@ using FatCat.Toolkit.Console;
 
 namespace FatCat.Toolkit.Communication;
 
-public delegate void TcpMessageReceived(byte[] data);
-
-public interface IFatTcpServer : IDisposable
-{
-	event TcpMessageReceived TcpMessageReceivedEvent;
-
-	void Start(ushort port, int receiveBufferSize = 1024);
-
-	void Start(ushort port, Encoding encoding, int receiveBufferSize = 1024);
-
-	void Stop();
-}
-
-public class FatFatTcpServer : IFatTcpServer
+public abstract class FatTcpServer
 {
 	private readonly IGenerator generator;
-	private int bufferSize;
+	protected int bufferSize;
 	private CancellationTokenSource cancelSource;
-	private CancellationToken cancelToken;
+	protected CancellationToken cancelToken;
 	private Encoding encoding;
 	private TcpListener listener;
 	private ushort port;
 	private Socket server;
 
-	private ConcurrentDictionary<string, OpenClientConnection> Connections { get; } = new();
+	private ConcurrentDictionary<string, ClientConnection> Connections { get; } = new();
 
-	public FatFatTcpServer(IGenerator generator)
+	protected FatTcpServer(IGenerator generator)
 	{
 		this.generator = generator;
 	}
@@ -68,6 +55,8 @@ public class FatFatTcpServer : IFatTcpServer
 		Dispose();
 	}
 
+	internal abstract ClientConnection GetClientConnection(TcpClient client, string clientId);
+
 	private async Task ServerThread()
 	{
 		await Task.CompletedTask;
@@ -87,7 +76,7 @@ public class FatFatTcpServer : IFatTcpServer
 
 			var clientId = generator.NewId();
 
-			var clientConnection = new OpenClientConnection(this, client, clientId, bufferSize, cancelToken);
+			var clientConnection = GetClientConnection(client, clientId);
 
 			Connections.TryAdd(clientId, clientConnection);
 

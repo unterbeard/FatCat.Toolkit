@@ -5,7 +5,7 @@ namespace FatCat.Toolkit.Communication;
 internal class OpenClientConnection : ClientConnection
 {
 	public OpenClientConnection(
-		FatFatTcpServer server,
+		IFatTcpServer server,
 		TcpClient client,
 		string clientId,
 		int bufferSize,

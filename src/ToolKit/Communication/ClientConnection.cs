@@ -8,12 +8,12 @@ internal abstract class ClientConnection
 	protected readonly CancellationToken cancellationToken;
 	protected readonly TcpClient client;
 	protected readonly string clientId;
-	protected readonly FatFatTcpServer server;
+	protected readonly IFatTcpServer server;
 
 	private bool IsNotCanceled => !cancellationToken.IsCancellationRequested;
 
 	protected ClientConnection(
-		FatFatTcpServer server,
+		IFatTcpServer server,
 		TcpClient client,
 		string clientId,
 		int bufferSize,
