@@ -13,8 +13,10 @@ internal class OpenClientConnection : ClientConnection
 	)
 		: base(server, client, clientId, bufferSize, cancellationToken) { }
 
-	protected override Stream GetStream()
+	protected override async Task<Stream> GetStream()
 	{
+		await Task.CompletedTask;
+
 		return client.GetStream();
 	}
 }

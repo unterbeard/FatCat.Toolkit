@@ -32,11 +32,11 @@ internal abstract class ClientConnection
 		Task.Factory.StartNew(ReceivingThread, TaskCreationOptions.LongRunning);
 	}
 
-	protected abstract Stream GetStream();
+	protected abstract Task<Stream> GetStream();
 
 	private async Task ReceivingThread()
 	{
-		var stream = GetStream();
+		var stream = await GetStream();
 		var buffer = new byte[bufferSize];
 
 		try
