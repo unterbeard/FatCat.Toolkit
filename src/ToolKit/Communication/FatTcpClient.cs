@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using FatCat.Toolkit.Console;
 using Humanizer;
 
@@ -80,6 +81,15 @@ public abstract class FatTcpClient
 
 			await TryReconnect();
 		}
+	}
+
+	public Task Send(string message, Encoding encoding = null)
+	{
+		encoding ??= Encoding.UTF8;
+
+		var bytes = encoding.GetBytes(message);
+
+		return Send(bytes);
 	}
 
 	protected abstract Stream GetStream();

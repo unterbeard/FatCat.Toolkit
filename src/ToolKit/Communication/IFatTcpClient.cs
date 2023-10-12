@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace FatCat.Toolkit.Communication;
 
 public interface IFatTcpClient
@@ -15,4 +17,6 @@ public interface IFatTcpClient
 	void Disconnect();
 
 	Task Send(byte[] bytes);
+
+	Task Send(string message, Encoding encoding = null);
 }
