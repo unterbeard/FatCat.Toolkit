@@ -8,7 +8,7 @@
         <AssemblyName>FatCat.Toolkit</AssemblyName>
         <DebugType>full</DebugType>
         <LangVersion>latest</LangVersion>
-        <VersionPrefix>1.0.158</VersionPrefix>
+    <VersionPrefix>1.0.159</VersionPrefix>
         <Authors>David Basarab</Authors>
         <PackageTags>tools</PackageTags>
         <PackageProjectUrl>https://github.com/DavidBasarab/FatCat.Toolkit</PackageProjectUrl>
@@ -40,9 +40,9 @@
         <PackageReference Include="Flurl.Http" Version="3.2.4"/>
         <PackageReference Include="Humanizer.Core" Version="2.14.1"/>
         <PackageReference Include="LiteDB" Version="5.0.17"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.11"/>
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.11"/>
-        <PackageReference Include="MongoDB.Driver" Version="2.21.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.12" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.12" />
+        <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="System.IO.Abstractions" Version="19.2.69"/>
     </ItemGroup>
