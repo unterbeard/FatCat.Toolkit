@@ -10,7 +10,7 @@ namespace OneOff;
 
 public class TcpWorker : SpikeWorker
 {
-	private const int TcpPort = 47899;
+	private const int TcpPort = 24329;
 	private readonly IGenerator generator;
 	private readonly ISimpleTcpSender tcpSender;
 	private IFatTcpClient fatTcpClient;
