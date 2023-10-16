@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Communication;
@@ -10,10 +11,10 @@ namespace OneOff;
 public class TcpWorker : SpikeWorker
 {
 	private const int TcpPort = 47899;
-	private IFatTcpClient fatTcpClient;
 	private readonly IGenerator generator;
-	private IFatTcpServer fatTcpServer;
 	private readonly ISimpleTcpSender tcpSender;
+	private IFatTcpClient fatTcpClient;
+	private IFatTcpServer fatTcpServer;
 
 	public TcpWorker(ISimpleTcpSender tcpSender, IGenerator generator)
 	{
@@ -29,19 +30,26 @@ public class TcpWorker : SpikeWorker
 
 		if (Program.Args.Any())
 		{
-			fatTcpServer = new SecureFatTcpServer(cert, generator);
-
-			fatTcpServer.TcpMessageReceivedEvent += TcpClientMessage;
-
-			fatTcpServer.Start(TcpPort, Encoding.UTF8);
-		}
-		else
-		{
 			fatTcpClient = new SecureFatTcpClient(cert);
 
 			fatTcpClient.Reconnect = true;
 
-			await fatTcpClient.Connect("127.0.0.1", TcpPort);
+			var host = Program.Args.FirstOrDefault();
+
+			var hostEntry = await Dns.GetHostEntryAsync(host);
+
+			var ip = hostEntry.AddressList.FirstOrDefault();
+
+			var ipString = ip.ToString();
+
+			ConsoleLog.WriteBlue($"{ipString}");
+
+			if (ip.ToString() == "::1")
+			{
+				ipString = "127.0.0.1";
+			}
+
+			await fatTcpClient.Connect(ipString, TcpPort);
 
 			for (var i = 0; i < 8500000; i++)
 			{
@@ -54,6 +62,19 @@ public class TcpWorker : SpikeWorker
 				await Task.Delay(1.Milliseconds());
 			}
 		}
+		else
+		{
+			StartServer(cert);
+		}
+	}
+
+	private void StartServer(X509Certificate2 cert)
+	{
+		fatTcpServer = new SecureFatTcpServer(cert, generator);
+
+		fatTcpServer.TcpMessageReceivedEvent += TcpClientMessage;
+
+		fatTcpServer.Start(TcpPort, Encoding.UTF8);
 	}
 
 	private void TcpClientMessage(byte[] data)
