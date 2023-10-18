@@ -9,6 +9,7 @@ namespace FatCat.Toolkit.Communication;
 public abstract class FatTcpServer
 {
 	private readonly IGenerator generator;
+	protected readonly IFatTcpLogger logger;
 	protected int bufferSize;
 	private CancellationTokenSource cancelSource;
 	protected CancellationToken cancelToken;
@@ -19,9 +20,10 @@ public abstract class FatTcpServer
 
 	private ConcurrentDictionary<string, ClientConnection> Connections { get; } = new();
 
-	protected FatTcpServer(IGenerator generator)
+	protected FatTcpServer(IGenerator generator, IFatTcpLogger logger)
 	{
 		this.generator = generator;
+		this.logger = logger;
 	}
 
 	public event TcpMessageReceived TcpMessageReceivedEvent;
@@ -68,7 +70,7 @@ public abstract class FatTcpServer
 
 		listener.Start();
 
-		ConsoleLog.WriteMagenta($"Server listening on {port}");
+		logger.WriteDebug($"Server listening on {port}");
 
 		while (!cancelToken.IsCancellationRequested)
 		{

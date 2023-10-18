@@ -70,7 +70,7 @@ public class TcpWorker : SpikeWorker
 
 	private void StartServer(X509Certificate2 cert)
 	{
-		fatTcpServer = new SecureFatTcpServer(cert, generator);
+		fatTcpServer = new SecureFatTcpServer(cert, generator, new ConsoleFatTcpLogger());
 
 		fatTcpServer.TcpMessageReceivedEvent += TcpClientMessage;
 

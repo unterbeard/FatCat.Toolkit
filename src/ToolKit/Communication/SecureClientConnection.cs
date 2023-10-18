@@ -36,9 +36,10 @@ internal class SecureClientConnection : ClientConnection
 		TcpClient client,
 		string clientId,
 		int bufferSize,
+		IFatTcpLogger logger,
 		CancellationToken cancellationToken
 	)
-		: base(server, client, clientId, bufferSize, cancellationToken)
+		: base(server, client, clientId, bufferSize, logger, cancellationToken)
 	{
 		this.certificate = certificate;
 	}

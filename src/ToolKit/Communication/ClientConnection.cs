@@ -8,6 +8,7 @@ internal abstract class ClientConnection
 	protected readonly CancellationToken cancellationToken;
 	protected readonly TcpClient client;
 	protected readonly string clientId;
+	private readonly IFatTcpLogger logger;
 	protected readonly IFatTcpServer server;
 
 	private bool IsNotCanceled => !cancellationToken.IsCancellationRequested;
@@ -17,6 +18,7 @@ internal abstract class ClientConnection
 		TcpClient client,
 		string clientId,
 		int bufferSize,
+		IFatTcpLogger logger,
 		CancellationToken cancellationToken
 	)
 	{
@@ -24,6 +26,7 @@ internal abstract class ClientConnection
 		this.client = client;
 		this.clientId = clientId;
 		this.bufferSize = bufferSize;
+		this.logger = logger;
 		this.cancellationToken = cancellationToken;
 	}
 
@@ -41,6 +44,8 @@ internal abstract class ClientConnection
 
 		try
 		{
+			logger.WriteInformation($"Client Connected from {client.Client.RemoteEndPoint}");
+
 			while (IsNotCanceled)
 			{
 				var bytesCount = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
@@ -54,12 +59,15 @@ internal abstract class ClientConnection
 
 				Array.Copy(buffer, bytesReceived, bytesCount);
 
+				logger.WriteDebug($"Received {bytesCount} bytes from {clientId}");
+
 				server.OnMessageReceived(bytesReceived);
 			}
 		}
 		catch (IOException) { }
-		catch
-		{ // ignored
+		catch (Exception ex)
+		{
+			logger.WriteException(ex);
 		}
 	}
 }
