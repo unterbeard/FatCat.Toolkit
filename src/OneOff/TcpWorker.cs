@@ -30,7 +30,7 @@ public class TcpWorker : SpikeWorker
 
 		if (Program.Args.Any())
 		{
-			fatTcpClient = new SecureFatTcpClient(cert);
+			fatTcpClient = new SecureFatTcpClient(cert, new ConsoleFatTcpLogger());
 
 			fatTcpClient.Reconnect = true;
 

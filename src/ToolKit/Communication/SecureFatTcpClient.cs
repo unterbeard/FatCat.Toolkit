@@ -8,7 +8,8 @@ public class SecureFatTcpClient : FatTcpClient, IFatTcpClient
 {
 	private readonly X509Certificate certificate;
 
-	public SecureFatTcpClient(X509Certificate certificate)
+	public SecureFatTcpClient(X509Certificate certificate, IFatTcpLogger logger)
+		: base(logger)
 	{
 		this.certificate = certificate;
 	}
