@@ -11,8 +11,12 @@ public static class Program
 {
 	private const int WebPort = 14555;
 
+	public static string[] Args { get; set; }
+
 	public static async Task Main(params string[] args)
 	{
+		Args = args;
+
 		ConsoleLog.LogCallerInformation = true;
 
 		try
@@ -28,16 +32,22 @@ public static class Program
 				ScopeOptions.SetLifetimeScope
 			);
 
-			if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase))
-			{
-				ConnectClient(args);
-			}
-			else
-			{
-				RunServer(args);
-			}
+			// if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase))
+			// {
+			// 	ConnectClient(args);
+			// }
+			// else
+			// {
+			// 	RunServer(args);
+			// }
 
-			await Task.Delay(500.Milliseconds());
+			var worker = SystemScope.Container.Resolve<TcpWorker>();
+
+			await worker.DoWork();
+
+			var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
+
+			consoleUtilities.WaitForExit();
 		}
 		catch (Exception ex)
 		{
