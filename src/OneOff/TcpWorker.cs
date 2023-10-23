@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Communication;
@@ -36,20 +35,7 @@ public class TcpWorker : SpikeWorker
 
 			var host = Program.Args.FirstOrDefault();
 
-			var hostEntry = await Dns.GetHostEntryAsync(host);
-
-			var ip = hostEntry.AddressList.FirstOrDefault();
-
-			var ipString = ip.ToString();
-
-			ConsoleLog.WriteBlue($"{ipString}");
-
-			if (ip.ToString() == "::1")
-			{
-				ipString = "127.0.0.1";
-			}
-
-			await fatTcpClient.Connect(ipString, TcpPort);
+			await fatTcpClient.Connect(host, TcpPort);
 
 			for (var i = 0; i < 8500000; i++)
 			{
@@ -62,10 +48,7 @@ public class TcpWorker : SpikeWorker
 				await Task.Delay(1.Milliseconds());
 			}
 		}
-		else
-		{
-			StartServer(cert);
-		}
+		else { StartServer(cert); }
 	}
 
 	private void StartServer(X509Certificate2 cert)

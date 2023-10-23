@@ -1,4 +1,3 @@
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using FatCat.Toolkit.Console;
@@ -14,9 +13,7 @@ public abstract class FatTcpClient
 	private CancellationTokenSource cancelSource;
 	private CancellationToken cancelToken;
 	private string host;
-	private IPEndPoint ipEndpoint;
 	private ushort port;
-	private IPAddress serverIp;
 	private Stream stream;
 	protected TcpClient tcpClient;
 
@@ -26,12 +23,12 @@ public abstract class FatTcpClient
 
 	public TimeSpan ReconnectDelay { get; set; } = 2.Seconds();
 
-	public event TcpMessageReceived TcpMessageReceivedEvent;
-
 	protected FatTcpClient(IFatTcpLogger logger)
 	{
 		this.logger = logger;
 	}
+
+	public event TcpMessageReceived TcpMessageReceivedEvent;
 
 	public async Task Connect(
 		string host,
@@ -44,9 +41,6 @@ public abstract class FatTcpClient
 		this.port = port;
 		this.bufferSize = bufferSize;
 		cancelToken = cancellationToken;
-
-		serverIp = IPAddress.Parse(host);
-		ipEndpoint = new IPEndPoint(serverIp, this.port);
 
 		await MakeConnection();
 	}
