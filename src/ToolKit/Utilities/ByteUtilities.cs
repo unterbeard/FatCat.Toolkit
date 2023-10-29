@@ -10,7 +10,7 @@ public interface IByteUtilities
 public class ByteUtilities : IByteUtilities
 {
 	public const int BytesInMegaBytes = 1048576;
-	
+
 	public string ToReadableString(byte[] bytes)
 	{
 		return bytes.ToReadableString();

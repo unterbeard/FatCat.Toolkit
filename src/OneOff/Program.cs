@@ -2,7 +2,6 @@
 using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
-using Humanizer;
 using OneOffLib;
 
 namespace OneOff;

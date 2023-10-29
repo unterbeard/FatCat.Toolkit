@@ -2,7 +2,6 @@ using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using FatCat.Toolkit.Console;
 
 namespace FatCat.Toolkit.Communication;
 

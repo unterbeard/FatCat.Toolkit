@@ -5,23 +5,7 @@ namespace FatCat.Toolkit.Communication;
 
 public interface IFatTcpLogger
 {
-	void WriteException(Exception ex);
-
-	void WriteInformation(
-		string message,
-		[CallerMemberName] string memberName = "",
-		[CallerFilePath] string sourceFilePath = "",
-		[CallerLineNumber] int sourceLineNumber = 0
-	);
-
 	void WriteDebug(
-		string message,
-		[CallerMemberName] string memberName = "",
-		[CallerFilePath] string sourceFilePath = "",
-		[CallerLineNumber] int sourceLineNumber = 0
-	);
-
-	void WriteWarning(
 		string message,
 		[CallerMemberName] string memberName = "",
 		[CallerFilePath] string sourceFilePath = "",
@@ -34,10 +18,46 @@ public interface IFatTcpLogger
 		[CallerFilePath] string sourceFilePath = "",
 		[CallerLineNumber] int sourceLineNumber = 0
 	);
+
+	void WriteException(Exception ex);
+
+	void WriteInformation(
+		string message,
+		[CallerMemberName] string memberName = "",
+		[CallerFilePath] string sourceFilePath = "",
+		[CallerLineNumber] int sourceLineNumber = 0
+	);
+
+	void WriteWarning(
+		string message,
+		[CallerMemberName] string memberName = "",
+		[CallerFilePath] string sourceFilePath = "",
+		[CallerLineNumber] int sourceLineNumber = 0
+	);
 }
 
 public class ConsoleFatTcpLogger : IFatTcpLogger
 {
+	public void WriteDebug(
+		string message,
+		[CallerMemberName] string memberName = "",
+		[CallerFilePath] string sourceFilePath = "",
+		[CallerLineNumber] int sourceLineNumber = 0
+	)
+	{
+		ConsoleLog.Write(message, memberName, sourceFilePath, sourceLineNumber);
+	}
+
+	public void WriteError(
+		string message,
+		[CallerMemberName] string memberName = "",
+		[CallerFilePath] string sourceFilePath = "",
+		[CallerLineNumber] int sourceLineNumber = 0
+	)
+	{
+		ConsoleLog.WriteRed(message, memberName, sourceFilePath, sourceLineNumber);
+	}
+
 	public void WriteException(Exception ex)
 	{
 		ConsoleLog.WriteException(ex);
@@ -53,16 +73,6 @@ public class ConsoleFatTcpLogger : IFatTcpLogger
 		ConsoleLog.WriteMagenta(message, memberName, sourceFilePath, sourceLineNumber);
 	}
 
-	public void WriteDebug(
-		string message,
-		[CallerMemberName] string memberName = "",
-		[CallerFilePath] string sourceFilePath = "",
-		[CallerLineNumber] int sourceLineNumber = 0
-	)
-	{
-		ConsoleLog.Write(message, memberName, sourceFilePath, sourceLineNumber);
-	}
-
 	public void WriteWarning(
 		string message,
 		[CallerMemberName] string memberName = "",
@@ -71,15 +81,5 @@ public class ConsoleFatTcpLogger : IFatTcpLogger
 	)
 	{
 		ConsoleLog.WriteYellow(message, memberName, sourceFilePath, sourceLineNumber);
-	}
-
-	public void WriteError(
-		string message,
-		[CallerMemberName] string memberName = "",
-		[CallerFilePath] string sourceFilePath = "",
-		[CallerLineNumber] int sourceLineNumber = 0
-	)
-	{
-		ConsoleLog.WriteRed(message, memberName, sourceFilePath, sourceLineNumber);
 	}
 }

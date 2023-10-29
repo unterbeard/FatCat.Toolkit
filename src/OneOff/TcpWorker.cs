@@ -48,7 +48,10 @@ public class TcpWorker : SpikeWorker
 				await Task.Delay(1.Milliseconds());
 			}
 		}
-		else { StartServer(cert); }
+		else
+		{
+			StartServer(cert);
+		}
 	}
 
 	private void StartServer(X509Certificate2 cert)

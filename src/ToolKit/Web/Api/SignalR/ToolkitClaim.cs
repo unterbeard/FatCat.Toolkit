@@ -6,7 +6,7 @@ public class ToolkitClaim : EqualObject
 {
 	public static ToolkitClaim Create(Claim claim)
 	{
-		return new ToolkitClaim()
+		return new ToolkitClaim
 		{
 			Issuer = claim.Issuer,
 			Type = claim.Type,
