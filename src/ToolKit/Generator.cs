@@ -6,7 +6,9 @@ namespace FatCat.Toolkit;
 
 public interface IGenerator
 {
-	byte[] Bytes(int length);
+	IEnumerable<byte> Bytes(long length);
+
+	IEnumerable<byte> BytesFast(long length);
 
 	bool IsValidObjectId(string idToTest);
 
@@ -25,50 +27,36 @@ public interface IGenerator
 
 public class Generator : IGenerator
 {
-	public byte[] Bytes(int length)
+	public IEnumerable<byte> Bytes(long length)
 	{
-		var bytes = new byte[length];
+		var bytes = new List<byte>();
 
 		for (var i = 0; i < length; i++)
 		{
-			bytes[i] = (byte)Faker.RandomInt(0, 255);
+			bytes.Add((byte)Faker.RandomInt(0, 255));
 		}
 
 		return bytes;
 	}
 
-	public bool IsValidObjectId(string idToTest)
+	public IEnumerable<byte> BytesFast(long length)
 	{
-		return ObjectId.TryParse(idToTest, out _);
+		
+		
+		return Bytes(length);
 	}
 
-	public Guid NewGuid()
-	{
-		return Guid.NewGuid();
-	}
+	public bool IsValidObjectId(string idToTest) => ObjectId.TryParse(idToTest, out _);
 
-	public string NewId()
-	{
-		return NewObjectId().ToString();
-	}
+	public Guid NewGuid() => Guid.NewGuid();
 
-	public ObjectId NewObjectId()
-	{
-		return ObjectId.GenerateNewId();
-	}
+	public string NewId() => NewObjectId().ToString();
 
-	public int NextRandom(int? minNumber = null, int? maxNumber = null)
-	{
-		return Faker.RandomInt(minNumber, maxNumber);
-	}
+	public ObjectId NewObjectId() => ObjectId.GenerateNewId();
 
-	public int RandomNumber(int? minNumber = null, int? maxNumber = null)
-	{
-		return Faker.RandomInt(minNumber, maxNumber);
-	}
+	public int NextRandom(int? minNumber = null, int? maxNumber = null) => Faker.RandomInt(minNumber, maxNumber);
 
-	public string RandomString(string? prefix = null, int? length = null)
-	{
-		return Faker.RandomString(prefix, length);
-	}
+	public int RandomNumber(int? minNumber = null, int? maxNumber = null) => Faker.RandomInt(minNumber, maxNumber);
+
+	public string RandomString(string? prefix = null, int? length = null) => Faker.RandomString(prefix, length);
 }
