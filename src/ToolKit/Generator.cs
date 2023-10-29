@@ -6,9 +6,9 @@ namespace FatCat.Toolkit;
 
 public interface IGenerator
 {
-	IEnumerable<byte> Bytes(long length);
+	IEnumerable<byte> Bytes(int length);
 
-	IEnumerable<byte> BytesFast(long length);
+	IEnumerable<byte> BytesFast(int length);
 
 	bool IsValidObjectId(string idToTest);
 
@@ -27,7 +27,7 @@ public interface IGenerator
 
 public class Generator : IGenerator
 {
-	public IEnumerable<byte> Bytes(long length)
+	public IEnumerable<byte> Bytes(int length)
 	{
 		var bytes = new List<byte>();
 
@@ -39,12 +39,7 @@ public class Generator : IGenerator
 		return bytes;
 	}
 
-	public IEnumerable<byte> BytesFast(long length)
-	{
-		
-		
-		return Bytes(length);
-	}
+	public IEnumerable<byte> BytesFast(int length) => Bytes(length);
 
 	public bool IsValidObjectId(string idToTest) => ObjectId.TryParse(idToTest, out _);
 

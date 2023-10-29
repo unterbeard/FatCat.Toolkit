@@ -22,17 +22,17 @@ public class GeneratorTests
 	[Fact]
 	public void CanGenerateALargeByteArrayQuickly()
 	{
-		var testSizeInMb = 113.34;
+		var testSizeInMb = 113;
 
 		var sizeInBytes = testSizeInMb * ByteUtilities.BytesInMegaBytes;
 
 		var timer = Stopwatch.StartNew();
 
-		var bytes = generator.BytesFast((long)sizeInBytes);
+		var bytes = generator.BytesFast(sizeInBytes);
 
 		timer.Stop();
 
-		bytes.LongCount().Should().Be((long)sizeInBytes);
+		bytes.LongCount().Should().Be(sizeInBytes);
 
 		timer.Elapsed.Should().BeLessOrEqualTo(200.Milliseconds());
 	}
