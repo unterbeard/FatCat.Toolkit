@@ -28,7 +28,7 @@ public class GeneratorTests
 
 		var timer = Stopwatch.StartNew();
 
-		var bytes = generator.BytesFast(sizeInBytes);
+		var bytes = generator.Bytes(sizeInBytes);
 
 		timer.Stop();
 

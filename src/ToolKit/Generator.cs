@@ -8,8 +8,6 @@ public interface IGenerator
 {
 	IEnumerable<byte> Bytes(int length);
 
-	IEnumerable<byte> BytesFast(int length);
-
 	bool IsValidObjectId(string idToTest);
 
 	Guid NewGuid();
@@ -29,19 +27,7 @@ public class Generator : IGenerator
 {
 	public IEnumerable<byte> Bytes(int length)
 	{
-		var bytes = new List<byte>();
-
-		for (var i = 0; i < length; i++)
-		{
-			bytes.Add((byte)Faker.RandomInt(0, 255));
-		}
-
-		return bytes;
-	}
-
-	public IEnumerable<byte> BytesFast(int length)
-	{
-		return Bytes(length);
+		return Faker.RandomBytes(length);
 	}
 
 	public bool IsValidObjectId(string idToTest)
