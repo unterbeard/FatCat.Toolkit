@@ -83,7 +83,10 @@ public class WebCaller : IWebCaller
 		BaseUri = uri;
 	}
 
-	public async Task<WebResult> Delete(string url) => await Delete(url, DefaultTimeout);
+	public async Task<WebResult> Delete(string url)
+	{
+		return await Delete(url, DefaultTimeout);
+	}
 
 	public async Task<WebResult> Delete(string url, TimeSpan timeout)
 	{
@@ -118,7 +121,10 @@ public class WebCaller : IWebCaller
 		}
 	}
 
-	public Task<WebResult> Get(string url) => Get(url, DefaultTimeout);
+	public Task<WebResult> Get(string url)
+	{
+		return Get(url, DefaultTimeout);
+	}
 
 	public async Task<WebResult> Get(string url, TimeSpan timeout)
 	{
@@ -158,14 +164,26 @@ public class WebCaller : IWebCaller
 	}
 
 	public Task<WebResult> Post<T>(string url, T data)
-		where T : EqualObject => Post(url, data, DefaultTimeout);
+		where T : EqualObject
+	{
+		return Post(url, data, DefaultTimeout);
+	}
 
 	public Task<WebResult> Post<T>(string url, List<T> data)
-		where T : EqualObject => Post(url, data, DefaultTimeout);
+		where T : EqualObject
+	{
+		return Post(url, data, DefaultTimeout);
+	}
 
-	public Task<WebResult> Post(string url) => Post(url, DefaultTimeout);
+	public Task<WebResult> Post(string url)
+	{
+		return Post(url, DefaultTimeout);
+	}
 
-	public Task<WebResult> Post(string url, string data) => Post(url, data, DefaultTimeout);
+	public Task<WebResult> Post(string url, string data)
+	{
+		return Post(url, data, DefaultTimeout);
+	}
 
 	public async Task<WebResult> Post<T>(string url, T data, TimeSpan timeout)
 		where T : EqualObject
