@@ -36,9 +36,11 @@ public class PostTests : WebCallerTests
 
 		result.IsSuccessful.Should().BeTrue();
 
-		var jsonResponse = result.To<HttpBinDataJsonResponse<TestData>>();
+		var jsonResponse = result.To<HttpBinDataJsonResponse<string>>();
 
-		jsonResponse.Json.Should().BeEquivalentTo(data);
+		var responseData = JsonConvert.DeserializeObject<TestData>(jsonResponse.Json);
+
+		responseData.Should().BeEquivalentTo(data);
 	}
 
 	[Fact]
