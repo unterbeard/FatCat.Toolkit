@@ -50,11 +50,9 @@ public class PostTests : WebCallerTests
 
 		result.IsSuccessful.Should().BeTrue();
 
-		var jsonResponse = result.To<HttpBinDataJsonResponse<string>>();
+		var jsonResponse = result.To<HttpBinDataJsonResponse<TestData>>();
 
-		var responseData = JsonConvert.DeserializeObject<TestData>(jsonResponse.Json);
-
-		responseData.Should().BeEquivalentTo(data);
+		jsonResponse.Json.Should().BeEquivalentTo(data);
 	}
 
 	[Fact]
@@ -68,7 +66,7 @@ public class PostTests : WebCallerTests
 
 		response = result.To<HttpBinResponse>();
 
-		response.RawData.Should().Be($"\"{data}\"");
+		response.RawData.Should().Be($"{data}");
 	}
 
 	protected override Task<WebResult> MakeCallToWeb(string path)

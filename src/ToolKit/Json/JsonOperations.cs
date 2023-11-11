@@ -1,4 +1,3 @@
-#nullable enable
 using FatCat.Toolkit.Data.Mongo;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -7,9 +6,9 @@ namespace FatCat.Toolkit.Json;
 
 public interface IJsonOperations
 {
-	T? Deserialize<T>(string json);
+	T Deserialize<T>(string json);
 
-	string Serialize(EqualObject dataObject);
+	string Serialize(object dataObject);
 }
 
 public class JsonOperations : IJsonOperations
@@ -22,12 +21,12 @@ public class JsonOperations : IJsonOperations
 			Converters = new List<JsonConverter> { new StringEnumConverter(), new ObjectIdConverter() }
 		};
 
-	public T? Deserialize<T>(string json)
+	public T Deserialize<T>(string json)
 	{
 		return JsonConvert.DeserializeObject<T>(json, JsonSettings);
 	}
 
-	public string Serialize(EqualObject dataObject)
+	public string Serialize(object dataObject)
 	{
 		return JsonConvert.SerializeObject(dataObject, JsonSettings);
 	}

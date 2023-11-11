@@ -1,4 +1,5 @@
 ﻿using FakeItEasy;
+using FatCat.Toolkit.Json;
 using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Web;
 using FluentAssertions;
@@ -10,7 +11,7 @@ public abstract class WebCallerTests
 {
 	private const string BearerToken = "12345890";
 
-	protected readonly WebCaller webCaller = new(new Uri("https://httpbin.org"), A.Fake<IToolkitLogger>());
+	protected readonly WebCaller webCaller = new(new Uri("https://httpbin.org"), new JsonOperations(), A.Fake<IToolkitLogger>());
 
 	protected HttpBinResponse response;
 

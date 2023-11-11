@@ -1,15 +1,8 @@
-using System.Net;
-using System.Web;
-using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Data.Mongo;
+using System.Net.Http.Headers;
+using System.Text;
+using FatCat.Toolkit.Json;
 using FatCat.Toolkit.Logging;
-using Flurl;
-using Flurl.Http;
-using Flurl.Http.Configuration;
 using Humanizer;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using NullValueHandling = Newtonsoft.Json.NullValueHandling;
 
 namespace FatCat.Toolkit.Web;
 
@@ -25,21 +18,17 @@ public interface IWebCaller
 
 	Task<WebResult> Get(string url, TimeSpan timeout);
 
-	Task<WebResult> Post<T>(string url, T data)
-		where T : EqualObject;
+	Task<WebResult> Post<T>(string url, T data);
 
-	Task<WebResult> Post<T>(string url, List<T> data)
-		where T : EqualObject;
+	Task<WebResult> Post<T>(string url, List<T> data);
 
 	Task<WebResult> Post(string url);
 
 	Task<WebResult> Post(string url, string data);
 
-	Task<WebResult> Post<T>(string url, T data, TimeSpan timeout)
-		where T : EqualObject;
+	Task<WebResult> Post<T>(string url, T data, TimeSpan timeout);
 
-	Task<WebResult> Post<T>(string url, List<T> data, TimeSpan timeout)
-		where T : EqualObject;
+	Task<WebResult> Post<T>(string url, List<T> data, TimeSpan timeout);
 
 	Task<WebResult> Post(string url, TimeSpan timeout);
 
@@ -52,261 +41,137 @@ public class WebCaller : IWebCaller
 {
 	public static TimeSpan DefaultTimeout { get; set; } = 30.Seconds();
 
+	private readonly IJsonOperations jsonOperations;
 	private readonly IToolkitLogger logger;
 
 	private string bearerToken;
 
 	public Uri BaseUri { get; }
 
-	static WebCaller()
+	public WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger logger)
 	{
-		FlurlHttp.Configure(settings =>
-							{
-								var jsonSettings = new JsonSerializerSettings
-												{
-													NullValueHandling = NullValueHandling.Ignore,
-													Converters = new List<Newtonsoft.Json.JsonConverter>
-																	{
-																		new StringEnumConverter(),
-																		new ObjectIdConverter()
-																	}
-												};
-
-								settings.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings);
-								settings.Timeout = DefaultTimeout;
-							});
-	}
-
-	public WebCaller(Uri uri, IToolkitLogger logger)
-	{
+		this.jsonOperations = jsonOperations;
 		this.logger = logger;
 		BaseUri = uri;
 	}
 
-	public async Task<WebResult> Delete(string url) { return await Delete(url, DefaultTimeout); }
+	public async Task<WebResult> Delete(string url)
+	{
+		return await Delete(url, DefaultTimeout);
+	}
 
 	public async Task<WebResult> Delete(string url, TimeSpan timeout)
 	{
-		try
-		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
+		var httpClient = HttpClientFactory.GetWithTimeout(timeout);
 
-			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
+		EnsureBearerToken(httpClient);
 
-			var response = await request.DeleteAsync();
+		var response = await httpClient.DeleteAsync(GetFullUrl(url));
 
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			return ex.StatusCode == null
-						? WebResult.NotFound()
-						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
-		}
+		return new WebResult(response);
 	}
 
-	public Task<WebResult> Get(string url) { return Get(url, DefaultTimeout); }
+	public Task<WebResult> Get(string url)
+	{
+		return Get(url, DefaultTimeout);
+	}
 
 	public async Task<WebResult> Get(string url, TimeSpan timeout)
 	{
-		try
-		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
+		var httpClient = HttpClientFactory.GetWithTimeout(timeout);
 
-			logger.Debug($"Getting from Url <{request.Url}>");
+		EnsureBearerToken(httpClient);
 
-			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
+		var response = await httpClient.GetAsync(GetFullUrl(url));
 
-			var response = await request.GetAsync();
-
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			ConsoleLog.WriteRed($"Furl HttpException: {ex.Message}");
-
-			return ex.StatusCode == null
-						? WebResult.NotFound()
-						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
-		}
+		return new WebResult(response);
 	}
 
 	public Task<WebResult> Post<T>(string url, T data)
-		where T : EqualObject
 	{
 		return Post(url, data, DefaultTimeout);
 	}
 
 	public Task<WebResult> Post<T>(string url, List<T> data)
-		where T : EqualObject
 	{
 		return Post(url, data, DefaultTimeout);
 	}
 
-	public Task<WebResult> Post(string url) { return Post(url, DefaultTimeout); }
+	public Task<WebResult> Post(string url)
+	{
+		return Post(url, DefaultTimeout);
+	}
 
-	public Task<WebResult> Post(string url, string data) { return Post(url, data, DefaultTimeout); }
+	public Task<WebResult> Post(string url, string data)
+	{
+		return Post(url, data, DefaultTimeout);
+	}
 
 	public async Task<WebResult> Post<T>(string url, T data, TimeSpan timeout)
-		where T : EqualObject
 	{
-		try
-		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
+		var json = jsonOperations.Serialize(data);
 
-			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
-
-			var response = await request.PostJsonAsync(data);
-
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			return ex.StatusCode == null
-						? WebResult.NotFound()
-						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
-		}
+		return await DoPostWithJson(url, timeout, json);
 	}
 
 	public async Task<WebResult> Post<T>(string url, List<T> data, TimeSpan timeout)
-		where T : EqualObject
 	{
-		try
-		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
+		var json = jsonOperations.Serialize(data);
 
-			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
-
-			var response = await request.PostJsonAsync(data);
-
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			return ex.StatusCode == null
-						? WebResult.NotFound()
-						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
-		}
+		return await DoPostWithJson(url, timeout, json);
 	}
 
 	public async Task<WebResult> Post(string url, TimeSpan timeout)
 	{
-		try
-		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
+		var httpClient = HttpClientFactory.GetWithTimeout(timeout);
 
-			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
+		EnsureBearerToken(httpClient);
 
-			var response = await request.PostAsync();
+		var response = await httpClient.PostAsync(GetFullUrl(url), null);
 
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			return ex.StatusCode == null
-						? WebResult.NotFound()
-						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
-		}
+		return new WebResult(response);
 	}
 
 	public async Task<WebResult> Post(string url, string data, TimeSpan timeout)
 	{
-		try
+		var httpClient = HttpClientFactory.GetWithTimeout(timeout);
+
+		EnsureBearerToken(httpClient);
+
+		var response = await httpClient.PostAsync(GetFullUrl(url), new StringContent(data, Encoding.UTF8));
+
+		return new WebResult(response);
+	}
+
+	public void UserBearerToken(string token)
+	{
+		bearerToken = token;
+	}
+
+	private async Task<WebResult> DoPostWithJson(string url, TimeSpan timeout, string json)
+	{
+		var httpClient = HttpClientFactory.GetWithTimeout(timeout);
+
+		EnsureBearerToken(httpClient);
+
+		var response = await httpClient.PostAsync(
+			GetFullUrl(url),
+			new StringContent(json, Encoding.UTF8, "application/json")
+		);
+
+		return new WebResult(response);
+	}
+
+	private void EnsureBearerToken(HttpClient httpClient)
+	{
+		if (bearerToken is not null)
 		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
-
-			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
-
-			var response = await request.PostJsonAsync(data);
-
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
-		catch (FlurlHttpException ex)
-		{
-			return ex.StatusCode == null
-						? WebResult.NotFound()
-						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
+			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
 		}
 	}
 
-	public void UserBearerToken(string token) { bearerToken = token; }
-
-	private Url CreateRequest(string pathSegment)
+	private Uri GetFullUrl(string url)
 	{
-		var startingBase = BaseUri.ToString();
-
-		if (startingBase.EndsWith("/")) { startingBase = startingBase.Remove(startingBase.Length - 1); }
-
-		var url = pathSegment.StartsWith("/") ? $"{startingBase}{pathSegment}" : $"{startingBase}/{pathSegment}";
-
-		var requestUri = new Uri(url);
-
-		var queryString = requestUri.Query;
-
-		var queries = HttpUtility.ParseQueryString(queryString);
-
-		var callingUrl = requestUri.RemoveQuery();
-
-		if (queries.AllKeys.Length is not 0)
-		{
-			foreach (var key in queries.AllKeys)
-			{
-				var queryValue = queries[key];
-
-				if (queryValue.Contains(","))
-				{
-					var values = queryValue.Split(',');
-
-					foreach (var value in values) { callingUrl.QueryParams.Add(key, value); }
-				}
-				else { callingUrl.SetQueryParam(key, queryValue); }
-			}
-		}
-
-		logger.Debug($"Create Request for <{callingUrl}>");
-
-		return callingUrl;
+		return new Uri(BaseUri, url);
 	}
 }
