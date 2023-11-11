@@ -26,6 +26,20 @@ public class PostTests : WebCallerTests
 	}
 
 	[Fact]
+	public async Task PostWithDataObject()
+	{
+		var data = Faker.Create<TestData>();
+
+		var result = await webCaller.Post(BasicPath, data);
+
+		result.IsSuccessful.Should().BeTrue();
+
+		var jsonResponse = result.To<HttpBinDataJsonResponse<TestData>>();
+
+		jsonResponse.Json.Should().BeEquivalentTo(data);
+	}
+
+	[Fact]
 	public async Task PostWithJsonData()
 	{
 		var data = Faker.Create<TestData>();
@@ -57,7 +71,10 @@ public class PostTests : WebCallerTests
 		response.RawData.Should().Be($"\"{data}\"");
 	}
 
-	protected override Task<WebResult> MakeCallToWeb(string path) { return webCaller.Post(path); }
+	protected override Task<WebResult> MakeCallToWeb(string path)
+	{
+		return webCaller.Post(path);
+	}
 
 	public class TestData : EqualObject
 	{
@@ -67,6 +84,9 @@ public class PostTests : WebCallerTests
 
 		public int Number { get; set; }
 
-		public string ToJson() { return JsonConvert.SerializeObject(this); }
+		public string ToJson()
+		{
+			return JsonConvert.SerializeObject(this);
+		}
 	}
 }
