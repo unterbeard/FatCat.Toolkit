@@ -61,20 +61,20 @@ public class WebCaller : IWebCaller
 	static WebCaller()
 	{
 		FlurlHttp.Configure(settings =>
-		{
-			var jsonSettings = new JsonSerializerSettings
-			{
-				NullValueHandling = NullValueHandling.Ignore,
-				Converters = new List<Newtonsoft.Json.JsonConverter>
-				{
-					new StringEnumConverter(),
-					new ObjectIdConverter()
-				}
-			};
+							{
+								var jsonSettings = new JsonSerializerSettings
+												{
+													NullValueHandling = NullValueHandling.Ignore,
+													Converters = new List<Newtonsoft.Json.JsonConverter>
+																	{
+																		new StringEnumConverter(),
+																		new ObjectIdConverter()
+																	}
+												};
 
-			settings.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings);
-			settings.Timeout = DefaultTimeout;
-		});
+								settings.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings);
+								settings.Timeout = DefaultTimeout;
+							});
 	}
 
 	public WebCaller(Uri uri, IToolkitLogger logger)
@@ -83,10 +83,7 @@ public class WebCaller : IWebCaller
 		BaseUri = uri;
 	}
 
-	public async Task<WebResult> Delete(string url)
-	{
-		return await Delete(url, DefaultTimeout);
-	}
+	public async Task<WebResult> Delete(string url) { return await Delete(url, DefaultTimeout); }
 
 	public async Task<WebResult> Delete(string url, TimeSpan timeout)
 	{
@@ -94,24 +91,18 @@ public class WebCaller : IWebCaller
 		{
 			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
 
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
+			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
 
 			var response = await request.DeleteAsync();
 
 			return new WebResult(response.ResponseMessage);
 		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
 		catch (FlurlHttpException ex)
 		{
 			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+						? WebResult.NotFound()
+						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
 		}
 		catch (Exception ex)
 		{
@@ -121,10 +112,7 @@ public class WebCaller : IWebCaller
 		}
 	}
 
-	public Task<WebResult> Get(string url)
-	{
-		return Get(url, DefaultTimeout);
-	}
+	public Task<WebResult> Get(string url) { return Get(url, DefaultTimeout); }
 
 	public async Task<WebResult> Get(string url, TimeSpan timeout)
 	{
@@ -134,26 +122,20 @@ public class WebCaller : IWebCaller
 
 			logger.Debug($"Getting from Url <{request.Url}>");
 
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
+			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
 
 			var response = await request.GetAsync();
 
 			return new WebResult(response.ResponseMessage);
 		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
 		catch (FlurlHttpException ex)
 		{
 			ConsoleLog.WriteRed($"Furl HttpException: {ex.Message}");
 
 			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+						? WebResult.NotFound()
+						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
 		}
 		catch (Exception ex)
 		{
@@ -175,15 +157,9 @@ public class WebCaller : IWebCaller
 		return Post(url, data, DefaultTimeout);
 	}
 
-	public Task<WebResult> Post(string url)
-	{
-		return Post(url, DefaultTimeout);
-	}
+	public Task<WebResult> Post(string url) { return Post(url, DefaultTimeout); }
 
-	public Task<WebResult> Post(string url, string data)
-	{
-		return Post(url, data, DefaultTimeout);
-	}
+	public Task<WebResult> Post(string url, string data) { return Post(url, data, DefaultTimeout); }
 
 	public async Task<WebResult> Post<T>(string url, T data, TimeSpan timeout)
 		where T : EqualObject
@@ -192,24 +168,18 @@ public class WebCaller : IWebCaller
 		{
 			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
 
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
+			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
 
 			var response = await request.PostJsonAsync(data);
 
 			return new WebResult(response.ResponseMessage);
 		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
 		catch (FlurlHttpException ex)
 		{
 			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+						? WebResult.NotFound()
+						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
 		}
 		catch (Exception ex)
 		{
@@ -226,24 +196,18 @@ public class WebCaller : IWebCaller
 		{
 			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
 
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
+			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
 
 			var response = await request.PostJsonAsync(data);
 
 			return new WebResult(response.ResponseMessage);
 		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
 		catch (FlurlHttpException ex)
 		{
 			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+						? WebResult.NotFound()
+						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
 		}
 		catch (Exception ex)
 		{
@@ -259,24 +223,18 @@ public class WebCaller : IWebCaller
 		{
 			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
 
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
+			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
 
 			var response = await request.PostAsync();
 
 			return new WebResult(response.ResponseMessage);
 		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
 		catch (FlurlHttpException ex)
 		{
 			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+						? WebResult.NotFound()
+						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
 		}
 		catch (Exception ex)
 		{
@@ -292,24 +250,18 @@ public class WebCaller : IWebCaller
 		{
 			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
 
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
+			if (bearerToken is not null) { request.WithOAuthBearerToken(bearerToken); }
 
 			var response = await request.PostJsonAsync(data);
 
 			return new WebResult(response.ResponseMessage);
 		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
+		catch (FlurlHttpTimeoutException) { return WebResult.Timeout(); }
 		catch (FlurlHttpException ex)
 		{
 			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
+						? WebResult.NotFound()
+						: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
 		}
 		catch (Exception ex)
 		{
@@ -319,19 +271,13 @@ public class WebCaller : IWebCaller
 		}
 	}
 
-	public void UserBearerToken(string token)
-	{
-		bearerToken = token;
-	}
+	public void UserBearerToken(string token) { bearerToken = token; }
 
 	private Url CreateRequest(string pathSegment)
 	{
 		var startingBase = BaseUri.ToString();
 
-		if (startingBase.EndsWith("/"))
-		{
-			startingBase = startingBase.Remove(startingBase.Length - 1);
-		}
+		if (startingBase.EndsWith("/")) { startingBase = startingBase.Remove(startingBase.Length - 1); }
 
 		var url = pathSegment.StartsWith("/") ? $"{startingBase}{pathSegment}" : $"{startingBase}/{pathSegment}";
 
@@ -353,15 +299,9 @@ public class WebCaller : IWebCaller
 				{
 					var values = queryValue.Split(',');
 
-					foreach (var value in values)
-					{
-						callingUrl.QueryParams.Add(key, value);
-					}
+					foreach (var value in values) { callingUrl.QueryParams.Add(key, value); }
 				}
-				else
-				{
-					callingUrl.SetQueryParam(key, queryValue);
-				}
+				else { callingUrl.SetQueryParam(key, queryValue); }
 			}
 		}
 

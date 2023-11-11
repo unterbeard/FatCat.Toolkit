@@ -1,30 +1,13 @@
-﻿using FakeItEasy;
-using FatCat.Toolkit.Logging;
-using FatCat.Toolkit.Web;
-using FluentAssertions;
-using Xunit;
+﻿using FatCat.Toolkit.Web;
 
 namespace Tests.FatCat.Toolkit.Web.Api.WebCallerSpecs;
 
-public class GetTests
+public class GetTests : WebCallerTests
 {
-	private readonly WebCaller webCaller = new(new Uri("https://httpbin.org"), A.Fake<IToolkitLogger>());
+	protected override string BasicPath => "/get";
 
-	[Fact]
-	public async Task CanMakeBasicGet()
+	protected override async Task<WebResult> MakeCallToWeb(string path)
 	{
-		var result = await webCaller.Get("/get");
-
-		result.IsSuccessful
-			.Should()
-			.BeTrue();
-	}
-	
-	[Fact]
-	public void CanMakeAGetWithQueryParameters()
-	{
-		true
-			.Should()
-			.BeFalse();
+		return await webCaller.Get(path);
 	}
 }
