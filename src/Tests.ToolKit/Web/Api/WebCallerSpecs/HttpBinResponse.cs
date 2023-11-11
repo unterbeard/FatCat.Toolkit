@@ -8,9 +8,6 @@ public class HttpBinResponse : EqualObject
 {
 	public string BearerToken => Headers.TryGetValue("Authorization", out var value) ? value : null;
 
-	[JsonProperty("data")]
-	public Dictionary<string, object> Data { get; set; }
-
 	[JsonProperty("headers")]
 	public Dictionary<string, string> Headers { get; set; }
 
@@ -19,6 +16,9 @@ public class HttpBinResponse : EqualObject
 
 	[JsonProperty("args")]
 	public Dictionary<string, object> QueryParameters { get; set; }
+
+	[JsonProperty("data")]
+	public string RawData { get; set; }
 
 	[JsonProperty("url")]
 	public string Url { get; set; }
