@@ -164,7 +164,7 @@ public class WebCaller : IWebCaller
 		string contentType = null
 	)
 	{
-		var httpClient = HttpClientFactory.GetWithTimeout(timeout);
+		var httpClient = HttpClientFactory.Get();
 
 		EnsureBearerToken(httpClient);
 
@@ -175,8 +175,17 @@ public class WebCaller : IWebCaller
 			requestMessage.Content = new StringContent(data, Encoding.UTF8, contentType);
 		}
 
-		var response = await httpClient.SendAsync(requestMessage);
+		using var tokenSource = new CancellationTokenSource(timeout);
 
-		return new WebResult(response);
+		try
+		{
+			var response = await httpClient.SendAsync(requestMessage, tokenSource.Token);
+
+			return new WebResult(response);
+		}
+		catch (TaskCanceledException)
+		{
+			return WebResult.Timeout();
+		}
 	}
 }
