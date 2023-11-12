@@ -1,21 +1,19 @@
-using System.Net;
-using System.Web;
-using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Data.Mongo;
+using System.Net.Http.Headers;
+using System.Text;
+using FatCat.Toolkit.Extensions;
+using FatCat.Toolkit.Json;
 using FatCat.Toolkit.Logging;
-using Flurl;
-using Flurl.Http;
-using Flurl.Http.Configuration;
 using Humanizer;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using NullValueHandling = Newtonsoft.Json.NullValueHandling;
 
 namespace FatCat.Toolkit.Web;
 
 public interface IWebCaller
 {
+	string AcceptHeader { get; set; }
+
 	Uri BaseUri { get; }
+
+	TimeSpan Timeout { get; set; }
 
 	Task<WebResult> Delete(string url);
 
@@ -25,298 +23,119 @@ public interface IWebCaller
 
 	Task<WebResult> Get(string url, TimeSpan timeout);
 
-	Task<WebResult> Post<T>(string url, T data)
-		where T : EqualObject;
+	Task<WebResult> Post<T>(string url, T data);
 
-	Task<WebResult> Post<T>(string url, List<T> data)
-		where T : EqualObject;
+	Task<WebResult> Post<T>(string url, List<T> data);
 
 	Task<WebResult> Post(string url);
 
 	Task<WebResult> Post(string url, string data);
 
-	Task<WebResult> Post<T>(string url, T data, TimeSpan timeout)
-		where T : EqualObject;
+	Task<WebResult> Post(string url, string data, string contentType);
 
-	Task<WebResult> Post<T>(string url, List<T> data, TimeSpan timeout)
-		where T : EqualObject;
+	Task<WebResult> Post<T>(string url, T data, TimeSpan timeout);
+
+	Task<WebResult> Post<T>(string url, List<T> data, TimeSpan timeout);
 
 	Task<WebResult> Post(string url, TimeSpan timeout);
 
-	Task<WebResult> Post(string url, string data, TimeSpan timeout);
+	Task<WebResult> Post(string url, string data, TimeSpan timeout, string contentType);
 
 	void UserBearerToken(string token);
 }
 
 public class WebCaller : IWebCaller
 {
-	public static TimeSpan DefaultTimeout { get; set; } = 30.Seconds();
-
+	private readonly IJsonOperations jsonOperations;
 	private readonly IToolkitLogger logger;
 
 	private string bearerToken;
 
+	public string AcceptHeader { get; set; } = "application/json";
+
 	public Uri BaseUri { get; }
 
-	static WebCaller()
-	{
-		FlurlHttp.Configure(settings =>
-		{
-			var jsonSettings = new JsonSerializerSettings
-			{
-				NullValueHandling = NullValueHandling.Ignore,
-				Converters = new List<Newtonsoft.Json.JsonConverter>
-				{
-					new StringEnumConverter(),
-					new ObjectIdConverter()
-				}
-			};
+	public TimeSpan Timeout { get; set; } = 30.Seconds();
 
-			settings.JsonSerializer = new NewtonsoftJsonSerializer(jsonSettings);
-			settings.Timeout = DefaultTimeout;
-		});
-	}
-
-	public WebCaller(Uri uri, IToolkitLogger logger)
+	public WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger logger)
 	{
+		this.jsonOperations = jsonOperations;
 		this.logger = logger;
 		BaseUri = uri;
 	}
 
 	public async Task<WebResult> Delete(string url)
 	{
-		return await Delete(url, DefaultTimeout);
+		return await Delete(url, Timeout);
 	}
 
 	public async Task<WebResult> Delete(string url, TimeSpan timeout)
 	{
-		try
-		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
-
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
-
-			var response = await request.DeleteAsync();
-
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
-		catch (FlurlHttpException ex)
-		{
-			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
-		}
+		return await SendWebRequest(HttpMethod.Delete, url, timeout);
 	}
 
 	public Task<WebResult> Get(string url)
 	{
-		return Get(url, DefaultTimeout);
+		return Get(url, Timeout);
 	}
 
 	public async Task<WebResult> Get(string url, TimeSpan timeout)
 	{
-		try
-		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
-
-			logger.Debug($"Getting from Url <{request.Url}>");
-
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
-
-			var response = await request.GetAsync();
-
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
-		catch (FlurlHttpException ex)
-		{
-			ConsoleLog.WriteRed($"Furl HttpException: {ex.Message}");
-
-			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
-		}
+		return await SendWebRequest(HttpMethod.Get, url, timeout);
 	}
 
 	public Task<WebResult> Post<T>(string url, T data)
-		where T : EqualObject
 	{
-		return Post(url, data, DefaultTimeout);
+		return Post(url, data, Timeout);
 	}
 
 	public Task<WebResult> Post<T>(string url, List<T> data)
-		where T : EqualObject
 	{
-		return Post(url, data, DefaultTimeout);
+		return Post(url, data, Timeout);
 	}
 
 	public Task<WebResult> Post(string url)
 	{
-		return Post(url, DefaultTimeout);
+		return Post(url, Timeout);
 	}
 
 	public Task<WebResult> Post(string url, string data)
 	{
-		return Post(url, data, DefaultTimeout);
+		return Post(url, data, Timeout);
+	}
+
+	public async Task<WebResult> Post(string url, string data, string contentType)
+	{
+		return await Post(url, data, Timeout, contentType);
 	}
 
 	public async Task<WebResult> Post<T>(string url, T data, TimeSpan timeout)
-		where T : EqualObject
 	{
-		try
-		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
+		var json = jsonOperations.Serialize(data);
 
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
-
-			var response = await request.PostJsonAsync(data);
-
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
-		catch (FlurlHttpException ex)
-		{
-			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
-		}
+		return await SendWebRequest(HttpMethod.Post, url, timeout, json, "application/json");
 	}
 
 	public async Task<WebResult> Post<T>(string url, List<T> data, TimeSpan timeout)
-		where T : EqualObject
 	{
-		try
-		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
+		var json = jsonOperations.Serialize(data);
 
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
-
-			var response = await request.PostJsonAsync(data);
-
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
-		catch (FlurlHttpException ex)
-		{
-			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
-		}
+		return await SendWebRequest(HttpMethod.Post, url, timeout, json, "application/json");
 	}
 
 	public async Task<WebResult> Post(string url, TimeSpan timeout)
 	{
-		try
-		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
+		return await SendWebRequest(HttpMethod.Post, url, timeout);
+	}
 
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
-
-			var response = await request.PostAsync();
-
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
-		catch (FlurlHttpException ex)
-		{
-			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
-		}
+	public async Task<WebResult> Post(string url, string data, TimeSpan timeout, string contentType)
+	{
+		return await SendWebRequest(HttpMethod.Post, url, timeout, data, contentType);
 	}
 
 	public async Task<WebResult> Post(string url, string data, TimeSpan timeout)
 	{
-		try
-		{
-			var request = CreateRequest(url).WithTimeout(timeout).AllowHttpStatus("*");
-
-			if (bearerToken is not null)
-			{
-				request.WithOAuthBearerToken(bearerToken);
-			}
-
-			var response = await request.PostJsonAsync(data);
-
-			return new WebResult(response.ResponseMessage);
-		}
-		catch (FlurlHttpTimeoutException)
-		{
-			return WebResult.Timeout();
-		}
-		catch (FlurlHttpException ex)
-		{
-			return ex.StatusCode == null
-				? WebResult.NotFound()
-				: new WebResult((HttpStatusCode)ex.StatusCode, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			logger.Error($"Exception of type of {ex.GetType().FullName}");
-
-			throw;
-		}
+		return await SendWebRequest(HttpMethod.Post, url, timeout, data);
 	}
 
 	public void UserBearerToken(string token)
@@ -324,49 +143,49 @@ public class WebCaller : IWebCaller
 		bearerToken = token;
 	}
 
-	private Url CreateRequest(string pathSegment)
+	private void EnsureBearerToken(HttpClient httpClient)
 	{
-		var startingBase = BaseUri.ToString();
-
-		if (startingBase.EndsWith("/"))
+		if (bearerToken is not null)
 		{
-			startingBase = startingBase.Remove(startingBase.Length - 1);
+			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
+		}
+	}
+
+	private Uri GetFullUrl(string url)
+	{
+		return new Uri(BaseUri, url);
+	}
+
+	private async Task<WebResult> SendWebRequest(
+		HttpMethod httpMethod,
+		string url,
+		TimeSpan timeout,
+		string data = null,
+		string contentType = null
+	)
+	{
+		var httpClient = HttpClientFactory.Get();
+
+		EnsureBearerToken(httpClient);
+
+		var requestMessage = new HttpRequestMessage(httpMethod, GetFullUrl(url));
+
+		if (data.IsNotNullOrEmpty())
+		{
+			requestMessage.Content = new StringContent(data, Encoding.UTF8, contentType);
 		}
 
-		var url = pathSegment.StartsWith("/") ? $"{startingBase}{pathSegment}" : $"{startingBase}/{pathSegment}";
+		using var tokenSource = new CancellationTokenSource(timeout);
 
-		var requestUri = new Uri(url);
-
-		var queryString = requestUri.Query;
-
-		var queries = HttpUtility.ParseQueryString(queryString);
-
-		var callingUrl = requestUri.RemoveQuery();
-
-		if (queries.AllKeys.Length is not 0)
+		try
 		{
-			foreach (var key in queries.AllKeys)
-			{
-				var queryValue = queries[key];
+			var response = await httpClient.SendAsync(requestMessage, tokenSource.Token);
 
-				if (queryValue.Contains(","))
-				{
-					var values = queryValue.Split(',');
-
-					foreach (var value in values)
-					{
-						callingUrl.QueryParams.Add(key, value);
-					}
-				}
-				else
-				{
-					callingUrl.SetQueryParam(key, queryValue);
-				}
-			}
+			return new WebResult(response);
 		}
-
-		logger.Debug($"Create Request for <{callingUrl}>");
-
-		return callingUrl;
+		catch (TaskCanceledException)
+		{
+			return WebResult.Timeout();
+		}
 	}
 }

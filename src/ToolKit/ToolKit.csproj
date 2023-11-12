@@ -8,7 +8,7 @@
         <AssemblyName>FatCat.Toolkit</AssemblyName>
         <DebugType>full</DebugType>
         <LangVersion>latest</LangVersion>
-    <VersionPrefix>1.0.163</VersionPrefix>
+    <VersionPrefix>1.0.164</VersionPrefix>
         <Authors>David Basarab</Authors>
         <PackageTags>tools</PackageTags>
         <PackageProjectUrl>https://github.com/DavidBasarab/FatCat.Toolkit</PackageProjectUrl>
@@ -33,7 +33,7 @@
     <ItemGroup>
         <PackageReference Include="Autofac" Version="7.1.0"/>
         <PackageReference Include="Autofac.AspNetCore.Extensions" Version="2.0.15"/>
-        <PackageReference Include="FakeItEasy" Version="7.4.0"/>
+        <PackageReference Include="FakeItEasy" Version="8.0.0" />
         <PackageReference Include="fasterflect" Version="3.0.0"/>
         <PackageReference Include="FatCat.Fakes" Version="1.0.23" />
         <PackageReference Include="FluentAssertions" Version="6.12.0"/>

@@ -15,7 +15,7 @@ public class ByteTools : IByteTools
 {
 	public string FromBase64Encoded(byte[] bytes)
 	{
-		if (bytes.IsNullOrEmpty())
+		if (bytes.Length == 0)
 		{
 			return string.Empty;
 		}
