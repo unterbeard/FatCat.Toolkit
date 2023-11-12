@@ -4,6 +4,7 @@ using FatCat.Toolkit.Json;
 using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Web;
 using FluentAssertions;
+using Humanizer;
 using Xunit;
 
 namespace Tests.FatCat.Toolkit.Web.Api.WebCallerSpecs;
@@ -53,9 +54,24 @@ public abstract class WebCallerTests
 	{
 		var path = BasicPath;
 
-		if (path.StartsWith("/")) { path = path.Substring(1); }
+		if (path.StartsWith("/"))
+		{
+			path = path.Substring(1);
+		}
 
 		await MakeCall(path);
+	}
+
+	[Fact]
+	public async Task CanTimeout()
+	{
+		webCaller.Timeout = 1.Seconds();
+
+		var result = await MakeCallToWeb("delay/3");
+
+		result.IsUnsuccessful.Should().BeTrue();
+
+		result.StatusCode.Should().Be(HttpStatusCode.RequestTimeout);
 	}
 
 	[Fact]
@@ -94,7 +110,10 @@ public abstract class WebCallerTests
 		response.QueryParameters["second"].Should().Be("13");
 	}
 
-	protected void VerifyBearerToken() { response.BearerToken.Should().Be($"Bearer {BearerToken}"); }
+	protected void VerifyBearerToken()
+	{
+		response.BearerToken.Should().Be($"Bearer {BearerToken}");
+	}
 
 	protected void VerifyStatusListQueryParameters()
 	{
@@ -102,13 +121,7 @@ public abstract class WebCallerTests
 
 		statusList.Count.Should().Be(3);
 
-		statusList.Should()
-		.BeEquivalentTo(new List<string>
-						{
-							"1",
-							"2",
-							"3"
-						});
+		statusList.Should().BeEquivalentTo(new List<string> { "1", "2", "3" });
 	}
 
 	private async Task MakeCall(string path)
@@ -120,5 +133,8 @@ public abstract class WebCallerTests
 		response = result.To<HttpBinResponse>();
 	}
 
-	private void UserBearerToken() { webCaller.UserBearerToken(BearerToken); }
+	private void UserBearerToken()
+	{
+		webCaller.UserBearerToken(BearerToken);
+	}
 }
