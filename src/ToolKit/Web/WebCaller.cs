@@ -147,6 +147,8 @@ public class WebCaller : IWebCaller
 	{
 		if (bearerToken is not null)
 		{
+			logger.Debug($"Adding Bearer Token := <{bearerToken}>");
+
 			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
 		}
 	}
@@ -164,27 +166,49 @@ public class WebCaller : IWebCaller
 		string contentType = null
 	)
 	{
+		logger.Debug("Creating http client");
+
 		var httpClient = HttpClientFactory.Get();
 
 		EnsureBearerToken(httpClient);
 
-		var requestMessage = new HttpRequestMessage(httpMethod, GetFullUrl(url));
+		var requestUri = GetFullUrl(url);
+
+		logger.Debug($"Creating request message to Uri := <{requestUri}>");
+
+		var requestMessage = new HttpRequestMessage(httpMethod, requestUri);
 
 		if (data.IsNotNullOrEmpty())
 		{
+			logger.Debug($"Adding data of length := <{data.Length}> | Content Type := <{contentType}>");
+
 			requestMessage.Content = new StringContent(data, Encoding.UTF8, contentType);
 		}
+
+		logger.Debug($"Timeout is := <{timeout}>");
 
 		using var tokenSource = new CancellationTokenSource(timeout);
 
 		try
 		{
+			logger.Debug($"Sending request to <{requestUri}>");
+
 			var response = await httpClient.SendAsync(requestMessage, tokenSource.Token);
 
-			return new WebResult(response);
+			logger.Debug("Creating web result from response");
+
+			var result = new WebResult(response);
+
+			logger.Debug($"Request to <{requestUri}> | StatusCode := <{result.StatusCode}>");
+
+			bearerToken = null;
+
+			return result;
 		}
 		catch (TaskCanceledException)
 		{
+			logger.Debug($"Request to {requestUri} timed out");
+
 			return WebResult.Timeout();
 		}
 	}
