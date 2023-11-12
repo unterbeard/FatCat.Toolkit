@@ -8,7 +8,11 @@ namespace FatCat.Toolkit.Web;
 
 public interface IWebCaller
 {
+	string AcceptHeader { get; set; }
+
 	Uri BaseUri { get; }
+
+	TimeSpan Timeout { get; set; }
 
 	Task<WebResult> Delete(string url);
 
@@ -41,14 +45,16 @@ public interface IWebCaller
 
 public class WebCaller : IWebCaller
 {
-	private static TimeSpan DefaultTimeout { get; } = 30.Seconds();
-
 	private readonly IJsonOperations jsonOperations;
 	private readonly IToolkitLogger logger;
 
 	private string bearerToken;
 
+	public string AcceptHeader { get; set; } = "application/json";
+
 	public Uri BaseUri { get; }
+
+	public TimeSpan Timeout { get; set; } = 30.Seconds();
 
 	public WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger logger)
 	{
@@ -57,10 +63,7 @@ public class WebCaller : IWebCaller
 		BaseUri = uri;
 	}
 
-	public async Task<WebResult> Delete(string url)
-	{
-		return await Delete(url, DefaultTimeout);
-	}
+	public async Task<WebResult> Delete(string url) { return await Delete(url, Timeout); }
 
 	public async Task<WebResult> Delete(string url, TimeSpan timeout)
 	{
@@ -73,46 +76,19 @@ public class WebCaller : IWebCaller
 		return new WebResult(response);
 	}
 
-	public Task<WebResult> Get(string url)
-	{
-		return Get(url, DefaultTimeout);
-	}
+	public Task<WebResult> Get(string url) { return Get(url, Timeout); }
 
-	public async Task<WebResult> Get(string url, TimeSpan timeout)
-	{
-		var httpClient = HttpClientFactory.GetWithTimeout(timeout);
+	public async Task<WebResult> Get(string url, TimeSpan timeout) { return await SendWebRequest(HttpMethod.Get, url, timeout); }
 
-		EnsureBearerToken(httpClient);
+	public Task<WebResult> Post<T>(string url, T data) { return Post(url, data, Timeout); }
 
-		var response = await httpClient.GetAsync(GetFullUrl(url));
+	public Task<WebResult> Post<T>(string url, List<T> data) { return Post(url, data, Timeout); }
 
-		return new WebResult(response);
-	}
+	public Task<WebResult> Post(string url) { return Post(url, Timeout); }
 
-	public Task<WebResult> Post<T>(string url, T data)
-	{
-		return Post(url, data, DefaultTimeout);
-	}
+	public Task<WebResult> Post(string url, string data) { return Post(url, data, Timeout); }
 
-	public Task<WebResult> Post<T>(string url, List<T> data)
-	{
-		return Post(url, data, DefaultTimeout);
-	}
-
-	public Task<WebResult> Post(string url)
-	{
-		return Post(url, DefaultTimeout);
-	}
-
-	public Task<WebResult> Post(string url, string data)
-	{
-		return Post(url, data, DefaultTimeout);
-	}
-
-	public async Task<WebResult> Post(string url, string data, string contentType)
-	{
-		return await Post(url, data, DefaultTimeout, contentType);
-	}
+	public async Task<WebResult> Post(string url, string data, string contentType) { return await Post(url, data, Timeout, contentType); }
 
 	public async Task<WebResult> Post<T>(string url, T data, TimeSpan timeout)
 	{
@@ -146,9 +122,9 @@ public class WebCaller : IWebCaller
 		EnsureBearerToken(httpClient);
 
 		var response = await httpClient.PostAsync(
-			GetFullUrl(url),
-			new StringContent(data, Encoding.UTF8, contentType)
-		);
+												GetFullUrl(url),
+												new StringContent(data, Encoding.UTF8, contentType)
+												);
 
 		return new WebResult(response);
 	}
@@ -164,10 +140,7 @@ public class WebCaller : IWebCaller
 		return new WebResult(response);
 	}
 
-	public void UserBearerToken(string token)
-	{
-		bearerToken = token;
-	}
+	public void UserBearerToken(string token) { bearerToken = token; }
 
 	private async Task<WebResult> DoPostWithJson(string url, TimeSpan timeout, string json)
 	{
@@ -176,23 +149,30 @@ public class WebCaller : IWebCaller
 		EnsureBearerToken(httpClient);
 
 		var response = await httpClient.PostAsync(
-			GetFullUrl(url),
-			new StringContent(json, Encoding.UTF8, "application/json")
-		);
+												GetFullUrl(url),
+												new StringContent(json, Encoding.UTF8, "application/json")
+												);
 
 		return new WebResult(response);
 	}
 
 	private void EnsureBearerToken(HttpClient httpClient)
 	{
-		if (bearerToken is not null)
-		{
-			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
-		}
+		if (bearerToken is not null) { httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken); }
 	}
 
-	private Uri GetFullUrl(string url)
+	private Uri GetFullUrl(string url) { return new Uri(BaseUri, url); }
+
+	private async Task<WebResult> SendWebRequest(HttpMethod httpMethod, string url, TimeSpan timeout)
 	{
-		return new Uri(BaseUri, url);
+		var httpClient = HttpClientFactory.GetWithTimeout(timeout);
+
+		EnsureBearerToken(httpClient);
+
+		var requestMessage = new HttpRequestMessage(httpMethod, GetFullUrl(url));
+
+		var response = await httpClient.SendAsync(requestMessage);
+
+		return new WebResult(response);
 	}
 }
