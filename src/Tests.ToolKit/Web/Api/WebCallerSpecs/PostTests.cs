@@ -12,6 +12,22 @@ public class PostTests : WebCallerTests
 	protected override string BasicPath => "/post";
 
 	[Fact]
+	public async Task CanMakeAPostWithCustomContentType()
+	{
+		var plainText = "this is plain text";
+
+		var result = await webCaller.Post(BasicPath, plainText, "text/plain");
+
+		result.IsSuccessful.Should().BeTrue();
+
+		response = result.To<HttpBinResponse>();
+
+		response.RawData.Should().Be(plainText);
+
+		response.ContentType.Should().Be("text/plain; charset=utf-8");
+	}
+
+	[Fact]
 	public async Task PostWithAListOfData()
 	{
 		var dataList = Faker.Create<List<TestData>>();
@@ -60,7 +76,7 @@ public class PostTests : WebCallerTests
 	{
 		var data = "this is just some data";
 
-		var result = await webCaller.Post(BasicPath, data);
+		var result = await webCaller.Post(BasicPath, data, "text/plain");
 
 		result.IsSuccessful.Should().BeTrue();
 

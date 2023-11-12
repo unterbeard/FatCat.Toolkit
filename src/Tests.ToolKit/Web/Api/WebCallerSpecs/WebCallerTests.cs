@@ -11,9 +11,10 @@ public abstract class WebCallerTests
 {
 	private const string BearerToken = "12345890";
 
-	protected readonly WebCaller webCaller = new(new Uri("https://httpbin.org"), new JsonOperations(), A.Fake<IToolkitLogger>());
-
 	protected HttpBinResponse response;
+
+	protected WebCaller webCaller =
+		new(new Uri("https://httpbin.org"), new JsonOperations(), A.Fake<IToolkitLogger>());
 
 	protected abstract string BasicPath { get; }
 
@@ -47,6 +48,19 @@ public abstract class WebCallerTests
 	}
 
 	[Fact]
+	public async Task CanMakeCallWithoutSlashInFrontOfPath()
+	{
+		var path = BasicPath;
+
+		if (path.StartsWith("/"))
+		{
+			path = path.Substring(1);
+		}
+
+		await MakeCall(path);
+	}
+
+	[Fact]
 	public async Task CanPassAnAuthToken()
 	{
 		UserBearerToken();
@@ -54,6 +68,14 @@ public abstract class WebCallerTests
 		await MakeCall(BasicPath);
 
 		VerifyBearerToken();
+	}
+
+	[Fact]
+	public async Task DoACallWithAnExtraSlashOnUrl()
+	{
+		webCaller = new(new Uri("https://httpbin.org/"), new JsonOperations(), A.Fake<IToolkitLogger>());
+
+		await MakeCall(BasicPath);
 	}
 
 	protected abstract Task<WebResult> MakeCallToWeb(string path);

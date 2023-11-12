@@ -8,6 +8,8 @@ public class HttpBinResponse : EqualObject
 {
 	public string BearerToken => Headers.TryGetValue("Authorization", out var value) ? value : null;
 
+	public string ContentType => Headers.TryGetValue("Content-Type", out var value) ? value : null;
+
 	[JsonProperty("headers")]
 	public Dictionary<string, string> Headers { get; set; }
 

@@ -26,20 +26,22 @@ public interface IWebCaller
 
 	Task<WebResult> Post(string url, string data);
 
+	Task<WebResult> Post(string url, string data, string contentType);
+
 	Task<WebResult> Post<T>(string url, T data, TimeSpan timeout);
 
 	Task<WebResult> Post<T>(string url, List<T> data, TimeSpan timeout);
 
 	Task<WebResult> Post(string url, TimeSpan timeout);
 
-	Task<WebResult> Post(string url, string data, TimeSpan timeout);
+	Task<WebResult> Post(string url, string data, TimeSpan timeout, string contentType);
 
 	void UserBearerToken(string token);
 }
 
 public class WebCaller : IWebCaller
 {
-	public static TimeSpan DefaultTimeout { get; set; } = 30.Seconds();
+	private static TimeSpan DefaultTimeout { get; } = 30.Seconds();
 
 	private readonly IJsonOperations jsonOperations;
 	private readonly IToolkitLogger logger;
@@ -107,6 +109,11 @@ public class WebCaller : IWebCaller
 		return Post(url, data, DefaultTimeout);
 	}
 
+	public async Task<WebResult> Post(string url, string data, string contentType)
+	{
+		return await Post(url, data, DefaultTimeout, contentType);
+	}
+
 	public async Task<WebResult> Post<T>(string url, T data, TimeSpan timeout)
 	{
 		var json = jsonOperations.Serialize(data);
@@ -128,6 +135,20 @@ public class WebCaller : IWebCaller
 		EnsureBearerToken(httpClient);
 
 		var response = await httpClient.PostAsync(GetFullUrl(url), null);
+
+		return new WebResult(response);
+	}
+
+	public async Task<WebResult> Post(string url, string data, TimeSpan timeout, string contentType)
+	{
+		var httpClient = HttpClientFactory.GetWithTimeout(timeout);
+
+		EnsureBearerToken(httpClient);
+
+		var response = await httpClient.PostAsync(
+			GetFullUrl(url),
+			new StringContent(data, Encoding.UTF8, contentType)
+		);
 
 		return new WebResult(response);
 	}
