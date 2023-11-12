@@ -1,4 +1,5 @@
-﻿using FakeItEasy;
+﻿using System.Net;
+using FakeItEasy;
 using FatCat.Toolkit.Json;
 using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Web;
@@ -52,10 +53,7 @@ public abstract class WebCallerTests
 	{
 		var path = BasicPath;
 
-		if (path.StartsWith("/"))
-		{
-			path = path.Substring(1);
-		}
+		if (path.StartsWith("/")) { path = path.Substring(1); }
 
 		await MakeCall(path);
 	}
@@ -78,6 +76,16 @@ public abstract class WebCallerTests
 		await MakeCall(BasicPath);
 	}
 
+	[Fact]
+	public async Task ReturnStatusCodeOfNotFound()
+	{
+		var result = await MakeCallToWeb("status/404");
+
+		result.IsUnsuccessful.Should().BeTrue();
+
+		result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+	}
+
 	protected abstract Task<WebResult> MakeCallToWeb(string path);
 
 	protected void VerifyBasicQueryStrings()
@@ -86,10 +94,7 @@ public abstract class WebCallerTests
 		response.QueryParameters["second"].Should().Be("13");
 	}
 
-	protected void VerifyBearerToken()
-	{
-		response.BearerToken.Should().Be($"Bearer {BearerToken}");
-	}
+	protected void VerifyBearerToken() { response.BearerToken.Should().Be($"Bearer {BearerToken}"); }
 
 	protected void VerifyStatusListQueryParameters()
 	{
@@ -97,7 +102,13 @@ public abstract class WebCallerTests
 
 		statusList.Count.Should().Be(3);
 
-		statusList.Should().BeEquivalentTo(new List<string> { "1", "2", "3" });
+		statusList.Should()
+		.BeEquivalentTo(new List<string>
+						{
+							"1",
+							"2",
+							"3"
+						});
 	}
 
 	private async Task MakeCall(string path)
@@ -109,8 +120,5 @@ public abstract class WebCallerTests
 		response = result.To<HttpBinResponse>();
 	}
 
-	private void UserBearerToken()
-	{
-		webCaller.UserBearerToken(BearerToken);
-	}
+	private void UserBearerToken() { webCaller.UserBearerToken(BearerToken); }
 }
