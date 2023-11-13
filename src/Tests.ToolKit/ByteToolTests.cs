@@ -14,9 +14,9 @@ public class ByteToolTests
 
 		var textToChange = Faker.RandomString();
 
-		var bytes = byteTools.ToBase64Encoded(textToChange);
+		var bytes = byteTools.FromBase64Encoded(textToChange);
 
-		var plainText = byteTools.FromBase64Encoded(bytes);
+		var plainText = byteTools.ToBase64Encoded(bytes);
 
 		plainText.Should().Be(textToChange);
 	}
