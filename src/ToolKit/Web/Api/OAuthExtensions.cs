@@ -42,7 +42,7 @@ internal static class OAuthExtensions
 			{
 				if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
 				{
-					context.Response.Headers.Add("Token-Expired", "true");
+					context.Response.Headers.TryAdd("Token-Expired", "true");
 				}
 				else
 				{
