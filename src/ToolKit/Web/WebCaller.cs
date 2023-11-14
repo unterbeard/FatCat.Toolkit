@@ -153,7 +153,7 @@ public class WebCaller : IWebCaller
 		}
 	}
 
-	private Uri GetFullUrl(string url)
+	public Uri GetFullUrl(string url)
 	{
 		return new Uri(BaseUri, url);
 	}
