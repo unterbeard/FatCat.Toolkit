@@ -3,10 +3,12 @@ using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Logging;
+using FatCat.Toolkit.Web.Api;
+using FatCat.Toolkit.Web.Api.SignalR;
 using Humanizer;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace FatCat.Toolkit.Web.Api.SignalR;
+namespace FatCat.Toolkit.WebServer.SignalR;
 
 public interface IToolkitHubClientConnection : IAsyncDisposable
 {

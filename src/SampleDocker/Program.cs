@@ -3,6 +3,7 @@ using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web.Api;
 using FatCat.Toolkit.Web.Api.SignalR;
+using FatCat.Toolkit.WebServer;
 using Humanizer;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;

@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using Microsoft.AspNetCore.SignalR;
 
-namespace FatCat.Toolkit.Web.Api.SignalR;
+namespace FatCat.Toolkit.WebServer.SignalR;
 
 public interface IToolkitHubConnectedClients
 {

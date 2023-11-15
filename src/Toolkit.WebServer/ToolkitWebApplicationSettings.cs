@@ -1,8 +1,9 @@
 #nullable enable
 using System.Reflection;
+using FatCat.Toolkit.Web.Api;
 using FatCat.Toolkit.Web.Api.SignalR;
 
-namespace FatCat.Toolkit.Web.Api;
+namespace FatCat.Toolkit.WebServer;
 
 public class ToolkitWebApplicationSettings : EqualObject
 {

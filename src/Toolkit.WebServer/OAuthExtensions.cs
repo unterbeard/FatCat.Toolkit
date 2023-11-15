@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FatCat.Toolkit.Web.Api;
+namespace FatCat.Toolkit.WebServer;
 
 internal static class OAuthExtensions
 {

@@ -4,7 +4,7 @@ using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
-using FatCat.Toolkit.Web.Api.SignalR;
+using FatCat.Toolkit.WebServer.SignalR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -20,8 +20,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Converters;
+using WebApplicationOptions = FatCat.Toolkit.Web.Api.WebApplicationOptions;
 
-namespace FatCat.Toolkit.Web.Api;
+namespace FatCat.Toolkit.WebServer;
 
 internal class ApplicationStartUp
 {

@@ -1,10 +1,12 @@
 ﻿using System.Collections.Concurrent;
 using FatCat.Toolkit.Logging;
+using FatCat.Toolkit.Web.Api;
+using FatCat.Toolkit.Web.Api.SignalR;
 using Humanizer;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
-namespace FatCat.Toolkit.Web.Api.SignalR;
+namespace FatCat.Toolkit.WebServer.SignalR;
 
 public interface IToolkitHubServer
 {

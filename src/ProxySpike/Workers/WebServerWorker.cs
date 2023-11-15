@@ -2,6 +2,7 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web.Api;
+using FatCat.Toolkit.WebServer;
 using Newtonsoft.Json;
 using ProxySpike.Helpers;
 using ProxySpike.Options;

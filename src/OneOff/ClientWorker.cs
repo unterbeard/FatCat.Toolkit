@@ -4,6 +4,7 @@ using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.Web;
 using FatCat.Toolkit.Web.Api.SignalR;
+using FatCat.Toolkit.WebServer.SignalR;
 using Humanizer;
 using Newtonsoft.Json;
 

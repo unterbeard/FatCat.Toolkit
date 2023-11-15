@@ -19,6 +19,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Toolkit.WebServer\Toolkit.WebServer.csproj" />
         <ProjectReference Include="..\ToolKit\ToolKit.csproj"/>
     </ItemGroup>
 
