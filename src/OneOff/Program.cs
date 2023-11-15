@@ -40,13 +40,13 @@ public static class Program
 			// 	RunServer(args);
 			// }
 
-			var worker = SystemScope.Container.Resolve<TcpWorker>();
+			var worker = SystemScope.Container.Resolve<UriWorker>();
 
 			await worker.DoWork();
 
-			var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
-
-			consoleUtilities.WaitForExit();
+			// var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
+			//
+			// consoleUtilities.WaitForExit();
 		}
 		catch (Exception ex)
 		{

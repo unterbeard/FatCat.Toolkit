@@ -64,50 +64,38 @@ public class WebCaller : IWebCaller
 		BaseUri = uri;
 	}
 
-	public async Task<WebResult> Delete(string url)
+	public async Task<WebResult> Delete(string url) => await Delete(url, Timeout);
+
+	public async Task<WebResult> Delete(string url, TimeSpan timeout) =>
+		await SendWebRequest(HttpMethod.Delete, url, timeout);
+
+	public Task<WebResult> Get(string url) => Get(url, Timeout);
+
+	public async Task<WebResult> Get(string url, TimeSpan timeout) =>
+		await SendWebRequest(HttpMethod.Get, url, timeout);
+
+	public Uri GetFullUrl(string url)
 	{
-		return await Delete(url, Timeout);
+		var baseUrl = BaseUri.ToString();
+
+		if (baseUrl.EndsWith('/'))
+		{
+			baseUrl = baseUrl.Remove(baseUrl.Length - 1, 1);
+		}
+
+		return new Uri($"{baseUrl}/{url}");
 	}
 
-	public async Task<WebResult> Delete(string url, TimeSpan timeout)
-	{
-		return await SendWebRequest(HttpMethod.Delete, url, timeout);
-	}
+	public Task<WebResult> Post<T>(string url, T data) => Post(url, data, Timeout);
 
-	public Task<WebResult> Get(string url)
-	{
-		return Get(url, Timeout);
-	}
+	public Task<WebResult> Post<T>(string url, List<T> data) => Post(url, data, Timeout);
 
-	public async Task<WebResult> Get(string url, TimeSpan timeout)
-	{
-		return await SendWebRequest(HttpMethod.Get, url, timeout);
-	}
+	public Task<WebResult> Post(string url) => Post(url, Timeout);
 
-	public Task<WebResult> Post<T>(string url, T data)
-	{
-		return Post(url, data, Timeout);
-	}
+	public Task<WebResult> Post(string url, string data) => Post(url, data, Timeout);
 
-	public Task<WebResult> Post<T>(string url, List<T> data)
-	{
-		return Post(url, data, Timeout);
-	}
-
-	public Task<WebResult> Post(string url)
-	{
-		return Post(url, Timeout);
-	}
-
-	public Task<WebResult> Post(string url, string data)
-	{
-		return Post(url, data, Timeout);
-	}
-
-	public async Task<WebResult> Post(string url, string data, string contentType)
-	{
-		return await Post(url, data, Timeout, contentType);
-	}
+	public async Task<WebResult> Post(string url, string data, string contentType) =>
+		await Post(url, data, Timeout, contentType);
 
 	public async Task<WebResult> Post<T>(string url, T data, TimeSpan timeout)
 	{
@@ -123,20 +111,14 @@ public class WebCaller : IWebCaller
 		return await SendWebRequest(HttpMethod.Post, url, timeout, json, "application/json");
 	}
 
-	public async Task<WebResult> Post(string url, TimeSpan timeout)
-	{
-		return await SendWebRequest(HttpMethod.Post, url, timeout);
-	}
+	public async Task<WebResult> Post(string url, TimeSpan timeout) =>
+		await SendWebRequest(HttpMethod.Post, url, timeout);
 
-	public async Task<WebResult> Post(string url, string data, TimeSpan timeout, string contentType)
-	{
-		return await SendWebRequest(HttpMethod.Post, url, timeout, data, contentType);
-	}
+	public async Task<WebResult> Post(string url, string data, TimeSpan timeout, string contentType) =>
+		await SendWebRequest(HttpMethod.Post, url, timeout, data, contentType);
 
-	public async Task<WebResult> Post(string url, string data, TimeSpan timeout)
-	{
-		return await SendWebRequest(HttpMethod.Post, url, timeout, data);
-	}
+	public async Task<WebResult> Post(string url, string data, TimeSpan timeout) =>
+		await SendWebRequest(HttpMethod.Post, url, timeout, data);
 
 	public void UserBearerToken(string token)
 	{
@@ -151,11 +133,6 @@ public class WebCaller : IWebCaller
 
 			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
 		}
-	}
-
-	private Uri GetFullUrl(string url)
-	{
-		return new Uri(BaseUri, url);
 	}
 
 	private async Task<WebResult> SendWebRequest(
