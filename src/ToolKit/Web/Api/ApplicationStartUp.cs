@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Extensions;
@@ -191,9 +190,9 @@ internal class ApplicationStartUp
 					config.Filters.Add(new AuthorizeFilter(policy));
 				}
 			})
-			.AddJsonOptions(x =>
+			.AddNewtonsoftJson(build =>
 			{
-				x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+				build.SerializerSettings.Converters.Add(new StringEnumConverter());
 			});
 
 		services
