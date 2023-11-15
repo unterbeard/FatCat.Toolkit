@@ -31,22 +31,22 @@ public static class Program
 				ScopeOptions.SetLifetimeScope
 			);
 
-			// if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase))
-			// {
-			// 	ConnectClient(args);
-			// }
-			// else
-			// {
-			// 	RunServer(args);
-			// }
+			if (args.Any() && args[0].Equals("client", StringComparison.OrdinalIgnoreCase))
+			{
+				ConnectClient(args);
+			}
+			else
+			{
+				RunServer(args);
+			}
 
-			var worker = SystemScope.Container.Resolve<UriWorker>();
-
-			await worker.DoWork();
-
-			// var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
+			// var worker = SystemScope.Container.Resolve<UriWorker>();
 			//
-			// consoleUtilities.WaitForExit();
+			// await worker.DoWork();
+
+			var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
+
+			consoleUtilities.WaitForExit();
 		}
 		catch (Exception ex)
 		{
