@@ -1,5 +1,5 @@
 ﻿#nullable enable
-namespace FatCat.Toolkit.WebServer.SignalR;
+namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public class ConnectionResult
 {

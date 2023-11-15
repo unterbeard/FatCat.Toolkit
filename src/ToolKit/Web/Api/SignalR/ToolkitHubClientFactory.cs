@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using FatCat.Toolkit.Injection;
 
-namespace FatCat.Toolkit.WebServer.SignalR;
+namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public interface IToolkitHubClientFactory : IAsyncDisposable
 {

@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using FatCat.Toolkit.Web.Api.SignalR;
 using Microsoft.AspNetCore.SignalR;
 
 namespace FatCat.Toolkit.WebServer.SignalR;
@@ -24,7 +25,7 @@ public class ToolkitHubConnectedClients : IToolkitHubConnectedClients
 		var client = hubContext.Clients.Client(clientId);
 
 		await client.SendCoreAsync(
-			ToolkitHub.ServerResponseMessage,
+			ToolkitHubMethodNames.ServerResponseMessage,
 			new object[] { messageType, data, sessionId ?? generator.NewId() }
 		);
 	}

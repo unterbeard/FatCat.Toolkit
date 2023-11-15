@@ -97,10 +97,7 @@ public class ToolkitHubServer : IToolkitHubServer
 		responses.TryAdd(sessionId, toolkitMessage);
 	}
 
-	public List<string> GetConnections()
-	{
-		return connections.Keys.ToList();
-	}
+	public List<string> GetConnections() => connections.Keys.ToList();
 
 	public void OnClientConnected(ToolkitUser toolkitUser, string connectionId)
 	{
@@ -134,7 +131,7 @@ public class ToolkitHubServer : IToolkitHubServer
 		await hubContext.Clients
 			.Client(connectionId)
 			.SendAsync(
-				ToolkitHub.ServerDataBufferMessage,
+				ToolkitHubMethodNames.ServerDataBufferMessage,
 				message.MessageType,
 				sessionId,
 				message.Data,
@@ -144,10 +141,7 @@ public class ToolkitHubServer : IToolkitHubServer
 		return await WaitForClientResponse(message, timeout, sessionId);
 	}
 
-	public Task SendToAllClients(ToolkitMessage message)
-	{
-		throw new NotImplementedException();
-	}
+	public Task SendToAllClients(ToolkitMessage message) => throw new NotImplementedException();
 
 	public async Task<ToolkitMessage> SendToClient(
 		string connectionId,
@@ -169,21 +163,22 @@ public class ToolkitHubServer : IToolkitHubServer
 		await SendMessageToClient(connectionId, message, generator.NewId());
 	}
 
-	private Task InvokeClientConnected(ToolkitUser user, string connectionId)
-	{
-		return ClientConnected?.Invoke(user, connectionId);
-	}
+	private Task InvokeClientConnected(ToolkitUser user, string connectionId) =>
+		ClientConnected?.Invoke(user, connectionId);
 
-	private Task InvokeClientDisconnected(ToolkitUser user, string connectionId)
-	{
-		return ClientDisconnected?.Invoke(user, connectionId);
-	}
+	private Task InvokeClientDisconnected(ToolkitUser user, string connectionId) =>
+		ClientDisconnected?.Invoke(user, connectionId);
 
 	private async Task SendMessageToClient(string connectionId, ToolkitMessage message, string sessionId)
 	{
 		await hubContext.Clients
 			.Client(connectionId)
-			.SendAsync(ToolkitHub.ServerOriginatedMessage, message.MessageType, sessionId, message.Data);
+			.SendAsync(
+				ToolkitHubMethodNames.ServerOriginatedMessage,
+				message.MessageType,
+				sessionId,
+				message.Data
+			);
 	}
 
 	private async Task<ToolkitMessage> WaitForClientResponse(

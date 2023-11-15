@@ -2,9 +2,8 @@
 using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
-using OneOffLib;
 
-namespace OneOff;
+namespace OneOffToolkitOnly;
 
 public static class Program
 {
@@ -14,8 +13,6 @@ public static class Program
 
 	public static async Task Main(params string[] args)
 	{
-		await Task.CompletedTask;
-
 		Args = args;
 
 		ConsoleLog.LogCallerInformation = true;
@@ -24,16 +21,11 @@ public static class Program
 		{
 			SystemScope.Initialize(
 				new ContainerBuilder(),
-				new List<Assembly>
-				{
-					typeof(OneOffModule).Assembly,
-					typeof(Program).Assembly,
-					typeof(ConsoleLog).Assembly
-				},
+				new List<Assembly> { typeof(Program).Assembly, typeof(ConsoleLog).Assembly },
 				ScopeOptions.SetLifetimeScope
 			);
 
-			RunServer(args);
+			ConnectClient(args);
 
 			// var worker = SystemScope.Container.Resolve<UriWorker>();
 			//
@@ -49,8 +41,14 @@ public static class Program
 		}
 	}
 
-	private static void RunServer(string[] args)
+	private static void ConnectClient(string[] args)
 	{
-		new ServerWorker().DoWork(args);
+		var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
+
+		var clientWorker = SystemScope.Container.Resolve<ClientWorker>();
+
+		clientWorker.DoWork(args);
+
+		consoleUtilities.WaitForExit();
 	}
 }
