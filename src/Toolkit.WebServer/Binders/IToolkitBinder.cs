@@ -1,4 +1,4 @@
-﻿namespace FatCat.Toolkit.Web.Api.Binders;
+﻿namespace FatCat.Toolkit.WebServer.Binders;
 
 public interface IToolkitBinder
 {

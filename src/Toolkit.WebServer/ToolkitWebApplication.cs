@@ -7,8 +7,9 @@ using Humanizer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using WebApplicationOptions = FatCat.Toolkit.Web.Api.WebApplicationOptions;
 
-namespace FatCat.Toolkit.Web.Api;
+namespace FatCat.Toolkit.WebServer;
 
 public static class ToolkitWebApplication
 {
@@ -22,6 +23,8 @@ public static class ToolkitWebApplication
 	public static void Run(ToolkitWebApplicationSettings settings)
 	{
 		Settings = settings;
+
+		settings.ContainerAssemblies.Add(typeof(ToolkitWebServerModule).Assembly);
 
 		SystemScope.ContainerAssemblies = settings.ContainerAssemblies;
 

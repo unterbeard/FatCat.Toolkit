@@ -1,11 +1,10 @@
 ﻿#nullable enable
 using System.Net;
-using FatCat.Toolkit.Web;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using FluentAssertions.Primitives;
 
-namespace FatCat.Toolkit.Testing;
+namespace FatCat.Toolkit.WebServer.Testing;
 
 public static class WebResultAssertionsExtensions
 {

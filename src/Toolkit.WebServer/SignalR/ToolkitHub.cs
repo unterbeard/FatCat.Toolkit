@@ -1,16 +1,13 @@
 ﻿#nullable enable
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
+using FatCat.Toolkit.Web.Api.SignalR;
 using Microsoft.AspNetCore.SignalR;
 
-namespace FatCat.Toolkit.Web.Api.SignalR;
+namespace FatCat.Toolkit.WebServer.SignalR;
 
 public class ToolkitHub : Hub
 {
-	public const string ServerDataBufferMessage = "ServerDataBufferMessage";
-	public const string ServerOriginatedMessage = "ServerOriginatedMessage";
-	public const string ServerResponseMessage = "ServerResponseMessage";
-
 	private IToolkitHubServer HubServer => SystemScope.Container.Resolve<IToolkitHubServer>();
 
 	private IToolkitLogger Logger => SystemScope.Container.Resolve<IToolkitLogger>();
@@ -42,7 +39,7 @@ public class ToolkitHub : Hub
 
 		await Clients
 			.Client(Context.ConnectionId)
-			.SendAsync(ServerResponseMessage, messageType, sessionId, responseMessage);
+			.SendAsync(ToolkitHubMethodNames.ServerResponseMessage, messageType, sessionId, responseMessage);
 
 		Logger.Debug(
 			$"Done sending response for message | <{responseMessage}> | SessionId <{sessionId}> | ConnectionId {Context.ConnectionId}"
@@ -67,7 +64,7 @@ public class ToolkitHub : Hub
 
 		await Clients
 			.Client(Context.ConnectionId)
-			.SendAsync(ServerResponseMessage, messageType, sessionId, responseMessage);
+			.SendAsync(ToolkitHubMethodNames.ServerResponseMessage, messageType, sessionId, responseMessage);
 	}
 
 	public async Task ClientResponseMessage(int messageType, string sessionId, string data)
@@ -125,8 +122,5 @@ public class ToolkitHub : Hub
 		return base.OnDisconnectedAsync(exception);
 	}
 
-	private ToolkitUser GetUser()
-	{
-		return Context.User == null ? null : ToolkitUser.Create(Context.User);
-	}
+	private ToolkitUser GetUser() => Context.User == null ? null : ToolkitUser.Create(Context.User);
 }

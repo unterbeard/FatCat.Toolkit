@@ -63,6 +63,16 @@ public abstract class WebCallerTests
 	}
 
 	[Fact]
+	public async Task CanPassAnAuthToken()
+	{
+		UserBearerToken();
+
+		await MakeCall(BasicPath);
+
+		VerifyBearerToken();
+	}
+
+	[Fact]
 	public async Task CanTimeout()
 	{
 		webCaller.Timeout = 1.Seconds();
@@ -72,16 +82,6 @@ public abstract class WebCallerTests
 		result.IsUnsuccessful.Should().BeTrue();
 
 		result.StatusCode.Should().Be(HttpStatusCode.RequestTimeout);
-	}
-
-	[Fact]
-	public async Task CanPassAnAuthToken()
-	{
-		UserBearerToken();
-
-		await MakeCall(BasicPath);
-
-		VerifyBearerToken();
 	}
 
 	[Fact]
@@ -102,7 +102,7 @@ public abstract class WebCallerTests
 		result.StatusCode.Should().Be(HttpStatusCode.NotFound);
 	}
 
-	protected abstract Task<WebResult> MakeCallToWeb(string path);
+	protected abstract Task<FatWebResponse> MakeCallToWeb(string path);
 
 	protected void VerifyBasicQueryStrings()
 	{

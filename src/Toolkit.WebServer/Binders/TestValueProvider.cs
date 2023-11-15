@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace FatCat.Toolkit.Web.Api.Binders;
+namespace FatCat.Toolkit.WebServer.Binders;
 
 public class TestValueProvider : IValueProvider
 {

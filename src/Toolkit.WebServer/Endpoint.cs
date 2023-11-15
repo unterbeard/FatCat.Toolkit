@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace FatCat.Toolkit.Web;
+namespace FatCat.Toolkit.WebServer;
 
 [Controller]
 public abstract class Endpoint : Controller

@@ -2,22 +2,17 @@
 using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
-using FatCat.Toolkit.Logging;
-using FatCat.Toolkit.Threading;
-using FatCat.Toolkit.WebServer;
-using OneOffLib;
-using Thread = FatCat.Toolkit.Threading.Thread;
 
-namespace OneOff;
+namespace OneOffToolkitOnly;
 
 public static class Program
 {
+	private const int WebPort = 14555;
+
 	public static string[] Args { get; set; }
 
 	public static async Task Main(params string[] args)
 	{
-		await Task.CompletedTask;
-
 		Args = args;
 
 		ConsoleLog.LogCallerInformation = true;
@@ -26,17 +21,11 @@ public static class Program
 		{
 			SystemScope.Initialize(
 				new ContainerBuilder(),
-				new List<Assembly>
-				{
-					typeof(OneOffModule).Assembly,
-					typeof(Program).Assembly,
-					typeof(ConsoleLog).Assembly,
-					typeof(ToolkitWebServerModule).Assembly
-				},
+				new List<Assembly> { typeof(Program).Assembly, typeof(ConsoleLog).Assembly },
 				ScopeOptions.SetLifetimeScope
 			);
 
-			RunServer(args);
+			ConnectClient(args);
 
 			// var worker = SystemScope.Container.Resolve<UriWorker>();
 			//
@@ -52,8 +41,14 @@ public static class Program
 		}
 	}
 
-	private static void RunServer(string[] args)
+	private static void ConnectClient(string[] args)
 	{
-		new ServerWorker(new Thread(new ToolkitLogger())).DoWork(args);
+		var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
+
+		var clientWorker = SystemScope.Container.Resolve<ClientWorker>();
+
+		clientWorker.DoWork(args);
+
+		consoleUtilities.WaitForExit();
 	}
 }

@@ -1,30 +1,29 @@
-#nullable enable
 using System.Collections;
 using FatCat.Toolkit.Extensions;
 using Newtonsoft.Json;
 
 namespace FatCat.Toolkit.Web;
 
-internal static class ContentConverter
+public static class JsonContentConverter
 {
 	private static Dictionary<Type, Func<string, object>> TypeSetters { get; } = new();
 
-	public static T? ConvertTo<T>(this WebResult result)
+	public static T ConvertTo<T>(string json)
 	{
-		if (result.Content.IsNullOrEmpty())
+		if (json.IsNullOrEmpty())
 		{
 			return ToDefaultValue<T>();
 		}
 
 		if (TypeSetters.ContainsKey(typeof(T)))
 		{
-			return (T)TypeSetters[typeof(T)](result.Content!);
+			return (T)TypeSetters[typeof(T)](json);
 		}
 
-		return JsonConvert.DeserializeObject<T>(result.Content!);
+		return JsonConvert.DeserializeObject<T>(json);
 	}
 
-	static ContentConverter()
+	static JsonContentConverter()
 	{
 		TypeSetters.Add(typeof(string), SetString);
 		TypeSetters.Add(typeof(int), SetInt);
@@ -47,47 +46,23 @@ internal static class ContentConverter
 		return (T)listAsInstance!;
 	}
 
-	private static bool IsList(Type type)
-	{
-		return type.IsGenericType && type.Implements(typeof(IEnumerable));
-	}
+	private static bool IsList(Type type) => type.IsGenericType && type.Implements(typeof(IEnumerable));
 
-	private static object SetBool(string content)
-	{
-		return bool.Parse(content);
-	}
+	private static object SetBool(string content) => bool.Parse(content);
 
-	private static object SetDateTime(string content)
-	{
-		return DateTime.Parse(content);
-	}
+	private static object SetDateTime(string content) => DateTime.Parse(content);
 
-	private static object SetDouble(string content)
-	{
-		return double.Parse(content);
-	}
+	private static object SetDouble(string content) => double.Parse(content);
 
-	private static object SetGuid(string content)
-	{
-		return Guid.Parse(content);
-	}
+	private static object SetGuid(string content) => Guid.Parse(content);
 
-	private static object SetInt(string content)
-	{
-		return int.Parse(content);
-	}
+	private static object SetInt(string content) => int.Parse(content);
 
-	private static object SetString(string content)
-	{
-		return content;
-	}
+	private static object SetString(string content) => content;
 
-	private static object SetTimespan(string content)
-	{
-		return TimeSpan.Parse(content);
-	}
+	private static object SetTimespan(string content) => TimeSpan.Parse(content);
 
-	private static T? ToDefaultValue<T>()
+	private static T ToDefaultValue<T>()
 	{
 		var typeToCreate = typeof(T);
 

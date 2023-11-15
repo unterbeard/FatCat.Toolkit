@@ -1,4 +1,5 @@
 using FatCat.Toolkit.Web;
+using FatCat.Toolkit.WebServer;
 
 namespace Tests.FatCat.Toolkit;
 

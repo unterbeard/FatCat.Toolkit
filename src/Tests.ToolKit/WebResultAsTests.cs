@@ -1,6 +1,7 @@
 using FatCat.Fakes;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Web;
+using FatCat.Toolkit.WebServer;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;

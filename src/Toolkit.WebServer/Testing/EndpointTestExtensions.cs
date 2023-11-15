@@ -1,13 +1,12 @@
 ﻿#nullable enable
 using FatCat.Toolkit.Extensions;
-using FatCat.Toolkit.Web;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 
-namespace FatCat.Toolkit.Testing;
+namespace FatCat.Toolkit.WebServer.Testing;
 
 public static class EndpointTestExtensions
 {

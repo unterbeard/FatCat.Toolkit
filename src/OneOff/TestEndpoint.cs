@@ -1,6 +1,7 @@
 ﻿using FatCat.Fakes;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Web;
+using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ public class TestModel : EqualObject
 }
 
 [AllowAnonymous]
-public class TestEndpoint : Endpoint
+public class TestEndpoint(ISomeServiceWorker someServiceWorker) : Endpoint
 {
 	[HttpGet("api/test")]
 	public WebResult GetTestStuff()
@@ -25,7 +26,8 @@ public class TestEndpoint : Endpoint
 
 		testModel.SomeData = $"This is a test endpoint | <{DateTime.Now:h:mm:ss tt zz}>";
 
-		// return WebResult.Ok(testModel);
-		return WebResult.BadRequest("This is an error");
+		someServiceWorker.DoSomeWork();
+
+		return WebResult.Ok(testModel);
 	}
 }

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace FatCat.Toolkit.Web.Api.Binders;
+namespace FatCat.Toolkit.WebServer.Binders;
 
 public class TestModelBindingContext : ModelBindingContext
 {

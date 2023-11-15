@@ -2,6 +2,7 @@
 using FatCat.Toolkit;
 using FatCat.Toolkit.Data.Mongo;
 using FatCat.Toolkit.Web;
+using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 

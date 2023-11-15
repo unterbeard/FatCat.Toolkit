@@ -1,6 +1,7 @@
 ﻿using FatCat.Fakes;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Web;
+using FatCat.Toolkit.WebServer;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;
@@ -85,7 +86,7 @@ public class PostTests : WebCallerTests
 		response.RawData.Should().Be($"{data}");
 	}
 
-	protected override Task<WebResult> MakeCallToWeb(string path)
+	protected override Task<FatWebResponse> MakeCallToWeb(string path)
 	{
 		return webCaller.Post(path);
 	}
