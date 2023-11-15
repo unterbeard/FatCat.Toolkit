@@ -74,7 +74,7 @@ public class ServerWorker
 		}
 		else
 		{
-			ConsoleLog.WriteRed($"Web Reqeust status code: <{finalResult.StatusCode}> | <{finalResult.Content}>");
+			ConsoleLog.WriteRed($"Web Request status code: <{finalResult.StatusCode}> | <{finalResult.Content}>");
 		}
 	}
 
@@ -100,8 +100,10 @@ public class ServerWorker
 
 		var caller = factory.GetWebCaller(new Uri("https://localhost:14555"));
 
+		MakeWebRequest(caller, "api/test");
+
 		// var response = caller.Get("api/test/Search/firstname=david&lastname=basarab&count=43").Result;
-		MakeWebRequest(caller, "api/test/Search?firstname=david&lastname=basarab&count=43");
-		MakeWebRequest(caller, "api/test/Search/Multi?statuses=Available&statuses=CheckedOut");
+		// MakeWebRequest(caller, "api/test/Search?firstname=david&lastname=basarab&count=43");
+		// MakeWebRequest(caller, "api/test/Search/Multi?statuses=Available&statuses=CheckedOut");
 	}
 }
