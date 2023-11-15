@@ -24,6 +24,8 @@ public static class ToolkitWebApplication
 	{
 		Settings = settings;
 
+		settings.ContainerAssemblies.Add(typeof(ToolkitWebServerModule).Assembly);
+
 		SystemScope.ContainerAssemblies = settings.ContainerAssemblies;
 
 		var builder = WebApplication.CreateBuilder(settings.Args);
