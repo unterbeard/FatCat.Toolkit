@@ -1,14 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <RootNamespace>FatCat.Toolkit</RootNamespace>
-        <AssemblyName>FatCat.Toolkit</AssemblyName>
+        <RootNamespace>FatCat.Toolkit.WebServer</RootNamespace>
+        <AssemblyName>FatCat.Toolkit.WebServer</AssemblyName>
         <DebugType>full</DebugType>
         <LangVersion>latest</LangVersion>
-        <VersionPrefix>1.0.171</VersionPrefix>
+        <VersionPrefix>1.0.001</VersionPrefix>
         <Authors>David Basarab</Authors>
         <PackageTags>tools</PackageTags>
         <PackageProjectUrl>https://github.com/DavidBasarab/FatCat.Toolkit</PackageProjectUrl>
@@ -44,5 +44,8 @@
         <PackageReference Include="MongoDB.Driver" Version="2.22.0"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="System.IO.Abstractions" Version="19.2.69"/>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\ToolKit\ToolKit.csproj" />
     </ItemGroup>
 </Project>
