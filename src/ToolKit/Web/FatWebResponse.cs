@@ -2,6 +2,32 @@
 
 namespace FatCat.Toolkit.Web;
 
+public class FatWebResponse<T> : EqualObject
+	where T : class
+{
+	public FatWebResponse BaseResponse { get; }
+
+	public string Content => BaseResponse.Content;
+
+	public string ContentType => BaseResponse.ContentType;
+
+	public T Data => BaseResponse.IsSuccessful ? BaseResponse.To<T>() : null;
+
+	public bool IsSuccessful => BaseResponse.IsSuccessful;
+
+	public bool IsUnsuccessful => !IsSuccessful;
+
+	public HttpStatusCode StatusCode => BaseResponse.StatusCode;
+
+	public FatWebResponse(HttpStatusCode statusCode) =>
+		BaseResponse = new FatWebResponse { StatusCode = statusCode };
+
+	public FatWebResponse(FatWebResponse webResponse) => BaseResponse = webResponse;
+
+	public override string ToString() =>
+		$"FatWebResponse | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {Content}";
+}
+
 public class FatWebResponse : EqualObject
 {
 	public static FatWebResponse Timeout() => new() { StatusCode = HttpStatusCode.RequestTimeout };
