@@ -2,6 +2,7 @@
 using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.WebServer;
 using OneOffLib;
 
 namespace OneOff;
@@ -28,7 +29,8 @@ public static class Program
 				{
 					typeof(OneOffModule).Assembly,
 					typeof(Program).Assembly,
-					typeof(ConsoleLog).Assembly
+					typeof(ConsoleLog).Assembly,
+					typeof(ToolkitWebServerModule).Assembly
 				},
 				ScopeOptions.SetLifetimeScope
 			);
