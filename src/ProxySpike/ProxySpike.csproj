@@ -15,7 +15,7 @@
 
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1"/>
-        <PackageReference Include="FatCat.Fakes" Version="1.0.24" />
+        <PackageReference Include="FatCat.Fakes" Version="1.0.25" />
         <PackageReference Include="Yarp.ReverseProxy" Version="2.0.1"/>
     </ItemGroup>
 
