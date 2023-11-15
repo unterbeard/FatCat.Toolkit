@@ -11,4 +11,4 @@ Set-Location ".\Toolkit.WebServer"
 
 Submit-NugetPackage
 
-Pop-Location`
+Pop-Location
