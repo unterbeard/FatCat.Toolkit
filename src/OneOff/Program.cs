@@ -2,15 +2,16 @@
 using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.Logging;
+using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using OneOffLib;
+using Thread = FatCat.Toolkit.Threading.Thread;
 
 namespace OneOff;
 
 public static class Program
 {
-	private const int WebPort = 14555;
-
 	public static string[] Args { get; set; }
 
 	public static async Task Main(params string[] args)
@@ -53,6 +54,6 @@ public static class Program
 
 	private static void RunServer(string[] args)
 	{
-		new ServerWorker().DoWork(args);
+		new ServerWorker(new Thread(new ToolkitLogger())).DoWork(args);
 	}
 }

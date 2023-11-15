@@ -2,6 +2,7 @@
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
+using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.Web;
 using FatCat.Toolkit.Web.Api;
 using FatCat.Toolkit.Web.Api.SignalR;
@@ -10,8 +11,10 @@ using Newtonsoft.Json;
 
 namespace OneOff;
 
-public class ServerWorker
+public class ServerWorker(IThread thread)
 {
+	private readonly IThread thread = thread;
+
 	public void DoWork(string[] args)
 	{
 		var applicationSettings = new ToolkitWebApplicationSettings
@@ -24,7 +27,11 @@ public class ServerWorker
 			},
 			SignalRPath = "events",
 			ToolkitTokenParameters = new SpikeToolkitParameters(),
-			ContainerAssemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
+			ContainerAssemblies = new List<Assembly>
+			{
+				Assembly.GetExecutingAssembly(),
+				typeof(ToolkitWebServerModule).Assembly
+			},
 			OnWebApplicationStarted = Started,
 			Args = args
 		};
@@ -95,16 +102,19 @@ public class ServerWorker
 
 	private void Started()
 	{
-		ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
+		thread.Run(() =>
+		{
+			ConsoleLog.WriteGreen("Hey the web application has started!!!!!");
 
-		var factory = SystemScope.Container.Resolve<IWebCallerFactory>();
+			var factory = SystemScope.Container.Resolve<IWebCallerFactory>();
 
-		var caller = factory.GetWebCaller(new Uri("https://localhost:14555"));
+			var caller = factory.GetWebCaller(new Uri("https://localhost:14555"));
 
-		MakeWebRequest(caller, "api/test");
+			MakeWebRequest(caller, "api/test");
 
-		// var response = caller.Get("api/test/Search/firstname=david&lastname=basarab&count=43").Result;
-		// MakeWebRequest(caller, "api/test/Search?firstname=david&lastname=basarab&count=43");
-		// MakeWebRequest(caller, "api/test/Search/Multi?statuses=Available&statuses=CheckedOut");
+			// var response = caller.Get("api/test/Search/firstname=david&lastname=basarab&count=43").Result;
+			// MakeWebRequest(caller, "api/test/Search?firstname=david&lastname=basarab&count=43");
+			// MakeWebRequest(caller, "api/test/Search/Multi?statuses=Available&statuses=CheckedOut");
+		});
 	}
 }
