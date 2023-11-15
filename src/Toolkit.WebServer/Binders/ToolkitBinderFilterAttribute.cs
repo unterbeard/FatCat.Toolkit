@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace FatCat.Toolkit.Web.Api.Binders;
+namespace FatCat.Toolkit.WebServer.Binders;
 
 [ExcludeFromCodeCoverage(Justification = "Helper too simple to test")]
 public class ToolkitBinderFilterAttribute : ActionFilterAttribute

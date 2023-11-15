@@ -1,11 +1,11 @@
-#nullable enable
 using System.Net;
 using FatCat.Toolkit.Extensions;
+using FatCat.Toolkit.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 
-namespace FatCat.Toolkit.Web;
+namespace FatCat.Toolkit.WebServer;
 
 public class WebResult<T> : IActionResult
 	where T : class
@@ -42,11 +42,11 @@ public class WebResult<T> : IActionResult
 
 	public WebResult BaseResult { get; }
 
-	public string? Content => BaseResult.Content;
+	public string Content => BaseResult.Content;
 
 	public string ContentType => BaseResult.ContentType;
 
-	public T? Data => BaseResult.IsSuccessful ? BaseResult.To<T>() : null;
+	public T Data => BaseResult.IsSuccessful ? BaseResult.To<T>() : null;
 
 	public bool IsSuccessful => BaseResult.IsSuccessful;
 
@@ -77,7 +77,7 @@ public class WebResult : IActionResult
 		return new WebResult(HttpStatusCode.BadRequest, modelState);
 	}
 
-	public static WebResult BadRequest(string fieldName, string? messageId)
+	public static WebResult BadRequest(string fieldName, string messageId)
 	{
 		var modelState = new ModelStateDictionary();
 
@@ -89,12 +89,12 @@ public class WebResult : IActionResult
 		return BadRequest(modelState);
 	}
 
-	public static WebResult BadRequest(string? messageId)
+	public static WebResult BadRequest(string messageId)
 	{
 		return BadRequest("General", messageId);
 	}
 
-	public static WebResult NotAcceptable(string? content = null)
+	public static WebResult NotAcceptable(string content = null)
 	{
 		return new WebResult(HttpStatusCode.NotAcceptable, content);
 	}
@@ -113,22 +113,22 @@ public class WebResult : IActionResult
 		return NotFound(modelState);
 	}
 
-	public static WebResult NotFound(string? content = null)
+	public static WebResult NotFound(string content = null)
 	{
 		return new WebResult(HttpStatusCode.NotFound, content);
 	}
 
-	public static WebResult NotImplemented(string? content = null)
+	public static WebResult NotImplemented(string content = null)
 	{
 		return new WebResult(HttpStatusCode.NotImplemented, content);
 	}
 
-	public static WebResult Ok(string? content = null)
+	public static WebResult Ok(string content = null)
 	{
 		return new WebResult(content!.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content!);
 	}
 
-	public static WebResult Ok(EqualObject? returnObject)
+	public static WebResult Ok(EqualObject returnObject)
 	{
 		return new WebResult(returnObject == null ? HttpStatusCode.NoContent : HttpStatusCode.OK, returnObject!);
 	}
@@ -143,7 +143,7 @@ public class WebResult : IActionResult
 		return new WebResult(returnList);
 	}
 
-	public static WebResult PreconditionFailed(string? content = null)
+	public static WebResult PreconditionFailed(string content = null)
 	{
 		return new WebResult(HttpStatusCode.PreconditionFailed, content);
 	}
@@ -158,11 +158,11 @@ public class WebResult : IActionResult
 		return new WebResult(HttpStatusCode.Unauthorized);
 	}
 
-	private readonly HttpContent? httpContent;
+	private readonly HttpContent httpContent;
 
-	private string? content;
+	private string content;
 
-	public string? Content
+	public string Content
 	{
 		get
 		{
@@ -188,31 +188,28 @@ public class WebResult : IActionResult
 		httpContent = response.Content;
 	}
 
-	public WebResult(SimpleResponse response)
-		: this(response.HttpStatusCode, response.Text) { }
-
-	public WebResult(EqualObject? resultObject)
+	public WebResult(EqualObject resultObject)
 		: this(resultObject == null ? HttpStatusCode.NoContent : HttpStatusCode.OK, resultObject!) { }
 
 	/// <summary>
 	///  If you call this with an empty string or null for content, it will return a 204.
 	/// </summary>
-	public WebResult(string? content = null)
+	public WebResult(string content = null)
 		: this(content!.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content) { }
 
 	public WebResult(HttpStatusCode statusCode, EqualObject resultObject)
-		: this(statusCode, Json.Serialize(resultObject)) { }
+		: this(statusCode, Web.Json.Serialize(resultObject)) { }
 
 	public WebResult(HttpStatusCode statusCode, IEnumerable<EqualObject> returnList)
-		: this(statusCode, Json.Serialize(returnList)) { }
+		: this(statusCode, Web.Json.Serialize(returnList)) { }
 
 	public WebResult(IEnumerable<EqualObject> returnList)
-		: this(HttpStatusCode.OK, Json.Serialize(returnList)) { }
+		: this(HttpStatusCode.OK, Web.Json.Serialize(returnList)) { }
 
 	public WebResult(HttpStatusCode statusCode, ModelStateDictionary modelState)
-		: this(statusCode, Json.Serialize(new SerializableError(modelState))) { }
+		: this(statusCode, Web.Json.Serialize(new SerializableError(modelState))) { }
 
-	public WebResult(HttpStatusCode statusCode, string? content)
+	public WebResult(HttpStatusCode statusCode, string content)
 	{
 		Content = content;
 		StatusCode = statusCode;
@@ -242,9 +239,9 @@ public class WebResult : IActionResult
 		await result.ExecuteResultAsync(context);
 	}
 
-	public T? To<T>()
+	public T To<T>()
 	{
-		return this.ConvertTo<T>();
+		return JsonContentConverter.ConvertTo<T>(Content);
 	}
 
 	public override string ToString()

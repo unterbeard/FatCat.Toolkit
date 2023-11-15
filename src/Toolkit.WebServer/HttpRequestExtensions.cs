@@ -1,7 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
-namespace FatCat.Toolkit.Web;
+namespace FatCat.Toolkit.WebServer;
 
 public static class HttpRequestExtensions
 {

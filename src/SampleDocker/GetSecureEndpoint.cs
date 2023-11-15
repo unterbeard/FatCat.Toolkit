@@ -1,14 +1,15 @@
 ﻿using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web;
 using FatCat.Toolkit.Web.Api.SignalR;
+using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Endpoint = FatCat.Toolkit.Web.Endpoint;
+using Endpoint = FatCat.Toolkit.WebServer.Endpoint;
 
 namespace SampleDocker;
 
-public class GetSecureEndpoint : Endpoint
+public class GetSecureEndpoint : FatCat.Toolkit.WebServer.Endpoint
 {
 	private readonly IHttpContextAccessor httpContextAccessor;
 

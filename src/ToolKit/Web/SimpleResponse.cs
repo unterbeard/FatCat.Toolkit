@@ -1,15 +1,14 @@
-#nullable enable
 using System.Net;
 
 namespace FatCat.Toolkit.Web;
 
 public class SimpleResponse : EqualObject
 {
-	public HttpContent? Content { get; set; }
+	public HttpContent Content { get; set; }
 
-	public string? ContentType { get; set; }
+	public string ContentType { get; set; }
 
-	public Exception? Exception { get; set; }
+	public Exception Exception { get; set; }
 
 	public Dictionary<string, IEnumerable<string>> Headers { get; set; } = new();
 
@@ -19,15 +18,13 @@ public class SimpleResponse : EqualObject
 
 	public int StatusCode { get; set; }
 
-	public string? Text { get; set; }
+	public string Text { get; set; }
 
-	public WebResult ToResult()
-	{
-		return new WebResult
+	public FatWebResponse ToResult() =>
+		new()
 		{
 			Content = Text,
-			ContentType = ContentType!,
+			ContentType = ContentType,
 			StatusCode = HttpStatusCode
 		};
-	}
 }
