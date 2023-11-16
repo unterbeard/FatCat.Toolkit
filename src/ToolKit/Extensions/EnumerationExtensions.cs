@@ -4,10 +4,15 @@ namespace FatCat.Toolkit.Extensions;
 
 public static class EnumerationExtensions
 {
-	public static bool Empty<T>(this IEnumerable<T> source) => !source.Any();
+	public static bool Empty<T>(this IEnumerable<T> source)
+	{
+		return !source.Any();
+	}
 
-	public static bool Empty<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) =>
-		!source.Any(predicate);
+	public static bool Empty<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+	{
+		return !source.Any(predicate);
+	}
 
 	public static bool IsFlagNotSet<T>(this T value, T flag)
 		where T : struct
@@ -27,7 +32,10 @@ public static class EnumerationExtensions
 		return (testValueNumber & flagNumberValue) != 0;
 	}
 
-	public static string ToDelimited(this IEnumerable list) => ToDelimited(list, ",");
+	public static string ToDelimited(this IEnumerable list)
+	{
+		return ToDelimited(list, ",");
+	}
 
 	public static string ToDelimited(this IEnumerable list, string delimiter)
 	{
@@ -42,7 +50,10 @@ public static class EnumerationExtensions
 		return returnValue;
 	}
 
-	public static T ToEnum<T>(this string value) => (T)Enum.Parse(typeof(T), value, true);
+	public static T ToEnum<T>(this string value)
+	{
+		return (T)Enum.Parse(typeof(T), value, true);
+	}
 
 	public static T ToEnum<T>(this string value, T errorValue)
 	{
@@ -56,6 +67,8 @@ public static class EnumerationExtensions
 		}
 	}
 
-	public static IList<T> ToList<T>() =>
-		(from object value in Enum.GetValues(typeof(T)) select (T)value).ToList();
+	public static IList<T> ToList<T>()
+	{
+		return (from object value in Enum.GetValues(typeof(T)) select (T)value).ToList();
+	}
 }

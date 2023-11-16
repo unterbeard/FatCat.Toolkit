@@ -23,7 +23,10 @@ public abstract class FatTcpClient
 
 	public TimeSpan ReconnectDelay { get; set; } = 2.Seconds();
 
-	protected FatTcpClient(IFatTcpLogger logger) => this.logger = logger;
+	protected FatTcpClient(IFatTcpLogger logger)
+	{
+		this.logger = logger;
+	}
 
 	public event TcpMessageReceived TcpMessageReceivedEvent;
 

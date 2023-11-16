@@ -70,10 +70,10 @@ public static class TestExtensions
 			});
 	}
 
-	public static UnorderedCallAssertion ShouldMatch<T>(
-		this IAssertConfiguration configuration,
-		Action<T> matcher
-	) => configuration.MustHaveHappened(1, Times.OrMore);
+	public static UnorderedCallAssertion ShouldMatch<T>(this IAssertConfiguration configuration, Action<T> matcher)
+	{
+		return configuration.MustHaveHappened(1, Times.OrMore);
+	}
 
 	private static T Matches<T>(this IArgumentConstraintManager<T> manager, Func<T, bool> predicate)
 	{

@@ -38,9 +38,15 @@ public class TestModelBindingContext : ModelBindingContext
 		set { }
 	}
 
-	public TestModelBindingContext(TestValueProvider testValueProvider) => TestValueProvider = testValueProvider;
+	public TestModelBindingContext(TestValueProvider testValueProvider)
+	{
+		TestValueProvider = testValueProvider;
+	}
 
-	public TestModelBindingContext() => TestValueProvider = new();
+	public TestModelBindingContext()
+	{
+		TestValueProvider = new();
+	}
 
 	public void AddTestValues(string name, string value)
 	{
@@ -52,9 +58,15 @@ public class TestModelBindingContext : ModelBindingContext
 		string fieldName,
 		string modelName,
 		object model
-	) => throw new NotImplementedException();
+	)
+	{
+		throw new NotImplementedException();
+	}
 
-	public override NestedScope EnterNestedScope() => throw new NotImplementedException();
+	public override NestedScope EnterNestedScope()
+	{
+		throw new NotImplementedException();
+	}
 
 	public void RemoveTestValues(string name)
 	{

@@ -41,11 +41,20 @@ public class FakeFatCatCache<T> : IFatCatCache<T>
 		Cache.Clear();
 	}
 
-	public T? Get(string cacheId) => Cache.Get(cacheId);
+	public T? Get(string cacheId)
+	{
+		return Cache.Get(cacheId);
+	}
 
-	public IList<T> GetAll() => Cache.GetAll();
+	public IList<T> GetAll()
+	{
+		return Cache.GetAll();
+	}
 
-	public bool InCache(string cacheId) => Cache.InCache(cacheId);
+	public bool InCache(string cacheId)
+	{
+		return Cache.InCache(cacheId);
+	}
 
 	public void Remove(string cacheId)
 	{

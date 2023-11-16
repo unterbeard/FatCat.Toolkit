@@ -8,7 +8,10 @@ public class WebCallerWorker : SpikeWorker
 {
 	private readonly IWebCallerFactory webCallerFactory;
 
-	public WebCallerWorker(IWebCallerFactory webCallerFactory) => this.webCallerFactory = webCallerFactory;
+	public WebCallerWorker(IWebCallerFactory webCallerFactory)
+	{
+		this.webCallerFactory = webCallerFactory;
+	}
 
 	public override async Task DoWork()
 	{

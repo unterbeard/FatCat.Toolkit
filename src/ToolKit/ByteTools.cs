@@ -42,5 +42,8 @@ public class ByteTools : IByteTools
 		return Encoding.UTF8.GetString(plainTextBytes);
 	}
 
-	public string ToBase64String(byte[] bytes) => bytes.Length == 0 ? string.Empty : Convert.ToBase64String(bytes);
+	public string ToBase64String(byte[] bytes)
+	{
+		return bytes.Length == 0 ? string.Empty : Convert.ToBase64String(bytes);
+	}
 }

@@ -197,8 +197,10 @@ internal static class ObjectEquals
 		return result;
 	}
 
-	private static bool BothAreNull(object? rhs, object? lhs) =>
-		ReferenceEquals(rhs, null) && ReferenceEquals(lhs, null);
+	private static bool BothAreNull(object? rhs, object? lhs)
+	{
+		return ReferenceEquals(rhs, null) && ReferenceEquals(lhs, null);
+	}
 
 	private static bool CompareDictionaries(PropertyInfo propertyInfo, object? compare1, object? compare2)
 	{
@@ -227,8 +229,10 @@ internal static class ObjectEquals
 		return dictionary1;
 	}
 
-	private static bool ExcludeFromCompare(PropertyInfo propertyInfo) =>
-		propertyInfo.GetCustomAttributes(typeof(CompareExclude), false).Any();
+	private static bool ExcludeFromCompare(PropertyInfo propertyInfo)
+	{
+		return propertyInfo.GetCustomAttributes(typeof(CompareExclude), false).Any();
+	}
 
 	private static string GenericHashBuilder(IEnumerable list)
 	{
@@ -257,9 +261,13 @@ internal static class ObjectEquals
 			.Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
 	}
 
-	private static bool IsOneNull(object? rhs, object? lhs) =>
-		ReferenceEquals(rhs, null) || ReferenceEquals(lhs, null);
+	private static bool IsOneNull(object? rhs, object? lhs)
+	{
+		return ReferenceEquals(rhs, null) || ReferenceEquals(lhs, null);
+	}
 
-	private static bool OneValueNull(object? compare2, object? compare1) =>
-		!BothAreNull(compare1, compare2) && IsOneNull(compare1, compare2);
+	private static bool OneValueNull(object? compare2, object? compare1)
+	{
+		return !BothAreNull(compare1, compare2) && IsOneNull(compare1, compare2);
+	}
 }

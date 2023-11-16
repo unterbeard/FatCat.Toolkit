@@ -88,7 +88,10 @@ public class PostTests : WebCallerTests
 		response.RawData.Should().Be($"{data}");
 	}
 
-	protected override Task<FatWebResponse> MakeCallToWeb(string path) => webCaller.Post(path);
+	protected override Task<FatWebResponse> MakeCallToWeb(string path)
+	{
+		return webCaller.Post(path);
+	}
 
 	public class TestData : EqualObject
 	{
@@ -98,6 +101,9 @@ public class PostTests : WebCallerTests
 
 		public int Number { get; set; }
 
-		public string ToJson() => JsonConvert.SerializeObject(this);
+		public string ToJson()
+		{
+			return JsonConvert.SerializeObject(this);
+		}
 	}
 }

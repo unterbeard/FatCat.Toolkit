@@ -26,11 +26,13 @@ public class SimpleResponse : EqualObject
 
 	public string Text { get; set; }
 
-	public FatWebResponse ToResult() =>
-		new()
+	public FatWebResponse ToResult()
+	{
+		return new FatWebResponse
 		{
 			Content = Text,
 			ContentType = ContentType,
 			StatusCode = HttpStatusCode
 		};
+	}
 }

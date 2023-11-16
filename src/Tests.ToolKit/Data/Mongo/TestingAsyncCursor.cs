@@ -13,7 +13,10 @@ public class TestingAsyncCursor<T> : IAsyncCursor<T>
 		get => items;
 	}
 
-	public TestingAsyncCursor(List<T> items) => this.items = items;
+	public TestingAsyncCursor(List<T> items)
+	{
+		this.items = items;
+	}
 
 	public void Dispose() { }
 

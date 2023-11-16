@@ -14,10 +14,15 @@ public interface IEnvironmentRepository
 
 public class EnvironmentRepository : IEnvironmentRepository
 {
-	public string? Get(string name) => Environment.GetEnvironmentVariable(name);
+	public string? Get(string name)
+	{
+		return Environment.GetEnvironmentVariable(name);
+	}
 
-	public string? Get(string name, EnvironmentVariableTarget target) =>
-		Environment.GetEnvironmentVariable(name, target);
+	public string? Get(string name, EnvironmentVariableTarget target)
+	{
+		return Environment.GetEnvironmentVariable(name, target);
+	}
 
 	public void Set(string name, string? value)
 	{

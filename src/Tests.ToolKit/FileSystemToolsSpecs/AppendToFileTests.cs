@@ -8,7 +8,10 @@ public class AppendToFileTests : TestsToEnsureFileExists
 {
 	private readonly string textToAppend;
 
-	public AppendToFileTests() => textToAppend = Faker.RandomString();
+	public AppendToFileTests()
+	{
+		textToAppend = Faker.RandomString();
+	}
 
 	[Fact]
 	public async Task UseFileSystemToAppendText()

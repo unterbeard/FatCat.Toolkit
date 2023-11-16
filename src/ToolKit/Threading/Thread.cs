@@ -17,7 +17,10 @@ public class Thread : IThread
 {
 	private readonly IToolkitLogger logger;
 
-	public Thread(IToolkitLogger logger) => this.logger = logger;
+	public Thread(IToolkitLogger logger)
+	{
+		this.logger = logger;
+	}
 
 	public void Run(Func<Task> action)
 	{
@@ -49,9 +52,15 @@ public class Thread : IThread
 		});
 	}
 
-	public Task Sleep(TimeSpan sleepTime) => Task.Delay(sleepTime);
+	public Task Sleep(TimeSpan sleepTime)
+	{
+		return Task.Delay(sleepTime);
+	}
 
-	public Task Sleep(TimeSpan sleepTime, CancellationToken token) => Task.Delay(sleepTime, token);
+	public Task Sleep(TimeSpan sleepTime, CancellationToken token)
+	{
+		return Task.Delay(sleepTime, token);
+	}
 
 	private void HandleException(Exception ex)
 	{

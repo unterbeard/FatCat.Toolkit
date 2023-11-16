@@ -8,7 +8,10 @@ public class SampleConnectionInformation : IMongoConnectionInformation
 {
 	private readonly IConfiguration configuration;
 
-	public SampleConnectionInformation(IConfiguration configuration) => this.configuration = configuration;
+	public SampleConnectionInformation(IConfiguration configuration)
+	{
+		this.configuration = configuration;
+	}
 
 	public string GetConnectionString()
 	{
@@ -19,5 +22,8 @@ public class SampleConnectionInformation : IMongoConnectionInformation
 		return connectionString;
 	}
 
-	public string GetDatabaseName() => null;
+	public string GetDatabaseName()
+	{
+		return null;
+	}
 }

@@ -54,5 +54,8 @@ public class UpdateListTests : EnsureCollectionTests
 		repository.Update(itemList).Should().Be(itemList);
 	}
 
-	protected override Task TestMethod() => repository.Update(itemList);
+	protected override Task TestMethod()
+	{
+		return repository.Update(itemList);
+	}
 }

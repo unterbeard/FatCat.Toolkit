@@ -35,6 +35,8 @@ public class AutoWaitEvent : IAutoWaitEvent
 		autoResetEvent.Set();
 	}
 
-	public bool Wait(TimeSpan? timeout) =>
-		timeout.HasValue ? autoResetEvent.WaitOne(timeout.Value) : autoResetEvent.WaitOne();
+	public bool Wait(TimeSpan? timeout)
+	{
+		return timeout.HasValue ? autoResetEvent.WaitOne(timeout.Value) : autoResetEvent.WaitOne();
+	}
 }

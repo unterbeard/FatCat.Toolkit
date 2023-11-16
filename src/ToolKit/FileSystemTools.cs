@@ -45,7 +45,10 @@ public class FileSystemTools : IFileSystemTools
 {
 	private readonly IFileSystem fileSystem;
 
-	public FileSystemTools(IFileSystem fileSystem) => this.fileSystem = fileSystem;
+	public FileSystemTools(IFileSystem fileSystem)
+	{
+		this.fileSystem = fileSystem;
+	}
 
 	public async Task AppendToFile(string path, string text)
 	{
@@ -74,7 +77,10 @@ public class FileSystemTools : IFileSystemTools
 		return true;
 	}
 
-	public bool DirectoryExists(string path) => fileSystem.Directory.Exists(path);
+	public bool DirectoryExists(string path)
+	{
+		return fileSystem.Directory.Exists(path);
+	}
 
 	public void EnsureDirectory(string path)
 	{
@@ -98,7 +104,10 @@ public class FileSystemTools : IFileSystemTools
 		using var _ = fileSystem.File.Create(path);
 	}
 
-	public bool FileExists(string path) => fileSystem.File.Exists(path);
+	public bool FileExists(string path)
+	{
+		return fileSystem.File.Exists(path);
+	}
 
 	public List<string> GetDirectories(string path)
 	{
@@ -112,7 +121,10 @@ public class FileSystemTools : IFileSystemTools
 		return directories.ToList();
 	}
 
-	public IFileInfo GetFileMetaData(string fullPath) => fileSystem.FileInfo.New(fullPath);
+	public IFileInfo GetFileMetaData(string fullPath)
+	{
+		return fileSystem.FileInfo.New(fullPath);
+	}
 
 	public List<string> GetFiles(string directoryPath)
 	{
@@ -157,8 +169,10 @@ public class FileSystemTools : IFileSystemTools
 		return true;
 	}
 
-	public async Task<byte[]> ReadAllBytes(string path) =>
-		FileDoesNotExist(path) ? Array.Empty<byte>() : await fileSystem.File.ReadAllBytesAsync(path);
+	public async Task<byte[]> ReadAllBytes(string path)
+	{
+		return FileDoesNotExist(path) ? Array.Empty<byte>() : await fileSystem.File.ReadAllBytesAsync(path);
+	}
 
 	public async Task<List<string>> ReadAllLines(string path)
 	{
@@ -172,8 +186,10 @@ public class FileSystemTools : IFileSystemTools
 		return lines.ToList();
 	}
 
-	public async Task<string> ReadAllText(string path) =>
-		FileDoesNotExist(path) ? string.Empty : await fileSystem.File.ReadAllTextAsync(path);
+	public async Task<string> ReadAllText(string path)
+	{
+		return FileDoesNotExist(path) ? string.Empty : await fileSystem.File.ReadAllTextAsync(path);
+	}
 
 	public async Task WriteAllBytes(string path, byte[] bytes)
 	{
@@ -189,5 +205,8 @@ public class FileSystemTools : IFileSystemTools
 		await fileSystem.File.WriteAllTextAsync(path, text);
 	}
 
-	private bool FileDoesNotExist(string path) => !FileExists(path);
+	private bool FileDoesNotExist(string path)
+	{
+		return !FileExists(path);
+	}
 }

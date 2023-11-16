@@ -13,7 +13,10 @@ public interface IEmbeddedResourceRepository
 
 public class EmbeddedResourceRepository : IEmbeddedResourceRepository
 {
-	public List<string> GetAllResourceNames(Assembly assembly) => assembly.GetManifestResourceNames().ToList();
+	public List<string> GetAllResourceNames(Assembly assembly)
+	{
+		return assembly.GetManifestResourceNames().ToList();
+	}
 
 	public Stream GetStream(Assembly assembly, string resourceName)
 	{

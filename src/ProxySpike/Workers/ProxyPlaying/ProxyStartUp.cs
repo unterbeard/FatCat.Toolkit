@@ -10,9 +10,11 @@ public class ProxyStartUp
 {
 	public IConfiguration Configuration { get; }
 
-	public ProxyStartUp(IConfiguration configuration) =>
+	public ProxyStartUp(IConfiguration configuration)
+	{
 		// Default configuration comes from AppSettings.json file in project/output
 		Configuration = configuration;
+	}
 
 	// This method gets called by the runtime. Use this method to configure the HTTP request
 	// pipeline that handles requests

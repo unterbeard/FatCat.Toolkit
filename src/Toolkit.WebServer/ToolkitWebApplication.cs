@@ -15,7 +15,10 @@ public static class ToolkitWebApplication
 {
 	public static ToolkitWebApplicationSettings Settings { get; private set; } = null!;
 
-	public static bool IsOptionSet(WebApplicationOptions option) => Settings.Options.IsFlagSet(option);
+	public static bool IsOptionSet(WebApplicationOptions option)
+	{
+		return Settings.Options.IsFlagSet(option);
+	}
 
 	public static void Run(ToolkitWebApplicationSettings settings)
 	{

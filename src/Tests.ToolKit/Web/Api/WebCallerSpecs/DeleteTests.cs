@@ -9,5 +9,8 @@ public class DeleteTests : WebCallerTests
 		get => "/delete";
 	}
 
-	protected override async Task<FatWebResponse> MakeCallToWeb(string path) => await webCaller.Delete(path);
+	protected override async Task<FatWebResponse> MakeCallToWeb(string path)
+	{
+		return await webCaller.Delete(path);
+	}
 }

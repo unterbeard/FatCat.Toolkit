@@ -11,7 +11,10 @@ public class TestValueProvider : IValueProvider
 		values.Add(name, value);
 	}
 
-	public bool ContainsPrefix(string prefix) => values.ContainsKey(prefix);
+	public bool ContainsPrefix(string prefix)
+	{
+		return values.ContainsKey(prefix);
+	}
 
 	public ValueProviderResult GetValue(string key)
 	{

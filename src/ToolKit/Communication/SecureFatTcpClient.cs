@@ -9,7 +9,10 @@ public class SecureFatTcpClient : FatTcpClient, IFatTcpClient
 	private readonly X509Certificate certificate;
 
 	public SecureFatTcpClient(X509Certificate certificate, IFatTcpLogger logger)
-		: base(logger) => this.certificate = certificate;
+		: base(logger)
+	{
+		this.certificate = certificate;
+	}
 
 	protected override Stream GetStream()
 	{
@@ -32,5 +35,8 @@ public class SecureFatTcpClient : FatTcpClient, IFatTcpClient
 		X509Certificate remoteCertificate,
 		X509Chain chain,
 		SslPolicyErrors sslPolicyErrors
-	) => CertificateHelper.CertValidation(remoteCertificate, certificate, sslPolicyErrors);
+	)
+	{
+		return CertificateHelper.CertValidation(remoteCertificate, certificate, sslPolicyErrors);
+	}
 }

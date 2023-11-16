@@ -8,7 +8,10 @@ public class WriteAllTextTests : TestsToEnsureFileExists
 {
 	private readonly string textToCreate;
 
-	public WriteAllTextTests() => textToCreate = Faker.RandomString();
+	public WriteAllTextTests()
+	{
+		textToCreate = Faker.RandomString();
+	}
 
 	[Fact]
 	public async Task WriteTextToFile()

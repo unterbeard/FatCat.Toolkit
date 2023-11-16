@@ -9,5 +9,8 @@ public class GetTests : WebCallerTests
 		get => "/get";
 	}
 
-	protected override async Task<FatWebResponse> MakeCallToWeb(string path) => await webCaller.Get(path);
+	protected override async Task<FatWebResponse> MakeCallToWeb(string path)
+	{
+		return await webCaller.Get(path);
+	}
 }

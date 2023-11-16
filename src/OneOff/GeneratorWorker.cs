@@ -7,7 +7,10 @@ public class GeneratorWorker
 {
 	private readonly IGenerator generator;
 
-	public GeneratorWorker(IGenerator generator) => this.generator = generator;
+	public GeneratorWorker(IGenerator generator)
+	{
+		this.generator = generator;
+	}
 
 	public void DoWork()
 	{

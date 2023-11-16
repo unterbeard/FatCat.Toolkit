@@ -42,6 +42,8 @@ public class ManualWaitEvent : IManualWaitEvent
 		manualResetEvent.Set();
 	}
 
-	public bool Wait(TimeSpan? timeout) =>
-		timeout.HasValue ? manualResetEvent.WaitOne(timeout.Value) : manualResetEvent.WaitOne();
+	public bool Wait(TimeSpan? timeout)
+	{
+		return timeout.HasValue ? manualResetEvent.WaitOne(timeout.Value) : manualResetEvent.WaitOne();
+	}
 }

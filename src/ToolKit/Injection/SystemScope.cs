@@ -72,9 +72,15 @@ public class SystemScope : ISystemScope
 	private SystemScope() { }
 
 	public TItem Resolve<TItem>()
-		where TItem : class => LifetimeScope!.Resolve<TItem>();
+		where TItem : class
+	{
+		return LifetimeScope!.Resolve<TItem>();
+	}
 
-	public object Resolve(Type type) => LifetimeScope!.Resolve(type);
+	public object Resolve(Type type)
+	{
+		return LifetimeScope!.Resolve(type);
+	}
 
 	public bool TryResolve(Type type, out object? instance)
 	{

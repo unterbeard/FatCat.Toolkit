@@ -15,7 +15,10 @@ public class GetStorageItemsEndpoint : Endpoint
 	private const string ContainerName = "quickstartblobs-da3c108f-fb28-47cb-8e57-4a2578253c3c";
 	private readonly IConfiguration configuration;
 
-	public GetStorageItemsEndpoint(IConfiguration configuration) => this.configuration = configuration;
+	public GetStorageItemsEndpoint(IConfiguration configuration)
+	{
+		this.configuration = configuration;
+	}
 
 	[HttpPost("api/store")]
 	public async Task<WebResult> GetStorageItems()

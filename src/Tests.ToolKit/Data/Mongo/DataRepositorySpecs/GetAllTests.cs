@@ -42,5 +42,8 @@ public class GetAllTests : EnsureCollectionTests
 		repository.GetAll().Should().BeEquivalentTo(itemList);
 	}
 
-	protected override Task TestMethod() => repository.GetAll();
+	protected override Task TestMethod()
+	{
+		return repository.GetAll();
+	}
 }

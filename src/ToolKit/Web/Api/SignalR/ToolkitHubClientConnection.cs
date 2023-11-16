@@ -133,8 +133,10 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		);
 	}
 
-	public Task SendNoResponse(ToolkitMessage message) =>
-		SendSessionMessage(message.MessageType, message.Data ?? string.Empty, generator.NewId());
+	public Task SendNoResponse(ToolkitMessage message)
+	{
+		return SendSessionMessage(message.MessageType, message.Data ?? string.Empty, generator.NewId());
+	}
 
 	public async Task<bool> TryToConnect(string hubUrl, Action onConnectionLost = null)
 	{
@@ -150,10 +152,15 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		}
 	}
 
-	private Task<string> InvokeDataBufferMessage(ToolkitMessage message, byte[] dataBuffer) =>
-		ServerDataBufferMessage?.Invoke(message, dataBuffer)!;
+	private Task<string> InvokeDataBufferMessage(ToolkitMessage message, byte[] dataBuffer)
+	{
+		return ServerDataBufferMessage?.Invoke(message, dataBuffer)!;
+	}
 
-	private Task<string> InvokeServerMessage(ToolkitMessage message) => ServerMessage?.Invoke(message)!;
+	private Task<string> InvokeServerMessage(ToolkitMessage message)
+	{
+		return ServerMessage?.Invoke(message)!;
+	}
 
 	private Task OnConnectionClosed(Exception arg)
 	{
@@ -258,8 +265,10 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 		connection.On(ToolkitHubMethodNames.ServerDataBufferMessage, dataBufferMethod);
 	}
 
-	private Task SendSessionMessage(int messageType, string data, string sessionId) =>
-		connection.SendAsync(nameof(ToolkitHubMethodNames.ClientMessage), messageType, sessionId, data);
+	private Task SendSessionMessage(int messageType, string data, string sessionId)
+	{
+		return connection.SendAsync(nameof(ToolkitHubMethodNames.ClientMessage), messageType, sessionId, data);
+	}
 
 	private async Task<ToolkitMessage> WaitForResponse(
 		ToolkitMessage message,

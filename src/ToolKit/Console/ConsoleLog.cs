@@ -215,10 +215,12 @@ public static class ConsoleLog
 		Write(ConsoleColor.Yellow, message, memberName, sourceFilePath, sourceLineNumber);
 	}
 
-	private static string? GetPrintableStackTrace(string spaces, Exception exception) =>
-		string.IsNullOrEmpty(exception.StackTrace)
+	private static string? GetPrintableStackTrace(string spaces, Exception exception)
+	{
+		return string.IsNullOrEmpty(exception.StackTrace)
 			? null
 			: exception.StackTrace.Replace(Environment.NewLine, $"{spaces}{Environment.NewLine}                ");
+	}
 
 	private static void WriteEquals(ConsoleColor color, NewLineLocation lineLocation = NewLineLocation.None)
 	{

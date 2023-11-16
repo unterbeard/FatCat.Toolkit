@@ -18,7 +18,10 @@ public class ToolkitHubClientFactory : IToolkitHubClientFactory
 	private readonly ConcurrentDictionary<string, IToolkitHubClientConnection> connections = new();
 	private readonly ISystemScope scope;
 
-	public ToolkitHubClientFactory(ISystemScope scope) => this.scope = scope;
+	public ToolkitHubClientFactory(ISystemScope scope)
+	{
+		this.scope = scope;
+	}
 
 	public async Task<IToolkitHubClientConnection> ConnectToClient(string hubUrl)
 	{

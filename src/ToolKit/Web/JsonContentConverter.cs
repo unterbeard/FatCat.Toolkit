@@ -46,21 +46,45 @@ public static class JsonContentConverter
 		return (T)listAsInstance!;
 	}
 
-	private static bool IsList(Type type) => type.IsGenericType && type.Implements(typeof(IEnumerable));
+	private static bool IsList(Type type)
+	{
+		return type.IsGenericType && type.Implements(typeof(IEnumerable));
+	}
 
-	private static object SetBool(string content) => bool.Parse(content);
+	private static object SetBool(string content)
+	{
+		return bool.Parse(content);
+	}
 
-	private static object SetDateTime(string content) => DateTime.Parse(content);
+	private static object SetDateTime(string content)
+	{
+		return DateTime.Parse(content);
+	}
 
-	private static object SetDouble(string content) => double.Parse(content);
+	private static object SetDouble(string content)
+	{
+		return double.Parse(content);
+	}
 
-	private static object SetGuid(string content) => Guid.Parse(content);
+	private static object SetGuid(string content)
+	{
+		return Guid.Parse(content);
+	}
 
-	private static object SetInt(string content) => int.Parse(content);
+	private static object SetInt(string content)
+	{
+		return int.Parse(content);
+	}
 
-	private static object SetString(string content) => content;
+	private static object SetString(string content)
+	{
+		return content;
+	}
 
-	private static object SetTimespan(string content) => TimeSpan.Parse(content);
+	private static object SetTimespan(string content)
+	{
+		return TimeSpan.Parse(content);
+	}
 
 	private static T ToDefaultValue<T>()
 	{

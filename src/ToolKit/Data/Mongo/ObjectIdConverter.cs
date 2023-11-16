@@ -11,7 +11,10 @@ public class ObjectIdConverter : JsonConverter
 		get => true;
 	}
 
-	public override bool CanConvert(Type objectType) => objectType == typeof(ObjectId);
+	public override bool CanConvert(Type objectType)
+	{
+		return objectType == typeof(ObjectId);
+	}
 
 	public override object ReadJson(
 		JsonReader reader,

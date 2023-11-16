@@ -10,7 +10,10 @@ namespace FatCat.Toolkit.WebServer.Testing;
 
 public static class EndpointTestExtensions
 {
-	public static EndpointAssertions Should(this Endpoint controller) => new(controller);
+	public static EndpointAssertions Should(this Endpoint controller)
+	{
+		return new EndpointAssertions(controller);
+	}
 }
 
 public class EndpointAssertions : ReferenceTypeAssertions<Endpoint, EndpointAssertions>
@@ -23,16 +26,25 @@ public class EndpointAssertions : ReferenceTypeAssertions<Endpoint, EndpointAsse
 	}
 
 	public EndpointAssertions(Endpoint endpoint)
-		: base(endpoint) => this.endpoint = endpoint;
+		: base(endpoint)
+	{
+		this.endpoint = endpoint;
+	}
 
-	public AndConstraint<EndpointAssertions> BeDelete(string methodName, string template = null!) =>
-		HaveHttpAttribute<HttpDeleteAttribute>(methodName, template);
+	public AndConstraint<EndpointAssertions> BeDelete(string methodName, string template = null!)
+	{
+		return HaveHttpAttribute<HttpDeleteAttribute>(methodName, template);
+	}
 
-	public AndConstraint<EndpointAssertions> BeGet(string methodName, string template = null!) =>
-		HaveHttpAttribute<HttpGetAttribute>(methodName, template);
+	public AndConstraint<EndpointAssertions> BeGet(string methodName, string template = null!)
+	{
+		return HaveHttpAttribute<HttpGetAttribute>(methodName, template);
+	}
 
-	public AndConstraint<EndpointAssertions> BePost(string methodName, string template = null!) =>
-		HaveHttpAttribute<HttpPostAttribute>(methodName, template);
+	public AndConstraint<EndpointAssertions> BePost(string methodName, string template = null!)
+	{
+		return HaveHttpAttribute<HttpPostAttribute>(methodName, template);
+	}
 
 	public AndConstraint<EndpointAssertions> HaveHttpAttribute<THttpAttribute>(
 		string methodName,

@@ -170,7 +170,10 @@ public class ApplicationTools : IApplicationTools
 		return hostName.ToLower();
 	}
 
-	public string GetIPAddress() => GetIPAddressObject()?.ToString();
+	public string GetIPAddress()
+	{
+		return GetIPAddressObject()?.ToString();
+	}
 
 	public IPAddress GetIPAddressObject()
 	{
@@ -228,5 +231,8 @@ public class ApplicationTools : IApplicationTools
 		}
 	}
 
-	private static string? GetProcessFileName() => Process.GetCurrentProcess().MainModule?.FileName;
+	private static string? GetProcessFileName()
+	{
+		return Process.GetCurrentProcess().MainModule?.FileName;
+	}
 }

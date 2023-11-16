@@ -18,7 +18,10 @@ public interface IFatCatCache<T>
 
 	bool InCache(string cacheId);
 
-	public bool InCache(T cacheItem) => InCache(cacheItem.CacheId);
+	public bool InCache(T cacheItem)
+	{
+		return InCache(cacheItem.CacheId);
+	}
 
 	void Remove(string cacheId);
 

@@ -54,7 +54,10 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 		this.jsonOperations = jsonOperations;
 	}
 
-	public bool Exists() => fileSystem.File.Exists(DataPath);
+	public bool Exists()
+	{
+		return fileSystem.File.Exists(DataPath);
+	}
 
 	public async Task<T> Get()
 	{

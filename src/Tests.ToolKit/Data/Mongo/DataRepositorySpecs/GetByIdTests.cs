@@ -59,5 +59,8 @@ public class GetByIdTests : EnsureCollectionTests
 		repository.GetById(id.ToString()).Should().Be(filterItem);
 	}
 
-	protected override Task TestMethod() => repository.GetById(id.ToString());
+	protected override Task TestMethod()
+	{
+		return repository.GetById(id.ToString());
+	}
 }

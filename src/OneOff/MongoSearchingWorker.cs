@@ -49,7 +49,10 @@ public class MongoSearchingWorker : SpikeWorker
 {
 	private readonly IMongoRepository<TestSearchingObject> mongo;
 
-	public MongoSearchingWorker(IMongoRepository<TestSearchingObject> mongo) => this.mongo = mongo;
+	public MongoSearchingWorker(IMongoRepository<TestSearchingObject> mongo)
+	{
+		this.mongo = mongo;
+	}
 
 	public override async Task DoWork()
 	{

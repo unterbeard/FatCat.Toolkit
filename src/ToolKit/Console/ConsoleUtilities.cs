@@ -19,7 +19,10 @@ public class ConsoleUtilities : IConsoleUtilities
 {
 	private readonly IManualWaitEvent stopEvent;
 
-	public ConsoleUtilities(IManualWaitEvent stopEvent) => this.stopEvent = stopEvent;
+	public ConsoleUtilities(IManualWaitEvent stopEvent)
+	{
+		this.stopEvent = stopEvent;
+	}
 
 	public void Exit()
 	{
