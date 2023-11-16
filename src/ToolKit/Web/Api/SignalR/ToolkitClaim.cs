@@ -4,13 +4,14 @@ namespace FatCat.Toolkit.Web.Api.SignalR;
 
 public class ToolkitClaim : EqualObject
 {
-	public static ToolkitClaim Create(Claim claim) => new()
-													{
-														Issuer = claim.Issuer,
-														Type = claim.Type,
-														Value = claim.Value,
-														OriginalIssuer = claim.OriginalIssuer
-													};
+	public static ToolkitClaim Create(Claim claim) =>
+		new()
+		{
+			Issuer = claim.Issuer,
+			Type = claim.Type,
+			Value = claim.Value,
+			OriginalIssuer = claim.OriginalIssuer
+		};
 
 	public string Issuer { get; set; }
 

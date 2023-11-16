@@ -20,7 +20,10 @@ public class ObjectIdConverter : JsonConverter
 		JsonSerializer serializer
 	)
 	{
-		if (reader.Value == null) { return new ObjectId(); }
+		if (reader.Value == null)
+		{
+			return new ObjectId();
+		}
 
 		var objectIdString = reader.Value.ToString();
 

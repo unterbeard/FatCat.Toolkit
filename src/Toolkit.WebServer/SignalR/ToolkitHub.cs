@@ -23,33 +23,33 @@ public class ToolkitHub : Hub
 		await Task.CompletedTask;
 
 		Logger.Debug(
-					$"Got DataBuffer Message | MessageType <{messageType}> | SessionId <{sessionId}> | Data <{data}> | Buffer <{dataBuffer.Length}> | ConnectionId <{Context.ConnectionId}>"
-					);
+			$"Got DataBuffer Message | MessageType <{messageType}> | SessionId <{sessionId}> | Data <{data}> | Buffer <{dataBuffer.Length}> | ConnectionId <{Context.ConnectionId}>"
+		);
 
 		var toolkitMessage = new ToolkitMessage
-							{
-								Data = data,
-								ConnectionId = Context.ConnectionId,
-								User = GetUser(),
-								MessageType = messageType
-							};
+		{
+			Data = data,
+			ConnectionId = Context.ConnectionId,
+			User = GetUser(),
+			MessageType = messageType
+		};
 
 		var responseMessage = await ToolkitWebApplication.Settings.OnOnClientDataBufferMessage(
-																									toolkitMessage,
-																									dataBuffer
-																								);
+			toolkitMessage,
+			dataBuffer
+		);
 
 		Logger.Debug(
-					$"Response for message | <{responseMessage}> | Sending to ConnectionId {Context.ConnectionId}"
-					);
+			$"Response for message | <{responseMessage}> | Sending to ConnectionId {Context.ConnectionId}"
+		);
 
 		await Clients
 			.Client(Context.ConnectionId)
 			.SendAsync(ToolkitHubMethodNames.ServerResponseMessage, messageType, sessionId, responseMessage);
 
 		Logger.Debug(
-					$"Done sending response for message | <{responseMessage}> | SessionId <{sessionId}> | ConnectionId {Context.ConnectionId}"
-					);
+			$"Done sending response for message | <{responseMessage}> | SessionId <{sessionId}> | ConnectionId {Context.ConnectionId}"
+		);
 	}
 
 	public async Task ClientMessage(int messageType, string sessionId, string data)
@@ -57,12 +57,12 @@ public class ToolkitHub : Hub
 		Logger.Debug($"Got Message | MessageType <{messageType}> | SessionId <{sessionId}> | Data <{data}>");
 
 		var toolkitMessage = new ToolkitMessage
-							{
-								Data = data,
-								ConnectionId = Context.ConnectionId,
-								User = GetUser(),
-								MessageType = messageType
-							};
+		{
+			Data = data,
+			ConnectionId = Context.ConnectionId,
+			User = GetUser(),
+			MessageType = messageType
+		};
 
 		var responseMessage = await ToolkitWebApplication.Settings.OnClientHubMessage(toolkitMessage);
 
@@ -78,12 +78,12 @@ public class ToolkitHub : Hub
 		await Task.CompletedTask;
 
 		var toolkitMessage = new ToolkitMessage
-							{
-								Data = data,
-								ConnectionId = Context.ConnectionId,
-								User = GetUser(),
-								MessageType = messageType
-							};
+		{
+			Data = data,
+			ConnectionId = Context.ConnectionId,
+			User = GetUser(),
+			MessageType = messageType
+		};
 
 		HubServer.ClientResponseMessage(sessionId, toolkitMessage);
 	}
@@ -102,7 +102,10 @@ public class ToolkitHub : Hub
 
 			ToolkitWebApplication.Settings.OnClientConnected(toolkitUser, Context.ConnectionId);
 		}
-		catch (Exception ex) { Logger.Exception(ex); }
+		catch (Exception ex)
+		{
+			Logger.Exception(ex);
+		}
 
 		return base.OnConnectedAsync();
 	}
@@ -117,7 +120,10 @@ public class ToolkitHub : Hub
 
 			ToolkitWebApplication.Settings.OnClientDisconnected(toolkitUser, Context.ConnectionId);
 		}
-		catch (Exception ex) { Logger.Exception(ex); }
+		catch (Exception ex)
+		{
+			Logger.Exception(ex);
+		}
 
 		return base.OnDisconnectedAsync(exception);
 	}

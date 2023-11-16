@@ -44,7 +44,10 @@ public abstract class FatTcpClient
 
 	public void Disconnect()
 	{
-		try { cancelSource.Cancel(); }
+		try
+		{
+			cancelSource.Cancel();
+		}
 		catch
 		{ // ignored
 		}
@@ -54,7 +57,10 @@ public abstract class FatTcpClient
 
 	public async Task Send(byte[] bytes)
 	{
-		if (!Connected || tcpClient is null || stream is null) { return; }
+		if (!Connected || tcpClient is null || stream is null)
+		{
+			return;
+		}
 
 		try
 		{
@@ -89,7 +95,10 @@ public abstract class FatTcpClient
 
 	protected abstract Stream GetStream();
 
-	protected virtual void OnOnMessageReceived(byte[] data) { TcpMessageReceivedEvent?.Invoke(data); }
+	protected virtual void OnOnMessageReceived(byte[] data)
+	{
+		TcpMessageReceivedEvent?.Invoke(data);
+	}
 
 	private async Task CreateSocket()
 	{
@@ -158,7 +167,10 @@ public abstract class FatTcpClient
 				}
 			}
 		}
-		catch (Exception e) { ConsoleLog.WriteException(e); }
+		catch (Exception e)
+		{
+			ConsoleLog.WriteException(e);
+		}
 	}
 
 	private void ShutdownSocket()
@@ -173,7 +185,10 @@ public abstract class FatTcpClient
 		{ // ignored
 		}
 
-		try { tcpClient.Dispose(); }
+		try
+		{
+			tcpClient.Dispose();
+		}
 		catch
 		{ // ignored
 		}
@@ -195,7 +210,10 @@ public abstract class FatTcpClient
 
 	private void VerifyCancelToken()
 	{
-		if (cancelToken != default) { return; }
+		if (cancelToken != default)
+		{
+			return;
+		}
 
 		cancelSource = new CancellationTokenSource();
 		cancelToken = cancelSource.Token;

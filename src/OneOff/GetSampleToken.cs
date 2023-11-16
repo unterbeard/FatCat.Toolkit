@@ -37,13 +37,13 @@ public class GetSampleToken : Endpoint
 		var cert = new X509Certificate2(@"C:\DevelopmentCert\DevelopmentCert.pfx", "basarab_cert");
 
 		return new SecurityTokenDescriptor
-				{
-					Subject = user,
-					Expires = DateTime.UtcNow.AddMinutes(15),
-					Audience = "https://foghaze.com/Brume",
-					Issuer = "FogHaze",
-					NotBefore = DateTime.UtcNow.AddSeconds(-10),
-					SigningCredentials = new X509SigningCredentials(cert)
-				};
+		{
+			Subject = user,
+			Expires = DateTime.UtcNow.AddMinutes(15),
+			Audience = "https://foghaze.com/Brume",
+			Issuer = "FogHaze",
+			NotBefore = DateTime.UtcNow.AddSeconds(-10),
+			SigningCredentials = new X509SigningCredentials(cert)
+		};
 	}
 }

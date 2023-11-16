@@ -18,11 +18,7 @@ public class JsonOperations : IJsonOperations
 		{
 			TypeNameHandling = TypeNameHandling.All,
 			NullValueHandling = NullValueHandling.Ignore,
-			Converters = new List<JsonConverter>
-						{
-							new StringEnumConverter(),
-							new ObjectIdConverter()
-						}
+			Converters = new List<JsonConverter> { new StringEnumConverter(), new ObjectIdConverter() }
 		};
 
 	public T Deserialize<T>(string json) => JsonConvert.DeserializeObject<T>(json, JsonSettings);

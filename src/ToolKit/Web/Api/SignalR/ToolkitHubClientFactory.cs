@@ -22,7 +22,10 @@ public class ToolkitHubClientFactory : IToolkitHubClientFactory
 
 	public async Task<IToolkitHubClientConnection> ConnectToClient(string hubUrl)
 	{
-		if (connections.TryGetValue(hubUrl, out var connection)) { return connection; }
+		if (connections.TryGetValue(hubUrl, out var connection))
+		{
+			return connection;
+		}
 
 		connection = scope.Resolve<IToolkitHubClientConnection>();
 
@@ -35,28 +38,40 @@ public class ToolkitHubClientFactory : IToolkitHubClientFactory
 
 	public async ValueTask DisposeAsync()
 	{
-		foreach (var connection in connections.Values) { await connection.DisposeAsync(); }
+		foreach (var connection in connections.Values)
+		{
+			await connection.DisposeAsync();
+		}
 	}
 
-	public void RemoveHubFromConnections(string hubUrl) { connections.TryRemove(hubUrl, out _); }
+	public void RemoveHubFromConnections(string hubUrl)
+	{
+		connections.TryRemove(hubUrl, out _);
+	}
 
 	public async Task<ConnectionResult> TryToConnectToClient(string hubUrl, Action? onConnectionLost = null)
 	{
-		if (connections.TryGetValue(hubUrl, out var connection)) { return new ConnectionResult(true, connection); }
+		if (connections.TryGetValue(hubUrl, out var connection))
+		{
+			return new ConnectionResult(true, connection);
+		}
 
 		connection = scope.Resolve<IToolkitHubClientConnection>();
 
 		var result = await connection.TryToConnect(
-													hubUrl,
-													() =>
-													{
-														RemoveHubFromConnections(hubUrl);
+			hubUrl,
+			() =>
+			{
+				RemoveHubFromConnections(hubUrl);
 
-														onConnectionLost?.Invoke();
-													}
-													);
+				onConnectionLost?.Invoke();
+			}
+		);
 
-		if (!result) { return new ConnectionResult(false); }
+		if (!result)
+		{
+			return new ConnectionResult(false);
+		}
 
 		connections.TryAdd(hubUrl, connection);
 

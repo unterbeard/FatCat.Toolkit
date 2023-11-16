@@ -58,7 +58,10 @@ public class DataConnectionTests
 	}
 
 	[Fact]
-	public void ReturnCollectionFromMongoDatabase() { connection.GetCollection<TestingMongoObject>().Should().Be(mongoCollection); }
+	public void ReturnCollectionFromMongoDatabase()
+	{
+		connection.GetCollection<TestingMongoObject>().Should().Be(mongoCollection);
+	}
 
 	private void SetUpCollectionName()
 	{
@@ -87,7 +90,7 @@ public class DataConnectionTests
 		mongoCollection = A.Fake<IMongoCollection<TestingMongoObject>>();
 
 		A.CallTo(() => mongoDatabase.GetCollection<TestingMongoObject>(A<string>._, A<MongoCollectionSettings>._))
-		.Returns(mongoCollection);
+			.Returns(mongoCollection);
 	}
 
 	private void SetUpMongoConnection()

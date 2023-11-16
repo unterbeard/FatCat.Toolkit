@@ -36,13 +36,13 @@ public class GetSampleToken : Endpoint
 		var key = new RsaSecurityKey(SecureData.Rsa);
 
 		return new SecurityTokenDescriptor
-				{
-					Subject = user,
-					Expires = DateTime.UtcNow.AddMinutes(15),
-					Audience = "https://foghaze.com/Brume",
-					Issuer = "FogHaze",
-					NotBefore = DateTime.UtcNow.AddSeconds(-10),
-					SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSsaPssSha256)
-				};
+		{
+			Subject = user,
+			Expires = DateTime.UtcNow.AddMinutes(15),
+			Audience = "https://foghaze.com/Brume",
+			Issuer = "FogHaze",
+			NotBefore = DateTime.UtcNow.AddSeconds(-10),
+			SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSsaPssSha256)
+		};
 	}
 }

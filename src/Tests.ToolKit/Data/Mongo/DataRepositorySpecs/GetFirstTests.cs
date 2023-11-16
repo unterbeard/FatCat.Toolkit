@@ -19,7 +19,7 @@ public class GetFirstTests : EnsureCollectionTests
 		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
 		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture!, default, default))
-		.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { firstItem }));
+			.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { firstItem }));
 	}
 
 	[Fact]
@@ -30,12 +30,12 @@ public class GetFirstTests : EnsureCollectionTests
 		A.CallTo(
 				() =>
 					collection.FindAsync<TestingMongoObject>(
-																A<ExpressionFilterDefinition<TestingMongoObject>>._!,
-																default,
-																default
-															)
-				)
-		.MustHaveHappened();
+						A<ExpressionFilterDefinition<TestingMongoObject>>._!,
+						default,
+						default
+					)
+			)
+			.MustHaveHappened();
 
 		var filter = expressionCapture.Value.Expression.Compile();
 
@@ -43,7 +43,10 @@ public class GetFirstTests : EnsureCollectionTests
 	}
 
 	[Fact]
-	public void ReturnFirstItem() { repository.GetFirst().Should().Be(firstItem); }
+	public void ReturnFirstItem()
+	{
+		repository.GetFirst().Should().Be(firstItem);
+	}
 
 	protected override Task TestMethod() => repository.GetFirst();
 }

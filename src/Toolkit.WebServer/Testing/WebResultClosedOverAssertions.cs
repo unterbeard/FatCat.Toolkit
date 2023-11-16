@@ -16,7 +16,8 @@ public static class WebResultClosedOverAssertions
 		return new WebResultClosedOverAssertions<T>(result);
 	}
 
-	public static WebResultClosedOverAssertions<T> Should<T>(this WebResult<T> webResult) where T : class => new(webResult);
+	public static WebResultClosedOverAssertions<T> Should<T>(this WebResult<T> webResult)
+		where T : class => new(webResult);
 }
 
 public class WebResultClosedOverAssertions<T>
@@ -96,7 +97,10 @@ public class WebResultClosedOverAssertions<T>
 
 	public WebResultClosedOverAssertions<T> BeNotFound() => HaveStatusCode(HttpStatusCode.NotFound);
 
-	public WebResultClosedOverAssertions<T> BeOk() { return HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent }); }
+	public WebResultClosedOverAssertions<T> BeOk()
+	{
+		return HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent });
+	}
 
 	public WebResultClosedOverAssertions<T> BeSuccessful()
 	{
@@ -145,7 +149,10 @@ public class WebResultClosedOverAssertions<T>
 		return this;
 	}
 
-	public WebResultClosedOverAssertions<T> HaveContentEquivalentTo(T expectedContent) { return HaveContentEquivalentTo(expectedContent, config => config); }
+	public WebResultClosedOverAssertions<T> HaveContentEquivalentTo(T expectedContent)
+	{
+		return HaveContentEquivalentTo(expectedContent, config => config);
+	}
 
 	public WebResultClosedOverAssertions<T> HaveContentEquivalentTo(
 		T expectedContent,
@@ -157,10 +164,10 @@ public class WebResultClosedOverAssertions<T>
 		Subject
 			.Should()
 			.HaveStatusCode(
-							HttpStatusCode.OK,
-							"you cannot test for content from an unsuccessful status code: {0}",
-							Subject.StatusCode
-							);
+				HttpStatusCode.OK,
+				"you cannot test for content from an unsuccessful status code: {0}",
+				Subject.StatusCode
+			);
 
 		var actualContent = Subject.Data;
 

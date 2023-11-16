@@ -34,7 +34,10 @@ public class HashTools : IHashTools
 			return hash;
 		}
 
-		public void Dispose() { memoryStream.Dispose(); }
+		public void Dispose()
+		{
+			memoryStream.Dispose();
+		}
 
 		private async Task<byte[]> GetMd5Hash()
 		{

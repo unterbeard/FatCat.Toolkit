@@ -52,7 +52,10 @@ public class MongoRepository<T> : IMongoRepository<T>
 
 	public async Task<List<T>> Create(List<T> items)
 	{
-		foreach (var item in items) { await Create(item); }
+		foreach (var item in items)
+		{
+			await Create(item);
+		}
 
 		return items;
 	}
@@ -68,7 +71,10 @@ public class MongoRepository<T> : IMongoRepository<T>
 
 	public async Task<List<T>> Delete(List<T> items)
 	{
-		foreach (var item in items) { await Delete(item); }
+		foreach (var item in items)
+		{
+			await Delete(item);
+		}
 
 		return items;
 	}
@@ -98,11 +104,20 @@ public class MongoRepository<T> : IMongoRepository<T>
 		return list.FirstOrDefault();
 	}
 
-	public async Task<T?> GetById(string id) { return await GetByFilter(i => i.Id == new ObjectId(id)); }
+	public async Task<T?> GetById(string id)
+	{
+		return await GetByFilter(i => i.Id == new ObjectId(id));
+	}
 
-	public async Task<T?> GetById(ObjectId id) { return await GetByFilter(i => i.Id == id); }
+	public async Task<T?> GetById(ObjectId id)
+	{
+		return await GetByFilter(i => i.Id == id);
+	}
 
-	public async Task<T?> GetFirst() { return await GetByFilter(i => true); }
+	public async Task<T?> GetFirst()
+	{
+		return await GetByFilter(i => true);
+	}
 
 	public async Task<T> GetFirstOrCreate()
 	{
@@ -129,13 +144,19 @@ public class MongoRepository<T> : IMongoRepository<T>
 
 	public async Task<List<T>> Update(List<T> items)
 	{
-		foreach (var item in items) { await Update(item); }
+		foreach (var item in items)
+		{
+			await Update(item);
+		}
 
 		return items;
 	}
 
 	private void EnsureCollection()
 	{
-		if (Collection == null) { throw new ConnectionToMongoIsRequired(); }
+		if (Collection == null)
+		{
+			throw new ConnectionToMongoIsRequired();
+		}
 	}
 }

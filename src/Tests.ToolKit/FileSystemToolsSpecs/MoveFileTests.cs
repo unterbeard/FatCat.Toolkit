@@ -18,7 +18,10 @@ public class MoveFileTests : FileToolsTests
 	}
 
 	[Fact]
-	public void IfCanMoveFileReturnTrue() { fileTools.MoveFile(SourceFilePath, DestinationFilePath).Should().BeTrue(); }
+	public void IfCanMoveFileReturnTrue()
+	{
+		fileTools.MoveFile(SourceFilePath, DestinationFilePath).Should().BeTrue();
+	}
 
 	[Fact]
 	public void IfSourceFileDoesNotExistReturnFalse()

@@ -31,5 +31,8 @@ public class ExistsTests : FileSystemRepositoryTests
 		repository.Exists().Should().BeTrue();
 	}
 
-	private void SetUpFileExists(bool value) { A.CallTo(() => fileSystem.File.Exists(A<string>._)).Returns(value); }
+	private void SetUpFileExists(bool value)
+	{
+		A.CallTo(() => fileSystem.File.Exists(A<string>._)).Returns(value);
+	}
 }

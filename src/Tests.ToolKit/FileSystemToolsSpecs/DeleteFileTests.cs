@@ -41,5 +41,8 @@ public class DeleteFileTests : FileToolsTests
 	}
 
 	[Fact]
-	public void IfTheFileIsDeletedReturnTrue() { fileTools.DeleteFile(filePath).Should().BeTrue(); }
+	public void IfTheFileIsDeletedReturnTrue()
+	{
+		fileTools.DeleteFile(filePath).Should().BeTrue();
+	}
 }

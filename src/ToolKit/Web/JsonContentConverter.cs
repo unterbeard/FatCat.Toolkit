@@ -10,9 +10,15 @@ public static class JsonContentConverter
 
 	public static T ConvertTo<T>(string json)
 	{
-		if (json.IsNullOrEmpty()) { return ToDefaultValue<T>(); }
+		if (json.IsNullOrEmpty())
+		{
+			return ToDefaultValue<T>();
+		}
 
-		if (TypeSetters.ContainsKey(typeof(T))) { return (T)TypeSetters[typeof(T)](json); }
+		if (TypeSetters.ContainsKey(typeof(T)))
+		{
+			return (T)TypeSetters[typeof(T)](json);
+		}
 
 		return JsonConvert.DeserializeObject<T>(json);
 	}

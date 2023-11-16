@@ -32,11 +32,14 @@ public class ToolkitWebApplicationSettings : EqualObject
 
 	public event ToolkitHubMessage ClientMessage;
 
-	public Task OnClientConnected(ToolkitUser user, string connectionId) => ClientConnected?.Invoke(user, connectionId);
+	public Task OnClientConnected(ToolkitUser user, string connectionId) =>
+		ClientConnected?.Invoke(user, connectionId);
 
-	public Task OnClientDisconnected(ToolkitUser user, string connectionId) => ClientDisconnected?.Invoke(user, connectionId);
+	public Task OnClientDisconnected(ToolkitUser user, string connectionId) =>
+		ClientDisconnected?.Invoke(user, connectionId);
 
 	public Task<string?> OnClientHubMessage(ToolkitMessage message) => ClientMessage?.Invoke(message)!;
 
-	public Task<string?> OnOnClientDataBufferMessage(ToolkitMessage message, byte[] dataBuffer) => ClientDataBufferMessage?.Invoke(message, dataBuffer)!;
+	public Task<string?> OnOnClientDataBufferMessage(ToolkitMessage message, byte[] dataBuffer) =>
+		ClientDataBufferMessage?.Invoke(message, dataBuffer)!;
 }

@@ -91,7 +91,10 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 
 	public WebResultAssertions BeNotFound() => HaveStatusCode(HttpStatusCode.NotFound);
 
-	public WebResultAssertions BeOk() { return HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent }); }
+	public WebResultAssertions BeOk()
+	{
+		return HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent });
+	}
 
 	public WebResultAssertions BeSuccessful()
 	{
@@ -140,7 +143,10 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 		return this;
 	}
 
-	public WebResultAssertions HaveContentEquivalentTo<TContentType>(TContentType expectedContent) { return HaveContentEquivalentTo(expectedContent, config => config); }
+	public WebResultAssertions HaveContentEquivalentTo<TContentType>(TContentType expectedContent)
+	{
+		return HaveContentEquivalentTo(expectedContent, config => config);
+	}
 
 	public WebResultAssertions HaveContentEquivalentTo<TContentType>(
 		TContentType expectedContent,
@@ -152,10 +158,10 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 		Subject
 			.Should()
 			.HaveStatusCode(
-							HttpStatusCode.OK,
-							"you cannot test for content from an unsuccessful status code: {0}",
-							Subject.StatusCode
-							);
+				HttpStatusCode.OK,
+				"you cannot test for content from an unsuccessful status code: {0}",
+				Subject.StatusCode
+			);
 
 		var actualContent = Subject.To<TContentType>();
 

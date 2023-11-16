@@ -58,9 +58,15 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 
 	public async Task<T> Get()
 	{
-		if (Data != null) { return Data; }
+		if (Data != null)
+		{
+			return Data;
+		}
 
-		if (DataDirectoryDoesNotExist || DataFileNotFound) { return new T(); }
+		if (DataDirectoryDoesNotExist || DataFileNotFound)
+		{
+			return new T();
+		}
 
 		var json = await fileSystem.File.ReadAllTextAsync(DataPath);
 
@@ -75,7 +81,10 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 
 		var json = jsonOperations.Serialize(Data);
 
-		if (DataDirectoryDoesNotExist) { fileSystem.Directory.CreateDirectory(DataDirectory); }
+		if (DataDirectoryDoesNotExist)
+		{
+			fileSystem.Directory.CreateDirectory(DataDirectory);
+		}
 
 		await fileSystem.File.WriteAllTextAsync(DataPath, json);
 	}

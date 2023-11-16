@@ -18,7 +18,10 @@ public static class ByteExtensions
 
 			finalString.Append($"{b:X2}");
 
-			if ((i + 1) % 2 == 0) { finalString.Append(" "); }
+			if ((i + 1) % 2 == 0)
+			{
+				finalString.Append(" ");
+			}
 		}
 
 		return finalString.ToString();

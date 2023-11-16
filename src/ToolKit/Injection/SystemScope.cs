@@ -36,7 +36,10 @@ public class SystemScope : ISystemScope
 
 	public static List<Assembly> ContainerAssemblies { get; set; } = defaultAssemblies;
 
-	public static void Initialize(ContainerBuilder builder, ScopeOptions options = ScopeOptions.None) { Initialize(builder, defaultAssemblies.ToList(), options); }
+	public static void Initialize(ContainerBuilder builder, ScopeOptions options = ScopeOptions.None)
+	{
+		Initialize(builder, defaultAssemblies.ToList(), options);
+	}
 
 	public static void Initialize(
 		ContainerBuilder builder,
@@ -44,7 +47,10 @@ public class SystemScope : ISystemScope
 		ScopeOptions options = ScopeOptions.None
 	)
 	{
-		if (!assemblies.Contains(typeof(SystemScope).Assembly)) { assemblies.Insert(0, typeof(SystemScope).Assembly); }
+		if (!assemblies.Contains(typeof(SystemScope).Assembly))
+		{
+			assemblies.Insert(0, typeof(SystemScope).Assembly);
+		}
 
 		Container.BuildContainer(builder, assemblies);
 
@@ -84,7 +90,10 @@ public class SystemScope : ISystemScope
 	public bool TryResolve<TItem>(out TItem? instance)
 		where TItem : class
 	{
-		if (LifetimeScope != null) { return LifetimeScope.TryResolve(out instance); }
+		if (LifetimeScope != null)
+		{
+			return LifetimeScope.TryResolve(out instance);
+		}
 
 		instance = null;
 
@@ -95,7 +104,10 @@ public class SystemScope : ISystemScope
 	{
 		ContainerAssemblies = assemblies;
 
-		foreach (var assembly in ContainerAssemblies) { ConsoleLog.WriteDarkCyan($"   Loading modules for assembly {assembly.FullName}"); }
+		foreach (var assembly in ContainerAssemblies)
+		{
+			ConsoleLog.WriteDarkCyan($"   Loading modules for assembly {assembly.FullName}");
+		}
 
 		builder.RegisterAssemblyModules(ContainerAssemblies.ToArray());
 

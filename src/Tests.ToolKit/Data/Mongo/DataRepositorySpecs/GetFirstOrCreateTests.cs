@@ -32,12 +32,12 @@ public class GetFirstOrCreateTests : EnsureCollectionTests
 		A.CallTo(
 				() =>
 					collection.FindAsync<TestingMongoObject>(
-																A<ExpressionFilterDefinition<TestingMongoObject>>._!,
-																default,
-																default
-															)
-				)
-		.MustHaveHappened();
+						A<ExpressionFilterDefinition<TestingMongoObject>>._!,
+						default,
+						default
+					)
+			)
+			.MustHaveHappened();
 
 		var filter = expressionCapture.Value.Expression.Compile();
 
@@ -94,12 +94,12 @@ public class GetFirstOrCreateTests : EnsureCollectionTests
 	private void SetUpToNotReturnAnItem()
 	{
 		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture, default, default))
-		.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject>()));
+			.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject>()));
 	}
 
 	private void SetUpToReturnItem()
 	{
 		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture, default, default))
-		.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { firstItem }));
+			.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { firstItem }));
 	}
 }

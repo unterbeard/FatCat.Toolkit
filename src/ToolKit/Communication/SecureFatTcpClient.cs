@@ -18,11 +18,11 @@ public class SecureFatTcpClient : FatTcpClient, IFatTcpClient
 		var clientCertificateCollection = new X509CertificateCollection(new[] { certificate });
 
 		sslStream.AuthenticateAsClient(
-										certificate.Subject,
-										clientCertificateCollection,
-										SslProtocols.Tls12,
-										false
-									);
+			certificate.Subject,
+			clientCertificateCollection,
+			SslProtocols.Tls12,
+			false
+		);
 
 		return sslStream;
 	}

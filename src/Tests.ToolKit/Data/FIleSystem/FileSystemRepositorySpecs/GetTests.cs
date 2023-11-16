@@ -7,7 +7,10 @@ namespace Tests.FatCat.Toolkit.Data.FIleSystem.FileSystemRepositorySpecs;
 
 public class GetTests : FileSystemRepositoryTests
 {
-	public GetTests() { SetUpFileExists(); }
+	public GetTests()
+	{
+		SetUpFileExists();
+	}
 
 	[Fact]
 	public async Task CheckIfDataDirectoryExists()

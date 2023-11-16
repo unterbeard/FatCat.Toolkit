@@ -11,14 +11,14 @@ public class ProxyRouteConfig
 		ConsoleLog.WriteDarkGreen("Building Routes for Proxy");
 
 		return new[]
-				{
-					new RouteConfig
-					{
-						RouteId = $"route_{Faker.RandomInt()}",
-						ClusterId = "cluster1",
-						Match = new RouteMatch { Path = "{**catch-all}" },
-					}
-				};
+		{
+			new RouteConfig
+			{
+				RouteId = $"route_{Faker.RandomInt()}",
+				ClusterId = "cluster1",
+				Match = new RouteMatch { Path = "{**catch-all}" },
+			}
+		};
 	}
 }
 
@@ -29,15 +29,18 @@ public static class ProxyClusterConfig
 		ConsoleLog.WriteGreen("Building Clusters for proxy");
 
 		return new[]
+		{
+			new ClusterConfig
+			{
+				ClusterId = "cluster1",
+				Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase)
 				{
-					new ClusterConfig
 					{
-						ClusterId = "cluster1",
-						Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase)
-									{
-										{ "destination1", new DestinationConfig { Address = "https://localhost:14555/" } },
-									}
-					}
-				};
+						"destination1",
+						new DestinationConfig { Address = "https://localhost:14555/" }
+					},
+				}
+			}
+		};
 	}
 }

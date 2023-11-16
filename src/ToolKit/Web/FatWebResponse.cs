@@ -40,17 +40,16 @@ public class FatWebResponse<T> : EqualObject
 		get => BaseResponse.StatusCode;
 	}
 
-	public FatWebResponse(HttpStatusCode statusCode) => BaseResponse = new FatWebResponse { StatusCode = statusCode };
+	public FatWebResponse(HttpStatusCode statusCode) =>
+		BaseResponse = new FatWebResponse { StatusCode = statusCode };
 
 	public FatWebResponse(FatWebResponse webResponse) => BaseResponse = webResponse;
 
-	public FatWebResponse(HttpStatusCode statusCode, T data) => BaseResponse = new FatWebResponse
-																				{
-																					StatusCode = statusCode,
-																					Content = JsonConvert.SerializeObject(data)
-																				};
+	public FatWebResponse(HttpStatusCode statusCode, T data) =>
+		BaseResponse = new FatWebResponse { StatusCode = statusCode, Content = JsonConvert.SerializeObject(data) };
 
-	public override string ToString() => $"FatWebResponse | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {Content}";
+	public override string ToString() =>
+		$"FatWebResponse | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {Content}";
 }
 
 public class FatWebResponse : EqualObject

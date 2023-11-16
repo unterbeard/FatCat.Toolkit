@@ -18,5 +18,8 @@ public class AppendToFileTests : TestsToEnsureFileExists
 		A.CallTo(() => fileSystem.File.AppendAllTextAsync(filePath, textToAppend, default)).MustHaveHappened();
 	}
 
-	protected override async Task RunMethodToTest() { await fileTools.AppendToFile(filePath, textToAppend); }
+	protected override async Task RunMethodToTest()
+	{
+		await fileTools.AppendToFile(filePath, textToAppend);
+	}
 }

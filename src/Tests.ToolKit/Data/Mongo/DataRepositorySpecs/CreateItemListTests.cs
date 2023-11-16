@@ -11,11 +11,20 @@ public class CreateItemListTests : EnsureCollectionTests
 	{
 		await repository.Create(itemList);
 
-		foreach (var currentItem in itemList) { A.CallTo(() => collection.InsertOneAsync(currentItem, default, default)).MustHaveHappened(); }
+		foreach (var currentItem in itemList)
+		{
+			A.CallTo(() => collection.InsertOneAsync(currentItem, default, default)).MustHaveHappened();
+		}
 	}
 
 	[Fact]
-	public void ReturnListOfCreatedItems() { repository.Create(itemList).Should().BeEquivalentTo(itemList); }
+	public void ReturnListOfCreatedItems()
+	{
+		repository.Create(itemList).Should().BeEquivalentTo(itemList);
+	}
 
-	protected override async Task TestMethod() { await repository.Create(itemList); }
+	protected override async Task TestMethod()
+	{
+		await repository.Create(itemList);
+	}
 }

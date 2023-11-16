@@ -12,7 +12,8 @@ public class GetSecureEndpoint : Endpoint
 {
 	private readonly IHttpContextAccessor httpContextAccessor;
 
-	public GetSecureEndpoint(IHttpContextAccessor httpContextAccessor) => this.httpContextAccessor = httpContextAccessor;
+	public GetSecureEndpoint(IHttpContextAccessor httpContextAccessor) =>
+		this.httpContextAccessor = httpContextAccessor;
 
 	[HttpGet("api/Sample/Secure")]
 	public WebResult DoGet()

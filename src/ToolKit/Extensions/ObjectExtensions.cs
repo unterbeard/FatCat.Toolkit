@@ -9,7 +9,10 @@ public static class ObjectExtensions
 	public static T? DeepCopy<T>(this T? objectToCopy)
 		where T : class
 	{
-		if (objectToCopy == null) { return null; }
+		if (objectToCopy == null)
+		{
+			return null;
+		}
 
 		var json = JsonConvert.SerializeObject(objectToCopy, JsonOperations.JsonSettings);
 

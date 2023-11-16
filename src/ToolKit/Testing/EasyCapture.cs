@@ -7,14 +7,14 @@ public class EasyCapture<T>
 	public static implicit operator T(EasyCapture<T> capture)
 	{
 		A<T>.That.Matches(
-							i =>
-							{
-								capture.CaptureValue(i);
+			i =>
+			{
+				capture.CaptureValue(i);
 
-								return true;
-							},
-							$"Captured parameter {typeof(T).FullName}"
-						);
+				return true;
+			},
+			$"Captured parameter {typeof(T).FullName}"
+		);
 
 		return default!;
 	}
@@ -36,5 +36,8 @@ public class EasyCapture<T>
 		get => values.AsReadOnly();
 	}
 
-	private void CaptureValue(T value) { values.Add(value); }
+	private void CaptureValue(T value)
+	{
+		values.Add(value);
+	}
 }

@@ -35,10 +35,10 @@ public abstract class FileSystemRepositoryTests
 		SetUpJsonHelper();
 
 		repository = new SingleItemFileSystemRepository<TestFileDataObject>(
-																			fileSystem,
-																			applicationTools,
-																			jsonHelper
-																			);
+			fileSystem,
+			applicationTools,
+			jsonHelper
+		);
 	}
 
 	private void SetUpApplicationTools()

@@ -6,7 +6,8 @@ public static class EnumerationExtensions
 {
 	public static bool Empty<T>(this IEnumerable<T> source) => !source.Any();
 
-	public static bool Empty<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) => !source.Any(predicate);
+	public static bool Empty<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) =>
+		!source.Any(predicate);
 
 	public static bool IsFlagNotSet<T>(this T value, T flag)
 		where T : struct
@@ -31,9 +32,12 @@ public static class EnumerationExtensions
 	public static string ToDelimited(this IEnumerable list, string delimiter)
 	{
 		var returnValue = list.Cast<object>()
-							.Aggregate<object, string>(null!, (current, unknown) => current + (unknown + delimiter));
+			.Aggregate<object, string>(null!, (current, unknown) => current + (unknown + delimiter));
 
-		if (!string.IsNullOrEmpty(delimiter)) { returnValue = returnValue.Remove(returnValue.Length - delimiter.Length); }
+		if (!string.IsNullOrEmpty(delimiter))
+		{
+			returnValue = returnValue.Remove(returnValue.Length - delimiter.Length);
+		}
 
 		return returnValue;
 	}
@@ -42,9 +46,16 @@ public static class EnumerationExtensions
 
 	public static T ToEnum<T>(this string value, T errorValue)
 	{
-		try { return (T)Enum.Parse(typeof(T), value, true); }
-		catch { return errorValue; }
+		try
+		{
+			return (T)Enum.Parse(typeof(T), value, true);
+		}
+		catch
+		{
+			return errorValue;
+		}
 	}
 
-	public static IList<T> ToList<T>() => (from object value in Enum.GetValues(typeof(T)) select (T)value).ToList();
+	public static IList<T> ToList<T>() =>
+		(from object value in Enum.GetValues(typeof(T)) select (T)value).ToList();
 }

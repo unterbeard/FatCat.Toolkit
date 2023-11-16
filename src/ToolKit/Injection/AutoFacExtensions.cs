@@ -17,7 +17,10 @@ public static class AutoFacExtensions
 	>(this IRegistrationBuilder<TLimit, TScanningActivatorData, TRegistrationStyle> registration)
 		where TScanningActivatorData : ScanningActivatorData
 	{
-		if (registration == null) { throw new ArgumentNullException(nameof(registration)); }
+		if (registration == null)
+		{
+			throw new ArgumentNullException(nameof(registration));
+		}
 
 		return registration.Where(TypeHasPublicConstructor);
 	}
@@ -36,13 +39,13 @@ public static class AutoFacExtensions
 		where T : notnull
 	{
 		return builder.Register(
-								(IComponentContext ctx) =>
-								{
-									var haiScope = ctx.Resolve<ISystemScope>();
+			(IComponentContext ctx) =>
+			{
+				var haiScope = ctx.Resolve<ISystemScope>();
 
-									return @delegate(haiScope);
-								}
-								);
+				return @delegate(haiScope);
+			}
+		);
 	}
 
 	private static bool TypeHasPublicConstructor(Type type)

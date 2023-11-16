@@ -56,20 +56,28 @@ public class WebResult<T> : IActionResult
 
 	public WebResult(WebResult result) => BaseResult = result;
 
-	public async Task ExecuteResultAsync(ActionContext context) { await BaseResult.ExecuteResultAsync(context); }
+	public async Task ExecuteResultAsync(ActionContext context)
+	{
+		await BaseResult.ExecuteResultAsync(context);
+	}
 
-	public override string ToString() => $"WebResult | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {BaseResult.Content}";
+	public override string ToString() =>
+		$"WebResult | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {BaseResult.Content}";
 }
 
 public class WebResult : IActionResult
 {
-	public static WebResult BadRequest(ModelStateDictionary modelState) => new(HttpStatusCode.BadRequest, modelState);
+	public static WebResult BadRequest(ModelStateDictionary modelState) =>
+		new(HttpStatusCode.BadRequest, modelState);
 
 	public static WebResult BadRequest(string fieldName, string messageId)
 	{
 		var modelState = new ModelStateDictionary();
 
-		if (messageId.IsNotNullOrEmpty()) { modelState.AddModelError(fieldName, messageId!); }
+		if (messageId.IsNotNullOrEmpty())
+		{
+			modelState.AddModelError(fieldName, messageId!);
+		}
 
 		return BadRequest(modelState);
 	}
@@ -93,15 +101,18 @@ public class WebResult : IActionResult
 
 	public static WebResult NotImplemented(string content = null) => new(HttpStatusCode.NotImplemented, content);
 
-	public static WebResult Ok(string content = null) => new(content!.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content!);
+	public static WebResult Ok(string content = null) =>
+		new(content!.IsNullOrEmpty() ? HttpStatusCode.NoContent : HttpStatusCode.OK, content!);
 
-	public static WebResult Ok(EqualObject returnObject) => new(returnObject == null ? HttpStatusCode.NoContent : HttpStatusCode.OK, returnObject!);
+	public static WebResult Ok(EqualObject returnObject) =>
+		new(returnObject == null ? HttpStatusCode.NoContent : HttpStatusCode.OK, returnObject!);
 
 	public static WebResult Ok(IEnumerable<EqualObject> returnList) => new(returnList);
 
 	public static WebResult Ok(List<EqualObject> returnList) => new(returnList);
 
-	public static WebResult PreconditionFailed(string content = null) => new(HttpStatusCode.PreconditionFailed, content);
+	public static WebResult PreconditionFailed(string content = null) =>
+		new(HttpStatusCode.PreconditionFailed, content);
 
 	public static WebResult Timeout() => new(HttpStatusCode.RequestTimeout);
 
@@ -173,7 +184,8 @@ public class WebResult : IActionResult
 		StatusCode = statusCode;
 	}
 
-	public WebResult(HttpStatusCode statusCode) => StatusCode = statusCode == HttpStatusCode.OK ? HttpStatusCode.NoContent : statusCode;
+	public WebResult(HttpStatusCode statusCode) =>
+		StatusCode = statusCode == HttpStatusCode.OK ? HttpStatusCode.NoContent : statusCode;
 
 	public WebResult() { }
 
@@ -182,11 +194,11 @@ public class WebResult : IActionResult
 	public async Task ExecuteResultAsync(ActionContext context)
 	{
 		var result = new ContentResult
-					{
-						Content = Content,
-						StatusCode = (int?)StatusCode,
-						ContentType = ContentType
-					};
+		{
+			Content = Content,
+			StatusCode = (int?)StatusCode,
+			ContentType = ContentType
+		};
 
 		await result.ExecuteResultAsync(context);
 	}

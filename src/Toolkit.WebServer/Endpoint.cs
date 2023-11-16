@@ -9,12 +9,14 @@ public abstract class Endpoint : Controller
 {
 	protected string? AuthToken
 	{
-		get => Request.Headers.TryGetValue("Authorization", out var values) ? values.FirstOrDefault() : string.Empty;
+		get =>
+			Request.Headers.TryGetValue("Authorization", out var values) ? values.FirstOrDefault() : string.Empty;
 	}
 
 	protected WebResult BadRequest(string? message = null) => WebResult.BadRequest(message);
 
-	protected WebResult BadRequest(string fieldName, string? messageId) => WebResult.BadRequest(fieldName, messageId);
+	protected WebResult BadRequest(string fieldName, string? messageId) =>
+		WebResult.BadRequest(fieldName, messageId);
 
 	protected WebResult NotAcceptable(string? message = null) => WebResult.NotAcceptable(message);
 

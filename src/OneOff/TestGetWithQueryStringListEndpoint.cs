@@ -14,15 +14,15 @@ public class TestGetWithQueryStringListEndpoint : Endpoint
 		ConsoleLog.WriteMagenta("Got Query Request");
 
 		ConsoleLog.WriteMagenta(
-								JsonConvert.SerializeObject(
-														statuses,
-														new JsonSerializerSettings
-														{
-															Formatting = Formatting.Indented,
-															Converters = new List<JsonConverter> { new StringEnumConverter() }
-														}
-														)
-								);
+			JsonConvert.SerializeObject(
+				statuses,
+				new JsonSerializerSettings
+				{
+					Formatting = Formatting.Indented,
+					Converters = new List<JsonConverter> { new StringEnumConverter() }
+				}
+			)
+		);
 
 		return Ok($"Got Message | <{DateTime.Now:h:mm:ss tt zz}>");
 	}

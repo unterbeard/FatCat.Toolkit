@@ -28,7 +28,10 @@ public class CreateItemTests : EnsureCollectionTests
 	}
 
 	[Fact]
-	public void ReturnItem() { repository.Create(item).Should().Be(item); }
+	public void ReturnItem()
+	{
+		repository.Create(item).Should().Be(item);
+	}
 
 	protected override Task TestMethod() => repository.Create(item);
 }
