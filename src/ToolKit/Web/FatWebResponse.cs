@@ -96,6 +96,36 @@ public class FatWebResponse<T> : EqualObject
 
 public class FatWebResponse : EqualObject
 {
+	public static FatWebResponse BadRequest()
+	{
+		return new FatWebResponse(HttpStatusCode.BadRequest);
+	}
+
+	public static FatWebResponse BadRequest(string message)
+	{
+		return new FatWebResponse(HttpStatusCode.BadRequest, message);
+	}
+
+	public static FatWebResponse NotFound()
+	{
+		return new FatWebResponse(HttpStatusCode.NotFound);
+	}
+
+	public static FatWebResponse NotImplemented()
+	{
+		return new FatWebResponse(HttpStatusCode.NotImplemented);
+	}
+
+	public static FatWebResponse Ok(object data)
+	{
+		return new FatWebResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(data));
+	}
+
+	public static FatWebResponse Ok()
+	{
+		return new FatWebResponse(HttpStatusCode.OK);
+	}
+
 	public static FatWebResponse Timeout()
 	{
 		return new FatWebResponse { StatusCode = HttpStatusCode.RequestTimeout };
@@ -131,6 +161,17 @@ public class FatWebResponse : EqualObject
 	public HttpStatusCode StatusCode { get; set; }
 
 	public FatWebResponse() { }
+
+	public FatWebResponse(HttpStatusCode statusCode)
+	{
+		StatusCode = statusCode;
+	}
+
+	public FatWebResponse(HttpStatusCode statusCode, string content)
+	{
+		StatusCode = statusCode;
+		Content = content;
+	}
 
 	public FatWebResponse(HttpResponseMessage response)
 	{
