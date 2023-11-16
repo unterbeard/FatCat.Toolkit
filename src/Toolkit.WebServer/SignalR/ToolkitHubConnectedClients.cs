@@ -25,8 +25,13 @@ public class ToolkitHubConnectedClients : IToolkitHubConnectedClients
 		var client = hubContext.Clients.Client(clientId);
 
 		await client.SendCoreAsync(
-			ToolkitHubMethodNames.ServerResponseMessage,
-			new object[] { messageType, data, sessionId ?? generator.NewId() }
-		);
+									ToolkitHubMethodNames.ServerResponseMessage,
+									new object[]
+									{
+										messageType,
+										data,
+										sessionId ?? generator.NewId()
+									}
+								);
 	}
 }

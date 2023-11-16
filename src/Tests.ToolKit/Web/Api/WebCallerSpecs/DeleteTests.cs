@@ -1,14 +1,13 @@
 ﻿using FatCat.Toolkit.Web;
-using FatCat.Toolkit.WebServer;
 
 namespace Tests.FatCat.Toolkit.Web.Api.WebCallerSpecs;
 
 public class DeleteTests : WebCallerTests
 {
-	protected override string BasicPath => "/delete";
-
-	protected override async Task<FatWebResponse> MakeCallToWeb(string path)
+	protected override string BasicPath
 	{
-		return await webCaller.Delete(path);
+		get => "/delete";
 	}
+
+	protected override async Task<FatWebResponse> MakeCallToWeb(string path) => await webCaller.Delete(path);
 }

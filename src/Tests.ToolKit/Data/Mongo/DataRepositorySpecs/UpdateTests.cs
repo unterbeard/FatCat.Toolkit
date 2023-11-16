@@ -17,8 +17,8 @@ public class UpdateTests : EnsureCollectionTests
 
 		A.CallTo(
 				() => collection.ReplaceOneAsync(updateFilterCapture, updateCapture, A<ReplaceOptions>._, default)
-			)
-			.Returns(new ReplaceOneResult.Acknowledged(1, 1, default));
+				)
+		.Returns(new ReplaceOneResult.Acknowledged(1, 1, default));
 	}
 
 	[Fact]
@@ -29,13 +29,13 @@ public class UpdateTests : EnsureCollectionTests
 		A.CallTo(
 				() =>
 					collection.ReplaceOneAsync(
-						A<ExpressionFilterDefinition<TestingMongoObject>>._,
-						item,
-						A<ReplaceOptions>._,
-						default
-					)
-			)
-			.MustHaveHappened();
+													A<ExpressionFilterDefinition<TestingMongoObject>>._,
+													item,
+													A<ReplaceOptions>._,
+													default
+												)
+				)
+		.MustHaveHappened();
 
 		var filter = updateFilterCapture.Value.Expression.Compile();
 
@@ -43,13 +43,7 @@ public class UpdateTests : EnsureCollectionTests
 	}
 
 	[Fact]
-	public void ReturnUpdatedItem()
-	{
-		repository.Update(item).Should().Be(item);
-	}
+	public void ReturnUpdatedItem() { repository.Update(item).Should().Be(item); }
 
-	protected override Task TestMethod()
-	{
-		return repository.Update(item);
-	}
+	protected override Task TestMethod() => repository.Update(item);
 }

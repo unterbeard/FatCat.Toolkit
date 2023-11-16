@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Web;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,13 +36,13 @@ public class GetSampleToken : Endpoint
 		var key = new RsaSecurityKey(SecureData.Rsa);
 
 		return new SecurityTokenDescriptor
-		{
-			Subject = user,
-			Expires = DateTime.UtcNow.AddMinutes(15),
-			Audience = "https://foghaze.com/Brume",
-			Issuer = "FogHaze",
-			NotBefore = DateTime.UtcNow.AddSeconds(-10),
-			SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSsaPssSha256)
-		};
+				{
+					Subject = user,
+					Expires = DateTime.UtcNow.AddMinutes(15),
+					Audience = "https://foghaze.com/Brume",
+					Issuer = "FogHaze",
+					NotBefore = DateTime.UtcNow.AddSeconds(-10),
+					SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSsaPssSha256)
+				};
 	}
 }

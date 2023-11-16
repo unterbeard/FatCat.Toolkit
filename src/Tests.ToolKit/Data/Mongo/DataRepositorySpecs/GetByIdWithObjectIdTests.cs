@@ -23,7 +23,7 @@ public class GetByIdWithObjectIdTests : EnsureCollectionTests
 		expressionCapture = new EasyCapture<ExpressionFilterDefinition<TestingMongoObject>>();
 
 		A.CallTo(() => collection.FindAsync<TestingMongoObject>(expressionCapture!, default, default))
-			.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { filterItem }));
+		.Returns(new TestingAsyncCursor<TestingMongoObject>(new List<TestingMongoObject> { filterItem }));
 	}
 
 	[Fact]
@@ -34,33 +34,24 @@ public class GetByIdWithObjectIdTests : EnsureCollectionTests
 		A.CallTo(
 				() =>
 					collection.FindAsync<TestingMongoObject>(
-						A<ExpressionFilterDefinition<TestingMongoObject>>._!,
-						default,
-						default
-					)
-			)
-			.MustHaveHappened();
+																A<ExpressionFilterDefinition<TestingMongoObject>>._!,
+																default,
+																default
+															)
+				)
+		.MustHaveHappened();
 
 		expressionCapture.Value.Should().NotBeNull();
 
 		var filter = expressionCapture.Value.Expression.Compile();
 
-		foreach (var currentItem in itemList)
-		{
-			filter(currentItem!).Should().BeFalse();
-		}
+		foreach (var currentItem in itemList) { filter(currentItem!).Should().BeFalse(); }
 
 		filter(filterItem!).Should().BeTrue();
 	}
 
 	[Fact]
-	public void ReturnFilterItem()
-	{
-		repository.GetById(id).Should().Be(filterItem);
-	}
+	public void ReturnFilterItem() { repository.GetById(id).Should().Be(filterItem); }
 
-	protected override Task TestMethod()
-	{
-		return repository.GetById(id);
-	}
+	protected override Task TestMethod() => repository.GetById(id);
 }

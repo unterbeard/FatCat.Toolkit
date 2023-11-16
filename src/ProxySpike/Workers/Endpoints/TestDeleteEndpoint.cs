@@ -1,5 +1,4 @@
 ﻿using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Web;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Mvc;
 

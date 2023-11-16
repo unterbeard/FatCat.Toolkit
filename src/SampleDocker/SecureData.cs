@@ -6,5 +6,8 @@ public static class SecureData
 {
 	private static RSA rsa;
 
-	public static RSA Rsa => rsa ??= RSA.Create(2048);
+	public static RSA Rsa
+	{
+		get => rsa ??= RSA.Create(2048);
+	}
 }

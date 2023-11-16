@@ -6,10 +6,7 @@ public static class StaticSimpleLogger
 {
 	private static readonly SimpleLogger simpleLogger = new(new ApplicationTools());
 
-	public static void SetLogLevel(LogLevel logLevel)
-	{
-		simpleLogger.SetLogLevel(logLevel);
-	}
+	public static void SetLogLevel(LogLevel logLevel) { simpleLogger.SetLogLevel(logLevel); }
 
 	public static void Write(
 		LogLevel logLevel,

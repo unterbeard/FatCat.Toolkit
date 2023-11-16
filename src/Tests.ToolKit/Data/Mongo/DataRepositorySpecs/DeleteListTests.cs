@@ -13,17 +13,11 @@ public class DeleteListTests : EnsureCollectionTests
 		await repository.Delete(itemList);
 
 		A.CallTo(() => collection.DeleteOneAsync(A<ExpressionFilterDefinition<TestingMongoObject>>._, default))
-			.MustHaveHappened(itemList.Count, Times.Exactly);
+		.MustHaveHappened(itemList.Count, Times.Exactly);
 	}
 
 	[Fact]
-	public void ReturnDeleteItemList()
-	{
-		repository.Delete(itemList).Should().BeEquivalentTo(itemList);
-	}
+	public void ReturnDeleteItemList() { repository.Delete(itemList).Should().BeEquivalentTo(itemList); }
 
-	protected override Task TestMethod()
-	{
-		return repository.Delete(itemList);
-	}
+	protected override Task TestMethod() => repository.Delete(itemList);
 }

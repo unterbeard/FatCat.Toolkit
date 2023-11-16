@@ -1,6 +1,5 @@
 ﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Web;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +26,7 @@ public class TestGetWithQueryStringsEndpoint : Endpoint
 		ConsoleLog.WriteMagenta(JsonConvert.SerializeObject(request, Formatting.Indented));
 
 		return Ok(
-			$"Got {request.Count} of {request.FirstName} {request.LastName} | <{DateTime.Now:h:mm:ss tt zz}>"
-		);
+					$"Got {request.Count} of {request.FirstName} {request.LastName} | <{DateTime.Now:h:mm:ss tt zz}>"
+				);
 	}
 }

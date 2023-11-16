@@ -12,27 +12,15 @@ public class MongoNames : IMongoNames
 {
 	private readonly IDataNames dataNames;
 
-	public MongoNames(IDataNames dataNames)
-	{
-		this.dataNames = dataNames;
-	}
+	public MongoNames(IDataNames dataNames) => this.dataNames = dataNames;
 
 	public string GetCollectionName<T>()
-		where T : DataObject
-	{
-		return dataNames.GetCollectionName<T>();
-	}
+		where T : DataObject => dataNames.GetCollectionName<T>();
 
-	public string GetCollectionNameFromType(Type type)
-	{
-		return dataNames.GetCollectionNameFromType(type);
-	}
+	public string GetCollectionNameFromType(Type type) => dataNames.GetCollectionNameFromType(type);
 
 	public string GetDatabaseName<T>()
-		where T : MongoObject
-	{
-		return GetDatabaseNameFromType(typeof(T));
-	}
+		where T : MongoObject => GetDatabaseNameFromType(typeof(T));
 
 	public string GetDatabaseNameFromType(Type type)
 	{

@@ -26,10 +26,10 @@ public class MongoConnection : IMongoConnection
 	public MongoConnection(List<Assembly> dataAssemblies)
 	{
 		ConventionRegistry.Register(
-			nameof(IgnoreExtraElementsConvention),
-			new ConventionPack { new IgnoreExtraElementsConvention(true) },
-			_ => true
-		);
+									nameof(IgnoreExtraElementsConvention),
+									new ConventionPack { new IgnoreExtraElementsConvention(true) },
+									_ => true
+									);
 
 		// Yse if want to represent enums as strings
 		// ConventionRegistry.Register(nameof(EnumRepresentationConvention), new ConventionPack { new EnumRepresentationConvention(BsonType.String) }, _ => true);
@@ -38,30 +38,18 @@ public class MongoConnection : IMongoConnection
 		{
 			foreach (var mongoObjectType in assembly.TypesImplementing<MongoObject>())
 			{
-				if (mongoObjectType.IsGenericTypeDefinition)
-				{
-					continue;
-				}
+				if (mongoObjectType.IsGenericTypeDefinition) { continue; }
 
-				if (!BsonClassMap.IsClassMapRegistered(mongoObjectType))
-				{
-					BsonClassMap.LookupClassMap(mongoObjectType);
-				}
+				if (!BsonClassMap.IsClassMapRegistered(mongoObjectType)) { BsonClassMap.LookupClassMap(mongoObjectType); }
 			}
 		}
 	}
 
 	public IMongoDatabase GetDatabase(string databaseName, string? connectionString)
 	{
-		if (databases.TryGetValue(databaseName, out var database))
-		{
-			return database;
-		}
+		if (databases.TryGetValue(databaseName, out var database)) { return database; }
 
-		if (connectionString == null)
-		{
-			connectionString = NotSetConnectionString;
-		}
+		if (connectionString == null) { connectionString = NotSetConnectionString; }
 
 		if (!connections.TryGetValue(connectionString, out var mongoClient))
 		{

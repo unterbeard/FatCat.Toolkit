@@ -15,15 +15,15 @@ public static class WebResultAssertionsExtensions
 		return new WebResultAssertions(result);
 	}
 
-	public static WebResultAssertions Should(this WebResult webResult)
-	{
-		return new WebResultAssertions(webResult);
-	}
+	public static WebResultAssertions Should(this WebResult webResult) => new(webResult);
 }
 
 public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultAssertions>
 {
-	protected override string Identifier => "Web Results assertions";
+	protected override string Identifier
+	{
+		get => "Web Results assertions";
+	}
 
 	public WebResultAssertions(WebResult result)
 		: base(result) { }
@@ -44,10 +44,7 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 		return this;
 	}
 
-	public WebResultAssertions BeBadRequest()
-	{
-		return HaveStatusCode(HttpStatusCode.BadRequest);
-	}
+	public WebResultAssertions BeBadRequest() => HaveStatusCode(HttpStatusCode.BadRequest);
 
 	public WebResultAssertions BeBadRequest(string fieldName, string messageId)
 	{
@@ -63,10 +60,7 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 		return HaveStatusCode(HttpStatusCode.BadRequest).Be(expectedResult);
 	}
 
-	public WebResultAssertions BeConflict()
-	{
-		return HaveStatusCode(HttpStatusCode.Conflict);
-	}
+	public WebResultAssertions BeConflict() => HaveStatusCode(HttpStatusCode.Conflict);
 
 	public WebResultAssertions BeEmptyListOf<T>()
 	{
@@ -93,20 +87,11 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 		return this;
 	}
 
-	public WebResultAssertions BeNotAcceptable()
-	{
-		return HaveStatusCode(HttpStatusCode.NotAcceptable);
-	}
+	public WebResultAssertions BeNotAcceptable() => HaveStatusCode(HttpStatusCode.NotAcceptable);
 
-	public WebResultAssertions BeNotFound()
-	{
-		return HaveStatusCode(HttpStatusCode.NotFound);
-	}
+	public WebResultAssertions BeNotFound() => HaveStatusCode(HttpStatusCode.NotFound);
 
-	public WebResultAssertions BeOk()
-	{
-		return HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent });
-	}
+	public WebResultAssertions BeOk() { return HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent }); }
 
 	public WebResultAssertions BeSuccessful()
 	{
@@ -117,10 +102,7 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 		return this;
 	}
 
-	public WebResultAssertions BeUnauthorized()
-	{
-		return HaveStatusCode(HttpStatusCode.Unauthorized);
-	}
+	public WebResultAssertions BeUnauthorized() => HaveStatusCode(HttpStatusCode.Unauthorized);
 
 	public WebResultAssertions BeUnsuccessful()
 	{
@@ -158,10 +140,7 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 		return this;
 	}
 
-	public WebResultAssertions HaveContentEquivalentTo<TContentType>(TContentType expectedContent)
-	{
-		return HaveContentEquivalentTo(expectedContent, config => config);
-	}
+	public WebResultAssertions HaveContentEquivalentTo<TContentType>(TContentType expectedContent) { return HaveContentEquivalentTo(expectedContent, config => config); }
 
 	public WebResultAssertions HaveContentEquivalentTo<TContentType>(
 		TContentType expectedContent,
@@ -173,10 +152,10 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 		Subject
 			.Should()
 			.HaveStatusCode(
-				HttpStatusCode.OK,
-				"you cannot test for content from an unsuccessful status code: {0}",
-				Subject.StatusCode
-			);
+							HttpStatusCode.OK,
+							"you cannot test for content from an unsuccessful status code: {0}",
+							Subject.StatusCode
+							);
 
 		var actualContent = Subject.To<TContentType>();
 
@@ -194,10 +173,7 @@ public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultA
 		return this;
 	}
 
-	public WebResultAssertions HaveNoContent()
-	{
-		return HaveStatusCode(HttpStatusCode.NoContent);
-	}
+	public WebResultAssertions HaveNoContent() => HaveStatusCode(HttpStatusCode.NoContent);
 
 	public WebResultAssertions HaveStatusCode(
 		HttpStatusCode statusCode,

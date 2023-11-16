@@ -19,15 +19,9 @@ public class ConsoleUtilities : IConsoleUtilities
 {
 	private readonly IManualWaitEvent stopEvent;
 
-	public ConsoleUtilities(IManualWaitEvent stopEvent)
-	{
-		this.stopEvent = stopEvent;
-	}
+	public ConsoleUtilities(IManualWaitEvent stopEvent) => this.stopEvent = stopEvent;
 
-	public void Exit()
-	{
-		OnCancel(null, null);
-	}
+	public void Exit() { OnCancel(null, null); }
 
 	public void WaitForExit(Action? onExit = null)
 	{
@@ -41,10 +35,7 @@ public class ConsoleUtilities : IConsoleUtilities
 
 	private void OnCancel(object? sender, ConsoleCancelEventArgs? e)
 	{
-		if (e != null)
-		{
-			e.Cancel = true;
-		}
+		if (e != null) { e.Cancel = true; }
 
 		stopEvent.Trigger();
 	}

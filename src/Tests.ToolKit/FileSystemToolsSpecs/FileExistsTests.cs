@@ -22,8 +22,5 @@ public class FileExistsTests : FileToolsTests
 	}
 
 	[Fact]
-	public void TrueIfFileExists()
-	{
-		fileTools.FileExists(filePath).Should().BeTrue();
-	}
+	public void TrueIfFileExists() { fileTools.FileExists(filePath).Should().BeTrue(); }
 }

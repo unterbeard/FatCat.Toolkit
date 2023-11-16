@@ -1,7 +1,6 @@
 ﻿using FatCat.Fakes;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Data.Mongo;
-using FatCat.Toolkit.Web;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -23,10 +22,10 @@ public class GetSampleDataEndpoint : Endpoint
 	public async Task<WebResult> GetSampleData()
 	{
 		var response = new SampleResponse
-		{
-			ConfigValue = configuration["PlayingSetting"],
-			SomeMetaData = "Some Meta Data"
-		};
+						{
+							ConfigValue = configuration["PlayingSetting"],
+							SomeMetaData = "Some Meta Data"
+						};
 
 		var testItem = Faker.Create<TestDataObject>();
 

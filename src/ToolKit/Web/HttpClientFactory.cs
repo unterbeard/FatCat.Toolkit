@@ -4,8 +4,5 @@ internal static class HttpClientFactory
 {
 	private static readonly HttpClient client = new();
 
-	public static HttpClient Get()
-	{
-		return client;
-	}
+	public static HttpClient Get() => client;
 }

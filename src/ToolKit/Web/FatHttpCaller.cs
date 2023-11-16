@@ -2,7 +2,4 @@
 
 public interface IFatHttpCaller { }
 
-public class FatHttpCaller : IFatHttpCaller
-{
-	
-}
+public class FatHttpCaller : IFatHttpCaller { }

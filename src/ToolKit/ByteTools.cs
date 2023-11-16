@@ -16,10 +16,7 @@ public class ByteTools : IByteTools
 {
 	public byte[] FromBase64Encoded(string text)
 	{
-		if (text.IsNullOrEmpty())
-		{
-			return Array.Empty<byte>();
-		}
+		if (text.IsNullOrEmpty()) { return Array.Empty<byte>(); }
 
 		var plainTextBytes = Encoding.UTF8.GetBytes(text);
 
@@ -30,10 +27,7 @@ public class ByteTools : IByteTools
 
 	public string ToBase64Encoded(byte[] bytes)
 	{
-		if (bytes.Length == 0)
-		{
-			return string.Empty;
-		}
+		if (bytes.Length == 0) { return string.Empty; }
 
 		var base64Text = Convert.ToBase64String(bytes);
 
@@ -42,8 +36,5 @@ public class ByteTools : IByteTools
 		return Encoding.UTF8.GetString(plainTextBytes);
 	}
 
-	public string ToBase64String(byte[] bytes)
-	{
-		return bytes.Length == 0 ? string.Empty : Convert.ToBase64String(bytes);
-	}
+	public string ToBase64String(byte[] bytes) => bytes.Length == 0 ? string.Empty : Convert.ToBase64String(bytes);
 }

@@ -9,10 +9,7 @@ public class GetDirectoriesTests : FileToolsTests
 {
 	private List<string> directories;
 
-	public GetDirectoriesTests()
-	{
-		SetUpGetDirectories();
-	}
+	public GetDirectoriesTests() { SetUpGetDirectories(); }
 
 	[Fact]
 	public void GetDirectoriesFromFileSystem()
@@ -31,10 +28,7 @@ public class GetDirectoriesTests : FileToolsTests
 	}
 
 	[Fact]
-	public void ReturnDirectories()
-	{
-		fileTools.GetDirectories(directoryPath).Should().BeEquivalentTo(directories);
-	}
+	public void ReturnDirectories() { fileTools.GetDirectories(directoryPath).Should().BeEquivalentTo(directories); }
 
 	[Fact]
 	public void VerifyDirectoryExists()

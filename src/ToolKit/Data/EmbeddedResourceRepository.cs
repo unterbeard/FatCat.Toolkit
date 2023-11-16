@@ -13,10 +13,7 @@ public interface IEmbeddedResourceRepository
 
 public class EmbeddedResourceRepository : IEmbeddedResourceRepository
 {
-	public List<string> GetAllResourceNames(Assembly assembly)
-	{
-		return assembly.GetManifestResourceNames().ToList();
-	}
+	public List<string> GetAllResourceNames(Assembly assembly) => assembly.GetManifestResourceNames().ToList();
 
 	public Stream GetStream(Assembly assembly, string resourceName)
 	{
@@ -29,10 +26,7 @@ public class EmbeddedResourceRepository : IEmbeddedResourceRepository
 	{
 		var manifestStream = GetStream(assembly, resourceName);
 
-		if (manifestStream is null)
-		{
-			return null;
-		}
+		if (manifestStream is null) { return null; }
 
 		var streamReader = new StreamReader(manifestStream);
 

@@ -28,29 +28,26 @@ public static class Program
 			Parser.Default
 				.ParseArguments<ServerOptions, ProxyOptions>(args)
 				.WithParsed<ProxyOptions>(options =>
-				{
-					thread.Run(async () =>
-					{
-						var worker = SystemScope.Container.Resolve<ProxyWorker>();
+												{
+													thread.Run(async () =>
+																{
+																	var worker = SystemScope.Container.Resolve<ProxyWorker>();
 
-						await worker.DoWork(options);
-					});
-				})
+																	await worker.DoWork(options);
+																});
+												})
 				.WithParsed<ServerOptions>(options =>
-				{
-					thread.Run(async () =>
-					{
-						var worker = SystemScope.Container.Resolve<WebServerWorker>();
+											{
+												thread.Run(async () =>
+															{
+																var worker = SystemScope.Container.Resolve<WebServerWorker>();
 
-						await worker.DoWork(options);
-					});
-				});
+																await worker.DoWork(options);
+															});
+											});
 
 			consoleUtilities.WaitForExit();
 		}
-		catch (Exception ex)
-		{
-			ConsoleLog.WriteException(ex);
-		}
+		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}
 }

@@ -19,8 +19,5 @@ public class WebCallerFactory : IWebCallerFactory
 		this.jsonOperations = jsonOperations;
 	}
 
-	public IWebCaller GetWebCaller(Uri baseUri)
-	{
-		return new WebCaller(baseUri, jsonOperations, toolkitLogger);
-	}
+	public IWebCaller GetWebCaller(Uri baseUri) => new WebCaller(baseUri, jsonOperations, toolkitLogger);
 }

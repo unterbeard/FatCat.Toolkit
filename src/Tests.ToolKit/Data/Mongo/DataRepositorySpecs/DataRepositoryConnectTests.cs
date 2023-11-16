@@ -24,8 +24,8 @@ public class DataRepositoryConnectTests : DataRepositoryTests
 		A.CallTo(
 				() =>
 					mongoDataConnection.GetCollection<TestingMongoObject>(connectionString, parameterDatabaseName)
-			)
-			.MustHaveHappened();
+				)
+		.MustHaveHappened();
 	}
 
 	[Fact]

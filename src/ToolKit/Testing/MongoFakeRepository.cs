@@ -22,7 +22,10 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 
 	public List<T> CreatedList { get; set; } = null!;
 
-	public string DatabaseName => repository.DatabaseName;
+	public string DatabaseName
+	{
+		get => repository.DatabaseName;
+	}
 
 	public T DeletedItem { get; set; } = null!;
 
@@ -53,80 +56,35 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 		SetUpGetByFilter();
 	}
 
-	public void Connect(string? connectionString = null, string? databaseName = null)
-	{
-		repository.Connect(connectionString, databaseName);
-	}
+	public void Connect(string? connectionString = null, string? databaseName = null) { repository.Connect(connectionString, databaseName); }
 
-	public async Task<T> Create(T item)
-	{
-		return await repository.Create(item);
-	}
+	public async Task<T> Create(T item) => await repository.Create(item);
 
-	public async Task<List<T>> Create(List<T> items)
-	{
-		return await repository.Create(items);
-	}
+	public async Task<List<T>> Create(List<T> items) => await repository.Create(items);
 
-	public async Task<T> Delete(T item)
-	{
-		return await repository.Delete(item);
-	}
+	public async Task<T> Delete(T item) => await repository.Delete(item);
 
-	public async Task<List<T>> Delete(List<T> items)
-	{
-		return await repository.Delete(items);
-	}
+	public async Task<List<T>> Delete(List<T> items) => await repository.Delete(items);
 
-	public async Task<List<T>> GetAll()
-	{
-		return await repository.GetAll();
-	}
+	public async Task<List<T>> GetAll() => await repository.GetAll();
 
-	public async Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter)
-	{
-		return await repository.GetAllByFilter(filter);
-	}
+	public async Task<List<T>> GetAllByFilter(Expression<Func<T, bool>> filter) => await repository.GetAllByFilter(filter);
 
-	public async Task<T?> GetByFilter(Expression<Func<T, bool>> filter)
-	{
-		return await repository.GetByFilter(filter);
-	}
+	public async Task<T?> GetByFilter(Expression<Func<T, bool>> filter) => await repository.GetByFilter(filter);
 
-	public async Task<T?> GetById(string id)
-	{
-		return await repository.GetById(id);
-	}
+	public async Task<T?> GetById(string id) => await repository.GetById(id);
 
-	public async Task<T?> GetById(ObjectId id)
-	{
-		return await repository.GetById(id);
-	}
+	public async Task<T?> GetById(ObjectId id) => await repository.GetById(id);
 
-	public async Task<T?> GetFirst()
-	{
-		return await repository.GetFirst();
-	}
+	public async Task<T?> GetFirst() => await repository.GetFirst();
 
-	public async Task<T> GetFirstOrCreate()
-	{
-		return await repository.GetFirstOrCreate();
-	}
+	public async Task<T> GetFirstOrCreate() => await repository.GetFirstOrCreate();
 
-	public void SetUpItemNotInRepository()
-	{
-		A.CallTo(() => repository.GetById(A<string>._)).Returns(null as T);
-	}
+	public void SetUpItemNotInRepository() { A.CallTo(() => repository.GetById(A<string>._)).Returns(null as T); }
 
-	public async Task<T> Update(T item)
-	{
-		return await repository.Update(item);
-	}
+	public async Task<T> Update(T item) => await repository.Update(item);
 
-	public async Task<List<T>> Update(List<T> items)
-	{
-		return await repository.Update(items);
-	}
+	public async Task<List<T>> Update(List<T> items) => await repository.Update(items);
 
 	public void VerifyCreate(T expectedItem)
 	{
@@ -135,50 +93,23 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 		CreatedCapture.Value.Should().Be(expectedItem);
 	}
 
-	public void VerifyCreate()
-	{
-		A.CallTo(() => repository.Create(A<T>._)).MustHaveHappened();
-	}
+	public void VerifyCreate() { A.CallTo(() => repository.Create(A<T>._)).MustHaveHappened(); }
 
-	public void VerifyDelete()
-	{
-		A.CallTo(() => repository.Delete(A<T>._)).MustHaveHappened();
-	}
+	public void VerifyDelete() { A.CallTo(() => repository.Delete(A<T>._)).MustHaveHappened(); }
 
-	public void VerifyDelete(T expectedItem)
-	{
-		A.CallTo(() => repository.Delete(expectedItem)).MustHaveHappened();
-	}
+	public void VerifyDelete(T expectedItem) { A.CallTo(() => repository.Delete(expectedItem)).MustHaveHappened(); }
 
-	public void VerifyDidNotCreate()
-	{
-		A.CallTo(() => repository.Create(A<T>._)).MustNotHaveHappened();
-	}
+	public void VerifyDidNotCreate() { A.CallTo(() => repository.Create(A<T>._)).MustNotHaveHappened(); }
 
-	public void VerifyDidNotGetAll()
-	{
-		A.CallTo(() => repository.GetAll()).MustNotHaveHappened();
-	}
+	public void VerifyDidNotGetAll() { A.CallTo(() => repository.GetAll()).MustNotHaveHappened(); }
 
-	public void VerifyDidNotGetByFilter()
-	{
-		FilterCapture.Value.Should().BeNull();
-	}
+	public void VerifyDidNotGetByFilter() { FilterCapture.Value.Should().BeNull(); }
 
-	public void VerifyDidNotGetById()
-	{
-		A.CallTo(() => repository.GetById(A<string>._)).MustNotHaveHappened();
-	}
+	public void VerifyDidNotGetById() { A.CallTo(() => repository.GetById(A<string>._)).MustNotHaveHappened(); }
 
-	public void VerifyDidNotUpdate()
-	{
-		A.CallTo(() => repository.Update(A<T>._)).MustNotHaveHappened();
-	}
+	public void VerifyDidNotUpdate() { A.CallTo(() => repository.Update(A<T>._)).MustNotHaveHappened(); }
 
-	public void VerifyGetAll()
-	{
-		A.CallTo(() => repository.GetAll()).MustHaveHappened();
-	}
+	public void VerifyGetAll() { A.CallTo(() => repository.GetAll()).MustHaveHappened(); }
 
 	public void VerifyGetByFilterByItemFalse(T item)
 	{
@@ -198,25 +129,13 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 		compliedExpression(item).Should().BeTrue();
 	}
 
-	public void VerifyGetById()
-	{
-		A.CallTo(() => repository.GetById(ItemId)).MustHaveHappened();
-	}
+	public void VerifyGetById() { A.CallTo(() => repository.GetById(ItemId)).MustHaveHappened(); }
 
-	public void VerifyGetFirst()
-	{
-		A.CallTo(() => repository.GetFirst()).MustHaveHappened();
-	}
+	public void VerifyGetFirst() { A.CallTo(() => repository.GetFirst()).MustHaveHappened(); }
 
-	public void VerifyNotGetFirst()
-	{
-		A.CallTo(() => repository.GetFirst()).MustNotHaveHappened();
-	}
+	public void VerifyNotGetFirst() { A.CallTo(() => repository.GetFirst()).MustNotHaveHappened(); }
 
-	public void VerifyUpdate(T expectedData)
-	{
-		A.CallTo(() => repository.Update(expectedData)).MustHaveHappened();
-	}
+	public void VerifyUpdate(T expectedData) { A.CallTo(() => repository.Update(expectedData)).MustHaveHappened(); }
 
 	private void SetUpCreate()
 	{

@@ -38,16 +38,10 @@ public class EnvironmentConnectionInformationTests
 	}
 
 	[Fact]
-	public void ReturnConnectionStringFromRepository()
-	{
-		connectionInformation.GetConnectionString().Should().Be(connectionString);
-	}
+	public void ReturnConnectionStringFromRepository() { connectionInformation.GetConnectionString().Should().Be(connectionString); }
 
 	[Fact]
-	public void ReturnDatabaseNameFromRepository()
-	{
-		connectionInformation.GetDatabaseName().Should().Be(dataBaseName);
-	}
+	public void ReturnDatabaseNameFromRepository() { connectionInformation.GetDatabaseName().Should().Be(dataBaseName); }
 
 	private void SetUpEnvironmentRepository()
 	{

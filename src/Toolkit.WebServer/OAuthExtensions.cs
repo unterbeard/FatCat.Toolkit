@@ -17,54 +17,45 @@ internal static class OAuthExtensions
 	public static JwtBearerEvents GetTokenBearerEvents()
 	{
 		return new JwtBearerEvents
-		{
-			OnTokenValidated = _ => Task.CompletedTask,
-			OnMessageReceived = context =>
-			{
-				var accessToken = context.Request.Query["access_token"];
-
-				// If the request is for our hub...
-				var path = context.HttpContext.Request.Path;
-
-				if (
-					!string.IsNullOrEmpty(accessToken)
-					&& path.StartsWithSegments(ToolkitWebApplication.Settings.SignalRPath)
-				)
 				{
-					// Read the token out of the query string
-					context.Token = accessToken;
-				}
+					OnTokenValidated = _ => Task.CompletedTask,
+					OnMessageReceived = context =>
+										{
+											var accessToken = context.Request.Query["access_token"];
 
-				return Task.CompletedTask;
-			},
-			OnForbidden = _ => Task.CompletedTask,
-			OnAuthenticationFailed = context =>
-			{
-				if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-				{
-					context.Response.Headers.TryAdd("Token-Expired", "true");
-				}
-				else
-				{
-					ConsoleLog.WriteException(context.Exception);
-				}
+											// If the request is for our hub...
+											var path = context.HttpContext.Request.Path;
 
-				return Task.CompletedTask;
-			},
-			OnChallenge = context =>
-			{
-				var hasError = context.Error.IsNotNullOrEmpty() || context.ErrorDescription.IsNotNullOrEmpty();
+											if (
+												!string.IsNullOrEmpty(accessToken)
+												&& path.StartsWithSegments(ToolkitWebApplication.Settings.SignalRPath)
+											)
+											{
+												// Read the token out of the query string
+												context.Token = accessToken;
+											}
 
-				if (!hasError)
-				{
-					return Task.CompletedTask;
-				}
+											return Task.CompletedTask;
+										},
+					OnForbidden = _ => Task.CompletedTask,
+					OnAuthenticationFailed = context =>
+											{
+												if (context.Exception.GetType() == typeof(SecurityTokenExpiredException)) { context.Response.Headers.TryAdd("Token-Expired", "true"); }
+												else { ConsoleLog.WriteException(context.Exception); }
 
-				ConsoleLog.WriteRed("Error: {Error}", context.Error);
-				ConsoleLog.WriteRed("ErrorDescription: {ErrorDescription}", context.ErrorDescription);
+												return Task.CompletedTask;
+											},
+					OnChallenge = context =>
+								{
+									var hasError = context.Error.IsNotNullOrEmpty() || context.ErrorDescription.IsNotNullOrEmpty();
 
-				return Task.CompletedTask;
-			}
-		};
+									if (!hasError) { return Task.CompletedTask; }
+
+									ConsoleLog.WriteRed("Error: {Error}", context.Error);
+									ConsoleLog.WriteRed("ErrorDescription: {ErrorDescription}", context.ErrorDescription);
+
+									return Task.CompletedTask;
+								}
+				};
 	}
 }

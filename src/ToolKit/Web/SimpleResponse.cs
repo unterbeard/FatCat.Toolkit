@@ -12,19 +12,24 @@ public class SimpleResponse : EqualObject
 
 	public Dictionary<string, IEnumerable<string>> Headers { get; set; } = new();
 
-	public HttpStatusCode HttpStatusCode => (HttpStatusCode)StatusCode;
+	public HttpStatusCode HttpStatusCode
+	{
+		get => (HttpStatusCode)StatusCode;
+	}
 
-	public bool IsSuccessful => StatusCode >= 200 && StatusCode < 400;
+	public bool IsSuccessful
+	{
+		get => StatusCode >= 200 && StatusCode < 400;
+	}
 
 	public int StatusCode { get; set; }
 
 	public string Text { get; set; }
 
-	public FatWebResponse ToResult() =>
-		new()
-		{
-			Content = Text,
-			ContentType = ContentType,
-			StatusCode = HttpStatusCode
-		};
+	public FatWebResponse ToResult() => new()
+										{
+											Content = Text,
+											ContentType = ContentType,
+											StatusCode = HttpStatusCode
+										};
 }

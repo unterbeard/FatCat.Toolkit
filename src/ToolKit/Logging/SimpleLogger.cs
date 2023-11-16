@@ -76,10 +76,7 @@ public class SimpleLogger : ISimpleLogger
 		this.logName = logName ?? this.applicationTools.ExecutableName;
 	}
 
-	public void SetLogLevel(LogLevel logLevel)
-	{
-		this.logLevel = logLevel;
-	}
+	public void SetLogLevel(LogLevel logLevel) { this.logLevel = logLevel; }
 
 	public void Write(
 		LogLevel logLevel,

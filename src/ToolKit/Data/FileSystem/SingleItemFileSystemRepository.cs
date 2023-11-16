@@ -23,13 +23,25 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 
 	public T? Data { get; set; }
 
-	private string DataDirectory => Path.Join(applicationTools.ExecutingDirectory, "Data");
+	private string DataDirectory
+	{
+		get => Path.Join(applicationTools.ExecutingDirectory, "Data");
+	}
 
-	private bool DataDirectoryDoesNotExist => !fileSystem.Directory.Exists(DataDirectory);
+	private bool DataDirectoryDoesNotExist
+	{
+		get => !fileSystem.Directory.Exists(DataDirectory);
+	}
 
-	private bool DataFileNotFound => !fileSystem.File.Exists(DataPath);
+	private bool DataFileNotFound
+	{
+		get => !fileSystem.File.Exists(DataPath);
+	}
 
-	private string DataPath => Path.Join(DataDirectory, $"{typeof(T).Name}.data");
+	private string DataPath
+	{
+		get => Path.Join(DataDirectory, $"{typeof(T).Name}.data");
+	}
 
 	public SingleItemFileSystemRepository(
 		IFileSystem fileSystem,
@@ -42,22 +54,13 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 		this.jsonOperations = jsonOperations;
 	}
 
-	public bool Exists()
-	{
-		return fileSystem.File.Exists(DataPath);
-	}
+	public bool Exists() => fileSystem.File.Exists(DataPath);
 
 	public async Task<T> Get()
 	{
-		if (Data != null)
-		{
-			return Data;
-		}
+		if (Data != null) { return Data; }
 
-		if (DataDirectoryDoesNotExist || DataFileNotFound)
-		{
-			return new T();
-		}
+		if (DataDirectoryDoesNotExist || DataFileNotFound) { return new T(); }
 
 		var json = await fileSystem.File.ReadAllTextAsync(DataPath);
 
@@ -72,10 +75,7 @@ public class SingleItemFileSystemRepository<T> : ISingleItemFileSystemRepository
 
 		var json = jsonOperations.Serialize(Data);
 
-		if (DataDirectoryDoesNotExist)
-		{
-			fileSystem.Directory.CreateDirectory(DataDirectory);
-		}
+		if (DataDirectoryDoesNotExist) { fileSystem.Directory.CreateDirectory(DataDirectory); }
 
 		await fileSystem.File.WriteAllTextAsync(DataPath, json);
 	}

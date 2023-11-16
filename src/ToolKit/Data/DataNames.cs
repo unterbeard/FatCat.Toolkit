@@ -13,13 +13,7 @@ public interface IDataNames
 public class DataNames : IDataNames
 {
 	public string GetCollectionName<T>()
-		where T : DataObject
-	{
-		return GetCollectionNameFromType(typeof(T));
-	}
+		where T : DataObject => GetCollectionNameFromType(typeof(T));
 
-	public string GetCollectionNameFromType(Type type)
-	{
-		return type.Name.Pluralize();
-	}
+	public string GetCollectionNameFromType(Type type) => type.Name.Pluralize();
 }

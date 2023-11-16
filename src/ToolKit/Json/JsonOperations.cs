@@ -18,16 +18,14 @@ public class JsonOperations : IJsonOperations
 		{
 			TypeNameHandling = TypeNameHandling.All,
 			NullValueHandling = NullValueHandling.Ignore,
-			Converters = new List<JsonConverter> { new StringEnumConverter(), new ObjectIdConverter() }
+			Converters = new List<JsonConverter>
+						{
+							new StringEnumConverter(),
+							new ObjectIdConverter()
+						}
 		};
 
-	public T Deserialize<T>(string json)
-	{
-		return JsonConvert.DeserializeObject<T>(json, JsonSettings);
-	}
+	public T Deserialize<T>(string json) => JsonConvert.DeserializeObject<T>(json, JsonSettings);
 
-	public string Serialize(object dataObject)
-	{
-		return JsonConvert.SerializeObject(dataObject, JsonSettings);
-	}
+	public string Serialize(object dataObject) => JsonConvert.SerializeObject(dataObject, JsonSettings);
 }

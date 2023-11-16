@@ -16,18 +16,17 @@ public static class WebResultClosedOverAssertions
 		return new WebResultClosedOverAssertions<T>(result);
 	}
 
-	public static WebResultClosedOverAssertions<T> Should<T>(this WebResult<T> webResult)
-		where T : class
-	{
-		return new WebResultClosedOverAssertions<T>(webResult);
-	}
+	public static WebResultClosedOverAssertions<T> Should<T>(this WebResult<T> webResult) where T : class => new(webResult);
 }
 
 public class WebResultClosedOverAssertions<T>
 	: ReferenceTypeAssertions<WebResult<T>, WebResultClosedOverAssertions<T>>
 	where T : class
 {
-	protected override string Identifier => "Web Results assertions";
+	protected override string Identifier
+	{
+		get => "Web Results assertions";
+	}
 
 	public WebResultClosedOverAssertions(WebResult<T> result)
 		: base(result) { }
@@ -48,10 +47,7 @@ public class WebResultClosedOverAssertions<T>
 		return this;
 	}
 
-	public WebResultClosedOverAssertions<T> BeBadRequest()
-	{
-		return HaveStatusCode(HttpStatusCode.BadRequest);
-	}
+	public WebResultClosedOverAssertions<T> BeBadRequest() => HaveStatusCode(HttpStatusCode.BadRequest);
 
 	public WebResultClosedOverAssertions<T> BeBadRequest(string fieldName, string messageId)
 	{
@@ -67,10 +63,7 @@ public class WebResultClosedOverAssertions<T>
 		return HaveStatusCode(HttpStatusCode.BadRequest).Be(expectedResult);
 	}
 
-	public WebResultClosedOverAssertions<T> BeConflict()
-	{
-		return HaveStatusCode(HttpStatusCode.Conflict);
-	}
+	public WebResultClosedOverAssertions<T> BeConflict() => HaveStatusCode(HttpStatusCode.Conflict);
 
 	public WebResultClosedOverAssertions<T> BeEmptyListOf()
 	{
@@ -99,20 +92,11 @@ public class WebResultClosedOverAssertions<T>
 		return this;
 	}
 
-	public WebResultClosedOverAssertions<T> BeNotAcceptable()
-	{
-		return HaveStatusCode(HttpStatusCode.NotAcceptable);
-	}
+	public WebResultClosedOverAssertions<T> BeNotAcceptable() => HaveStatusCode(HttpStatusCode.NotAcceptable);
 
-	public WebResultClosedOverAssertions<T> BeNotFound()
-	{
-		return HaveStatusCode(HttpStatusCode.NotFound);
-	}
+	public WebResultClosedOverAssertions<T> BeNotFound() => HaveStatusCode(HttpStatusCode.NotFound);
 
-	public WebResultClosedOverAssertions<T> BeOk()
-	{
-		return HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent });
-	}
+	public WebResultClosedOverAssertions<T> BeOk() { return HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent }); }
 
 	public WebResultClosedOverAssertions<T> BeSuccessful()
 	{
@@ -161,10 +145,7 @@ public class WebResultClosedOverAssertions<T>
 		return this;
 	}
 
-	public WebResultClosedOverAssertions<T> HaveContentEquivalentTo(T expectedContent)
-	{
-		return HaveContentEquivalentTo(expectedContent, config => config);
-	}
+	public WebResultClosedOverAssertions<T> HaveContentEquivalentTo(T expectedContent) { return HaveContentEquivalentTo(expectedContent, config => config); }
 
 	public WebResultClosedOverAssertions<T> HaveContentEquivalentTo(
 		T expectedContent,
@@ -176,10 +157,10 @@ public class WebResultClosedOverAssertions<T>
 		Subject
 			.Should()
 			.HaveStatusCode(
-				HttpStatusCode.OK,
-				"you cannot test for content from an unsuccessful status code: {0}",
-				Subject.StatusCode
-			);
+							HttpStatusCode.OK,
+							"you cannot test for content from an unsuccessful status code: {0}",
+							Subject.StatusCode
+							);
 
 		var actualContent = Subject.Data;
 
@@ -197,10 +178,7 @@ public class WebResultClosedOverAssertions<T>
 		return this;
 	}
 
-	public WebResultClosedOverAssertions<T> HaveNoContent()
-	{
-		return HaveStatusCode(HttpStatusCode.NoContent);
-	}
+	public WebResultClosedOverAssertions<T> HaveNoContent() => HaveStatusCode(HttpStatusCode.NoContent);
 
 	public WebResultClosedOverAssertions<T> HaveStatusCode(
 		HttpStatusCode statusCode,

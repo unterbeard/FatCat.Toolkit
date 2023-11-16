@@ -39,10 +39,7 @@ internal class SecureClientConnection : ClientConnection
 		IFatTcpLogger logger,
 		CancellationToken cancellationToken
 	)
-		: base(server, client, clientId, bufferSize, logger, cancellationToken)
-	{
-		this.certificate = certificate;
-	}
+		: base(server, client, clientId, bufferSize, logger, cancellationToken) => this.certificate = certificate;
 
 	protected override async Task<Stream> GetStream()
 	{
@@ -58,8 +55,5 @@ internal class SecureClientConnection : ClientConnection
 		X509Certificate remoteCertificate,
 		X509Chain chain,
 		SslPolicyErrors sslPolicyErrors
-	)
-	{
-		return CertificateHelper.CertValidation(remoteCertificate, certificate, sslPolicyErrors);
-	}
+	) => CertificateHelper.CertValidation(remoteCertificate, certificate, sslPolicyErrors);
 }

@@ -29,15 +29,9 @@ public abstract class FatTcpServer
 
 	public void Dispose() { }
 
-	public virtual void OnMessageReceived(byte[] data)
-	{
-		TcpMessageReceivedEvent?.Invoke(data);
-	}
+	public virtual void OnMessageReceived(byte[] data) { TcpMessageReceivedEvent?.Invoke(data); }
 
-	public void Start(ushort port, int receiveBufferSize = 1024)
-	{
-		Start(port, Encoding.Unicode, receiveBufferSize);
-	}
+	public void Start(ushort port, int receiveBufferSize = 1024) { Start(port, Encoding.Unicode, receiveBufferSize); }
 
 	public void Start(ushort port, Encoding encoding, int receiveBufferSize = 1024)
 	{
@@ -51,10 +45,7 @@ public abstract class FatTcpServer
 		Task.Factory.StartNew(ServerThread, TaskCreationOptions.LongRunning);
 	}
 
-	public void Stop()
-	{
-		Dispose();
-	}
+	public void Stop() { Dispose(); }
 
 	internal abstract ClientConnection GetClientConnection(TcpClient client, string clientId);
 

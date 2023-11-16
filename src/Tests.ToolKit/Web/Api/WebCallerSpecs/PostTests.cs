@@ -1,7 +1,6 @@
 ﻿using FatCat.Fakes;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Web;
-using FatCat.Toolkit.WebServer;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;
@@ -10,7 +9,10 @@ namespace Tests.FatCat.Toolkit.Web.Api.WebCallerSpecs;
 
 public class PostTests : WebCallerTests
 {
-	protected override string BasicPath => "/post";
+	protected override string BasicPath
+	{
+		get => "/post";
+	}
 
 	[Fact]
 	public async Task CanMakeAPostWithCustomContentType()
@@ -86,10 +88,7 @@ public class PostTests : WebCallerTests
 		response.RawData.Should().Be($"{data}");
 	}
 
-	protected override Task<FatWebResponse> MakeCallToWeb(string path)
-	{
-		return webCaller.Post(path);
-	}
+	protected override Task<FatWebResponse> MakeCallToWeb(string path) => webCaller.Post(path);
 
 	public class TestData : EqualObject
 	{
@@ -99,9 +98,6 @@ public class PostTests : WebCallerTests
 
 		public int Number { get; set; }
 
-		public string ToJson()
-		{
-			return JsonConvert.SerializeObject(this);
-		}
+		public string ToJson() => JsonConvert.SerializeObject(this);
 	}
 }

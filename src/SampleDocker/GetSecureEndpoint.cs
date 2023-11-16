@@ -1,5 +1,4 @@
 ﻿using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Web;
 using FatCat.Toolkit.Web.Api.SignalR;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Http;
@@ -9,14 +8,11 @@ using Endpoint = FatCat.Toolkit.WebServer.Endpoint;
 
 namespace SampleDocker;
 
-public class GetSecureEndpoint : FatCat.Toolkit.WebServer.Endpoint
+public class GetSecureEndpoint : Endpoint
 {
 	private readonly IHttpContextAccessor httpContextAccessor;
 
-	public GetSecureEndpoint(IHttpContextAccessor httpContextAccessor)
-	{
-		this.httpContextAccessor = httpContextAccessor;
-	}
+	public GetSecureEndpoint(IHttpContextAccessor httpContextAccessor) => this.httpContextAccessor = httpContextAccessor;
 
 	[HttpGet("api/Sample/Secure")]
 	public WebResult DoGet()

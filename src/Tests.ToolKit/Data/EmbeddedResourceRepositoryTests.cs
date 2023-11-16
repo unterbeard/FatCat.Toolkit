@@ -9,10 +9,7 @@ public class EmbeddedResourceRepositoryTests
 	private const string ValidResourceName = "Tests.FatCat.Toolkit.Data.ResourceItemToGet.txt";
 	private readonly EmbeddedResourceRepository repository;
 
-	public EmbeddedResourceRepositoryTests()
-	{
-		repository = new EmbeddedResourceRepository();
-	}
+	public EmbeddedResourceRepositoryTests() => repository = new EmbeddedResourceRepository();
 
 	[Fact]
 	public void CanGetAManifestStream()

@@ -41,8 +41,7 @@ public class CallsWithMorePathInUri
 		response.Url.Should().Be(expectedFullUrl);
 	}
 
-	private WebCaller CreateWebCaller(string baseUrl) =>
-		new(new Uri(baseUrl), new JsonOperations(), A.Fake<IToolkitLogger>());
+	private WebCaller CreateWebCaller(string baseUrl) => new(new Uri(baseUrl), new JsonOperations(), A.Fake<IToolkitLogger>());
 
 	private static string GetExpectedUrl(string endingPath) => $"https://httpbin.org/anything/{endingPath}";
 }

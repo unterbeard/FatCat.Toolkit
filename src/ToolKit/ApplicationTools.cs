@@ -39,7 +39,10 @@ public interface IApplicationTools
 [ExcludeFromCodeCoverage(Justification = "Going directly to dotnet dlls")]
 public class ApplicationTools : IApplicationTools
 {
-	public static bool IsInContainer => Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER").ToBool();
+	public static bool IsInContainer
+	{
+		get => Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER").ToBool();
+	}
 
 	private string? executableName;
 	private string? executingDirectory;
@@ -47,7 +50,10 @@ public class ApplicationTools : IApplicationTools
 	private IPAddress? ipAddress;
 	private string? macAddress;
 
-	public string ExecutableFullPath => GetProcessFileName();
+	public string ExecutableFullPath
+	{
+		get => GetProcessFileName();
+	}
 
 	public string ExecutableName
 	{
@@ -57,10 +63,7 @@ public class ApplicationTools : IApplicationTools
 			{
 				var fileName = GetProcessFileName();
 
-				if (fileName!.IsNotNullOrEmpty())
-				{
-					executableName = Path.GetFileNameWithoutExtension(fileName);
-				}
+				if (fileName!.IsNotNullOrEmpty()) { executableName = Path.GetFileNameWithoutExtension(fileName); }
 			}
 
 			return executableName;
@@ -75,32 +78,32 @@ public class ApplicationTools : IApplicationTools
 			{
 				var fileName = Process.GetCurrentProcess().MainModule?.FileName;
 
-				if (fileName!.IsNotNullOrEmpty())
-				{
-					executingDirectory = Path.GetDirectoryName(fileName);
-				}
+				if (fileName!.IsNotNullOrEmpty()) { executingDirectory = Path.GetDirectoryName(fileName); }
 			}
 
 			return executingDirectory;
 		}
 	}
 
-	public bool InContainer => IsInContainer;
+	public bool InContainer
+	{
+		get => IsInContainer;
+	}
 
 	public string MacAddress
 	{
 		get
 		{
-			if (macAddress!.IsNullOrEmpty())
-			{
-				FindMacAddress();
-			}
+			if (macAddress!.IsNullOrEmpty()) { FindMacAddress(); }
 
 			return macAddress;
 		}
 	}
 
-	public string MachineName => Environment.MachineName;
+	public string MachineName
+	{
+		get => Environment.MachineName;
+	}
 
 	public ushort FindNextOpenPort(ushort startingPort)
 	{
@@ -112,10 +115,10 @@ public class ApplicationTools : IApplicationTools
 		var connections = properties.GetActiveTcpConnections();
 
 		usedPorts.AddRange(
-			from n in connections
-			where n.LocalEndPoint.Port >= startingPort
-			select n.LocalEndPoint.Port
-		);
+							from n in connections
+							where n.LocalEndPoint.Port >= startingPort
+							select n.LocalEndPoint.Port
+						);
 
 		// Ignore active tcp listeners
 		var endPoints = properties.GetActiveTcpListeners();
@@ -131,10 +134,7 @@ public class ApplicationTools : IApplicationTools
 
 		for (var portToCheck = startingPort; portToCheck < ushort.MaxValue; portToCheck++)
 		{
-			if (!usedPorts.Contains(portToCheck))
-			{
-				return portToCheck;
-			}
+			if (!usedPorts.Contains(portToCheck)) { return portToCheck; }
 		}
 
 		return 0;
@@ -149,26 +149,17 @@ public class ApplicationTools : IApplicationTools
 		{
 			domainName = "." + domainName;
 
-			if (!hostName.EndsWith(domainName))
-			{
-				hostName += domainName;
-			}
+			if (!hostName.EndsWith(domainName)) { hostName += domainName; }
 		}
 
 		return hostName.ToLower();
 	}
 
-	public string GetIPAddress()
-	{
-		return GetIPAddressObject()?.ToString();
-	}
+	public string GetIPAddress() => GetIPAddressObject()?.ToString();
 
 	public IPAddress GetIPAddressObject()
 	{
-		if (ipAddress != null)
-		{
-			return ipAddress;
-		}
+		if (ipAddress != null) { return ipAddress; }
 
 		ipAddress = IPAddress.Parse("127.0.0.1");
 
@@ -192,9 +183,9 @@ public class ApplicationTools : IApplicationTools
 		var host = Dns.GetHostEntry(Dns.GetHostName());
 
 		return host.AddressList
-			.Where(ip => ip.AddressFamily is AddressFamily.InterNetwork or AddressFamily.InterNetworkV6)
-			.Select(ip => ip.ToString())
-			.ToList();
+					.Where(ip => ip.AddressFamily is AddressFamily.InterNetwork or AddressFamily.InterNetworkV6)
+					.Select(ip => ip.ToString())
+					.ToList();
 	}
 
 	public string GetVersionFromAssembly(Assembly assembly)
@@ -212,15 +203,9 @@ public class ApplicationTools : IApplicationTools
 		{
 			macAddress = adapter.GetPhysicalAddress().ToString();
 
-			if (macAddress.IsNotNullOrEmpty())
-			{
-				break;
-			}
+			if (macAddress.IsNotNullOrEmpty()) { break; }
 		}
 	}
 
-	private static string? GetProcessFileName()
-	{
-		return Process.GetCurrentProcess().MainModule?.FileName;
-	}
+	private static string? GetProcessFileName() => Process.GetCurrentProcess().MainModule?.FileName;
 }

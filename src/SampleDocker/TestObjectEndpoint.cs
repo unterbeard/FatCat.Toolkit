@@ -1,6 +1,5 @@
 ﻿using FatCat.Fakes;
 using FatCat.Toolkit.Data.Mongo;
-using FatCat.Toolkit.Web;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +9,7 @@ public class TestObjectEndpoint : Endpoint
 {
 	private readonly IMongoRepository<TestDataObject> mongoRepository;
 
-	public TestObjectEndpoint(IMongoRepository<TestDataObject> mongoRepository)
-	{
-		this.mongoRepository = mongoRepository;
-	}
+	public TestObjectEndpoint(IMongoRepository<TestDataObject> mongoRepository) => this.mongoRepository = mongoRepository;
 
 	[HttpGet("api/Test/Data")]
 	public async Task<WebResult> GetTestDataObjects()

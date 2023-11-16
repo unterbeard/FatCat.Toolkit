@@ -54,10 +54,7 @@ public abstract class WebCallerTests
 	{
 		var path = BasicPath;
 
-		if (path.StartsWith("/"))
-		{
-			path = path.Substring(1);
-		}
+		if (path.StartsWith("/")) { path = path.Substring(1); }
 
 		await MakeCall(path);
 	}
@@ -110,10 +107,7 @@ public abstract class WebCallerTests
 		response.QueryParameters["second"].Should().Be("13");
 	}
 
-	protected void VerifyBearerToken()
-	{
-		response.BearerToken.Should().Be($"Bearer {BearerToken}");
-	}
+	protected void VerifyBearerToken() { response.BearerToken.Should().Be($"Bearer {BearerToken}"); }
 
 	protected void VerifyStatusListQueryParameters()
 	{
@@ -121,7 +115,13 @@ public abstract class WebCallerTests
 
 		statusList.Count.Should().Be(3);
 
-		statusList.Should().BeEquivalentTo(new List<string> { "1", "2", "3" });
+		statusList.Should()
+		.BeEquivalentTo(new List<string>
+						{
+							"1",
+							"2",
+							"3"
+						});
 	}
 
 	private async Task MakeCall(string path)
@@ -133,8 +133,5 @@ public abstract class WebCallerTests
 		response = result.To<HttpBinResponse>();
 	}
 
-	private void UserBearerToken()
-	{
-		webCaller.UserBearerToken(BearerToken);
-	}
+	private void UserBearerToken() { webCaller.UserBearerToken(BearerToken); }
 }

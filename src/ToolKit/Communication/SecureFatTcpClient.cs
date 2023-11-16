@@ -9,10 +9,7 @@ public class SecureFatTcpClient : FatTcpClient, IFatTcpClient
 	private readonly X509Certificate certificate;
 
 	public SecureFatTcpClient(X509Certificate certificate, IFatTcpLogger logger)
-		: base(logger)
-	{
-		this.certificate = certificate;
-	}
+		: base(logger) => this.certificate = certificate;
 
 	protected override Stream GetStream()
 	{
@@ -21,11 +18,11 @@ public class SecureFatTcpClient : FatTcpClient, IFatTcpClient
 		var clientCertificateCollection = new X509CertificateCollection(new[] { certificate });
 
 		sslStream.AuthenticateAsClient(
-			certificate.Subject,
-			clientCertificateCollection,
-			SslProtocols.Tls12,
-			false
-		);
+										certificate.Subject,
+										clientCertificateCollection,
+										SslProtocols.Tls12,
+										false
+									);
 
 		return sslStream;
 	}
@@ -35,8 +32,5 @@ public class SecureFatTcpClient : FatTcpClient, IFatTcpClient
 		X509Certificate remoteCertificate,
 		X509Chain chain,
 		SslPolicyErrors sslPolicyErrors
-	)
-	{
-		return CertificateHelper.CertValidation(remoteCertificate, certificate, sslPolicyErrors);
-	}
+	) => CertificateHelper.CertValidation(remoteCertificate, certificate, sslPolicyErrors);
 }

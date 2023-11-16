@@ -58,10 +58,7 @@ public class ConsoleFatTcpLogger : IFatTcpLogger
 		ConsoleLog.WriteRed(message, memberName, sourceFilePath, sourceLineNumber);
 	}
 
-	public void WriteException(Exception ex)
-	{
-		ConsoleLog.WriteException(ex);
-	}
+	public void WriteException(Exception ex) { ConsoleLog.WriteException(ex); }
 
 	public void WriteInformation(
 		string message,

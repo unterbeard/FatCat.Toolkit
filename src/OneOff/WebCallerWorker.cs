@@ -8,10 +8,7 @@ public class WebCallerWorker : SpikeWorker
 {
 	private readonly IWebCallerFactory webCallerFactory;
 
-	public WebCallerWorker(IWebCallerFactory webCallerFactory)
-	{
-		this.webCallerFactory = webCallerFactory;
-	}
+	public WebCallerWorker(IWebCallerFactory webCallerFactory) => this.webCallerFactory = webCallerFactory;
 
 	public override async Task DoWork()
 	{
@@ -23,13 +20,7 @@ public class WebCallerWorker : SpikeWorker
 
 		var result = await webCaller.Get(endingPath);
 
-		if (result.IsSuccessful)
-		{
-			ConsoleLog.WriteGreen($"Status: {result.StatusCode} | {result.Content}");
-		}
-		else
-		{
-			ConsoleLog.WriteRed($"Status: {result.StatusCode}");
-		}
+		if (result.IsSuccessful) { ConsoleLog.WriteGreen($"Status: {result.StatusCode} | {result.Content}"); }
+		else { ConsoleLog.WriteRed($"Status: {result.StatusCode}"); }
 	}
 }

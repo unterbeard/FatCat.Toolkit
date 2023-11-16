@@ -5,8 +5,5 @@ public class OpenFatTcpClient : FatTcpClient, IFatTcpClient
 	public OpenFatTcpClient(IFatTcpLogger logger)
 		: base(logger) { }
 
-	protected override Stream GetStream()
-	{
-		return tcpClient.GetStream();
-	}
+	protected override Stream GetStream() => tcpClient.GetStream();
 }

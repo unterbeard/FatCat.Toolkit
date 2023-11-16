@@ -1,5 +1,4 @@
-﻿using FatCat.Toolkit;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Tests.FatCat.Toolkit.Web.Api.WebCallerSpecs;
 

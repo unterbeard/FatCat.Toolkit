@@ -12,12 +12,12 @@ public class GetAllTests : EnsureCollectionTests
 		A.CallTo(
 				() =>
 					collection.FindAsync<TestingMongoObject>(
-						A<ExpressionFilterDefinition<TestingMongoObject>>._,
-						default,
-						default
-					)
-			)
-			.Returns(new TestingAsyncCursor<TestingMongoObject>(itemList));
+																A<ExpressionFilterDefinition<TestingMongoObject>>._,
+																default,
+																default
+															)
+				)
+		.Returns(new TestingAsyncCursor<TestingMongoObject>(itemList));
 	}
 
 	[Fact]
@@ -28,22 +28,16 @@ public class GetAllTests : EnsureCollectionTests
 		A.CallTo(
 				() =>
 					collection.FindAsync<TestingMongoObject>(
-						A<ExpressionFilterDefinition<TestingMongoObject>>._,
-						default,
-						default
-					)
-			)
-			.MustHaveHappened();
+																A<ExpressionFilterDefinition<TestingMongoObject>>._,
+																default,
+																default
+															)
+				)
+		.MustHaveHappened();
 	}
 
 	[Fact]
-	public void ReturnTheItems()
-	{
-		repository.GetAll().Should().BeEquivalentTo(itemList);
-	}
+	public void ReturnTheItems() { repository.GetAll().Should().BeEquivalentTo(itemList); }
 
-	protected override Task TestMethod()
-	{
-		return repository.GetAll();
-	}
+	protected override Task TestMethod() => repository.GetAll();
 }

@@ -25,10 +25,7 @@ public class MoveDirectoryTests : FileToolsTests
 	}
 
 	[Fact]
-	public void IfCanMoveDirectoryReturnTrue()
-	{
-		fileTools.MoveDirectory(sourceDirectoryPath, destinationDirectoryPath).Should().BeTrue();
-	}
+	public void IfCanMoveDirectoryReturnTrue() { fileTools.MoveDirectory(sourceDirectoryPath, destinationDirectoryPath).Should().BeTrue(); }
 
 	[Fact]
 	public void IfSourceDirectoryDoesNotExistReturnFalse()
@@ -44,6 +41,6 @@ public class MoveDirectoryTests : FileToolsTests
 		fileTools.MoveDirectory(sourceDirectoryPath, destinationDirectoryPath);
 
 		A.CallTo(() => fileSystem.Directory.Move(sourceDirectoryPath, destinationDirectoryPath))
-			.MustHaveHappened();
+		.MustHaveHappened();
 	}
 }

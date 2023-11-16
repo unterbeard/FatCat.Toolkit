@@ -8,13 +8,7 @@ public class SecureFatTcpServer : FatTcpServer, IFatTcpServer
 	private readonly X509Certificate certificate;
 
 	public SecureFatTcpServer(X509Certificate certificate, IGenerator generator, IFatTcpLogger logger)
-		: base(generator, logger)
-	{
-		this.certificate = certificate;
-	}
+		: base(generator, logger) => this.certificate = certificate;
 
-	internal override ClientConnection GetClientConnection(TcpClient client, string clientId)
-	{
-		return new SecureClientConnection(certificate, this, client, clientId, bufferSize, logger, cancelToken);
-	}
+	internal override ClientConnection GetClientConnection(TcpClient client, string clientId) => new SecureClientConnection(certificate, this, client, clientId, bufferSize, logger, cancelToken);
 }

@@ -1,6 +1,5 @@
 ﻿using FatCat.Fakes;
 using FatCat.Toolkit;
-using FatCat.Toolkit.Web;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

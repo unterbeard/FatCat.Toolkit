@@ -1,10 +1,8 @@
 ﻿using FatCat.Toolkit.Console;
-using FatCat.Toolkit.Web;
 using FatCat.Toolkit.WebServer;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using JsonConverter = Newtonsoft.Json.JsonConverter;
 
 namespace OneOff;
 
@@ -16,15 +14,15 @@ public class TestGetWithQueryStringListEndpoint : Endpoint
 		ConsoleLog.WriteMagenta("Got Query Request");
 
 		ConsoleLog.WriteMagenta(
-			JsonConvert.SerializeObject(
-				statuses,
-				new JsonSerializerSettings
-				{
-					Formatting = Formatting.Indented,
-					Converters = new List<JsonConverter> { new StringEnumConverter() }
-				}
-			)
-		);
+								JsonConvert.SerializeObject(
+														statuses,
+														new JsonSerializerSettings
+														{
+															Formatting = Formatting.Indented,
+															Converters = new List<JsonConverter> { new StringEnumConverter() }
+														}
+														)
+								);
 
 		return Ok($"Got Message | <{DateTime.Now:h:mm:ss tt zz}>");
 	}

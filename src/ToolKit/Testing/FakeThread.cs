@@ -15,65 +15,41 @@ public class FakeThread : IThread
 		SetUnRunFuncOnCall();
 	}
 
-	public void Run(Action action)
-	{
-		thread.Run(action);
-	}
+	public void Run(Action action) { thread.Run(action); }
 
-	public void Run(Func<Task> action)
-	{
-		thread.Run(action);
-	}
+	public void Run(Func<Task> action) { thread.Run(action); }
 
-	public Task Sleep(TimeSpan sleepTime)
-	{
-		return thread.Sleep(sleepTime);
-	}
+	public Task Sleep(TimeSpan sleepTime) => thread.Sleep(sleepTime);
 
-	public Task Sleep(TimeSpan sleepTime, CancellationToken token)
-	{
-		return thread.Sleep(sleepTime, token);
-	}
+	public Task Sleep(TimeSpan sleepTime, CancellationToken token) => thread.Sleep(sleepTime, token);
 
-	public void VerifyRunAction()
-	{
-		A.CallTo(() => thread.Run(A<Action>._)).MustHaveHappened();
-	}
+	public void VerifyRunAction() { A.CallTo(() => thread.Run(A<Action>._)).MustHaveHappened(); }
 
-	public void VerifyRunFunc()
-	{
-		A.CallTo(() => thread.Run(A<Func<Task>>._)).MustHaveHappened();
-	}
+	public void VerifyRunFunc() { A.CallTo(() => thread.Run(A<Func<Task>>._)).MustHaveHappened(); }
 
-	public void VerifySleep(TimeSpan expectedSleep)
-	{
-		A.CallTo(() => thread.Sleep(expectedSleep)).MustHaveHappened();
-	}
+	public void VerifySleep(TimeSpan expectedSleep) { A.CallTo(() => thread.Sleep(expectedSleep)).MustHaveHappened(); }
 
-	public void VerifySleep(TimeSpan expectedSleep, CancellationToken token)
-	{
-		A.CallTo(() => thread.Sleep(expectedSleep, token)).MustHaveHappened();
-	}
+	public void VerifySleep(TimeSpan expectedSleep, CancellationToken token) { A.CallTo(() => thread.Sleep(expectedSleep, token)).MustHaveHappened(); }
 
 	private void SetUnRunFuncOnCall()
 	{
 		A.CallTo(() => thread.Run(A<Func<Task>>._))
-			.Invokes(callObject =>
-			{
-				var passedFunction = callObject.Arguments[0] as Func<Task>;
+		.Invokes(callObject =>
+					{
+						var passedFunction = callObject.Arguments[0] as Func<Task>;
 
-				passedFunction?.Invoke().Wait();
-			});
+						passedFunction?.Invoke().Wait();
+					});
 	}
 
 	private void SetUpRunActionOnCall()
 	{
 		A.CallTo(() => thread.Run(A<Action>._))
-			.Invokes(callObject =>
-			{
-				var passedAction = callObject.Arguments[0] as Action;
+		.Invokes(callObject =>
+					{
+						var passedAction = callObject.Arguments[0] as Action;
 
-				passedAction?.Invoke();
-			});
+						passedAction?.Invoke();
+					});
 	}
 }

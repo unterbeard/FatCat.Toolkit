@@ -20,10 +20,14 @@ public static class Program
 		try
 		{
 			SystemScope.Initialize(
-				new ContainerBuilder(),
-				new List<Assembly> { typeof(Program).Assembly, typeof(ConsoleLog).Assembly },
-				ScopeOptions.SetLifetimeScope
-			);
+									new ContainerBuilder(),
+									new List<Assembly>
+									{
+										typeof(Program).Assembly,
+										typeof(ConsoleLog).Assembly
+									},
+									ScopeOptions.SetLifetimeScope
+								);
 
 			ConnectClient(args);
 
@@ -35,10 +39,7 @@ public static class Program
 
 			consoleUtilities.WaitForExit();
 		}
-		catch (Exception ex)
-		{
-			ConsoleLog.WriteException(ex);
-		}
+		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}
 
 	private static void ConnectClient(string[] args)

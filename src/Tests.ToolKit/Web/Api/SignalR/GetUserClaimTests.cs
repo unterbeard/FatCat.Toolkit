@@ -19,22 +19,13 @@ public class GetUserClaimTests
 	}
 
 	[Fact]
-	public void IfClaimNameIsNotInTheListReturnNull()
-	{
-		getUserClaim.GetClaim(user, "NotInList").Should().BeNull();
-	}
+	public void IfClaimNameIsNotInTheListReturnNull() { getUserClaim.GetClaim(user, "NotInList").Should().BeNull(); }
 
 	[Fact]
-	public void ReturnClaimBasedOnType()
-	{
-		getUserClaim.GetClaim(user, claimToFind.Type).Should().Be(claimToFind);
-	}
+	public void ReturnClaimBasedOnType() { getUserClaim.GetClaim(user, claimToFind.Type).Should().Be(claimToFind); }
 
 	[Fact]
-	public void ReturnClaimRegardlessOfCase()
-	{
-		getUserClaim.GetClaim(user, claimToFind.Type.ToUpper()).Should().Be(claimToFind);
-	}
+	public void ReturnClaimRegardlessOfCase() { getUserClaim.GetClaim(user, claimToFind.Type.ToUpper()).Should().Be(claimToFind); }
 
 	private void SetUpData()
 	{

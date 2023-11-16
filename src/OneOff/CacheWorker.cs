@@ -19,15 +19,27 @@ public class CacheWorker
 
 	public void DoWork()
 	{
-		var firstItem = new TestCacheItem { Name = "First Item", Number = 1 };
+		var firstItem = new TestCacheItem
+						{
+							Name = "First Item",
+							Number = 1
+						};
 
 		cache.Add(firstItem, 250.Milliseconds());
 
-		var secondItem = new TestCacheItem { Name = "Second Item", Number = 2 };
+		var secondItem = new TestCacheItem
+						{
+							Name = "Second Item",
+							Number = 2
+						};
 
 		cache.Add(secondItem);
 
-		var thirdItem = new TestCacheItem { Name = "Third Item", Number = 3 };
+		var thirdItem = new TestCacheItem
+						{
+							Name = "Third Item",
+							Number = 3
+						};
 
 		cache.Add(thirdItem, 1.Seconds());
 
@@ -51,7 +63,10 @@ public class CacheWorker
 
 public class TestCacheItem : ICacheItem
 {
-	public string CacheId => Name;
+	public string CacheId
+	{
+		get => Name;
+	}
 
 	public string Name { get; set; }
 

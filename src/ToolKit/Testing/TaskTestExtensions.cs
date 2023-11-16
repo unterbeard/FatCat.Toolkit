@@ -5,15 +5,15 @@ namespace FatCat.Toolkit.Testing;
 
 public static class TaskTestExtensions
 {
-	public static TaskTestAssertions<T> Should<T>(this Task<T> task)
-	{
-		return new TaskTestAssertions<T>(task);
-	}
+	public static TaskTestAssertions<T> Should<T>(this Task<T> task) => new(task);
 }
 
 public class TaskTestAssertions<T> : ReferenceTypeAssertions<Task<T>, TaskTestAssertions<T>>
 {
-	protected override string Identifier => "Task Test Assertions";
+	protected override string Identifier
+	{
+		get => "Task Test Assertions";
+	}
 
 	public TaskTestAssertions(Task<T> subject)
 		: base(subject) { }

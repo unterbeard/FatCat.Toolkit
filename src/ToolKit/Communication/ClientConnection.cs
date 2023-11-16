@@ -11,7 +11,10 @@ internal abstract class ClientConnection
 	private readonly IFatTcpLogger logger;
 	protected readonly IFatTcpServer server;
 
-	private bool IsNotCanceled => !cancellationToken.IsCancellationRequested;
+	private bool IsNotCanceled
+	{
+		get => !cancellationToken.IsCancellationRequested;
+	}
 
 	protected ClientConnection(
 		IFatTcpServer server,
@@ -30,10 +33,7 @@ internal abstract class ClientConnection
 		this.cancellationToken = cancellationToken;
 	}
 
-	public void Start()
-	{
-		Task.Factory.StartNew(ReceivingThread, TaskCreationOptions.LongRunning);
-	}
+	public void Start() { Task.Factory.StartNew(ReceivingThread, TaskCreationOptions.LongRunning); }
 
 	protected abstract Task<Stream> GetStream();
 
@@ -50,10 +50,7 @@ internal abstract class ClientConnection
 			{
 				var bytesCount = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
 
-				if (bytesCount == 0)
-				{
-					continue;
-				}
+				if (bytesCount == 0) { continue; }
 
 				var bytesReceived = new byte[bytesCount];
 
@@ -65,9 +62,6 @@ internal abstract class ClientConnection
 			}
 		}
 		catch (IOException) { }
-		catch (Exception ex)
-		{
-			logger.WriteException(ex);
-		}
+		catch (Exception ex) { logger.WriteException(ex); }
 	}
 }

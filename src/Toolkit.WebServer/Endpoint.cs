@@ -7,66 +7,35 @@ namespace FatCat.Toolkit.WebServer;
 [Controller]
 public abstract class Endpoint : Controller
 {
-	protected string? AuthToken =>
-		Request.Headers.TryGetValue("Authorization", out var values) ? values.FirstOrDefault() : string.Empty;
-
-	protected WebResult BadRequest(string? message = null)
+	protected string? AuthToken
 	{
-		return WebResult.BadRequest(message);
+		get => Request.Headers.TryGetValue("Authorization", out var values) ? values.FirstOrDefault() : string.Empty;
 	}
 
-	protected WebResult BadRequest(string fieldName, string? messageId)
-	{
-		return WebResult.BadRequest(fieldName, messageId);
-	}
+	protected WebResult BadRequest(string? message = null) => WebResult.BadRequest(message);
 
-	protected WebResult NotAcceptable(string? message = null)
-	{
-		return WebResult.NotAcceptable(message);
-	}
+	protected WebResult BadRequest(string fieldName, string? messageId) => WebResult.BadRequest(fieldName, messageId);
 
-	protected WebResult NotFound(string? message = null)
-	{
-		return WebResult.NotFound(message);
-	}
+	protected WebResult NotAcceptable(string? message = null) => WebResult.NotAcceptable(message);
 
-	protected WebResult NotImplemented()
-	{
-		return WebResult.NotImplemented();
-	}
+	protected WebResult NotFound(string? message = null) => WebResult.NotFound(message);
 
-	protected WebResult Ok(EqualObject model)
-	{
-		return Ok(JsonConvert.SerializeObject(model));
-	}
+	protected WebResult NotImplemented() => WebResult.NotImplemented();
+
+	protected WebResult Ok(EqualObject model) => Ok(JsonConvert.SerializeObject(model));
 
 	protected WebResult Ok<T>(List<T> list)
-		where T : EqualObject
-	{
-		return Ok(JsonConvert.SerializeObject(list));
-	}
+		where T : EqualObject => Ok(JsonConvert.SerializeObject(list));
 
 	protected WebResult Ok<T>(IEnumerable<T> list)
-		where T : EqualObject
-	{
-		return Ok(JsonConvert.SerializeObject(list));
-	}
+		where T : EqualObject => Ok(JsonConvert.SerializeObject(list));
 
 	/// <summary>
 	///  If you call this with an empty string or null for content, it will return a 204.
 	/// </summary>
-	protected WebResult Ok(string? results = null)
-	{
-		return WebResult.Ok(results);
-	}
+	protected WebResult Ok(string? results = null) => WebResult.Ok(results);
 
-	protected async Task<string> ReadContent()
-	{
-		return await Request.ReadContent();
-	}
+	protected async Task<string> ReadContent() => await Request.ReadContent();
 
-	protected new WebResult Unauthorized()
-	{
-		return WebResult.Unauthorized();
-	}
+	protected new WebResult Unauthorized() => WebResult.Unauthorized();
 }

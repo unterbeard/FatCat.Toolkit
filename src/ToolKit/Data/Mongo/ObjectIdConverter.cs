@@ -6,12 +6,12 @@ namespace FatCat.Toolkit.Data.Mongo;
 
 public class ObjectIdConverter : JsonConverter
 {
-	public override bool CanRead => true;
-
-	public override bool CanConvert(Type objectType)
+	public override bool CanRead
 	{
-		return objectType == typeof(ObjectId);
+		get => true;
 	}
+
+	public override bool CanConvert(Type objectType) => objectType == typeof(ObjectId);
 
 	public override object ReadJson(
 		JsonReader reader,
@@ -20,10 +20,7 @@ public class ObjectIdConverter : JsonConverter
 		JsonSerializer serializer
 	)
 	{
-		if (reader.Value == null)
-		{
-			return new ObjectId();
-		}
+		if (reader.Value == null) { return new ObjectId(); }
 
 		var objectIdString = reader.Value.ToString();
 

@@ -8,22 +8,19 @@ public class TestingAsyncCursor<T> : IAsyncCursor<T>
 
 	private bool movedCalled;
 
-	public IEnumerable<T> Current => items;
-
-	public TestingAsyncCursor(List<T> items)
+	public IEnumerable<T> Current
 	{
-		this.items = items;
+		get => items;
 	}
+
+	public TestingAsyncCursor(List<T> items) => this.items = items;
 
 	public void Dispose() { }
 
 	public bool MoveNext(CancellationToken cancellationToken = new())
 	{
 		// Only need to call move once, after that return false
-		if (movedCalled)
-		{
-			return false;
-		}
+		if (movedCalled) { return false; }
 
 		movedCalled = true;
 

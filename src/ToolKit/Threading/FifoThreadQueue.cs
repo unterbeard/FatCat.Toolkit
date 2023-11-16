@@ -33,7 +33,10 @@ public class FifoThreadQueue : IFifoThreadQueue
 
 	public CancellationToken CancelToken { get; set; }
 
-	public int QueueCount => queue.Count;
+	public int QueueCount
+	{
+		get => queue.Count;
+	}
 
 	public FifoThreadQueue()
 		: this(new ToolkitLogger()) { }
@@ -49,10 +52,7 @@ public class FifoThreadQueue : IFifoThreadQueue
 
 	public void Dispose()
 	{
-		if (disposed)
-		{
-			return;
-		}
+		if (disposed) { return; }
 
 		disposed = true;
 
@@ -71,28 +71,22 @@ public class FifoThreadQueue : IFifoThreadQueue
 	public void Enqueue(Func<Task> actionToQueue)
 	{
 		Enqueue(() =>
-		{
-			try
-			{
-				// taskFactory.StartNew(actionToQueue, cancelToken);
+				{
+					try
+					{
+						// taskFactory.StartNew(actionToQueue, cancelToken);
 
-				actionToQueue().Wait(CancelToken);
-			}
-			catch (TaskCanceledException) { }
-			catch (OperationCanceledException) { }
-			catch (Exception ex)
-			{
-				logger.Exception(ex);
-			}
-		});
+						actionToQueue().Wait(CancelToken);
+					}
+					catch (TaskCanceledException) { }
+					catch (OperationCanceledException) { }
+					catch (Exception ex) { logger.Exception(ex); }
+				});
 	}
 
 	public void Next()
 	{
-		if (queue.Count == 1)
-		{
-			return;
-		}
+		if (queue.Count == 1) { return; }
 
 		// Just dequeue the next action no reason that will skip to next if there is any
 		Dequeue();
@@ -122,14 +116,8 @@ public class FifoThreadQueue : IFifoThreadQueue
 
 	protected virtual void ExecuteAction(Action actionToExecute)
 	{
-		try
-		{
-			actionToExecute?.Invoke();
-		}
-		catch (Exception ex)
-		{
-			logger.Exception(ex);
-		}
+		try { actionToExecute?.Invoke(); }
+		catch (Exception ex) { logger.Exception(ex); }
 	}
 
 	private void CreateCancelToken()

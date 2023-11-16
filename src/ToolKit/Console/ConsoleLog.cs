@@ -125,10 +125,7 @@ public static class ConsoleLog
 		Write(ConsoleColor.DarkYellow, message, memberName, sourceFilePath, sourceLineNumber);
 	}
 
-	public static void WriteEmptyLine()
-	{
-		WriteLineWithColor(ConsoleColor.Black, string.Empty);
-	}
+	public static void WriteEmptyLine() { WriteLineWithColor(ConsoleColor.Black, string.Empty); }
 
 	public static void WriteException(
 		Exception exception,
@@ -215,26 +212,17 @@ public static class ConsoleLog
 		Write(ConsoleColor.Yellow, message, memberName, sourceFilePath, sourceLineNumber);
 	}
 
-	private static string? GetPrintableStackTrace(string spaces, Exception exception)
-	{
-		return string.IsNullOrEmpty(exception.StackTrace)
-			? null
-			: exception.StackTrace.Replace(Environment.NewLine, $"{spaces}{Environment.NewLine}                ");
-	}
+	private static string? GetPrintableStackTrace(string spaces, Exception exception) => string.IsNullOrEmpty(exception.StackTrace)
+																							? null
+																							: exception.StackTrace.Replace(Environment.NewLine, $"{spaces}{Environment.NewLine}                ");
 
 	private static void WriteEquals(ConsoleColor color, NewLineLocation lineLocation = NewLineLocation.None)
 	{
-		if (lineLocation.IsFlagSet(NewLineLocation.Before))
-		{
-			WriteEmptyLine();
-		}
+		if (lineLocation.IsFlagSet(NewLineLocation.Before)) { WriteEmptyLine(); }
 
 		WriteLineWithColor(color, new string('=', 125));
 
-		if (lineLocation.IsFlagSet(NewLineLocation.After))
-		{
-			WriteEmptyLine();
-		}
+		if (lineLocation.IsFlagSet(NewLineLocation.After)) { WriteEmptyLine(); }
 	}
 
 	private static void WriteExceptionForLevel(
@@ -251,17 +239,14 @@ public static class ConsoleLog
 		WriteRed($"{spaces}Error     : {exception.Message}", memberName, sourceFilePath, sourceLineNumber);
 
 		WriteRed(
-			$"{spaces}StackTrace: {GetPrintableStackTrace(spaces, exception)}",
-			memberName,
-			sourceFilePath,
-			sourceLineNumber
-		);
+				$"{spaces}StackTrace: {GetPrintableStackTrace(spaces, exception)}",
+				memberName,
+				sourceFilePath,
+				sourceLineNumber
+				);
 	}
 
-	private static void WriteLineWithColor(ConsoleColor color, string message)
-	{
-		consoleAccess.WriteLineWithColor(color, message);
-	}
+	private static void WriteLineWithColor(ConsoleColor color, string message) { consoleAccess.WriteLineWithColor(color, message); }
 
 	private enum NewLineLocation
 	{

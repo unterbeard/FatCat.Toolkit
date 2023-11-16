@@ -27,20 +27,14 @@ public class ManualWaitEvent : IManualWaitEvent
 {
 	private readonly ManualResetEvent manualResetEvent = new(false);
 
-	public bool HasBeenTriggered => manualResetEvent.WaitOne(1);
-
-	public void Dispose()
+	public bool HasBeenTriggered
 	{
-		manualResetEvent.Dispose();
+		get => manualResetEvent.WaitOne(1);
 	}
 
-	public void Trigger()
-	{
-		manualResetEvent.Set();
-	}
+	public void Dispose() { manualResetEvent.Dispose(); }
 
-	public bool Wait(TimeSpan? timeout)
-	{
-		return timeout.HasValue ? manualResetEvent.WaitOne(timeout.Value) : manualResetEvent.WaitOne();
-	}
+	public void Trigger() { manualResetEvent.Set(); }
+
+	public bool Wait(TimeSpan? timeout) => timeout.HasValue ? manualResetEvent.WaitOne(timeout.Value) : manualResetEvent.WaitOne();
 }

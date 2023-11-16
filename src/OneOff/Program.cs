@@ -3,7 +3,6 @@ using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
-using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.WebServer;
 using OneOffLib;
 using Thread = FatCat.Toolkit.Threading.Thread;
@@ -25,16 +24,16 @@ public static class Program
 		try
 		{
 			SystemScope.Initialize(
-				new ContainerBuilder(),
-				new List<Assembly>
-				{
-					typeof(OneOffModule).Assembly,
-					typeof(Program).Assembly,
-					typeof(ConsoleLog).Assembly,
-					typeof(ToolkitWebServerModule).Assembly
-				},
-				ScopeOptions.SetLifetimeScope
-			);
+									new ContainerBuilder(),
+									new List<Assembly>
+									{
+										typeof(OneOffModule).Assembly,
+										typeof(Program).Assembly,
+										typeof(ConsoleLog).Assembly,
+										typeof(ToolkitWebServerModule).Assembly
+									},
+									ScopeOptions.SetLifetimeScope
+								);
 
 			RunServer(args);
 
@@ -46,14 +45,8 @@ public static class Program
 
 			consoleUtilities.WaitForExit();
 		}
-		catch (Exception ex)
-		{
-			ConsoleLog.WriteException(ex);
-		}
+		catch (Exception ex) { ConsoleLog.WriteException(ex); }
 	}
 
-	private static void RunServer(string[] args)
-	{
-		new ServerWorker(new Thread(new ToolkitLogger())).DoWork(args);
-	}
+	private static void RunServer(string[] args) { new ServerWorker(new Thread(new ToolkitLogger())).DoWork(args); }
 }

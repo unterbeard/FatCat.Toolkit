@@ -11,9 +11,15 @@ public abstract class FileSystemRepositoryTests
 {
 	protected const string ExecutingDirectory = @"C:\Some\Install\Directory";
 
-	protected static string DataDirectory => Path.Join(ExecutingDirectory, "Data");
+	protected static string DataDirectory
+	{
+		get => Path.Join(ExecutingDirectory, "Data");
+	}
 
-	protected static string TestFileDataObjectPath => Path.Join(DataDirectory, "TestFileDataObject.data");
+	protected static string TestFileDataObjectPath
+	{
+		get => Path.Join(DataDirectory, "TestFileDataObject.data");
+	}
 
 	protected readonly SingleItemFileSystemRepository<TestFileDataObject> repository;
 	protected IApplicationTools applicationTools = null!;
@@ -29,10 +35,10 @@ public abstract class FileSystemRepositoryTests
 		SetUpJsonHelper();
 
 		repository = new SingleItemFileSystemRepository<TestFileDataObject>(
-			fileSystem,
-			applicationTools,
-			jsonHelper
-		);
+																			fileSystem,
+																			applicationTools,
+																			jsonHelper
+																			);
 	}
 
 	private void SetUpApplicationTools()

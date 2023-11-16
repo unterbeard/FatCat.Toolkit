@@ -13,29 +13,17 @@ public interface IHashTools
 
 public class HashTools : IHashTools
 {
-	public async Task<byte[]> CalculateHash(byte[] data)
-	{
-		return await new ByteHashProcessor().CalculateHash(data);
-	}
+	public async Task<byte[]> CalculateHash(byte[] data) => await new ByteHashProcessor().CalculateHash(data);
 
-	public async Task<string> CalculateHash(string data)
-	{
-		return await new StringHashProcessor().CalculateHash(data);
-	}
+	public async Task<string> CalculateHash(string data) => await new StringHashProcessor().CalculateHash(data);
 
-	public bool HashEquals(byte[] hash1, byte[] hash2)
-	{
-		return hash1.SequenceEqual(hash2);
-	}
+	public bool HashEquals(byte[] hash1, byte[] hash2) => hash1.SequenceEqual(hash2);
 
 	private class ByteHashProcessor : IDisposable
 	{
 		private readonly MemoryStream memoryStream;
 
-		public ByteHashProcessor()
-		{
-			memoryStream = new MemoryStream();
-		}
+		public ByteHashProcessor() => memoryStream = new MemoryStream();
 
 		public async Task<byte[]> CalculateHash(byte[] data)
 		{
@@ -46,10 +34,7 @@ public class HashTools : IHashTools
 			return hash;
 		}
 
-		public void Dispose()
-		{
-			memoryStream.Dispose();
-		}
+		public void Dispose() { memoryStream.Dispose(); }
 
 		private async Task<byte[]> GetMd5Hash()
 		{
@@ -72,10 +57,7 @@ public class HashTools : IHashTools
 	{
 		private readonly MemoryStream memoryStream;
 
-		public StringHashProcessor()
-		{
-			memoryStream = new MemoryStream();
-		}
+		public StringHashProcessor() => memoryStream = new MemoryStream();
 
 		public async Task<string> CalculateHash(string value)
 		{

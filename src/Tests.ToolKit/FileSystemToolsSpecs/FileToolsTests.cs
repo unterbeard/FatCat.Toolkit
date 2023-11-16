@@ -29,28 +29,13 @@ public abstract class FileToolsTests
 		SetUpDirectoryExists();
 	}
 
-	protected void SetFileDoesNotExist()
-	{
-		fileExists = false;
-	}
+	protected void SetFileDoesNotExist() { fileExists = false; }
 
-	protected void VerifyDirectoryExistsWasCalled()
-	{
-		A.CallTo(() => fileSystem.Directory.Exists(directoryPath)).MustHaveHappened();
-	}
+	protected void VerifyDirectoryExistsWasCalled() { A.CallTo(() => fileSystem.Directory.Exists(directoryPath)).MustHaveHappened(); }
 
-	protected void VerifyFileExistWasCalled()
-	{
-		A.CallTo(() => fileSystem.File.Exists(filePath)).MustHaveHappened();
-	}
+	protected void VerifyFileExistWasCalled() { A.CallTo(() => fileSystem.File.Exists(filePath)).MustHaveHappened(); }
 
-	private void SetUpDirectoryExists()
-	{
-		A.CallTo(() => fileSystem.Directory.Exists(A<string>._)).ReturnsLazily(() => directoryExists);
-	}
+	private void SetUpDirectoryExists() { A.CallTo(() => fileSystem.Directory.Exists(A<string>._)).ReturnsLazily(() => directoryExists); }
 
-	private void SetUpFileExists()
-	{
-		A.CallTo(() => fileSystem.File.Exists(A<string>._)).ReturnsLazily(() => fileExists);
-	}
+	private void SetUpFileExists() { A.CallTo(() => fileSystem.File.Exists(A<string>._)).ReturnsLazily(() => fileExists); }
 }

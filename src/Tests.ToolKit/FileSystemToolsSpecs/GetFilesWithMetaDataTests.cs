@@ -26,10 +26,7 @@ public class GetFilesWithMetaDataTests : FileToolsTests
 	{
 		fileTools.GetFilesWithMetaData(directoryPath);
 
-		foreach (var file in fileList)
-		{
-			A.CallTo(() => fileSystem.FileInfo.New(file)).MustHaveHappened();
-		}
+		foreach (var file in fileList) { A.CallTo(() => fileSystem.FileInfo.New(file)).MustHaveHappened(); }
 	}
 
 	[Fact]

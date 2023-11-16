@@ -22,8 +22,5 @@ public class DirectoryExistsTests : FileToolsTests
 	}
 
 	[Fact]
-	public void TrueIfDirectoryIsFound()
-	{
-		fileTools.DirectoryExists(directoryPath).Should().BeTrue();
-	}
+	public void TrueIfDirectoryIsFound() { fileTools.DirectoryExists(directoryPath).Should().BeTrue(); }
 }

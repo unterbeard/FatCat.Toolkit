@@ -41,7 +41,7 @@ public class SaveTests : FileSystemRepositoryTests
 		await repository.Save(dataToSave);
 
 		A.CallTo(() => fileSystem.File.WriteAllTextAsync(TestFileDataObjectPath, saveJson, default))
-			.MustHaveHappened();
+		.MustHaveHappened();
 	}
 
 	[Fact]
