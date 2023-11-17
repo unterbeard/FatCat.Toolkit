@@ -8,17 +8,8 @@ public interface IWebCallerFactory
 	IWebCaller GetWebCaller(Uri baseUri);
 }
 
-public class WebCallerFactory : IWebCallerFactory
+public class WebCallerFactory(IToolkitLogger toolkitLogger, IJsonOperations jsonOperations) : IWebCallerFactory
 {
-	private readonly IJsonOperations jsonOperations;
-	private readonly IToolkitLogger toolkitLogger;
-
-	public WebCallerFactory(IToolkitLogger toolkitLogger, IJsonOperations jsonOperations)
-	{
-		this.toolkitLogger = toolkitLogger;
-		this.jsonOperations = jsonOperations;
-	}
-
 	public IWebCaller GetWebCaller(Uri baseUri)
 	{
 		return new WebCaller(baseUri, jsonOperations, toolkitLogger);

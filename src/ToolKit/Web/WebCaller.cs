@@ -44,25 +44,15 @@ public interface IWebCaller
 	void UserBearerToken(string token);
 }
 
-public class WebCaller : IWebCaller
+public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger logger) : IWebCaller
 {
-	private readonly IJsonOperations jsonOperations;
-	private readonly IToolkitLogger logger;
-
 	private string bearerToken;
 
 	public string AcceptHeader { get; set; } = "application/json";
 
-	public Uri BaseUri { get; }
+	public Uri BaseUri { get; } = uri;
 
 	public TimeSpan Timeout { get; set; } = 30.Seconds();
-
-	public WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger logger)
-	{
-		this.jsonOperations = jsonOperations;
-		this.logger = logger;
-		BaseUri = uri;
-	}
 
 	public async Task<FatWebResponse> Delete(string url)
 	{
