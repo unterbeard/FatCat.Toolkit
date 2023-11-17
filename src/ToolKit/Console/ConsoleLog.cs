@@ -1,4 +1,3 @@
-#nullable enable
 using System.Runtime.CompilerServices;
 using FatCat.Toolkit.Extensions;
 
@@ -6,9 +5,7 @@ namespace FatCat.Toolkit.Console;
 
 public static class ConsoleLog
 {
-	private static readonly object lockObj = new();
-
-	public static IConsoleAccess ConsoleAccess { get; } = new SystemConsoleAccess();
+	public static IConsoleAccess ConsoleAccess { get; set; } = new SystemConsoleAccess();
 
 	public static bool LogCallerInformation { get; set; } = true;
 
@@ -216,7 +213,7 @@ public static class ConsoleLog
 		Write(ConsoleColor.Yellow, message, memberName, sourceFilePath, sourceLineNumber);
 	}
 
-	private static string? GetPrintableStackTrace(string spaces, Exception exception)
+	private static string GetPrintableStackTrace(string spaces, Exception exception)
 	{
 		return string.IsNullOrEmpty(exception.StackTrace)
 			? null
