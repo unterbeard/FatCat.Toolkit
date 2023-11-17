@@ -14,7 +14,10 @@ public static class HttpClientFactory
 	{
 		clientHandler = handler ?? new HttpClientHandler();
 
-		handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
+		if (handler is null)
+		{
+			clientHandler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
+		}
 
 		client = new HttpClient(clientHandler);
 	}
