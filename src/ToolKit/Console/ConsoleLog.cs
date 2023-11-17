@@ -6,8 +6,9 @@ namespace FatCat.Toolkit.Console;
 
 public static class ConsoleLog
 {
-	private static readonly IConsoleAccess consoleAccess = new ConsoleAccess();
 	private static readonly object lockObj = new();
+
+	public static IConsoleAccess ConsoleAccess { get; } = new SystemConsoleAccess();
 
 	public static bool LogCallerInformation { get; set; } = true;
 
@@ -260,7 +261,7 @@ public static class ConsoleLog
 
 	private static void WriteLineWithColor(ConsoleColor color, string message)
 	{
-		consoleAccess.WriteLineWithColor(color, message);
+		ConsoleAccess.WriteLineWithColor(color, message);
 	}
 
 	private enum NewLineLocation

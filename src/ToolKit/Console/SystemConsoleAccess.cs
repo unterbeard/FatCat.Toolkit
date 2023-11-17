@@ -5,7 +5,7 @@ public interface IConsoleAccess
 	void WriteLineWithColor(ConsoleColor color, string message);
 }
 
-public class ConsoleAccess : IConsoleAccess
+public class SystemConsoleAccess : IConsoleAccess
 {
 	private readonly object lockObject = new();
 
@@ -22,4 +22,9 @@ public class ConsoleAccess : IConsoleAccess
 			System.Console.ForegroundColor = oldColor;
 		}
 	}
+}
+
+public class NoOpConsoleAccess : IConsoleAccess
+{
+	public void WriteLineWithColor(ConsoleColor color, string message) { }
 }
