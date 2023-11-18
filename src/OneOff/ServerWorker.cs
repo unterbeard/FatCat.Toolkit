@@ -108,7 +108,7 @@ public class ServerWorker(IThread thread)
 
 			var factory = SystemScope.Container.Resolve<IWebCallerFactory>();
 
-			var caller = factory.GetWebCaller(new Uri("https://localhost:14555"));
+			var caller = factory.GetWebCaller(new Uri("http://localhost:14555"));
 
 			MakeWebRequest(caller, "api/test");
 

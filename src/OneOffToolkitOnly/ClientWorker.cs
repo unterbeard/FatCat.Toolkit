@@ -18,7 +18,7 @@ public class ClientWorker(IThread thread, IToolkitHubClientFactory hubFactory, I
 		{
 			HttpClientFactory.UseHttpClientHandler();
 
-			var mainUrl = "https://127.0.0.1:14555";
+			var mainUrl = "http://127.0.0.1:14555";
 
 			if (args.Length > 1)
 			{
