@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
@@ -55,6 +56,8 @@ public class ClientWorker(IThread thread, IToolkitHubClientFactory hubFactory, I
 
 	private async Task ConnectToHub(string mainUrl, string testToken)
 	{
+		ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
+
 		// Secure Url
 		var hubUrl = $"{mainUrl}/events?access_token={testToken}";
 

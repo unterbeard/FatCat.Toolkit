@@ -52,7 +52,10 @@ public class ToolkitHubClientConnection : IToolkitHubClientConnection
 
 	public async Task Connect(string hubUrl, Action onConnectionLost = null)
 	{
-		connection = new HubConnectionBuilder().WithUrl(hubUrl).Build();
+		connection = new HubConnectionBuilder().WithUrl(hubUrl, options =>
+																{
+																	
+																}).Build();
 
 		connection.Closed += a =>
 		{

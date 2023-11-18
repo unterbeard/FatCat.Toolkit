@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Net;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Extensions;
@@ -28,6 +29,8 @@ internal class ApplicationStartUp
 {
 	public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 	{
+		ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
+
 		app.Use(CaptureMiddlewareExceptions);
 
 		app.UseFileServer();
