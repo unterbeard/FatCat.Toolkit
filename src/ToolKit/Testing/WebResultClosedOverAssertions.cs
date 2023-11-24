@@ -1,4 +1,3 @@
-#nullable enable
 using System.Net;
 using FatCat.Toolkit.Web;
 using FluentAssertions;
@@ -194,7 +193,7 @@ public class FatWebResponseClosedOverAssertions<T>
 
 	public FatWebResponseClosedOverAssertions<T> HaveStatusCode(
 		HttpStatusCode statusCode,
-		string? because = null,
+		string because = null,
 		params object[] becauseArgs
 	)
 	{
@@ -203,7 +202,7 @@ public class FatWebResponseClosedOverAssertions<T>
 
 	public FatWebResponseClosedOverAssertions<T> WithMessage(
 		string expectedMessage,
-		string? because = null,
+		string because = null,
 		params object[] becauseArgs
 	)
 	{
@@ -214,7 +213,7 @@ public class FatWebResponseClosedOverAssertions<T>
 
 	private FatWebResponseClosedOverAssertions<T> HaveOneOfStatusCode(
 		HttpStatusCode[] acceptableStatusCodes,
-		string? because = null,
+		string because = null,
 		params object[] becauseArgs
 	)
 	{
