@@ -111,6 +111,10 @@ public class ServerWorker(IThread thread)
 			var caller = factory.GetWebCaller(new Uri("http://localhost:14555"));
 
 			MakeWebRequest(caller, "api/test");
+			
+			var testModel= Faker.Create<TestModel>();
+			
+			caller.Post("api/test/post", testModel);
 
 			// var response = caller.Get("api/test/Search/firstname=david&lastname=basarab&count=43").Result;
 			// MakeWebRequest(caller, "api/test/Search?firstname=david&lastname=basarab&count=43");
