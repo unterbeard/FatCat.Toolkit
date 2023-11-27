@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Console;
@@ -20,7 +21,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Converters;
 using WebApplicationOptions = FatCat.Toolkit.Web.Api.WebApplicationOptions;
 
 namespace FatCat.Toolkit.WebServer;
@@ -194,9 +194,10 @@ internal class ApplicationStartUp
 					config.Filters.Add(new AuthorizeFilter(policy));
 				}
 			})
-			.AddNewtonsoftJson(build =>
+			.AddJsonOptions(opts =>
 			{
-				build.SerializerSettings.Converters.Add(new StringEnumConverter());
+				var enumConverter = new JsonStringEnumConverter();
+				opts.JsonSerializerOptions.Converters.Add(enumConverter);
 			});
 
 		services
