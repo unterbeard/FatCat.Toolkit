@@ -13,6 +13,8 @@ public static class Program
 
 	public static async Task Main(params string[] args)
 	{
+		await Task.CompletedTask;
+
 		Args = args;
 
 		ConsoleLog.LogCallerInformation = true;
