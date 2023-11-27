@@ -8,6 +8,10 @@
         <LangVersion>12</LangVersion>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <NoWarn>$(NoWarn);NETSDK1206</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\Toolkit.WebServer\Toolkit.WebServer.csproj"/>
         <ProjectReference Include="..\ToolKit\ToolKit.csproj"/>

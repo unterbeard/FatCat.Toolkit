@@ -6,6 +6,10 @@
         <Nullable>disable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <NoWarn>$(NoWarn);NETSDK1206</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\ToolKit\ToolKit.csproj"/>
     </ItemGroup>

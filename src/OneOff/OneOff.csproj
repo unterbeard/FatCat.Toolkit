@@ -8,6 +8,10 @@
         <Nullable>disable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <NoWarn>$(NoWarn);NETSDK1206</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\OneOffLib\OneOffLib.csproj"/>
         <ProjectReference Include="..\Toolkit.WebServer\Toolkit.WebServer.csproj"/>
