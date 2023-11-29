@@ -46,6 +46,11 @@ public static class ToolkitWebApplication
 
 		applicationStartUp.Configure(app, app.Environment, app.Services.GetRequiredService<ILoggerFactory>());
 
+		if (Settings.BasePath.IsNotNullOrEmpty())
+		{
+			app.UsePathBase(Settings.BasePath);
+		}
+
 		app.MapControllers();
 
 		var thread = SystemScope.Container.Resolve<IThread>();

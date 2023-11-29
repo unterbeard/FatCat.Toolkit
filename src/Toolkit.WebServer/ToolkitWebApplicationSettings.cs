@@ -9,6 +9,8 @@ public class ToolkitWebApplicationSettings : EqualObject
 {
 	public string[] Args { get; set; } = Array.Empty<string>();
 
+	public string BasePath { get; set; }
+
 	public List<Assembly> ContainerAssemblies { get; set; } = new();
 
 	public Action? OnWebApplicationStarted { get; set; }

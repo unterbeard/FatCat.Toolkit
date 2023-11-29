@@ -62,7 +62,8 @@ public static class Program
 				typeof(ToolkitWebApplication).Assembly
 			},
 			OnWebApplicationStarted = Started,
-			Args = args
+			Args = args,
+			BasePath = "david"
 		};
 
 		applicationSettings.ClientDataBufferMessage += async (message, buffer) =>
