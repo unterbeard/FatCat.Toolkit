@@ -22,4 +22,12 @@ public class ToolkitClaim : EqualObject
 	public string Type { get; set; }
 
 	public string Value { get; set; }
+
+	public ToolkitClaim() { }
+
+	public ToolkitClaim(string claimType, string value)
+	{
+		Type = claimType;
+		Value = value;
+	}
 }
