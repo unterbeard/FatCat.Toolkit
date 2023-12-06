@@ -37,7 +37,7 @@ public static class Program
 
 			RunServer(args);
 
-			// var worker = SystemScope.Container.Resolve<UriWorker>();
+			// var worker = SystemScope.Container.Resolve<WebResultWorker>();
 			//
 			// await worker.DoWork();
 
