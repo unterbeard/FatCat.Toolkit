@@ -50,7 +50,7 @@
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0"/>
         <PackageReference Include="MongoDB.Driver" Version="2.22.0"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-        <PackageReference Include="System.IO.Abstractions" Version="19.2.87"/>
+        <PackageReference Include="System.IO.Abstractions" Version="20.0.4" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ToolKit\ToolKit.csproj"/>
