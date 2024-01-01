@@ -12,12 +12,12 @@ public class ByteToolTests
 	{
 		var byteTools = new ByteTools();
 
-		var textToChange = Faker.RandomString();
+		var bytes = Faker.RandomBytes(124);
 
-		var bytes = byteTools.FromBase64Encoded(textToChange);
+		var base64String = byteTools.ToBase64String(bytes);
 
-		var plainText = byteTools.ToBase64Encoded(bytes);
+		var decodedBytes = byteTools.FromBase64String(base64String);
 
-		plainText.Should().Be(textToChange);
+		decodedBytes.Should().BeEquivalentTo(bytes);
 	}
 }
