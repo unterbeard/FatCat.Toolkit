@@ -4,16 +4,10 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace FatCat.Toolkit.Communication;
 
-public class SecureFatTcpClient : FatTcpClient, IFatTcpClient
+public class SecureFatTcpClient(X509Certificate certificate, IFatTcpLogger logger)
+	: FatTcpClient(logger),
+		IFatTcpClient
 {
-	private readonly X509Certificate certificate;
-
-	public SecureFatTcpClient(X509Certificate certificate, IFatTcpLogger logger)
-		: base(logger)
-	{
-		this.certificate = certificate;
-	}
-
 	protected override Stream GetStream()
 	{
 		var sslStream = new SslStream(tcpClient.GetStream(), false, CertValidation, null);

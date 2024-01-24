@@ -2,18 +2,15 @@
 
 namespace FatCat.Toolkit.Communication;
 
-internal class OpenClientConnection : ClientConnection
+internal class OpenClientConnection(
+	IFatTcpServer server,
+	TcpClient client,
+	string clientId,
+	int bufferSize,
+	IFatTcpLogger logger,
+	CancellationToken cancellationToken
+) : ClientConnection(server, client, clientId, bufferSize, logger, cancellationToken)
 {
-	public OpenClientConnection(
-		IFatTcpServer server,
-		TcpClient client,
-		string clientId,
-		int bufferSize,
-		IFatTcpLogger logger,
-		CancellationToken cancellationToken
-	)
-		: base(server, client, clientId, bufferSize, logger, cancellationToken) { }
-
 	protected override async Task<Stream> GetStream()
 	{
 		await Task.CompletedTask;

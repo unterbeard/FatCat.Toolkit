@@ -26,24 +26,16 @@ internal static class CertificateHelper
 	}
 }
 
-internal class SecureClientConnection : ClientConnection
+internal class SecureClientConnection(
+	X509Certificate certificate,
+	IFatTcpServer server,
+	TcpClient client,
+	string clientId,
+	int bufferSize,
+	IFatTcpLogger logger,
+	CancellationToken cancellationToken
+) : ClientConnection(server, client, clientId, bufferSize, logger, cancellationToken)
 {
-	private readonly X509Certificate certificate;
-
-	public SecureClientConnection(
-		X509Certificate certificate,
-		IFatTcpServer server,
-		TcpClient client,
-		string clientId,
-		int bufferSize,
-		IFatTcpLogger logger,
-		CancellationToken cancellationToken
-	)
-		: base(server, client, clientId, bufferSize, logger, cancellationToken)
-	{
-		this.certificate = certificate;
-	}
-
 	protected override async Task<Stream> GetStream()
 	{
 		var sslStream = new SslStream(client.GetStream(), false, CertValidation);

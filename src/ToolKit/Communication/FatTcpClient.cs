@@ -5,9 +5,8 @@ using Humanizer;
 
 namespace FatCat.Toolkit.Communication;
 
-public abstract class FatTcpClient
+public abstract class FatTcpClient(IFatTcpLogger logger)
 {
-	private readonly IFatTcpLogger logger;
 	private byte[] buffer;
 	private int bufferSize;
 	private CancellationTokenSource cancelSource;
@@ -22,11 +21,6 @@ public abstract class FatTcpClient
 	public bool Reconnect { get; set; } = false;
 
 	public TimeSpan ReconnectDelay { get; set; } = 2.Seconds();
-
-	protected FatTcpClient(IFatTcpLogger logger)
-	{
-		this.logger = logger;
-	}
 
 	public event TcpMessageReceived TcpMessageReceivedEvent;
 

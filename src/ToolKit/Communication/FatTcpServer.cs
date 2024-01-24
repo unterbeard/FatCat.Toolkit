@@ -5,10 +5,9 @@ using System.Text;
 
 namespace FatCat.Toolkit.Communication;
 
-public abstract class FatTcpServer
+public abstract class FatTcpServer(IGenerator generator, IFatTcpLogger logger)
 {
-	private readonly IGenerator generator;
-	protected readonly IFatTcpLogger logger;
+	protected readonly IFatTcpLogger logger = logger;
 	protected int bufferSize;
 	private CancellationTokenSource cancelSource;
 	protected CancellationToken cancelToken;
@@ -18,12 +17,6 @@ public abstract class FatTcpServer
 	private Socket server;
 
 	private ConcurrentDictionary<string, ClientConnection> Connections { get; } = new();
-
-	protected FatTcpServer(IGenerator generator, IFatTcpLogger logger)
-	{
-		this.generator = generator;
-		this.logger = logger;
-	}
 
 	public event TcpMessageReceived TcpMessageReceivedEvent;
 
