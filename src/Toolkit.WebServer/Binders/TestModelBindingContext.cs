@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace FatCat.Toolkit.WebServer.Binders;
 
-public class TestModelBindingContext : ModelBindingContext
+public class TestModelBindingContext(TestValueProvider testValueProvider) : ModelBindingContext
 {
 	public override ActionContext ActionContext { get; set; }
 
@@ -28,7 +28,7 @@ public class TestModelBindingContext : ModelBindingContext
 
 	public override ModelBindingResult Result { get; set; }
 
-	public TestValueProvider TestValueProvider { get; set; }
+	public TestValueProvider TestValueProvider { get; set; } = testValueProvider;
 
 	public override ValidationStateDictionary ValidationState { get; set; }
 
@@ -38,15 +38,8 @@ public class TestModelBindingContext : ModelBindingContext
 		set { }
 	}
 
-	public TestModelBindingContext(TestValueProvider testValueProvider)
-	{
-		TestValueProvider = testValueProvider;
-	}
-
 	public TestModelBindingContext()
-	{
-		TestValueProvider = new();
-	}
+		: this(new()) { }
 
 	public void AddTestValues(string name, string value)
 	{

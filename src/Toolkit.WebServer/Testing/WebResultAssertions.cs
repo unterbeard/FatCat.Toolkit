@@ -21,15 +21,13 @@ public static class WebResultAssertionsExtensions
 	}
 }
 
-public class WebResultAssertions : ReferenceTypeAssertions<WebResult, WebResultAssertions>
+public class WebResultAssertions(WebResult result)
+	: ReferenceTypeAssertions<WebResult, WebResultAssertions>(result)
 {
 	protected override string Identifier
 	{
 		get => "Web Results assertions";
 	}
-
-	public WebResultAssertions(WebResult result)
-		: base(result) { }
 
 	public WebResultAssertions Be(WebResult expectedResult)
 	{

@@ -16,19 +16,14 @@ public static class EndpointTestExtensions
 	}
 }
 
-public class EndpointAssertions : ReferenceTypeAssertions<Endpoint, EndpointAssertions>
+public class EndpointAssertions(Endpoint endpoint)
+	: ReferenceTypeAssertions<Endpoint, EndpointAssertions>(endpoint)
 {
-	private readonly Endpoint endpoint;
+	private readonly Endpoint endpoint = endpoint;
 
 	protected override string Identifier
 	{
 		get => "Fog Endpoint";
-	}
-
-	public EndpointAssertions(Endpoint endpoint)
-		: base(endpoint)
-	{
-		this.endpoint = endpoint;
 	}
 
 	public AndConstraint<EndpointAssertions> BeDelete(string methodName, string template = null!)

@@ -23,17 +23,14 @@ public static class WebResultClosedOverAssertions
 	}
 }
 
-public class WebResultClosedOverAssertions<T>
-	: ReferenceTypeAssertions<WebResult<T>, WebResultClosedOverAssertions<T>>
+public class WebResultClosedOverAssertions<T>(WebResult<T> result)
+	: ReferenceTypeAssertions<WebResult<T>, WebResultClosedOverAssertions<T>>(result)
 	where T : class
 {
 	protected override string Identifier
 	{
 		get => "Web Results assertions";
 	}
-
-	public WebResultClosedOverAssertions(WebResult<T> result)
-		: base(result) { }
 
 	public WebResultClosedOverAssertions<T> Be(WebResult<T> expectedResult)
 	{

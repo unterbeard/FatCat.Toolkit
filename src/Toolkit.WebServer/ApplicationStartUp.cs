@@ -129,10 +129,10 @@ internal class ApplicationStartUp
 											});
 
 		services.AddAuthorization(options =>
-										{
-											// options.AddServerToServerPolicy();
-											options.AddPermissionsPolicies();
-										});
+								{
+									// options.AddServerToServerPolicy();
+									options.AddPermissionsPolicies();
+								});
 	}
 
 	private async Task CaptureMiddlewareExceptions(HttpContext context, Func<Task> next)
@@ -181,14 +181,14 @@ internal class ApplicationStartUp
 		services
 			.AddMvc()
 			.ConfigureApplicationPartManager(p =>
+											{
+												foreach (var containerAssembly in ToolkitWebApplication.Settings.ContainerAssemblies)
 												{
-													foreach (var containerAssembly in ToolkitWebApplication.Settings.ContainerAssemblies)
-													{
-														ConsoleLog.WriteCyan($"Adding Assembly Part <{containerAssembly.FullName}>");
+													ConsoleLog.WriteCyan($"Adding Assembly Part <{containerAssembly.FullName}>");
 
-														p.ApplicationParts.Add(new AssemblyPart(containerAssembly));
-													}
-												});
+													p.ApplicationParts.Add(new AssemblyPart(containerAssembly));
+												}
+											});
 	}
 
 	private void SetUpSignalR(IApplicationBuilder app)
@@ -196,11 +196,11 @@ internal class ApplicationStartUp
 		if (ToolkitWebApplication.Settings.Options.IsFlagNotSet(WebApplicationOptions.SignalR)) { return; }
 
 		app.UseEndpoints(endpoints =>
-							{
-								var endpointOption = endpoints.MapHub<ToolkitHub>(ToolkitWebApplication.Settings.SignalRPath);
+						{
+							var endpointOption = endpoints.MapHub<ToolkitHub>(ToolkitWebApplication.Settings.SignalRPath);
 
-								if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.Authentication)) { endpointOption.RequireAuthorization(); }
-							});
+							if (ToolkitWebApplication.Settings.Options.IsFlagSet(WebApplicationOptions.Authentication)) { endpointOption.RequireAuthorization(); }
+						});
 	}
 
 	private void SetUpStaticFiles(IApplicationBuilder app)
