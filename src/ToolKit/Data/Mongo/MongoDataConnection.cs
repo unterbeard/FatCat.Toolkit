@@ -9,17 +9,8 @@ public interface IMongoDataConnection
 		where T : MongoObject;
 }
 
-public class MongoDataConnection : IMongoDataConnection
+public class MongoDataConnection(IMongoNames mongoNames, IMongoConnection mongoConnection) : IMongoDataConnection
 {
-	private readonly IMongoConnection mongoConnection;
-	private readonly IMongoNames mongoNames;
-
-	public MongoDataConnection(IMongoNames mongoNames, IMongoConnection mongoConnection)
-	{
-		this.mongoNames = mongoNames;
-		this.mongoConnection = mongoConnection;
-	}
-
 	public IMongoCollection<T> GetCollection<T>(string? connectionString = null, string? databaseName = null)
 		where T : MongoObject
 	{

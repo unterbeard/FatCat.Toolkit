@@ -20,15 +20,13 @@ public static class FatResultAssertionsExtensions
 	}
 }
 
-public class FatResultAssertions<T> : ReferenceTypeAssertions<FatResult<T>, FatResultAssertions<T>>
+public class FatResultAssertions<T>(FatResult<T> subject)
+	: ReferenceTypeAssertions<FatResult<T>, FatResultAssertions<T>>(subject)
 {
 	protected override string Identifier
 	{
 		get => "FatResultAssertions";
 	}
-
-	public FatResultAssertions(FatResult<T> subject)
-		: base(subject) { }
 
 	public FatResultAssertions<T> Be(FatResult<T> expectedResult)
 	{

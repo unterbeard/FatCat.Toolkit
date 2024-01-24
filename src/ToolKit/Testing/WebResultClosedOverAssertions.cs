@@ -23,17 +23,14 @@ public static class FatWebResponseClosedOverAssertions
 	}
 }
 
-public class FatWebResponseClosedOverAssertions<T>
-	: ReferenceTypeAssertions<FatWebResponse<T>, FatWebResponseClosedOverAssertions<T>>
+public class FatWebResponseClosedOverAssertions<T>(FatWebResponse<T> result)
+	: ReferenceTypeAssertions<FatWebResponse<T>, FatWebResponseClosedOverAssertions<T>>(result)
 	where T : class
 {
 	protected override string Identifier
 	{
 		get => "Web Results assertions";
 	}
-
-	public FatWebResponseClosedOverAssertions(FatWebResponse<T> result)
-		: base(result) { }
 
 	public FatWebResponseClosedOverAssertions<T> Be(FatWebResponse<T> expectedResult)
 	{

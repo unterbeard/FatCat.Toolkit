@@ -32,12 +32,7 @@ public static class EnumerationExtensions
 		return (testValueNumber & flagNumberValue) != 0;
 	}
 
-	public static string ToDelimited(this IEnumerable list)
-	{
-		return ToDelimited(list, ",");
-	}
-
-	public static string ToDelimited(this IEnumerable list, string delimiter)
+	public static string ToDelimited(this IEnumerable list, string delimiter = ",")
 	{
 		var returnValue = list.Cast<object>()
 			.Aggregate<object, string>(null!, (current, unknown) => current + (unknown + delimiter));

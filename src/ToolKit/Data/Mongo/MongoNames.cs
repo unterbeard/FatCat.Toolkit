@@ -8,15 +8,8 @@ public interface IMongoNames : IDataNames
 	string GetDatabaseNameFromType(Type type);
 }
 
-public class MongoNames : IMongoNames
+public class MongoNames(IDataNames dataNames) : IMongoNames
 {
-	private readonly IDataNames dataNames;
-
-	public MongoNames(IDataNames dataNames)
-	{
-		this.dataNames = dataNames;
-	}
-
 	public string GetCollectionName<T>()
 		where T : DataObject
 	{

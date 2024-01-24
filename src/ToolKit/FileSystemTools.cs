@@ -41,15 +41,8 @@ public interface IFileSystemTools
 	Task WriteAllText(string path, string text);
 }
 
-public class FileSystemTools : IFileSystemTools
+public class FileSystemTools(IFileSystem fileSystem) : IFileSystemTools
 {
-	private readonly IFileSystem fileSystem;
-
-	public FileSystemTools(IFileSystem fileSystem)
-	{
-		this.fileSystem = fileSystem;
-	}
-
 	public async Task AppendToFile(string path, string text)
 	{
 		EnsureFile(path);

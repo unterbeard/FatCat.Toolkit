@@ -13,15 +13,8 @@ public interface IThread
 	Task Sleep(TimeSpan sleepTime, CancellationToken token);
 }
 
-public class Thread : IThread
+public class Thread(IToolkitLogger logger) : IThread
 {
-	private readonly IToolkitLogger logger;
-
-	public Thread(IToolkitLogger logger)
-	{
-		this.logger = logger;
-	}
-
 	public void Run(Func<Task> action)
 	{
 		Task.Run(async () =>

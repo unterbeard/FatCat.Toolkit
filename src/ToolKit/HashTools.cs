@@ -30,12 +30,7 @@ public class HashTools : IHashTools
 
 	private class ByteHashProcessor : IDisposable
 	{
-		private readonly MemoryStream memoryStream;
-
-		public ByteHashProcessor()
-		{
-			memoryStream = new MemoryStream();
-		}
+		private readonly MemoryStream memoryStream = new();
 
 		public async Task<byte[]> CalculateHash(byte[] data)
 		{

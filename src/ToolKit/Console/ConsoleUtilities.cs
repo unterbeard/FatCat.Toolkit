@@ -15,15 +15,8 @@ public interface IConsoleUtilities
 	void WaitForExit(Action? onExit = null);
 }
 
-public class ConsoleUtilities : IConsoleUtilities
+public class ConsoleUtilities(IManualWaitEvent stopEvent) : IConsoleUtilities
 {
-	private readonly IManualWaitEvent stopEvent;
-
-	public ConsoleUtilities(IManualWaitEvent stopEvent)
-	{
-		this.stopEvent = stopEvent;
-	}
-
 	public void Exit()
 	{
 		OnCancel(null, null);

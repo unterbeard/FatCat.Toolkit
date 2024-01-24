@@ -29,10 +29,10 @@ public class SimpleResponse : EqualObject
 	public FatWebResponse ToResult()
 	{
 		return new FatWebResponse
-		{
-			Content = Text,
-			ContentType = ContentType,
-			StatusCode = HttpStatusCode
-		};
+				{
+					Content = Text,
+					ContentType = ContentType,
+					StatusCode = HttpStatusCode
+				};
 	}
 }

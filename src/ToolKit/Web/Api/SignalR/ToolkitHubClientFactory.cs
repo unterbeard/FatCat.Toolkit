@@ -13,15 +13,9 @@ public interface IToolkitHubClientFactory : IAsyncDisposable
 	Task<ConnectionResult> TryToConnectToClient(string hubUrl, Action? onConnectionLost = null);
 }
 
-public class ToolkitHubClientFactory : IToolkitHubClientFactory
+public class ToolkitHubClientFactory(ISystemScope scope) : IToolkitHubClientFactory
 {
 	private readonly ConcurrentDictionary<string, IToolkitHubClientConnection> connections = new();
-	private readonly ISystemScope scope;
-
-	public ToolkitHubClientFactory(ISystemScope scope)
-	{
-		this.scope = scope;
-	}
 
 	public async Task<IToolkitHubClientConnection> ConnectToClient(string hubUrl)
 	{
