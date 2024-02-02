@@ -25,6 +25,29 @@ internal class MessageCallbackHolder<TMessage>
 	{
 		return callbacks;
 	}
+
+	public void Remove(Func<TMessage, Task> callback)
+	{
+		var newBag = new ConcurrentBag<Func<TMessage, Task>>();
+
+		Parallel.ForEach(
+			callbacks,
+			currentItem =>
+			{
+				if (!EqualityComparer<Func<TMessage, Task>>.Default.Equals(currentItem, callback))
+				{
+					newBag.Add(currentItem);
+				}
+			}
+		);
+
+		callbacks.Clear();
+
+		foreach (var newItem in newBag)
+		{
+			callbacks.Add(newItem);
+		}
+	}
 }
 
 public static class Messenger
@@ -90,9 +113,11 @@ public static class Messenger
 	public static void Unsubscribe<TMessage>(Func<TMessage, Task> callback)
 		where TMessage : Message
 	{
-		// if (subscribers.TryGetValue(typeof(TMessage), out var bag))
-		// {
-		// 	RemoveItemFromConcurrentBag(bag, callback as Func<object, Task>);
-		// }
+		if (subscribers.TryGetValue(typeof(TMessage), out var bag))
+		{
+			var holder = bag as MessageCallbackHolder<TMessage>;
+
+			holder.Remove(callback);
+		}
 	}
 }
