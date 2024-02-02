@@ -18,11 +18,17 @@ public interface IFatCatCache<T>
 
 	bool InCache(string cacheId);
 
-	public bool InCache(T cacheItem) { return InCache(cacheItem.CacheId); }
+	public bool InCache(T cacheItem)
+	{
+		return InCache(cacheItem.CacheId);
+	}
 
 	void Remove(string cacheId);
 
-	public void Remove(T cacheItem) { Remove(cacheItem.CacheId); }
+	public void Remove(T cacheItem)
+	{
+		Remove(cacheItem.CacheId);
+	}
 }
 
 public class FatCatCache<T> : IFatCatCache<T>
@@ -36,21 +42,30 @@ public class FatCatCache<T> : IFatCatCache<T>
 	{
 		RemoveExpiredItems();
 
-		if (!timeoutEnabled && timeout != null) { timeoutEnabled = true; }
+		if (!timeoutEnabled && timeout != null)
+		{
+			timeoutEnabled = true;
+		}
 
 		cache.AddOrUpdate(
-						cacheItem.CacheId,
-						new CacheEntry<T>(cacheItem, timeout),
-						(key, value) => new CacheEntry<T>(cacheItem, timeout)
-						);
+			cacheItem.CacheId,
+			new CacheEntry<T>(cacheItem, timeout),
+			(key, value) => new CacheEntry<T>(cacheItem, timeout)
+		);
 	}
 
 	public void Add(List<T> cacheItems, TimeSpan? timeout = null)
 	{
-		foreach (var item in cacheItems) { Add(item); }
+		foreach (var item in cacheItems)
+		{
+			Add(item);
+		}
 	}
 
-	public void Clear() { cache.Clear(); }
+	public void Clear()
+	{
+		cache.Clear();
+	}
 
 	public T? Get(string cacheId)
 	{
@@ -84,11 +99,20 @@ public class FatCatCache<T> : IFatCatCache<T>
 
 	private void RemoveExpiredItems()
 	{
-		if (!timeoutEnabled || cache.IsEmpty) { return; }
+		if (!timeoutEnabled || cache.IsEmpty)
+		{
+			return;
+		}
 
-		foreach (var value in cache.Values.Where(i => i.HasExpired())) { cache.Remove(value.Item.CacheId, out _); }
+		foreach (var value in cache.Values.Where(i => i.HasExpired()))
+		{
+			cache.Remove(value.Item.CacheId, out _);
+		}
 
-		if (cache.IsEmpty) { timeoutEnabled = false; }
+		if (cache.IsEmpty)
+		{
+			timeoutEnabled = false;
+		}
 	}
 
 	private class CacheEntry<TType>
@@ -109,7 +133,10 @@ public class FatCatCache<T> : IFatCatCache<T>
 
 		public bool HasExpired()
 		{
-			if (Timeout == null) { return false; }
+			if (Timeout == null)
+			{
+				return false;
+			}
 
 			var timeSinceEntry = DateTime.UtcNow - EntryTime;
 

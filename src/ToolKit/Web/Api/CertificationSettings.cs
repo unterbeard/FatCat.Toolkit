@@ -10,7 +10,10 @@ public class CertificationSettings : EqualObject
 
 	public X509Certificate2 GetCertificate()
 	{
-		if (Location == null || Password == null) { return null; }
+		if (Location == null || Password == null)
+		{
+			return null;
+		}
 
 		return new X509Certificate2(Location, Password);
 	}

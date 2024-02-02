@@ -203,8 +203,10 @@ public class ApplicationTools : IApplicationTools
 	{
 		var host = Dns.GetHostEntry(Dns.GetHostName());
 
-		return host.AddressList
-			.Where(ip => ip.AddressFamily is AddressFamily.InterNetwork or AddressFamily.InterNetworkV6)
+		return host
+			.AddressList.Where(ip =>
+				ip.AddressFamily is AddressFamily.InterNetwork or AddressFamily.InterNetworkV6
+			)
 			.Select(ip => ip.ToString())
 			.ToList();
 	}
