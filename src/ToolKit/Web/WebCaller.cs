@@ -54,32 +54,62 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 
 	public TimeSpan Timeout { get; set; } = 30.Seconds();
 
-	public async Task<FatWebResponse> Delete(string url) { return await Delete(url, Timeout); }
+	public async Task<FatWebResponse> Delete(string url)
+	{
+		return await Delete(url, Timeout);
+	}
 
-	public async Task<FatWebResponse> Delete(string url, TimeSpan timeout) { return await SendWebRequest(HttpMethod.Delete, url, timeout); }
+	public async Task<FatWebResponse> Delete(string url, TimeSpan timeout)
+	{
+		return await SendWebRequest(HttpMethod.Delete, url, timeout);
+	}
 
-	public Task<FatWebResponse> Get(string url) { return Get(url, Timeout); }
+	public Task<FatWebResponse> Get(string url)
+	{
+		return Get(url, Timeout);
+	}
 
-	public async Task<FatWebResponse> Get(string url, TimeSpan timeout) { return await SendWebRequest(HttpMethod.Get, url, timeout); }
+	public async Task<FatWebResponse> Get(string url, TimeSpan timeout)
+	{
+		return await SendWebRequest(HttpMethod.Get, url, timeout);
+	}
 
 	public Uri GetFullUrl(string url)
 	{
 		var baseUrl = BaseUri.ToString();
 
-		if (baseUrl.EndsWith('/')) { baseUrl = baseUrl.Remove(baseUrl.Length - 1, 1); }
+		if (baseUrl.EndsWith('/'))
+		{
+			baseUrl = baseUrl.Remove(baseUrl.Length - 1, 1);
+		}
 
 		return new Uri($"{baseUrl}/{url}");
 	}
 
-	public Task<FatWebResponse> Post<T>(string url, T data) { return Post(url, data, Timeout); }
+	public Task<FatWebResponse> Post<T>(string url, T data)
+	{
+		return Post(url, data, Timeout);
+	}
 
-	public Task<FatWebResponse> Post<T>(string url, List<T> data) { return Post(url, data, Timeout); }
+	public Task<FatWebResponse> Post<T>(string url, List<T> data)
+	{
+		return Post(url, data, Timeout);
+	}
 
-	public Task<FatWebResponse> Post(string url) { return Post(url, Timeout); }
+	public Task<FatWebResponse> Post(string url)
+	{
+		return Post(url, Timeout);
+	}
 
-	public Task<FatWebResponse> Post(string url, string data) { return Post(url, data, Timeout); }
+	public Task<FatWebResponse> Post(string url, string data)
+	{
+		return Post(url, data, Timeout);
+	}
 
-	public async Task<FatWebResponse> Post(string url, string data, string contentType) { return await Post(url, data, Timeout, contentType); }
+	public async Task<FatWebResponse> Post(string url, string data, string contentType)
+	{
+		return await Post(url, data, Timeout, contentType);
+	}
 
 	public async Task<FatWebResponse> Post<T>(string url, T data, TimeSpan timeout)
 	{
@@ -95,13 +125,25 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 		return await SendWebRequest(HttpMethod.Post, url, timeout, json, "application/json");
 	}
 
-	public async Task<FatWebResponse> Post(string url, TimeSpan timeout) { return await SendWebRequest(HttpMethod.Post, url, timeout); }
+	public async Task<FatWebResponse> Post(string url, TimeSpan timeout)
+	{
+		return await SendWebRequest(HttpMethod.Post, url, timeout);
+	}
 
-	public async Task<FatWebResponse> Post(string url, string data, TimeSpan timeout, string contentType) { return await SendWebRequest(HttpMethod.Post, url, timeout, data, contentType); }
+	public async Task<FatWebResponse> Post(string url, string data, TimeSpan timeout, string contentType)
+	{
+		return await SendWebRequest(HttpMethod.Post, url, timeout, data, contentType);
+	}
 
-	public async Task<FatWebResponse> Post(string url, string data, TimeSpan timeout) { return await SendWebRequest(HttpMethod.Post, url, timeout, data); }
+	public async Task<FatWebResponse> Post(string url, string data, TimeSpan timeout)
+	{
+		return await SendWebRequest(HttpMethod.Post, url, timeout, data);
+	}
 
-	public void UserBearerToken(string token) { bearerToken = token; }
+	public void UserBearerToken(string token)
+	{
+		bearerToken = token;
+	}
 
 	private void EnsureBearerToken(HttpClient httpClient)
 	{

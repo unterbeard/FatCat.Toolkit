@@ -16,7 +16,10 @@ public static class FatCatWebResponseAssertionsExtensions
 		return new FatWebResponseAssertions(result);
 	}
 
-	public static FatWebResponseAssertions Should(this FatWebResponse response) { return new FatWebResponseAssertions(response); }
+	public static FatWebResponseAssertions Should(this FatWebResponse response)
+	{
+		return new FatWebResponseAssertions(response);
+	}
 }
 
 public class FatWebResponseAssertions : ReferenceTypeAssertions<FatWebResponse, FatWebResponseAssertions>
@@ -45,9 +48,15 @@ public class FatWebResponseAssertions : ReferenceTypeAssertions<FatWebResponse, 
 		return this;
 	}
 
-	public FatWebResponseAssertions BeBadRequest() { return HaveStatusCode(HttpStatusCode.BadRequest); }
+	public FatWebResponseAssertions BeBadRequest()
+	{
+		return HaveStatusCode(HttpStatusCode.BadRequest);
+	}
 
-	public FatWebResponseAssertions BeConflict() { return HaveStatusCode(HttpStatusCode.Conflict); }
+	public FatWebResponseAssertions BeConflict()
+	{
+		return HaveStatusCode(HttpStatusCode.Conflict);
+	}
 
 	public FatWebResponseAssertions BeEmptyListOf<T>()
 	{
@@ -74,11 +83,20 @@ public class FatWebResponseAssertions : ReferenceTypeAssertions<FatWebResponse, 
 		return this;
 	}
 
-	public FatWebResponseAssertions BeNotAcceptable() { return HaveStatusCode(HttpStatusCode.NotAcceptable); }
+	public FatWebResponseAssertions BeNotAcceptable()
+	{
+		return HaveStatusCode(HttpStatusCode.NotAcceptable);
+	}
 
-	public FatWebResponseAssertions BeNotFound() { return HaveStatusCode(HttpStatusCode.NotFound); }
+	public FatWebResponseAssertions BeNotFound()
+	{
+		return HaveStatusCode(HttpStatusCode.NotFound);
+	}
 
-	public FatWebResponseAssertions BeOk() { return HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent }); }
+	public FatWebResponseAssertions BeOk()
+	{
+		return HaveOneOfStatusCode(new[] { HttpStatusCode.OK, HttpStatusCode.NoContent });
+	}
 
 	public FatWebResponseAssertions BeSuccessful()
 	{
@@ -89,7 +107,10 @@ public class FatWebResponseAssertions : ReferenceTypeAssertions<FatWebResponse, 
 		return this;
 	}
 
-	public FatWebResponseAssertions BeUnauthorized() { return HaveStatusCode(HttpStatusCode.Unauthorized); }
+	public FatWebResponseAssertions BeUnauthorized()
+	{
+		return HaveStatusCode(HttpStatusCode.Unauthorized);
+	}
 
 	public FatWebResponseAssertions BeUnsuccessful()
 	{
@@ -127,7 +148,10 @@ public class FatWebResponseAssertions : ReferenceTypeAssertions<FatWebResponse, 
 		return this;
 	}
 
-	public FatWebResponseAssertions HaveContentEquivalentTo<TContentType>(TContentType expectedContent) { return HaveContentEquivalentTo(expectedContent, config => config); }
+	public FatWebResponseAssertions HaveContentEquivalentTo<TContentType>(TContentType expectedContent)
+	{
+		return HaveContentEquivalentTo(expectedContent, config => config);
+	}
 
 	public FatWebResponseAssertions HaveContentEquivalentTo<TContentType>(
 		TContentType expectedContent,
@@ -139,10 +163,10 @@ public class FatWebResponseAssertions : ReferenceTypeAssertions<FatWebResponse, 
 		Subject
 			.Should()
 			.HaveStatusCode(
-							HttpStatusCode.OK,
-							"you cannot test for content from an unsuccessful status code: {0}",
-							Subject.StatusCode
-							);
+				HttpStatusCode.OK,
+				"you cannot test for content from an unsuccessful status code: {0}",
+				Subject.StatusCode
+			);
 
 		var actualContent = Subject.To<TContentType>();
 
@@ -160,7 +184,10 @@ public class FatWebResponseAssertions : ReferenceTypeAssertions<FatWebResponse, 
 		return this;
 	}
 
-	public FatWebResponseAssertions HaveNoContent() { return HaveStatusCode(HttpStatusCode.NoContent); }
+	public FatWebResponseAssertions HaveNoContent()
+	{
+		return HaveStatusCode(HttpStatusCode.NoContent);
+	}
 
 	public FatWebResponseAssertions HaveStatusCode(
 		HttpStatusCode statusCode,

@@ -6,17 +6,35 @@ namespace FatCat.Toolkit.Web;
 public class FatWebResponse<T> : EqualObject
 	where T : class
 {
-	public static FatWebResponse<T> BadRequest() { return new FatWebResponse<T>(HttpStatusCode.BadRequest); }
+	public static FatWebResponse<T> BadRequest()
+	{
+		return new FatWebResponse<T>(HttpStatusCode.BadRequest);
+	}
 
-	public static FatWebResponse<T> BadRequest(string message) { return new FatWebResponse<T>(HttpStatusCode.BadRequest, message); }
+	public static FatWebResponse<T> BadRequest(string message)
+	{
+		return new FatWebResponse<T>(HttpStatusCode.BadRequest, message);
+	}
 
-	public static FatWebResponse<T> NotFound() { return new FatWebResponse<T>(HttpStatusCode.NotFound); }
+	public static FatWebResponse<T> NotFound()
+	{
+		return new FatWebResponse<T>(HttpStatusCode.NotFound);
+	}
 
-	public static FatWebResponse<T> NotImplemented() { return new FatWebResponse<T>(HttpStatusCode.NotImplemented); }
+	public static FatWebResponse<T> NotImplemented()
+	{
+		return new FatWebResponse<T>(HttpStatusCode.NotImplemented);
+	}
 
-	public static FatWebResponse<T> Ok(T data) { return new FatWebResponse<T>(HttpStatusCode.OK, data); }
+	public static FatWebResponse<T> Ok(T data)
+	{
+		return new FatWebResponse<T>(HttpStatusCode.OK, data);
+	}
 
-	public static FatWebResponse<T> Ok() { return new FatWebResponse<T>(HttpStatusCode.OK); }
+	public static FatWebResponse<T> Ok()
+	{
+		return new FatWebResponse<T>(HttpStatusCode.OK);
+	}
 
 	public FatWebResponse BaseResponse { get; }
 
@@ -50,46 +68,68 @@ public class FatWebResponse<T> : EqualObject
 		get => BaseResponse.StatusCode;
 	}
 
-	public FatWebResponse(HttpStatusCode statusCode) { BaseResponse = new FatWebResponse { StatusCode = statusCode }; }
+	public FatWebResponse(HttpStatusCode statusCode)
+	{
+		BaseResponse = new FatWebResponse { StatusCode = statusCode };
+	}
 
-	public FatWebResponse(FatWebResponse webResponse) { BaseResponse = webResponse; }
+	public FatWebResponse(FatWebResponse webResponse)
+	{
+		BaseResponse = webResponse;
+	}
 
 	public FatWebResponse(HttpStatusCode statusCode, string content)
 	{
-		BaseResponse = new FatWebResponse
-						{
-							StatusCode = statusCode,
-							Content = content
-						};
+		BaseResponse = new FatWebResponse { StatusCode = statusCode, Content = content };
 	}
 
 	public FatWebResponse(HttpStatusCode statusCode, T data)
 	{
-		BaseResponse = new FatWebResponse
-						{
-							StatusCode = statusCode,
-							Content = JsonConvert.SerializeObject(data)
-						};
+		BaseResponse = new FatWebResponse { StatusCode = statusCode, Content = JsonConvert.SerializeObject(data) };
 	}
 
-	public override string ToString() { return $"FatWebResponse | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {Content}"; }
+	public override string ToString()
+	{
+		return $"FatWebResponse | StatusCode <{StatusCode}> | Type {typeof(T).FullName} | {Content}";
+	}
 }
 
 public class FatWebResponse : EqualObject
 {
-	public static FatWebResponse BadRequest() { return new FatWebResponse(HttpStatusCode.BadRequest); }
+	public static FatWebResponse BadRequest()
+	{
+		return new FatWebResponse(HttpStatusCode.BadRequest);
+	}
 
-	public static FatWebResponse BadRequest(string message) { return new FatWebResponse(HttpStatusCode.BadRequest, message); }
+	public static FatWebResponse BadRequest(string message)
+	{
+		return new FatWebResponse(HttpStatusCode.BadRequest, message);
+	}
 
-	public static FatWebResponse NotFound() { return new FatWebResponse(HttpStatusCode.NotFound); }
+	public static FatWebResponse NotFound()
+	{
+		return new FatWebResponse(HttpStatusCode.NotFound);
+	}
 
-	public static FatWebResponse NotImplemented() { return new FatWebResponse(HttpStatusCode.NotImplemented); }
+	public static FatWebResponse NotImplemented()
+	{
+		return new FatWebResponse(HttpStatusCode.NotImplemented);
+	}
 
-	public static FatWebResponse Ok(object data) { return new FatWebResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(data)); }
+	public static FatWebResponse Ok(object data)
+	{
+		return new FatWebResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(data));
+	}
 
-	public static FatWebResponse Ok() { return new FatWebResponse(HttpStatusCode.OK); }
+	public static FatWebResponse Ok()
+	{
+		return new FatWebResponse(HttpStatusCode.OK);
+	}
 
-	public static FatWebResponse Timeout() { return new FatWebResponse { StatusCode = HttpStatusCode.RequestTimeout }; }
+	public static FatWebResponse Timeout()
+	{
+		return new FatWebResponse { StatusCode = HttpStatusCode.RequestTimeout };
+	}
 
 	private readonly HttpContent httpContent;
 
@@ -122,7 +162,10 @@ public class FatWebResponse : EqualObject
 
 	public FatWebResponse() { }
 
-	public FatWebResponse(HttpStatusCode statusCode) { StatusCode = statusCode; }
+	public FatWebResponse(HttpStatusCode statusCode)
+	{
+		StatusCode = statusCode;
+	}
 
 	public FatWebResponse(HttpStatusCode statusCode, string content)
 	{
@@ -137,5 +180,8 @@ public class FatWebResponse : EqualObject
 		httpContent = response.Content;
 	}
 
-	public T To<T>() { return JsonContentConverter.ConvertTo<T>(Content); }
+	public T To<T>()
+	{
+		return JsonContentConverter.ConvertTo<T>(Content);
+	}
 }
