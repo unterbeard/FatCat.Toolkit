@@ -41,12 +41,16 @@ public interface IWebCaller
 
 	Task<FatWebResponse> Post(string url, string data, TimeSpan timeout, string contentType);
 
+	void SetClient(HttpClient client);
+
 	void UserBearerToken(string token);
 }
 
 public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger logger) : IWebCaller
 {
 	private string bearerToken;
+
+	private HttpClient localClient;
 
 	public string AcceptHeader { get; set; } = "application/json";
 
@@ -140,6 +144,11 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 		return await SendWebRequest(HttpMethod.Post, url, timeout, data);
 	}
 
+	public void SetClient(HttpClient client)
+	{
+		localClient = client;
+	}
+
 	public void UserBearerToken(string token)
 	{
 		bearerToken = token;
@@ -165,7 +174,7 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 	{
 		logger.Debug("Creating http client");
 
-		var httpClient = HttpClientFactory.Get();
+		var httpClient = localClient ?? HttpClientFactory.Get();
 
 		EnsureBearerToken(httpClient);
 
