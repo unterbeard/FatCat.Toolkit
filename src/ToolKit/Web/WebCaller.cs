@@ -157,14 +157,23 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 		return await SendWebRequest(HttpMethod.Post, url, timeout, data, contentType);
 	}
 
+	public async Task<FatWebResponse> Post(string url, string data, TimeSpan timeout)
+	{
+		return await SendWebRequest(HttpMethod.Post, url, timeout, data);
+	}
+
 	public Task<FatWebResponse> Put<T>(string url, T data)
 	{
-		throw new NotImplementedException();
+		var json = jsonOperations.Serialize(data);
+
+		return SendWebRequest(HttpMethod.Put, url, Timeout, json);
 	}
 
 	public Task<FatWebResponse> Put<T>(string url, List<T> data)
 	{
-		throw new NotImplementedException();
+		var json = jsonOperations.Serialize(data);
+
+		return SendWebRequest(HttpMethod.Put, url, Timeout, json);
 	}
 
 	public Task<FatWebResponse> Put(string url)
@@ -174,37 +183,36 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 
 	public Task<FatWebResponse> Put(string url, string data)
 	{
-		throw new NotImplementedException();
+		return SendWebRequest(HttpMethod.Put, url, Timeout, data);
 	}
 
 	public Task<FatWebResponse> Put(string url, string data, string contentType)
 	{
-		throw new NotImplementedException();
+		return SendWebRequest(HttpMethod.Put, url, Timeout, data, contentType);
 	}
 
 	public Task<FatWebResponse> Put<T>(string url, T data, TimeSpan timeout)
 	{
-		throw new NotImplementedException();
+		var json = jsonOperations.Serialize(data);
+
+		return SendWebRequest(HttpMethod.Put, url, timeout, json);
 	}
 
 	public Task<FatWebResponse> Put<T>(string url, List<T> data, TimeSpan timeout)
 	{
-		throw new NotImplementedException();
+		var json = jsonOperations.Serialize(data);
+
+		return SendWebRequest(HttpMethod.Put, url, timeout, json);
 	}
 
 	public Task<FatWebResponse> Put(string url, TimeSpan timeout)
 	{
-		throw new NotImplementedException();
+		return SendWebRequest(HttpMethod.Put, url, timeout);
 	}
 
 	public Task<FatWebResponse> Put(string url, string data, TimeSpan timeout, string contentType)
 	{
-		throw new NotImplementedException();
-	}
-
-	public async Task<FatWebResponse> Post(string url, string data, TimeSpan timeout)
-	{
-		return await SendWebRequest(HttpMethod.Post, url, timeout, data);
+		return SendWebRequest(HttpMethod.Put, url, timeout, data, contentType);
 	}
 
 	public void SetClient(HttpClient client)
