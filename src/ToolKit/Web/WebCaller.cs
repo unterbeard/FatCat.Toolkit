@@ -41,6 +41,24 @@ public interface IWebCaller
 
 	Task<FatWebResponse> Post(string url, string data, TimeSpan timeout, string contentType);
 
+	Task<FatWebResponse> Put<T>(string url, T data);
+
+	Task<FatWebResponse> Put<T>(string url, List<T> data);
+
+	Task<FatWebResponse> Put(string url);
+
+	Task<FatWebResponse> Put(string url, string data);
+
+	Task<FatWebResponse> Put(string url, string data, string contentType);
+
+	Task<FatWebResponse> Put<T>(string url, T data, TimeSpan timeout);
+
+	Task<FatWebResponse> Put<T>(string url, List<T> data, TimeSpan timeout);
+
+	Task<FatWebResponse> Put(string url, TimeSpan timeout);
+
+	Task<FatWebResponse> Put(string url, string data, TimeSpan timeout, string contentType);
+
 	void SetClient(HttpClient client);
 
 	void UserBearerToken(string token);
@@ -137,6 +155,51 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 	public async Task<FatWebResponse> Post(string url, string data, TimeSpan timeout, string contentType)
 	{
 		return await SendWebRequest(HttpMethod.Post, url, timeout, data, contentType);
+	}
+
+	public Task<FatWebResponse> Put<T>(string url, T data)
+	{
+		throw new NotImplementedException();
+	}
+
+	public Task<FatWebResponse> Put<T>(string url, List<T> data)
+	{
+		throw new NotImplementedException();
+	}
+
+	public Task<FatWebResponse> Put(string url)
+	{
+		return SendWebRequest(HttpMethod.Put, url, Timeout);
+	}
+
+	public Task<FatWebResponse> Put(string url, string data)
+	{
+		throw new NotImplementedException();
+	}
+
+	public Task<FatWebResponse> Put(string url, string data, string contentType)
+	{
+		throw new NotImplementedException();
+	}
+
+	public Task<FatWebResponse> Put<T>(string url, T data, TimeSpan timeout)
+	{
+		throw new NotImplementedException();
+	}
+
+	public Task<FatWebResponse> Put<T>(string url, List<T> data, TimeSpan timeout)
+	{
+		throw new NotImplementedException();
+	}
+
+	public Task<FatWebResponse> Put(string url, TimeSpan timeout)
+	{
+		throw new NotImplementedException();
+	}
+
+	public Task<FatWebResponse> Put(string url, string data, TimeSpan timeout, string contentType)
+	{
+		throw new NotImplementedException();
 	}
 
 	public async Task<FatWebResponse> Post(string url, string data, TimeSpan timeout)
