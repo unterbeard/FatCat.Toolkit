@@ -1,8 +1,6 @@
 ﻿using Fasterflect;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Extensions;
-using FluentAssertions;
-using Xunit;
 
 namespace Tests.FatCat.Toolkit;
 

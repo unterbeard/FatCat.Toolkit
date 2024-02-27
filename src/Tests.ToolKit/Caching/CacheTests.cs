@@ -1,7 +1,5 @@
-﻿using FatCat.Fakes;
-using FatCat.Toolkit;
+﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Caching;
-using Xunit;
 
 namespace Tests.FatCat.Toolkit.Caching;
 

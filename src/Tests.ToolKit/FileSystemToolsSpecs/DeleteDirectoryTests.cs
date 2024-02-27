@@ -1,6 +1,3 @@
-using FakeItEasy;
-using Xunit;
-
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
 public class DeleteDirectoryTests : FileToolsTests

@@ -1,8 +1,4 @@
-﻿using FakeItEasy;
-using FatCat.Fakes;
-using Xunit;
-
-namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
+﻿namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
 public class AppendToFileTests : TestsToEnsureFileExists
 {

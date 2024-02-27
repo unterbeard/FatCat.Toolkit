@@ -1,9 +1,4 @@
-﻿using FakeItEasy;
-using FatCat.Fakes;
-using FluentAssertions;
-using Xunit;
-
-namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
+﻿namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
 public class ReadAllLinesTests : FileToolsTests
 {

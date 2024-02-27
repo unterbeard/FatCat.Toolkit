@@ -1,7 +1,5 @@
 ﻿using FatCat.Toolkit.Messaging;
 using FatCat.Toolkit.Testing;
-using FluentAssertions;
-using Xunit;
 
 namespace Tests.FatCat.Toolkit.Messaging;
 

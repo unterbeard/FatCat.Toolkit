@@ -1,9 +1,6 @@
-﻿using FakeItEasy;
-using FatCat.Toolkit.Json;
+﻿using FatCat.Toolkit.Json;
 using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Web;
-using FluentAssertions;
-using Xunit;
 
 namespace Tests.FatCat.Toolkit.Web.Api.WebCallerSpecs;
 
