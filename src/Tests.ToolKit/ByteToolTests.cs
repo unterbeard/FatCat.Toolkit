@@ -1,7 +1,4 @@
-﻿using FatCat.Fakes;
-using FatCat.Toolkit;
-using FluentAssertions;
-using Xunit;
+﻿using FatCat.Toolkit;
 
 namespace Tests.FatCat.Toolkit;
 

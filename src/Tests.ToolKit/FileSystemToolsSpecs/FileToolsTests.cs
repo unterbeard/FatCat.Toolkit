@@ -1,6 +1,4 @@
 using System.IO.Abstractions;
-using FakeItEasy;
-using FatCat.Fakes;
 using FatCat.Toolkit;
 
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;

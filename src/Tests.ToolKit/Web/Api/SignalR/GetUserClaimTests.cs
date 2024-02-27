@@ -1,7 +1,4 @@
-﻿using FatCat.Fakes;
-using FatCat.Toolkit.Web.Api.SignalR;
-using FluentAssertions;
-using Xunit;
+﻿using FatCat.Toolkit.Web.Api.SignalR;
 
 namespace Tests.FatCat.Toolkit.Web.Api.SignalR;
 

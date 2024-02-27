@@ -1,9 +1,5 @@
 ﻿using System.IO.Abstractions;
-using FakeItEasy;
-using FatCat.Fakes;
 using FatCat.Toolkit.Testing;
-using FluentAssertions;
-using Xunit;
 
 namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 

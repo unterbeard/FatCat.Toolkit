@@ -1,7 +1,5 @@
-﻿using FakeItEasy;
-using FatCat.Toolkit.Testing;
+﻿using FatCat.Toolkit.Testing;
 using MongoDB.Driver;
-using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 

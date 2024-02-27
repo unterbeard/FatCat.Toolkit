@@ -1,9 +1,5 @@
-﻿using FakeItEasy;
-using FatCat.Fakes;
-using FatCat.Toolkit.Data;
+﻿using FatCat.Toolkit.Data;
 using FatCat.Toolkit.Data.Mongo;
-using FluentAssertions;
-using Xunit;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo;
 

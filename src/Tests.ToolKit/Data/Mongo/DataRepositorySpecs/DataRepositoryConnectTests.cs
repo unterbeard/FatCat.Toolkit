@@ -1,9 +1,4 @@
-﻿using FakeItEasy;
-using FatCat.Fakes;
-using FluentAssertions;
-using Xunit;
-
-namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
+﻿namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 
 public class DataRepositoryConnectTests : DataRepositoryTests
 {

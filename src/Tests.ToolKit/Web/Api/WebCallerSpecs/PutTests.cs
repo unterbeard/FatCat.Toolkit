@@ -1,9 +1,6 @@
-﻿using FatCat.Fakes;
-using FatCat.Toolkit;
+﻿using FatCat.Toolkit;
 using FatCat.Toolkit.Web;
-using FluentAssertions;
 using Newtonsoft.Json;
-using Xunit;
 
 namespace Tests.FatCat.Toolkit.Web.Api.WebCallerSpecs;
 

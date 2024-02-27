@@ -1,5 +1,3 @@
-using FakeItEasy;
-using FatCat.Fakes;
 using FatCat.Toolkit.Data.Mongo;
 using MongoDB.Driver;
 

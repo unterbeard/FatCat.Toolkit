@@ -1,8 +1,4 @@
-﻿using FakeItEasy;
-using FluentAssertions;
-using Xunit;
-
-namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
+﻿namespace Tests.FatCat.Toolkit.FileSystemToolsSpecs;
 
 public class MoveFileTests : FileToolsTests
 {

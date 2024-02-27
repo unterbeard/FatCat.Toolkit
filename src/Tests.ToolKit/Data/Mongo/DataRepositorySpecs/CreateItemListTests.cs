@@ -1,6 +1,4 @@
-﻿using FakeItEasy;
-using FatCat.Toolkit.Testing;
-using Xunit;
+﻿using FatCat.Toolkit.Testing;
 
 namespace Tests.FatCat.Toolkit.Data.Mongo.DataRepositorySpecs;
 

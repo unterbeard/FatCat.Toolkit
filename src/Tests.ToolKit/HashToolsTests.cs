@@ -1,6 +1,4 @@
 using FatCat.Toolkit;
-using FluentAssertions;
-using Xunit;
 
 namespace Tests.FatCat.Toolkit;
 
