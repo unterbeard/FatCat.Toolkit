@@ -50,7 +50,7 @@ public class ClientWorker(IThread thread, IToolkitHubClientFactory hubFactory, I
 
 			ConsoleLog.WriteMagenta($"StatusCode := <{response.StatusCode}> | {response.Content}");
 
-			// await ConnectToHub(mainUrl, testToken);
+			await ConnectToHub(mainUrl, testToken);
 		});
 	}
 
@@ -93,9 +93,14 @@ public class ClientWorker(IThread thread, IToolkitHubClientFactory hubFactory, I
 
 		ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
 
-		await thread.Sleep(15.Seconds());
+		await thread.Sleep(5.Seconds());
 
-		await SendDataToHub(hubConnection);
+		for (var i = 0; i < 17; i++)
+		{
+			await SendDataToHub(hubConnection);
+
+			await thread.Sleep(1.Seconds());
+		}
 	}
 
 	private static async Task<string> OnDataBufferFromServer(ToolkitMessage message, byte[] dataBuffer)
@@ -127,7 +132,7 @@ public class ClientWorker(IThread thread, IToolkitHubClientFactory hubFactory, I
 		await hubConnection.SendNoResponse(
 			new ToolkitMessage
 			{
-				Data = "This is from the client",
+				Data = $"This is from the client - <{Faker.RandomString()}>",
 				MessageType = 13,
 				ConnectionId = "ConnectionId"
 			}
