@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Reflection;
+﻿using System.Reflection;
 using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Extensions;
@@ -62,7 +61,7 @@ public class SystemScope : ISystemScope
 		}
 	}
 
-	public ILifetimeScope? LifetimeScope { get; set; }
+	public ILifetimeScope LifetimeScope { get; set; }
 
 	public List<Assembly> SystemAssemblies
 	{
@@ -74,15 +73,15 @@ public class SystemScope : ISystemScope
 	public TItem Resolve<TItem>()
 		where TItem : class
 	{
-		return LifetimeScope!.Resolve<TItem>();
+		return LifetimeScope.Resolve<TItem>();
 	}
 
 	public object Resolve(Type type)
 	{
-		return LifetimeScope!.Resolve(type);
+		return LifetimeScope.Resolve(type);
 	}
 
-	public bool TryResolve(Type type, out object? instance)
+	public bool TryResolve(Type type, out object instance)
 	{
 		if (LifetimeScope == null)
 		{
@@ -93,7 +92,7 @@ public class SystemScope : ISystemScope
 		return LifetimeScope.TryResolve(type, out instance);
 	}
 
-	public bool TryResolve<TItem>(out TItem? instance)
+	public bool TryResolve<TItem>(out TItem instance)
 		where TItem : class
 	{
 		if (LifetimeScope != null)
