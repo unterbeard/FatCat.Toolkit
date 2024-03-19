@@ -1,8 +1,8 @@
 ﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Threading;
+using FatCat.Toolkit.WebServer.Injection;
 using Humanizer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +30,7 @@ public static class ToolkitWebApplication
 
 		var builder = WebApplication.CreateBuilder(settings.Args);
 
-		builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+		builder.Host.UseServiceProviderFactory(new ToolkitServiceProviderFactory(new AutofacOptions()));
 
 		builder.Services.AddHttpContextAccessor();
 
