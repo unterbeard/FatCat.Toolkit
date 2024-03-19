@@ -1,12 +1,10 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Threading;
 using FatCat.Toolkit.Web;
 using FatCat.Toolkit.Web.Api.SignalR;
 using Humanizer;
-using Newtonsoft.Json;
 
 namespace OneOffToolkitOnly;
 
@@ -93,7 +91,9 @@ public class ClientWorker(IThread thread, IToolkitHubClientFactory hubFactory, I
 
 		ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
 
-		await SendDataBuffer(hubConnection);
+		await thread.Sleep(15.Seconds());
+
+		await SendDataToHub(hubConnection);
 	}
 
 	private static async Task<string> OnDataBufferFromServer(ToolkitMessage message, byte[] dataBuffer)
@@ -120,25 +120,15 @@ public class ClientWorker(IThread thread, IToolkitHubClientFactory hubFactory, I
 		return responseMessage;
 	}
 
-	private static async Task SendDataBuffer(IToolkitHubClientConnection hubConnection)
+	private static async Task SendDataToHub(IToolkitHubClientConnection hubConnection)
 	{
-		var dataBuffer = Faker.Create<List<byte>>(1024).ToArray();
-
-		ConsoleLog.WriteCyan($"Going to send data message of length {dataBuffer.Length}");
-
-		var watch = Stopwatch.StartNew();
-
-		var response = await hubConnection.SendDataBuffer(
-			new ToolkitMessage { Data = "Junk", MessageType = 123 },
-			dataBuffer
-		);
-
-		watch.Stop();
-
-		ConsoleLog.WriteYellow($"Send DataBuffer Message Took <{watch.Elapsed}>");
-
-		ConsoleLog.WriteCyan(
-			$"Response from server was {JsonConvert.SerializeObject(response, Formatting.Indented)}"
+		await hubConnection.SendNoResponse(
+			new ToolkitMessage
+			{
+				Data = "This is from the client",
+				MessageType = 13,
+				ConnectionId = "ConnectionId"
+			}
 		);
 	}
 }

@@ -25,13 +25,12 @@ public static class Program
 		{
 			SystemScope.Initialize(
 				new ContainerBuilder(),
-				new List<Assembly>
-				{
+				[
 					typeof(OneOffModule).Assembly,
 					typeof(Program).Assembly,
 					typeof(ConsoleLog).Assembly,
 					typeof(ToolkitWebServerModule).Assembly
-				},
+				],
 				ScopeOptions.SetLifetimeScope
 			);
 
