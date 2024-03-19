@@ -3,15 +3,8 @@ using FatCat.Toolkit.Console;
 
 namespace OneOff;
 
-public class GeneratorWorker
+public class GeneratorWorker(IGenerator generator)
 {
-	private readonly IGenerator generator;
-
-	public GeneratorWorker(IGenerator generator)
-	{
-		this.generator = generator;
-	}
-
 	public void DoWork()
 	{
 		var fakeList = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
