@@ -41,7 +41,8 @@ public class TestRequest : EqualObject
 }
 
 [AllowAnonymous]
-public class TestEndpoint(ISomeServiceWorker someServiceWorker) : Endpoint
+public class TestEndpoint(ISomeServiceWorker someServiceWorker, ISillyInterfaceThing sillyInterfaceThing)
+	: Endpoint
 {
 	[HttpGet("api/test")]
 	public WebResult GetTestStuff()
@@ -52,12 +53,14 @@ public class TestEndpoint(ISomeServiceWorker someServiceWorker) : Endpoint
 
 		someServiceWorker.DoSomeWork();
 
+		sillyInterfaceThing.DoSomethingSilly();
+
 		return WebResult.Ok(testModel);
 	}
 }
 
 [AllowAnonymous]
-public class TestPostEndpoint : Endpoint
+public class TestPostEndpoint(ISillyInterfaceThing sillyInterfaceThing) : Endpoint
 {
 	[HttpPost("api/test/post")]
 	public WebResult GetTestStuff([FromBody] TestModel testRequest)
@@ -67,6 +70,8 @@ public class TestPostEndpoint : Endpoint
 		var testModel = Faker.Create<TestModel>();
 
 		testModel.SomeData = $"This is a test endpoint | <{DateTime.Now:h:mm:ss tt zz}>";
+
+		sillyInterfaceThing.DoSomethingSilly();
 
 		return WebResult.Ok(testModel);
 	}
