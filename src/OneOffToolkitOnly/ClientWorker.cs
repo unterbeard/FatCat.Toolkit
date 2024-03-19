@@ -44,11 +44,13 @@ public class ClientWorker(IThread thread, IToolkitHubClientFactory hubFactory, I
 
 			webCaller.UserBearerToken(testToken);
 
-			var response = await webCaller.Get("Sample/Secure");
+			ConsoleLog.WriteCyan($"WebCaller URI <{webCaller.BaseUri}>");
+
+			var response = await webCaller.Get("api/Sample/Secure");
 
 			ConsoleLog.WriteMagenta($"StatusCode := <{response.StatusCode}> | {response.Content}");
 
-			await ConnectToHub(mainUrl, testToken);
+			// await ConnectToHub(mainUrl, testToken);
 		});
 	}
 
