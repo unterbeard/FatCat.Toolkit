@@ -40,10 +40,6 @@ public static class Program
 			// var worker = SystemScope.Container.Resolve<WebResultWorker>();
 			//
 			// await worker.DoWork();
-
-			var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
-
-			consoleUtilities.WaitForExit();
 		}
 		catch (Exception ex)
 		{
