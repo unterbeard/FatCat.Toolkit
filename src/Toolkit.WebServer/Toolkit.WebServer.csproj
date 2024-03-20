@@ -41,7 +41,6 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Autofac" Version="8.0.0" />
-        <PackageReference Include="Autofac.AspNetCore.Extensions" Version="2.0.15" />
         <PackageReference Include="FakeItEasy" Version="8.1.0" />
         <PackageReference Include="fasterflect" Version="3.0.0" />
         <PackageReference Include="FatCat.Fakes" Version="1.0.26" />
@@ -52,6 +51,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.IO.Abstractions" Version="21.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ToolKit\ToolKit.csproj" />
