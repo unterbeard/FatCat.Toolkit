@@ -15,7 +15,7 @@
         <RepositoryUrl>https://github.com/DavidBasarab/FatCat.Toolkit</RepositoryUrl>
         <NoWarn>CS8002,CS1700</NoWarn>
         <SignAssembly>true</SignAssembly>
-        <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup>
