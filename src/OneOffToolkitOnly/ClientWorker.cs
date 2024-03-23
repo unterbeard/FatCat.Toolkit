@@ -94,7 +94,7 @@ public class ClientWorker(IThread thread, IToolkitHubClientFactory hubFactory, I
 
 		ConsoleLog.WriteDarkGreen($"Done connecting to hub at {hubUrl}");
 
-		await thread.Sleep(5.Seconds());
+		await thread.Sleep(1.Seconds());
 
 		for (var i = 0; i < 17; i++)
 		{
