@@ -14,10 +14,11 @@ namespace OneOff;
 public class ServerWorker(IThread thread)
 {
 	private readonly IThread thread = thread;
+	private ToolkitWebApplicationSettings applicationSettings;
 
 	public void DoWork(string[] args)
 	{
-		var applicationSettings = new ToolkitWebApplicationSettings
+		applicationSettings = new ToolkitWebApplicationSettings
 		{
 			Options = WebApplicationOptions.Https | WebApplicationOptions.SignalR,
 			TlsCertificate = new CertificationSettings
@@ -27,11 +28,7 @@ public class ServerWorker(IThread thread)
 			},
 			SignalRPath = "events",
 			ToolkitTokenParameters = new SpikeToolkitParameters(),
-			ContainerAssemblies = new List<Assembly>
-			{
-				Assembly.GetExecutingAssembly(),
-				typeof(ToolkitWebServerModule).Assembly
-			},
+			ContainerAssemblies = [Assembly.GetExecutingAssembly(), typeof(ToolkitWebServerModule).Assembly],
 			OnWebApplicationStarted = Started,
 			Args = args
 		};
@@ -55,7 +52,7 @@ public class ServerWorker(IThread thread)
 			await Task.CompletedTask;
 
 			ConsoleLog.WriteDarkCyan(
-				$"MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>"
+				$"******** MessageId <{message.MessageType}> | Data <{message.Data}> | ConnectionId <{message.ConnectionId}>"
 			);
 
 			return "ACK";
@@ -111,9 +108,9 @@ public class ServerWorker(IThread thread)
 			var caller = factory.GetWebCaller(new Uri("http://localhost:14555"));
 
 			MakeWebRequest(caller, "api/test");
-			
-			var testModel= Faker.Create<TestModel>();
-			
+
+			var testModel = Faker.Create<TestModel>();
+
 			caller.Post("api/test/post", testModel);
 
 			// var response = caller.Get("api/test/Search/firstname=david&lastname=basarab&count=43").Result;
