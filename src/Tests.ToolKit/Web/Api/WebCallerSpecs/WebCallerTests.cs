@@ -17,7 +17,7 @@ public abstract class WebCallerTests
 	protected HttpBinResponse response;
 
 	protected WebCaller webCaller =
-		new(new Uri("https://httpbin.org"), new JsonOperations(), A.Fake<IToolkitLogger>());
+		new(new Uri("https://httpbin.org"), new JsonOperations(), A.Fake<IToolkitLogger>()) { Accept = null };
 
 	protected abstract string BasicPath { get; }
 

@@ -9,7 +9,7 @@ namespace FatCat.Toolkit.Web;
 
 public interface IWebCaller
 {
-	string AcceptHeader { get; set; }
+	string Accept { get; set; }
 
 	Uri BaseUri { get; }
 
@@ -72,11 +72,18 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 
 	private HttpClient localClient;
 
-	public string AcceptHeader { get; set; } = "application/json";
+	public string Accept { get; set; }
 
 	public Uri BaseUri { get; } = uri;
 
 	public TimeSpan Timeout { get; set; } = 30.Seconds();
+
+	public void ClearAuthorization()
+	{
+		bearerToken = null;
+		basicUsername = null;
+		basicPassword = null;
+	}
 
 	public async Task<FatWebResponse> Delete(string url)
 	{
@@ -272,6 +279,7 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 
 		var httpClient = localClient ?? HttpClientFactory.Get();
 
+		EnsureAccept(httpClient);
 		EnsureAuthorization(httpClient);
 
 		var requestUri = GetFullUrl(url);
@@ -315,10 +323,15 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 		}
 	}
 
-	public void ClearAuthorization()
+	private void EnsureAccept(HttpClient httpClient)
 	{
-		bearerToken = null;
-		basicUsername = null;
-		basicPassword = null;
+		if (Accept is not null)
+		{
+			httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(Accept));
+		}
+		else
+		{
+			httpClient.DefaultRequestHeaders.Accept.Clear();
+		}
 	}
 }

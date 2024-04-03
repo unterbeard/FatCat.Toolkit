@@ -6,6 +6,11 @@ namespace Tests.FatCat.Toolkit.Web.Api.WebCallerSpecs;
 
 public class HttpBinResponse : EqualObject
 {
+	public string AcceptHeader
+	{
+		get => Headers.GetValueOrDefault("Accept");
+	}
+
 	public string AuthorizationHeader
 	{
 		get => Headers.GetValueOrDefault("Authorization");
