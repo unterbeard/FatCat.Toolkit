@@ -24,7 +24,7 @@ public class PutTests : WebCallerTests
 
 		response.RawData.Should().Be(plainText);
 
-		response.ContentType.Should().Be("text/plain; charset=utf-8");
+		response.ContentTypeHeader.Should().Be("text/plain; charset=utf-8");
 	}
 
 	[Fact]

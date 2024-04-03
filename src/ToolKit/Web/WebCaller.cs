@@ -66,6 +66,8 @@ public interface IWebCaller
 
 public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger logger) : IWebCaller
 {
+	private string basicPassword;
+	private string basicUsername;
 	private string bearerToken;
 
 	private HttpClient localClient;
@@ -220,18 +222,41 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 		localClient = client;
 	}
 
+	public void UseBasicAuthorization(string username, string password)
+	{
+		basicUsername = username;
+		basicPassword = password;
+	}
+
 	public void UserBearerToken(string token)
 	{
 		bearerToken = token;
 	}
 
-	private void EnsureBearerToken(HttpClient httpClient)
+	private void EnsureAuthorization(HttpClient httpClient)
 	{
 		if (bearerToken is not null)
 		{
 			logger.Debug($"Adding Bearer Token := <{bearerToken}>");
 
 			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
+		}
+		else if (basicUsername is not null && basicPassword is not null)
+		{
+			logger.Debug("Adding Basic Authorization");
+
+			var encodedUsernameAndPassword = Convert.ToBase64String(
+				Encoding.UTF8.GetBytes($"{basicUsername}:{basicPassword}")
+			);
+
+			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+				"Basic",
+				encodedUsernameAndPassword
+			);
+		}
+		else
+		{
+			httpClient.DefaultRequestHeaders.Authorization = null;
 		}
 	}
 
@@ -247,7 +272,7 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 
 		var httpClient = localClient ?? HttpClientFactory.Get();
 
-		EnsureBearerToken(httpClient);
+		EnsureAuthorization(httpClient);
 
 		var requestUri = GetFullUrl(url);
 
@@ -288,5 +313,12 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 
 			return FatWebResponse.Timeout();
 		}
+	}
+
+	public void ClearAuthorization()
+	{
+		bearerToken = null;
+		basicUsername = null;
+		basicPassword = null;
 	}
 }
