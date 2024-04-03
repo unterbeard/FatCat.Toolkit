@@ -61,6 +61,8 @@ public interface IWebCaller
 
 	void SetClient(HttpClient client);
 
+	void UseBasicAuthorization(string username, string password);
+
 	void UserBearerToken(string token);
 }
 
@@ -240,6 +242,18 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 		bearerToken = token;
 	}
 
+	private void EnsureAccept(HttpClient httpClient)
+	{
+		if (Accept is not null)
+		{
+			httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(Accept));
+		}
+		else
+		{
+			httpClient.DefaultRequestHeaders.Accept.Clear();
+		}
+	}
+
 	private void EnsureAuthorization(HttpClient httpClient)
 	{
 		if (bearerToken is not null)
@@ -320,18 +334,6 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 			logger.Debug($"Request to {requestUri} timed out");
 
 			return FatWebResponse.Timeout();
-		}
-	}
-
-	private void EnsureAccept(HttpClient httpClient)
-	{
-		if (Accept is not null)
-		{
-			httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(Accept));
-		}
-		else
-		{
-			httpClient.DefaultRequestHeaders.Accept.Clear();
 		}
 	}
 }
