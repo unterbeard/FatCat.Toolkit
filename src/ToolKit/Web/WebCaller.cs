@@ -9,7 +9,7 @@ namespace FatCat.Toolkit.Web;
 
 public interface IWebCaller
 {
-	string AcceptHeader { get; set; }
+	string Accept { get; set; }
 
 	Uri BaseUri { get; }
 
@@ -66,15 +66,24 @@ public interface IWebCaller
 
 public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger logger) : IWebCaller
 {
+	private string basicPassword;
+	private string basicUsername;
 	private string bearerToken;
 
 	private HttpClient localClient;
 
-	public string AcceptHeader { get; set; } = "application/json";
+	public string Accept { get; set; }
 
 	public Uri BaseUri { get; } = uri;
 
 	public TimeSpan Timeout { get; set; } = 30.Seconds();
+
+	public void ClearAuthorization()
+	{
+		bearerToken = null;
+		basicUsername = null;
+		basicPassword = null;
+	}
 
 	public async Task<FatWebResponse> Delete(string url)
 	{
@@ -220,18 +229,41 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 		localClient = client;
 	}
 
+	public void UseBasicAuthorization(string username, string password)
+	{
+		basicUsername = username;
+		basicPassword = password;
+	}
+
 	public void UserBearerToken(string token)
 	{
 		bearerToken = token;
 	}
 
-	private void EnsureBearerToken(HttpClient httpClient)
+	private void EnsureAuthorization(HttpClient httpClient)
 	{
 		if (bearerToken is not null)
 		{
 			logger.Debug($"Adding Bearer Token := <{bearerToken}>");
 
 			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
+		}
+		else if (basicUsername is not null && basicPassword is not null)
+		{
+			logger.Debug("Adding Basic Authorization");
+
+			var encodedUsernameAndPassword = Convert.ToBase64String(
+				Encoding.UTF8.GetBytes($"{basicUsername}:{basicPassword}")
+			);
+
+			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+				"Basic",
+				encodedUsernameAndPassword
+			);
+		}
+		else
+		{
+			httpClient.DefaultRequestHeaders.Authorization = null;
 		}
 	}
 
@@ -247,7 +279,8 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 
 		var httpClient = localClient ?? HttpClientFactory.Get();
 
-		EnsureBearerToken(httpClient);
+		EnsureAccept(httpClient);
+		EnsureAuthorization(httpClient);
 
 		var requestUri = GetFullUrl(url);
 
@@ -287,6 +320,18 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 			logger.Debug($"Request to {requestUri} timed out");
 
 			return FatWebResponse.Timeout();
+		}
+	}
+
+	private void EnsureAccept(HttpClient httpClient)
+	{
+		if (Accept is not null)
+		{
+			httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(Accept));
+		}
+		else
+		{
+			httpClient.DefaultRequestHeaders.Accept.Clear();
 		}
 	}
 }

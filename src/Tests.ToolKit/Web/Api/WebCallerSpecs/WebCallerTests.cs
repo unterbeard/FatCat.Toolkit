@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text;
 using FatCat.Toolkit.Json;
 using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Web;
@@ -8,12 +9,15 @@ namespace Tests.FatCat.Toolkit.Web.Api.WebCallerSpecs;
 
 public abstract class WebCallerTests
 {
+	private const string BasicPassword = "This is a password";
+
+	private const string BasicUserName = "This is a UserName";
 	private const string BearerToken = "12345890";
 
 	protected HttpBinResponse response;
 
 	protected WebCaller webCaller =
-		new(new Uri("https://httpbin.org"), new JsonOperations(), A.Fake<IToolkitLogger>());
+		new(new Uri("https://httpbin.org"), new JsonOperations(), A.Fake<IToolkitLogger>()) { Accept = null };
 
 	protected abstract string BasicPath { get; }
 
@@ -47,6 +51,30 @@ public abstract class WebCallerTests
 	}
 
 	[Fact]
+	public async Task CanClearBasicAuthorization()
+	{
+		UserBasicAuthorization();
+
+		webCaller.ClearAuthorization();
+
+		await MakeCall(BasicPath);
+
+		response.AuthorizationHeader.Should().BeNullOrEmpty();
+	}
+
+	[Fact]
+	public async Task CanClearBearerToken()
+	{
+		UserBearerToken();
+
+		webCaller.ClearAuthorization();
+
+		await MakeCall(BasicPath);
+
+		response.AuthorizationHeader.Should().BeNullOrEmpty();
+	}
+
+	[Fact]
 	public async Task CanMakeCallWithoutSlashInFrontOfPath()
 	{
 		var path = BasicPath;
@@ -60,16 +88,6 @@ public abstract class WebCallerTests
 	}
 
 	[Fact]
-	public async Task CanPassAnAuthToken()
-	{
-		UserBearerToken();
-
-		await MakeCall(BasicPath);
-
-		VerifyBearerToken();
-	}
-
-	[Fact]
 	public async Task CanTimeout()
 	{
 		webCaller.Timeout = 1.Seconds();
@@ -79,6 +97,26 @@ public abstract class WebCallerTests
 		result.IsUnsuccessful.Should().BeTrue();
 
 		result.StatusCode.Should().Be(HttpStatusCode.RequestTimeout);
+	}
+
+	[Fact]
+	public async Task CanUseBasicAuthorization()
+	{
+		UserBasicAuthorization();
+
+		await MakeCall(BasicPath);
+
+		VerifyBasicAuthorization();
+	}
+
+	[Fact]
+	public async Task CanUseBearerToken()
+	{
+		UserBearerToken();
+
+		await MakeCall(BasicPath);
+
+		VerifyBearerToken();
 	}
 
 	[Fact]
@@ -109,7 +147,7 @@ public abstract class WebCallerTests
 
 	protected void VerifyBearerToken()
 	{
-		response.BearerToken.Should().Be($"Bearer {BearerToken}");
+		response.AuthorizationHeader.Should().Be($"Bearer {BearerToken}");
 	}
 
 	protected void VerifyStatusListQueryParameters()
@@ -130,8 +168,22 @@ public abstract class WebCallerTests
 		response = result.To<HttpBinResponse>();
 	}
 
+	private void UserBasicAuthorization()
+	{
+		webCaller.UseBasicAuthorization(BasicUserName, BasicPassword);
+	}
+
 	private void UserBearerToken()
 	{
 		webCaller.UserBearerToken(BearerToken);
+	}
+
+	private void VerifyBasicAuthorization()
+	{
+		var encodedUsernameAndPassword = Convert.ToBase64String(
+			Encoding.UTF8.GetBytes($"{BasicUserName}:{BasicPassword}")
+		);
+
+		response.AuthorizationHeader.Should().Be($"Basic {encodedUsernameAndPassword}");
 	}
 }

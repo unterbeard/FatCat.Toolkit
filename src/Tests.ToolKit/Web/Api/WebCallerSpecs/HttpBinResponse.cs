@@ -6,14 +6,19 @@ namespace Tests.FatCat.Toolkit.Web.Api.WebCallerSpecs;
 
 public class HttpBinResponse : EqualObject
 {
-	public string BearerToken
+	public string AcceptHeader
 	{
-		get => Headers.TryGetValue("Authorization", out var value) ? value : null;
+		get => Headers.GetValueOrDefault("Accept");
 	}
 
-	public string ContentType
+	public string AuthorizationHeader
 	{
-		get => Headers.TryGetValue("Content-Type", out var value) ? value : null;
+		get => Headers.GetValueOrDefault("Authorization");
+	}
+
+	public string ContentTypeHeader
+	{
+		get => Headers.GetValueOrDefault("Content-Type");
 	}
 
 	[JsonProperty("headers")]
