@@ -25,9 +25,9 @@ using WebApplicationOptions = FatCat.Toolkit.Web.Api.WebApplicationOptions;
 
 namespace FatCat.Toolkit.WebServer;
 
-internal class ApplicationStartUp
+internal sealed class ApplicationStartUp
 {
-	public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+	public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 	{
 		ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
 
@@ -73,7 +73,7 @@ internal class ApplicationStartUp
 		SystemScope.Initialize(builder, ToolkitWebApplication.Settings.ContainerAssemblies);
 	}
 
-	public virtual void ConfigureServices(IServiceCollection services)
+	public void ConfigureServices(IServiceCollection services)
 	{
 		try
 		{
@@ -145,6 +145,8 @@ internal class ApplicationStartUp
 			var toolkitTokenParameters = ToolkitWebApplication.Settings.ToolkitTokenParameters!;
 
 			options.TokenValidationParameters = toolkitTokenParameters.Get();
+
+			options.TokenHandlers.Add(new FatCatTokenHandler());
 
 			options.Events = OAuthExtensions.GetTokenBearerEvents();
 		});
