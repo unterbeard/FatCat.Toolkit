@@ -1,6 +1,7 @@
 using System.Reflection;
 using FatCat.Toolkit.Web.Api;
 using FatCat.Toolkit.Web.Api.SignalR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace FatCat.Toolkit.WebServer;
 
@@ -11,6 +12,8 @@ public class ToolkitWebApplicationSettings : EqualObject
 	public string BasePath { get; set; }
 
 	public List<Assembly> ContainerAssemblies { get; set; } = new();
+
+	public Func<JwtBearerEvents> JwtBearerEvents { get; set; } = OAuthExtensions.GetTokenBearerEvents;
 
 	public Action OnWebApplicationStarted { get; set; }
 

@@ -148,7 +148,7 @@ internal sealed class ApplicationStartUp
 
 			options.TokenHandlers.Add(new FatCatTokenHandler());
 
-			options.Events = OAuthExtensions.GetTokenBearerEvents();
+			options.Events = ToolkitWebApplication.Settings.JwtBearerEvents();
 		});
 
 		services.AddAuthorization(options =>
