@@ -1,11 +1,11 @@
 ﻿using System.Net;
 using System.Text.Json.Serialization;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
+using FatCat.Toolkit.WebServer.Injection.Helpers;
 using FatCat.Toolkit.WebServer.SignalR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
