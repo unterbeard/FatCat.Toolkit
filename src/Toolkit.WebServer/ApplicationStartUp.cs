@@ -1,11 +1,11 @@
 ﻿using System.Net;
 using System.Text.Json.Serialization;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Extensions;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
+using FatCat.Toolkit.WebServer.Injection.Helpers;
 using FatCat.Toolkit.WebServer.SignalR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,9 +25,9 @@ using WebApplicationOptions = FatCat.Toolkit.Web.Api.WebApplicationOptions;
 
 namespace FatCat.Toolkit.WebServer;
 
-internal class ApplicationStartUp
+internal sealed class ApplicationStartUp
 {
-	public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+	public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 	{
 		ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
 
@@ -73,7 +73,7 @@ internal class ApplicationStartUp
 		SystemScope.Initialize(builder, ToolkitWebApplication.Settings.ContainerAssemblies);
 	}
 
-	public virtual void ConfigureServices(IServiceCollection services)
+	public void ConfigureServices(IServiceCollection services)
 	{
 		try
 		{
@@ -146,7 +146,9 @@ internal class ApplicationStartUp
 
 			options.TokenValidationParameters = toolkitTokenParameters.Get();
 
-			options.Events = OAuthExtensions.GetTokenBearerEvents();
+			options.TokenHandlers.Add(new FatCatTokenHandler());
+
+			options.Events = ToolkitWebApplication.Settings.JwtBearerEvents();
 		});
 
 		services.AddAuthorization(options =>
