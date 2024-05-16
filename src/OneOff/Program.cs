@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
+using FatCat.Toolkit;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Injection;
 using FatCat.Toolkit.Logging;
@@ -34,7 +35,9 @@ public static class Program
 				ScopeOptions.SetLifetimeScope
 			);
 
-			RunServer(args);
+			// RunServer(args);
+
+			var fileSystemTools = SystemScope.Container.Resolve<IFileSystemTools>();
 
 			// var worker = SystemScope.Container.Resolve<WebResultWorker>();
 			//

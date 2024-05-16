@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.IO.Abstractions;
+using System.Reflection;
 using Autofac;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Extensions;
@@ -46,9 +47,12 @@ public class SystemScope : ISystemScope
 		ScopeOptions options = ScopeOptions.None
 	)
 	{
-		if (!assemblies.Contains(typeof(SystemScope).Assembly))
+		EnsureAssembly(assemblies, typeof(IFileSystem).Assembly);
+		EnsureAssembly(assemblies, typeof(SystemScope).Assembly);
+
+		foreach (var assembly in assemblies)
 		{
-			assemblies.Insert(0, typeof(SystemScope).Assembly);
+			ConsoleLog.Write($"    Using assembly {assembly.FullName}");
 		}
 
 		Container.BuildContainer(builder, assemblies);
@@ -126,5 +130,13 @@ public class SystemScope : ISystemScope
 			.PreserveExistingDefaults()
 			.Except<ISystemScope>()
 			.AsSelf();
+	}
+
+	private static void EnsureAssembly(List<Assembly> assemblies, Assembly assemblyToEnsure)
+	{
+		if (!assemblies.Contains(assemblyToEnsure))
+		{
+			assemblies.Insert(0, assemblyToEnsure);
+		}
 	}
 }
