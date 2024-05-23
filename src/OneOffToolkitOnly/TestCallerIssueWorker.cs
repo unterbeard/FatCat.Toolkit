@@ -1,4 +1,3 @@
-using FakeItEasy;
 using FatCat.Fakes;
 using FatCat.Toolkit.Console;
 using FatCat.Toolkit.Web;
@@ -20,11 +19,7 @@ public class TestCallerIssueWorker(IWebCallerFactory webCallerFactory)
 
 		var webCaller = webCallerFactory.GetWebCaller(new Uri("http://localhost:14555/api"));
 
-		var request = new TestRequest()
-		{
-			MessageText = "Jesus is awesome and he loves me very much",
-			UserIds = ["A", "B", "C"]
-		};
+		var request = Faker.Create<TestRequest>();
 
 		var json = JsonConvert.SerializeObject(request, Formatting.Indented);
 
