@@ -153,7 +153,6 @@ internal sealed class ApplicationStartUp
 
 		services.AddAuthorization(options =>
 		{
-			// options.AddServerToServerPolicy();
 			options.AddPermissionsPolicies();
 		});
 	}

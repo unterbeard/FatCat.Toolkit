@@ -7,7 +7,7 @@ namespace FatCat.Toolkit.WebServer;
 
 public class ToolkitWebApplicationSettings : EqualObject
 {
-	public string[] Args { get; set; } = Array.Empty<string>();
+	public string[] Args { get; set; } = [];
 
 	public string BasePath { get; set; }
 

@@ -35,13 +35,11 @@ public static class Program
 				ScopeOptions.SetLifetimeScope
 			);
 
-			// RunServer(args);
+			RunServer(args);
 
-			var fileSystemTools = SystemScope.Container.Resolve<IFileSystemTools>();
-
-			// var worker = SystemScope.Container.Resolve<WebResultWorker>();
-			//
-			// await worker.DoWork();
+			var worker = SystemScope.Container.Resolve<WebResultWorker>();
+			
+			await worker.DoWork();
 		}
 		catch (Exception ex)
 		{
