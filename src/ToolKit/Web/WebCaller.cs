@@ -305,6 +305,7 @@ public class WebCaller(Uri uri, IJsonOperations jsonOperations, IToolkitLogger l
 		if (data.IsNotNullOrEmpty())
 		{
 			logger.Debug($"Adding data of length := <{data.Length}> | Content Type := <{contentType}>");
+			logger.Debug(data);
 
 			requestMessage.Content = new StringContent(data, Encoding.UTF8, contentType);
 		}
