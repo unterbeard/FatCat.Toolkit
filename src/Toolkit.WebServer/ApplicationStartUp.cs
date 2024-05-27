@@ -41,8 +41,6 @@ internal sealed class ApplicationStartUp
 
 		if (ToolkitWebApplication.IsOptionSet(WebApplicationOptions.Authentication))
 		{
-			ConsoleLog.WriteMagenta("Adding Authentication?????????????????????");
-
 			app.UseAuthentication();
 			app.UseAuthorization();
 		}
@@ -84,11 +82,7 @@ internal sealed class ApplicationStartUp
 
 			services.AddCors(options => options.AddDefaultPolicy(p => p.AllowAnyOrigin()));
 
-			ConsoleLog.WriteGreen("===================== AddHttpContextAccessor  =================");
-
 			services.AddHttpContextAccessor();
-
-			ConsoleLog.WriteGreen("===================== After AddHttpContextAccessor  =================");
 
 			ConfigureControllers(services);
 
@@ -125,8 +119,6 @@ internal sealed class ApplicationStartUp
 		{
 			throw new NullReferenceException(nameof(ToolkitWebApplication.Settings.ToolkitTokenParameters));
 		}
-
-		ConsoleLog.WriteMagenta("Adding Authentication");
 
 		var authenticationBuilder = services
 			.AddAuthentication(options =>

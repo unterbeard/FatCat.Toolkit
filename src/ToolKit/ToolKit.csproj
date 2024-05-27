@@ -51,7 +51,7 @@
         <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.IO.Abstractions" Version="21.0.2" />
-        <PackageReference Include="xunit.extensibility.core" Version="2.8.0" />
+        <PackageReference Include="xunit.extensibility.core" Version="2.8.1" />
         
     </ItemGroup>
 </Project>

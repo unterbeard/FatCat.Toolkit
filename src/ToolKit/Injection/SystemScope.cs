@@ -113,11 +113,6 @@ public class SystemScope : ISystemScope
 	{
 		ContainerAssemblies = assemblies;
 
-		foreach (var assembly in ContainerAssemblies)
-		{
-			ConsoleLog.WriteDarkCyan($"   Loading modules for assembly {assembly.FullName}");
-		}
-
 		builder.RegisterAssemblyModules(ContainerAssemblies.ToArray());
 
 		builder.RegisterInstance(this).As<ISystemScope>();
