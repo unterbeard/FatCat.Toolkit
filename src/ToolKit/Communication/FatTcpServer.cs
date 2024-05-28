@@ -49,7 +49,7 @@ public abstract class FatTcpServer(IGenerator generator, IFatTcpLogger logger)
 		Dispose();
 	}
 
-	internal abstract ClientConnection GetClientConnection(TcpClient client, string clientId);
+	protected abstract ClientConnection GetClientConnection(TcpClient client, string clientId);
 
 	private async Task ServerThread()
 	{
