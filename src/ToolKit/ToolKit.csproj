@@ -7,7 +7,7 @@
         <AssemblyName>FatCat.Toolkit</AssemblyName>
         <DebugType>full</DebugType>
         <LangVersion>12</LangVersion>
-    <VersionPrefix>1.0.230</VersionPrefix>
+    <VersionPrefix>1.0.231</VersionPrefix>
         <Authors>David Basarab</Authors>
         <PackageTags>tools</PackageTags>
         <PackageProjectUrl>https://github.com/DavidBasarab/FatCat.Toolkit</PackageProjectUrl>
