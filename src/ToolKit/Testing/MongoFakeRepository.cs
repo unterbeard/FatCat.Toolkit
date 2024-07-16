@@ -66,6 +66,11 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 		return await repository.Create(item);
 	}
 
+	public async Task<T> Create(Action<T> matcher)
+	{
+		return await repository.Create(A<T>.That.Matches(matcher));
+	}
+
 	public async Task<List<T>> Create(List<T> items)
 	{
 		return await repository.Create(items);
@@ -74,6 +79,11 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 	public async Task<T> Delete(T item)
 	{
 		return await repository.Delete(item);
+	}
+
+	public async Task<T> Delete(Action<T> matcher)
+	{
+		return await repository.Delete(A<T>.That.Matches(matcher));
 	}
 
 	public async Task<List<T>> Delete(List<T> items)
@@ -124,6 +134,11 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 	public async Task<T> Update(T item)
 	{
 		return await repository.Update(item);
+	}
+
+	public async Task<T> Update(Action<T> matcher)
+	{
+		return await repository.Update(A<T>.That.Matches(matcher));
 	}
 
 	public async Task<List<T>> Update(List<T> items)
