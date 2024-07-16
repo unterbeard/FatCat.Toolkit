@@ -29,7 +29,7 @@ internal sealed class ApplicationStartUp
 {
 	public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 	{
-		ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
+		ServicePointManager.ServerCertificateValidationCallback = (_, _, _, _) => true;
 
 		app.Use(CaptureMiddlewareExceptions);
 
