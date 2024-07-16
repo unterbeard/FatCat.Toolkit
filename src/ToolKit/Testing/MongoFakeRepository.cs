@@ -66,11 +66,6 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 		return await repository.Create(item);
 	}
 
-	public async Task<T> Create(Action<T> matcher)
-	{
-		return await repository.Create(A<T>.That.Matches(matcher));
-	}
-
 	public async Task<List<T>> Create(List<T> items)
 	{
 		return await repository.Create(items);
@@ -79,11 +74,6 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 	public async Task<T> Delete(T item)
 	{
 		return await repository.Delete(item);
-	}
-
-	public async Task<T> Delete(Action<T> matcher)
-	{
-		return await repository.Delete(A<T>.That.Matches(matcher));
 	}
 
 	public async Task<List<T>> Delete(List<T> items)
@@ -136,14 +126,14 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 		return await repository.Update(item);
 	}
 
-	public async Task<T> Update(Action<T> matcher)
-	{
-		return await repository.Update(A<T>.That.Matches(matcher));
-	}
-
 	public async Task<List<T>> Update(List<T> items)
 	{
 		return await repository.Update(items);
+	}
+
+	public async Task<T> VerifyCreate(Action<T> matcher)
+	{
+		return await repository.Create(A<T>.That.Matches(matcher));
 	}
 
 	public void VerifyCreate(T expectedItem)
@@ -156,6 +146,11 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 	public void VerifyCreate()
 	{
 		A.CallTo(() => repository.Create(A<T>._)).MustHaveHappened();
+	}
+
+	public async Task<T> VerifyDelete(Action<T> matcher)
+	{
+		return await repository.Delete(A<T>.That.Matches(matcher));
 	}
 
 	public void VerifyDelete()
@@ -229,6 +224,11 @@ public class MongoFakeRepository<T> : IMongoRepository<T>
 	public void VerifyNotGetFirst()
 	{
 		A.CallTo(() => repository.GetFirst()).MustNotHaveHappened();
+	}
+
+	public async Task<T> VerifyUpdate(Action<T> matcher)
+	{
+		return await repository.Update(A<T>.That.Matches(matcher));
 	}
 
 	public void VerifyUpdate(T expectedData)
