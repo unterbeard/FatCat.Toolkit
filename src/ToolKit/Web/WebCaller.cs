@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using FatCat.Toolkit.Data.Mongo;
@@ -352,6 +353,17 @@ public class WebCaller : IWebCaller
 			bearerToken = null;
 
 			return result;
+		}
+		catch (HttpRequestException ex)
+		{
+			if (ex.Message.Contains("no host known", StringComparison.OrdinalIgnoreCase))
+			{
+				logger.Debug(ex.Message);
+
+				return new FatWebResponse(HttpStatusCode.NotFound);
+			}
+
+			throw;
 		}
 		catch (TaskCanceledException)
 		{
