@@ -20,7 +20,7 @@ public class JsonOperations : IJsonOperations
 		{
 			TypeNameHandling = TypeNameHandling.All,
 			NullValueHandling = NullValueHandling.Ignore,
-			Converters = new List<JsonConverter> { new StringEnumConverter(), new ObjectIdConverter() }
+			Converters = new List<JsonConverter> { new StringEnumConverter(), new ObjectIdConverter() },
 		};
 
 	public JsonSerializerSettings JsonSettings { get; set; } = DefaultSettings;

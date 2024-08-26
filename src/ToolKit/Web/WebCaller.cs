@@ -99,8 +99,8 @@ public class WebCaller : IWebCaller
 			Converters = new List<Newtonsoft.Json.JsonConverter>
 			{
 				new StringEnumConverter(),
-				new ObjectIdConverter()
-			}
+				new ObjectIdConverter(),
+			},
 		};
 	}
 

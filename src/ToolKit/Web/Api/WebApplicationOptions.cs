@@ -9,5 +9,5 @@ public enum WebApplicationOptions
 	Authentication = 4,
 	HttpsRedirection = 8,
 	Cors = 16,
-	CommonOptions = Cors | HttpsRedirection
+	CommonOptions = Cors | HttpsRedirection,
 }
