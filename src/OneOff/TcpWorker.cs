@@ -5,8 +5,10 @@ using FatCat.Fakes;
 using FatCat.Toolkit;
 using FatCat.Toolkit.Communication;
 using FatCat.Toolkit.Console;
+using FatCat.Toolkit.Logging;
 using FatCat.Toolkit.Threading;
 using Humanizer;
+using Thread = FatCat.Toolkit.Threading.Thread;
 
 namespace OneOff;
 
@@ -31,7 +33,11 @@ public class TcpWorker(ISimpleTcpSender tcpSender, IGenerator generator, IThread
 
 		if (Program.Args.Length != 0)
 		{
-			fatTcpClient = new SecureFatTcpClient(cert, new ConsoleFatTcpLogger());
+			fatTcpClient = new SecureFatTcpClient(
+				cert,
+				new ConsoleFatTcpLogger(),
+				new Thread(new ToolkitLogger())
+			);
 
 			fatTcpClient.Reconnect = true;
 
@@ -67,7 +73,7 @@ public class TcpWorker(ISimpleTcpSender tcpSender, IGenerator generator, IThread
 
 			var bytes = Encoding.UTF8.GetBytes(message);
 
-			await fatTcpClient.Send(bytes);
+			fatTcpClient.Send(bytes);
 
 			var delayTime = Faker.RandomInt(0, 123);
 
