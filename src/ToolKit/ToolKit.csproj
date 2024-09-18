@@ -7,7 +7,7 @@
         <AssemblyName>FatCat.Toolkit</AssemblyName>
         <DebugType>full</DebugType>
         <LangVersion>12</LangVersion>
-    <VersionPrefix>1.0.241</VersionPrefix>
+    <VersionPrefix>1.0.242</VersionPrefix>
         <Authors>David Basarab</Authors>
         <PackageTags>tools</PackageTags>
         <PackageProjectUrl>https://github.com/DavidBasarab/FatCat.Toolkit</PackageProjectUrl>
@@ -37,7 +37,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Autofac" Version="8.1.0" />
-        <PackageReference Include="CSharpier.MsBuild" Version="0.29.1">
+        <PackageReference Include="CSharpier.MsBuild" Version="0.29.2">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
