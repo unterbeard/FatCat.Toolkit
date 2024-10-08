@@ -7,7 +7,7 @@
         <AssemblyName>FatCat.Toolkit</AssemblyName>
         <DebugType>full</DebugType>
         <LangVersion>12</LangVersion>
-    <VersionPrefix>1.0.244</VersionPrefix>
+    <VersionPrefix>1.0.245</VersionPrefix>
         <Authors>David Basarab</Authors>
         <PackageTags>tools</PackageTags>
         <PackageProjectUrl>https://github.com/DavidBasarab/FatCat.Toolkit</PackageProjectUrl>
@@ -51,7 +51,7 @@
         <PackageReference Include="MongoDB.Driver" Version="2.29.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.IO.Abstractions" Version="21.0.29" />
-        <PackageReference Include="xunit.extensibility.core" Version="2.9.1" />
+        <PackageReference Include="xunit.extensibility.core" Version="2.9.2" />
         
     </ItemGroup>
 </Project>
