@@ -35,17 +35,17 @@ public static class Program
 				ScopeOptions.SetLifetimeScope
 			);
 
-			// RunServer(args);
+			RunServer(args);
 
-			var worker = SystemScope.Container.Resolve<TcpWorker>();
-
-			await worker.DoWork();
-
-			var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
-
-			consoleUtilities.WaitForExit();
-
-			ConsoleLog.WriteCyan($"Number of errors: {TcpWorker.NumberOfErrors}");
+			// var worker = SystemScope.Container.Resolve<TcpWorker>();
+			//
+			// await worker.DoWork();
+			//
+			// var consoleUtilities = SystemScope.Container.Resolve<IConsoleUtilities>();
+			//
+			// consoleUtilities.WaitForExit();
+			//
+			// ConsoleLog.WriteCyan($"Number of errors: {TcpWorker.NumberOfErrors}");
 		}
 		catch (Exception ex)
 		{
