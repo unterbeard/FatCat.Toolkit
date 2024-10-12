@@ -206,7 +206,7 @@
       &lt;Entry.SortBy&gt;
         &lt;Access /&gt;
         &lt;Kind Is="Member" /&gt;
-        &lt;Name Is="Enter Pattern Here" /&gt;
+        &lt;Name  /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
     &lt;Entry DisplayName="Properties"&gt;
@@ -218,7 +218,7 @@
       &lt;/Entry.Match&gt;
       &lt;Entry.SortBy&gt;
         &lt;Access /&gt;
-        &lt;Name Is="Enter Pattern Here" /&gt;
+        &lt;Name  /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
     &lt;Entry DisplayName="Setup/Teardown Methods"&gt;
@@ -274,7 +274,7 @@
       &lt;Entry.SortBy&gt;
         &lt;Access /&gt;
         &lt;Kind Is="Member" /&gt;
-        &lt;Name Is="Enter Pattern Here" /&gt;
+        &lt;Name  /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
     &lt;Entry DisplayName="Properties"&gt;
@@ -286,7 +286,7 @@
       &lt;/Entry.Match&gt;
       &lt;Entry.SortBy&gt;
         &lt;Access /&gt;
-        &lt;Name Is="Enter Pattern Here" /&gt;
+        &lt;Name  /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
     &lt;Entry DisplayName="BeforeScenario"&gt;
@@ -319,7 +319,7 @@
         &lt;/And&gt;
       &lt;/Entry.Match&gt;
       &lt;Entry.SortBy&gt;
-        &lt;Name Is="Enter Pattern Here" /&gt;
+        &lt;Name  /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
     &lt;Entry DisplayName="When"&gt;
@@ -332,7 +332,7 @@
         &lt;/And&gt;
       &lt;/Entry.Match&gt;
       &lt;Entry.SortBy&gt;
-        &lt;Name Is="Enter Pattern Here" /&gt;
+        &lt;Name  /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
     &lt;Entry DisplayName="Then"&gt;
@@ -345,14 +345,14 @@
         &lt;/And&gt;
       &lt;/Entry.Match&gt;
       &lt;Entry.SortBy&gt;
-        &lt;Name Is="Enter Pattern Here" /&gt;
+        &lt;Name  /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
     &lt;Entry DisplayName="All other members"&gt;
       &lt;Entry.SortBy&gt;
         &lt;Kind Is="Member" /&gt;
         &lt;Access /&gt;
-        &lt;Name Is="Enter Pattern Here" /&gt;
+        &lt;Name  /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
   &lt;/TypePattern&gt;
@@ -458,7 +458,7 @@
       &lt;Entry.SortBy&gt;
         &lt;Kind Is="Member" /&gt;
         &lt;Access /&gt;
-        &lt;Name Is="Enter Pattern Here" /&gt;
+        &lt;Name  /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
     &lt;Entry DisplayName="Constructors"&gt;
@@ -473,7 +473,7 @@
       &lt;Entry.SortBy&gt;
         &lt;Kind Is="Member" /&gt;
         &lt;Access /&gt;
-        &lt;Name Is="Enter Pattern Here" /&gt;
+        &lt;Name  /&gt;
       &lt;/Entry.SortBy&gt;
     &lt;/Entry&gt;
     &lt;Entry DisplayName="Nested Types"&gt;
@@ -575,6 +575,7 @@
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ECSharpKeepExistingMigration/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ECSharpPlaceEmbeddedOnSameLineMigration/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ECSharpUseContinuousIndentInsideBracesMigration/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002EMemberReordering_002EMigrations_002ECSharpFileLayoutPatternRemoveIsAttributeUpgrade/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002EAlwaysTreatStructAsNotReorderableMigration/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002ECSharpPlaceAttributeOnSameLineMigration/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002EMigrateBlankLinesAroundFieldToBlankLinesAroundProperty/@EntryIndexedValue">True</s:Boolean>
