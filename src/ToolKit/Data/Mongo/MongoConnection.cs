@@ -35,9 +35,6 @@ public class MongoConnection : IMongoConnection
 			_ => true
 		);
 
-		// Yse if want to represent enums as strings
-		// ConventionRegistry.Register(nameof(EnumRepresentationConvention), new ConventionPack { new EnumRepresentationConvention(BsonType.String) }, _ => true);
-
 		foreach (var assembly in dataAssemblies)
 		{
 			foreach (var mongoObjectType in assembly.TypesImplementing<MongoObject>())
@@ -62,10 +59,7 @@ public class MongoConnection : IMongoConnection
 			return database;
 		}
 
-		if (connectionString == null)
-		{
-			connectionString = NotSetConnectionString;
-		}
+		connectionString ??= NotSetConnectionString;
 
 		if (!connections.TryGetValue(connectionString, out var mongoClient))
 		{
