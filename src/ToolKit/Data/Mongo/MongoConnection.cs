@@ -2,8 +2,10 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using Fasterflect;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace FatCat.Toolkit.Data.Mongo;
@@ -25,6 +27,8 @@ public class MongoConnection : IMongoConnection
 
 	public MongoConnection(List<Assembly> dataAssemblies)
 	{
+		BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
 		ConventionRegistry.Register(
 			nameof(IgnoreExtraElementsConvention),
 			new ConventionPack { new IgnoreExtraElementsConvention(true) },
@@ -71,6 +75,8 @@ public class MongoConnection : IMongoConnection
 					: MongoClientSettings.FromConnectionString(connectionString);
 
 			mongoClient = new MongoClient(settings);
+
+			connections.TryAdd(connectionString, mongoClient);
 		}
 
 		var newDatabaseConnection = mongoClient.GetDatabase(databaseName);
