@@ -25,10 +25,13 @@ public class MongoConnection : IMongoConnection
 
 	private readonly ConcurrentDictionary<string, IMongoDatabase> databases = new();
 
-	public MongoConnection(List<Assembly> dataAssemblies)
+	static MongoConnection()
 	{
 		BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+	}
 
+	public MongoConnection(List<Assembly> dataAssemblies)
+	{
 		ConventionRegistry.Register(
 			nameof(IgnoreExtraElementsConvention),
 			new ConventionPack { new IgnoreExtraElementsConvention(true) },
